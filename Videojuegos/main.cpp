@@ -14,31 +14,57 @@ void fixPosition(const sf::RenderWindow& window, sf::CircleShape& shape) {
 	}
 }
 
+void fixPosition(const sf::RenderWindow& window, sf::Sprite& sprite) {
+	// comprobar que la figura siga dentro:
+	if (sprite.getPosition().x + sprite.getGlobalBounds().width > window.getSize().x) {
+		sprite.setPosition(window.getSize().x - sprite.getGlobalBounds().width, sprite.getPosition().y);
+	}
+	if (sprite.getPosition().y + sprite.getGlobalBounds().height > window.getSize().y) {
+		sprite.setPosition(sprite.getPosition().x, window.getSize().y - sprite.getGlobalBounds().height);
+	}
+}
+
 int main()
 {
-	sf::RenderWindow window(sf::VideoMode(400, 400), "SFML works!");
-	sf::CircleShape shape(20.f);
-	shape.setFillColor(sf::Color::Red);
+	sf::RenderWindow window(sf::VideoMode(800, 800), "SFML works!");
+	// D.E.P. CircleShape
+	//sf::CircleShape shape(20.f);
+	//shape.setFillColor(sf::Color::Red);
+	// ------------ Sprite:
+	// Declare and load a texture
+	sf::Texture texture;
+	texture.loadFromFile("assets/sprite-sprite-s.png");
+	// Create a sprite
+	sf::Sprite sprite(texture);// , sf::IntRect(0, 0, 200, 400));
+	//sprite.setColor(sf::Color(255, 255, 255, 200));
+	sprite.setPosition(100, 25);
+	
+	// Resize:
+	sprite.scale(0.4, 0.4);
+
+	// Draw it
+	window.draw(sprite);
+
+
 
 	window.setFramerateLimit(60); //60 FPS
 
 	srand(time(NULL));
 
-	float randX = static_cast<float>(5.0 * rand()/RAND_MAX), randY = static_cast<float>(5.0 * rand()/RAND_MAX);
+	float randX = static_cast<float>(20.0 * rand()/RAND_MAX), randY = static_cast<float>(20.0 * rand()/RAND_MAX);
 
 	while (window.isOpen())
 	{
-		if (shape.getPosition().x + shape.getRadius()*2 + randX > window.getSize().x
-			|| shape.getPosition().x < 0) {
+		if (sprite.getPosition().x + sprite.getGlobalBounds().width + randX > window.getSize().x
+			|| sprite.getPosition().x < 0) {
 			randX = -randX;
-			
 		}
-		if (shape.getPosition().y + shape.getRadius() * 2 + randY > window.getSize().y
-			|| shape.getPosition().y < 0) {
+		if (sprite.getPosition().y + sprite.getGlobalBounds().height + randY > window.getSize().y
+			|| sprite.getPosition().y < 0) {
 			randY = -randY;
 		}
 		
-		shape.move(randX, randY);
+		sprite.move(randX, randY);
 		
 		
 		sf::Event event;
@@ -52,12 +78,12 @@ int main()
 				
 				window.setView(sf::View(visibleArea));
 
-				fixPosition(window, shape); // Recoloca la figura si es necesario
+				fixPosition(window, sprite); // Recoloca la figura si es necesario
 			}
 		}
 
 		window.clear();
-		window.draw(shape);
+		window.draw(sprite);
 		window.display();
 	}
 
