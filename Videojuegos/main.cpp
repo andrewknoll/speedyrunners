@@ -3,6 +3,17 @@
 #include <random>
 #include <time.h>
 
+
+void fixPosition(const sf::RenderWindow& window, sf::CircleShape& shape) {
+	// comprobar que la figura siga dentro:
+	if (shape.getPosition().x + shape.getRadius() > window.getSize().x) {
+		shape.setPosition(window.getSize().x - shape.getRadius() * 2, shape.getPosition().y);
+	}
+	if (shape.getPosition().y + shape.getRadius() > window.getSize().y) {
+		shape.setPosition(shape.getPosition().x, window.getSize().y - shape.getRadius() * 2);
+	}
+}
+
 int main()
 {
 	sf::RenderWindow window(sf::VideoMode(400, 400), "SFML works!");
@@ -38,7 +49,10 @@ int main()
 			if (event.type == sf::Event::Resized)
 			{
 				sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
+				
 				window.setView(sf::View(visibleArea));
+
+				fixPosition(window, shape); // Recoloca la figura si es necesario
 			}
 		}
 

@@ -259,3 +259,12 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+practica0/pygame/Lib/
+
+practica0/pygame/Include/
+
+practica0/pygame/Scripts/
+
+practica0/pygame/pyvenv.cfg
+
+Videojuegos/Videojuegos.vcxproj
