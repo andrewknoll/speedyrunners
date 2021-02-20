@@ -6,7 +6,7 @@
 #include <time.h>
 
 inline float randInRange(const float min, const float max) {
-	return min + static_cast<float>(max * rand() / RAND_MAX);
+	return min + static_cast<float>((max-min) * rand() / RAND_MAX);
 }
 
 
@@ -15,33 +15,39 @@ class Star {
 	sf::CircleShape shape;
 
 	float map(float val, float min1, float max1, float min2, float max2) {
-		return (max2 - min2) * (val - min1) / (max1 - min1) + min2;
+		return (val - min1) * (max2 - min2) / (max1 - min1) + min2;
 	}
 
 public:
 	Star(const sf::RenderWindow& window) 
-	: x(randInRange(0, window.getSize().x)), y(randInRange(0, window.getSize().y)), z(randInRange(0,window.getSize().x)),
-		shape(5)
+	:	x(randInRange(-(window.getSize().x / 2.0), window.getSize().x/2.0)), 
+		y(randInRange(-(window.getSize().y / 2.0), window.getSize().y/2.0)),
+		z(randInRange(0.5, 2)*window.getSize().x),
+		shape(1)
 	{
-		shape.setFillColor(sf::Color::Yellow);
+		shape.setFillColor(sf::Color::White);
 	}
 
-	void draw(sf::RenderWindow& window) {
-		shape.setPosition(map(x / z, 0, 1, 0, window.getSize().x), map(y / z, 0, 1, 0, window.getSize().y));
+	void draw(sf::RenderWindow& window) {//window.getSize().x / 2.0 +
+		float shapex =  map(x / z, -1, 1, 0, window.getSize().x);
+		float shapey =  map(y / z, -1, 1, 0, window.getSize().y);
+		shape.setPosition(shapex, shapey);
 		window.draw(shape);
 		//sf::CircleShape shape(20.f);
 	//shape.setFillColor(sf::Color::Red);
 	}
 
 	void update(const sf::RenderWindow& window) {
-		z -= 1;
-		if (z < 0) { // Si llega a la camara, se resetea 
-			x = randInRange(0, window.getSize().x*0.96);
-			y = randInRange(0, window.getSize().y*0.96);
+		z -= 15;
+		if (z <= 0) { // Si llega a la camara, se resetea 
+			x = randInRange(-(window.getSize().x / 2.0), window.getSize().x / 2.0);
+			y = randInRange(-(window.getSize().y / 2.0), window.getSize().y / 2.0);
+			z = randInRange(0.5, 2) * window.getSize().x;
 		}
 		//x -= (x / z) * window.getSize().x;
 		//y -= (y / z) * window.getSize().y;
-		//shape.setScale()
+		float scale = window.getSize().x*2/z/5;
+		shape.setScale(scale, scale);
 	}
 
 };
@@ -51,7 +57,7 @@ inline void programaEstrellas()
 {
 	srand(time(NULL));
 	sf::RenderWindow window(sf::VideoMode(800, 800), "Stars");
-	int N_ESTRELLAS = 100;
+	int N_ESTRELLAS = 1000;
 	std::vector<Star> stars;
 	for (size_t i = 0; i < N_ESTRELLAS; i++)
 	{
@@ -79,13 +85,11 @@ inline void programaEstrellas()
 			}
 		}
 
-		for (auto star : stars) {
-			star.update(window);
-		}
 
 		window.clear();
-		for (auto star : stars) {
-			star.draw(window);
+		for (auto& star : stars) {
+			star.update(window); // update pos
+			star.draw(window); // draw
 		}
 		window.display();
 	}
