@@ -20,25 +20,25 @@ class Star {
 
 public:
 	Star(const sf::RenderWindow& window) 
-	:	x(randInRange(-(window.getSize().x / 2.0), window.getSize().x/2.0)), 
-		y(randInRange(-(window.getSize().y / 2.0), window.getSize().y/2.0)),
+	:	x(randInRange(-1,1)*window.getSize().x), 
+		y(randInRange(-1,1)* window.getSize().y),
 		z(randInRange(0.5, 2)*window.getSize().x),
 		shape(1)
 	{
-		shape.setFillColor(sf::Color::White);
+		shape.setFillColor(sf::Color(255,255,128,255));
 	}
 
 	void draw(sf::RenderWindow& window) {//window.getSize().x / 2.0 +
-		float shapex =  map(x / z, -1, 1, 0, window.getSize().x);
-		float shapey =  map(y / z, -1, 1, 0, window.getSize().y);
+		float shapex =  map(x / z, -0.5, 0.5, 0, window.getSize().x);
+		float shapey =  map(y / z, -0.5, 0.5, 0, window.getSize().y);
 		shape.setPosition(shapex, shapey);
-		window.draw(shape);
+		window.draw(shape, sf::RenderStates(sf::BlendAlpha));
 		//sf::CircleShape shape(20.f);
 	//shape.setFillColor(sf::Color::Red);
 	}
 
-	void update(const sf::RenderWindow& window) {
-		z -= 15;
+	void update(const sf::RenderWindow& window, const float& speed=15) {
+		z -= speed;
 		if (z <= 0) { // Si llega a la camara, se resetea 
 			x = randInRange(-(window.getSize().x / 2.0), window.getSize().x / 2.0);
 			y = randInRange(-(window.getSize().y / 2.0), window.getSize().y / 2.0);
@@ -46,7 +46,7 @@ public:
 		}
 		//x -= (x / z) * window.getSize().x;
 		//y -= (y / z) * window.getSize().y;
-		float scale = window.getSize().x*2/z/5;
+		float scale = std::max(0.6f,window.getSize().x*2/z/5);
 		shape.setScale(scale, scale);
 	}
 
@@ -55,6 +55,8 @@ public:
 
 inline void programaEstrellas()
 {
+	sf::Event event;
+	float speed = 15;
 	srand(time(NULL));
 	sf::RenderWindow window(sf::VideoMode(800, 800), "Stars");
 	int N_ESTRELLAS = 1000;
@@ -71,24 +73,29 @@ inline void programaEstrellas()
 	while (window.isOpen())
 	{
 
-		sf::Event event;
 		while (window.pollEvent(event))
 		{
-			if (event.type == sf::Event::Closed)
+			if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
 				window.close();
+			
 			if (event.type == sf::Event::Resized)
 			{
 				sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
 
 				window.setView(sf::View(visibleArea));
-
 			}
 		}
-
-
-		window.clear();
+		if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) { // accelerate
+			speed *= 1.05;
+			speed = std::min(speed, 120.f);
+		}
+		else if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) { // decelerate
+			speed *= 0.95;
+		}
+		
+		window.clear(sf::Color(10,10,10,128));//sf::Color(0,0,0,1));
 		for (auto& star : stars) {
-			star.update(window); // update pos
+			star.update(window, speed); // update pos
 			star.draw(window); // draw
 		}
 		window.display();
