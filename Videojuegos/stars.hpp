@@ -14,6 +14,9 @@ class Star {
 	float x, y, z; // z profundidad
 	sf::CircleShape shape;
 
+	float lastx, lasty;
+	//std::vector<sf::CircleShape> trail;
+
 	float map(float val, float min1, float max1, float min2, float max2) {
 		return (val - min1) * (max2 - min2) / (max1 - min1) + min2;
 	}
@@ -23,27 +26,45 @@ public:
 	:	x(randInRange(-1,1)*window.getSize().x), 
 		y(randInRange(-1,1)* window.getSize().y),
 		z(randInRange(0.5, 2)*window.getSize().x),
-		shape(1)
+		shape(1), lastx(x), lasty(y)
 	{
-		shape.setFillColor(sf::Color(255,255,128,255));
+		shape.setFillColor(sf::Color(255,255,200,255));
 	}
 
 	void draw(sf::RenderWindow& window) {//window.getSize().x / 2.0 +
-		float shapex =  map(x / z, -0.5, 0.5, 0, window.getSize().x);
-		float shapey =  map(y / z, -0.5, 0.5, 0, window.getSize().y);
-		shape.setPosition(shapex, shapey);
 		window.draw(shape, sf::RenderStates(sf::BlendAlpha));
-		//sf::CircleShape shape(20.f);
-	//shape.setFillColor(sf::Color::Red);
+		/*sf::RectangleShape trail(sf::Vector2(lastx;
+		window.draw(sf::RectangleShape())
+		lastx = shape.getPosition().x; 
+		lasty = shape.getPosition().y;*/
+
+		/*int i = 0;
+		for (auto shapeTrail : trail) {
+			shapeTrail.setFillColor(sf::Color(255, 255, 128, 255 / (4-i)));
+			window.draw(shapeTrail, sf::RenderStates(sf::BlendAlpha));
+		}
+		if (trail.size() > 3) {
+			trail.erase(trail.begin());
+		}*/
 	}
 
 	void update(const sf::RenderWindow& window, const float& speed=15) {
-		z -= speed;
-		if (z <= 0) { // Si llega a la camara, se resetea 
-			x = randInRange(-(window.getSize().x / 2.0), window.getSize().x / 2.0);
-			y = randInRange(-(window.getSize().y / 2.0), window.getSize().y / 2.0);
+		z -= speed; 
+		float shapex = map(x / z, -0.5, 0.5, 0, window.getSize().x);
+		float shapey = map(y / z, -0.5, 0.5, 0, window.getSize().y);
+
+		
+		if (z <= 0 || shapex == 0 || shapex >= window.getSize().x 
+			|| shapey == 0 || shapey >= window.getSize().y) { // Si se sale de la vista, se resetea 
+			x = randInRange(-0.7, 0.7) * window.getSize().x;
+			y = randInRange(-0.7, 0.7) * window.getSize().y;
 			z = randInRange(0.5, 2) * window.getSize().x;
+			shapex = map(x / z, -0.5, 0.5, 0, window.getSize().x);
+			shapey = map(y / z, -0.5, 0.5, 0, window.getSize().y);
 		}
+		//trail.emplace_back(sf::CircleShape(shape)); // Para las lineas
+		
+		shape.setPosition(shapex, shapey);
 		//x -= (x / z) * window.getSize().x;
 		//y -= (y / z) * window.getSize().y;
 		float scale = std::max(0.6f,window.getSize().x*2/z/5);
@@ -56,10 +77,10 @@ public:
 inline void programaEstrellas()
 {
 	sf::Event event;
-	float speed = 15;
+	float speed = 20;
 	srand(time(NULL));
 	sf::RenderWindow window(sf::VideoMode(800, 800), "Stars");
-	int N_ESTRELLAS = 1000;
+	int N_ESTRELLAS = 1400;
 	std::vector<Star> stars;
 	for (size_t i = 0; i < N_ESTRELLAS; i++)
 	{
@@ -69,6 +90,11 @@ inline void programaEstrellas()
 
 	window.setFramerateLimit(60); //60 FPS
 
+	// de https://en.sfml-dev.org/forums/index.php?topic=7018.0:
+	float fps;
+	sf::Clock clock = sf::Clock::Clock();
+	sf::Time previousTime = clock.getElapsedTime();
+	sf::Time currentTime;
 
 	while (window.isOpen())
 	{
@@ -93,12 +119,21 @@ inline void programaEstrellas()
 			speed *= 0.95;
 		}
 		
-		window.clear(sf::Color(10,10,10,128));//sf::Color(0,0,0,1));
+		window.clear(sf::Color(0,0,0,128));//sf::Color(0,0,0,1));
 		for (auto& star : stars) {
 			star.update(window, speed); // update pos
 			star.draw(window); // draw
 		}
 		window.display();
+
+
+		// https://en.sfml-dev.org/forums/index.php?topic=7018.0:
+		currentTime = clock.getElapsedTime();
+		fps = 1.0f / (currentTime.asSeconds() - previousTime.asSeconds()); // the asSeconds returns a float
+		if (int(currentTime.asMilliseconds())%100 < 2) // Para que no este sacandolo todos los frames
+			std::cout << "fps =" << floor(fps) << std::endl; // flooring it will make the frame rate a rounded number
+		previousTime = currentTime;
+
 	}
 
 }
