@@ -131,7 +131,7 @@ inline void programaEstrellas()
 		currentTime = clock.getElapsedTime();
 		fps = 1.0f / (currentTime.asSeconds() - previousTime.asSeconds()); // the asSeconds returns a float
 		if (int(currentTime.asMilliseconds())%100 < 2) // Para que no este sacandolo todos los frames
-			std::cout << "fps =" << floor(fps) << std::endl; // flooring it will make the frame rate a rounded number
+			std::cout << "fps = " << floor(fps) << std::endl; // flooring it will make the frame rate a rounded number
 		previousTime = currentTime;
 
 	}
