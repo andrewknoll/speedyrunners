@@ -1,0 +1,282 @@
+{"frames": [
+
+{
+	"filename": "peanutbuttergamer_win0001.png",
+	"frame": {"x":372,"y":388,"w":356,"h":386},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":33,"y":14,"w":356,"h":386},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "peanutbuttergamer_win0002.png",
+	"frame": {"x":372,"y":388,"w":356,"h":386},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":33,"y":14,"w":356,"h":386},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "peanutbuttergamer_win0003.png",
+	"frame": {"x":372,"y":388,"w":356,"h":386},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":33,"y":14,"w":356,"h":386},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "peanutbuttergamer_win0004.png",
+	"frame": {"x":372,"y":388,"w":356,"h":386},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":33,"y":14,"w":356,"h":386},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "peanutbuttergamer_win0005.png",
+	"frame": {"x":360,"y":776,"w":340,"h":396},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":35,"y":4,"w":340,"h":396},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "peanutbuttergamer_win0006.png",
+	"frame": {"x":360,"y":776,"w":340,"h":396},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":35,"y":4,"w":340,"h":396},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "peanutbuttergamer_win0007.png",
+	"frame": {"x":360,"y":776,"w":340,"h":396},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":35,"y":4,"w":340,"h":396},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "peanutbuttergamer_win0008.png",
+	"frame": {"x":2,"y":1162,"w":330,"h":394},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":35,"y":6,"w":330,"h":394},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "peanutbuttergamer_win0009.png",
+	"frame": {"x":2,"y":1162,"w":330,"h":394},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":35,"y":6,"w":330,"h":394},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "peanutbuttergamer_win0010.png",
+	"frame": {"x":702,"y":776,"w":316,"h":366},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":36,"y":34,"w":316,"h":366},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "peanutbuttergamer_win0011.png",
+	"frame": {"x":702,"y":776,"w":316,"h":366},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":36,"y":34,"w":316,"h":366},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "peanutbuttergamer_win0012.png",
+	"frame": {"x":334,"y":1174,"w":296,"h":376},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":42,"y":24,"w":296,"h":376},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "peanutbuttergamer_win0013.png",
+	"frame": {"x":334,"y":1174,"w":296,"h":376},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":42,"y":24,"w":296,"h":376},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "peanutbuttergamer_win0014.png",
+	"frame": {"x":730,"y":388,"w":288,"h":384},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":63,"y":16,"w":288,"h":384},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "peanutbuttergamer_win0015.png",
+	"frame": {"x":730,"y":388,"w":288,"h":384},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":63,"y":16,"w":288,"h":384},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "peanutbuttergamer_win0016.png",
+	"frame": {"x":702,"y":1144,"w":306,"h":384},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":43,"y":16,"w":306,"h":384},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "peanutbuttergamer_win0017.png",
+	"frame": {"x":702,"y":1144,"w":306,"h":384},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":43,"y":16,"w":306,"h":384},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "peanutbuttergamer_win0018.png",
+	"frame": {"x":382,"y":2,"w":374,"h":384},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":16,"w":374,"h":384},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "peanutbuttergamer_win0019.png",
+	"frame": {"x":382,"y":2,"w":374,"h":384},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":16,"w":374,"h":384},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "peanutbuttergamer_win0020.png",
+	"frame": {"x":2,"y":2,"w":378,"h":384},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":16,"w":378,"h":384},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "peanutbuttergamer_win0021.png",
+	"frame": {"x":2,"y":2,"w":378,"h":384},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":16,"w":378,"h":384},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "peanutbuttergamer_win0022.png",
+	"frame": {"x":2,"y":776,"w":356,"h":384},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":25,"y":16,"w":356,"h":384},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "peanutbuttergamer_win0023.png",
+	"frame": {"x":2,"y":776,"w":356,"h":384},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":25,"y":16,"w":356,"h":384},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "peanutbuttergamer_win0024.png",
+	"frame": {"x":2,"y":388,"w":368,"h":386},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":23,"y":14,"w":368,"h":386},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "peanutbuttergamer_win0025.png",
+	"frame": {"x":2,"y":388,"w":368,"h":386},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":23,"y":14,"w":368,"h":386},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "peanutbuttergamer_win0026.png",
+	"frame": {"x":2,"y":388,"w":368,"h":386},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":23,"y":14,"w":368,"h":386},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "peanutbuttergamer_win0027.png",
+	"frame": {"x":2,"y":388,"w":368,"h":386},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":23,"y":14,"w":368,"h":386},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "peanutbuttergamer_win0028.png",
+	"frame": {"x":2,"y":388,"w":368,"h":386},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":23,"y":14,"w":368,"h":386},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "peanutbuttergamer_win0029.png",
+	"frame": {"x":2,"y":388,"w":368,"h":386},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":23,"y":14,"w":368,"h":386},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "peanutbuttergamer_win0030.png",
+	"frame": {"x":2,"y":388,"w":368,"h":386},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":23,"y":14,"w":368,"h":386},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+}],
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "win_variant00.png",
+	"format": "RGBA8888",
+	"size": {"w":1024,"h":2048},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:eb7d3daf7929a40885bb8e861e61342b:f618f70a87263640f82779ed62b50bf3:f3541e6d0426558fd85434c5ba62c97c$"
+}
+}

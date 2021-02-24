@@ -1,0 +1,220 @@
+{"frames": [
+
+{
+	"filename": "Beach-Body_Cosmonaut_WIN03_0001.png",
+	"frame": {"x":1190,"y":708,"w":352,"h":376},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":35,"y":4,"w":352,"h":376},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "Beach-Body_Cosmonaut_WIN03_0002.png",
+	"frame": {"x":1190,"y":708,"w":352,"h":376},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":35,"y":4,"w":352,"h":376},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "Beach-Body_Cosmonaut_WIN03_0003.png",
+	"frame": {"x":1190,"y":708,"w":352,"h":376},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":35,"y":4,"w":352,"h":376},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "Beach-Body_Cosmonaut_WIN03_0004.png",
+	"frame": {"x":1190,"y":708,"w":352,"h":376},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":35,"y":4,"w":352,"h":376},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "Beach-Body_Cosmonaut_WIN03_0005.png",
+	"frame": {"x":1190,"y":708,"w":352,"h":376},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":35,"y":4,"w":352,"h":376},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "Beach-Body_Cosmonaut_WIN03_0006.png",
+	"frame": {"x":1190,"y":708,"w":352,"h":376},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":35,"y":4,"w":352,"h":376},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "Beach-Body_Cosmonaut_WIN03_0007.png",
+	"frame": {"x":1190,"y":708,"w":352,"h":376},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":35,"y":4,"w":352,"h":376},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "Beach-Body_Cosmonaut_WIN03_0008.png",
+	"frame": {"x":788,"y":1044,"w":346,"h":374},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":35,"y":6,"w":346,"h":374},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "Beach-Body_Cosmonaut_WIN03_0009.png",
+	"frame": {"x":788,"y":1044,"w":346,"h":374},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":35,"y":6,"w":346,"h":374},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "Beach-Body_Cosmonaut_WIN03_0010.png",
+	"frame": {"x":1592,"y":698,"w":370,"h":368},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":30,"y":12,"w":370,"h":368},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "Beach-Body_Cosmonaut_WIN03_0011.png",
+	"frame": {"x":1196,"y":342,"w":394,"h":364},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":6,"y":16,"w":394,"h":364},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "Beach-Body_Cosmonaut_WIN03_0012.png",
+	"frame": {"x":1196,"y":342,"w":394,"h":364},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":6,"y":16,"w":394,"h":364},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "Beach-Body_Cosmonaut_WIN03_0013.png",
+	"frame": {"x":798,"y":682,"w":390,"h":360},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":10,"y":20,"w":390,"h":360},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "Beach-Body_Cosmonaut_WIN03_0014.png",
+	"frame": {"x":400,"y":686,"w":386,"h":360},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":14,"y":20,"w":386,"h":360},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "Beach-Body_Cosmonaut_WIN03_0015.png",
+	"frame": {"x":400,"y":686,"w":386,"h":360},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":14,"y":20,"w":386,"h":360},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "Beach-Body_Cosmonaut_WIN03_0016.png",
+	"frame": {"x":2,"y":692,"w":386,"h":358},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":14,"y":22,"w":386,"h":358},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "Beach-Body_Cosmonaut_WIN03_0017.png",
+	"frame": {"x":2,"y":692,"w":386,"h":358},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":14,"y":22,"w":386,"h":358},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "Beach-Body_Cosmonaut_WIN03_0018.png",
+	"frame": {"x":1592,"y":342,"w":386,"h":354},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":14,"y":26,"w":386,"h":354},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "Beach-Body_Cosmonaut_WIN03_0019.png",
+	"frame": {"x":2,"y":2,"w":396,"h":348},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":32,"w":396,"h":348},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "Beach-Body_Cosmonaut_WIN03_0020.png",
+	"frame": {"x":400,"y":2,"w":396,"h":342},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":38,"w":396,"h":342},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "Beach-Body_Cosmonaut_WIN03_0021.png",
+	"frame": {"x":2,"y":352,"w":396,"h":338},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":42,"w":396,"h":338},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "Beach-Body_Cosmonaut_WIN03_0022.png",
+	"frame": {"x":400,"y":346,"w":396,"h":338},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":42,"w":396,"h":338},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "Beach-Body_Cosmonaut_WIN03_0023.png",
+	"frame": {"x":798,"y":342,"w":396,"h":338},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":42,"w":396,"h":338},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "Beach-Body_Cosmonaut_WIN03_0024.png",
+	"frame": {"x":1594,"y":2,"w":396,"h":338},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":42,"w":396,"h":338},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "Beach-Body_Cosmonaut_WIN03_0025.png",
+	"frame": {"x":1196,"y":2,"w":396,"h":338},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":42,"w":396,"h":338},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "Beach-Body_Cosmonaut_WIN03_0026.png",
+	"frame": {"x":798,"y":2,"w":396,"h":338},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":42,"w":396,"h":338},
+	"sourceSize": {"w":400,"h":380}
+}],
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker ",
+	"version": "1.0",
+	"image": "win_variant03.png",
+	"format": "RGBA8888",
+	"size": {"w":2048,"h":2048},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:8dff15f6c88c62e09980e13516f3e10c:d31d3158e45e60322b355058a1a9d922:4899fda4936836653220ff66f438bc87$"
+}
+}

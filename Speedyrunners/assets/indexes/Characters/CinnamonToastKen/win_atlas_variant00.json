@@ -1,0 +1,282 @@
+{"frames": [
+
+{
+	"filename": "CinnamonToastKen_win0001.png",
+	"frame": {"x":704,"y":2,"w":334,"h":384},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":30,"y":16,"w":334,"h":384},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "CinnamonToastKen_win0002.png",
+	"frame": {"x":704,"y":2,"w":334,"h":384},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":30,"y":16,"w":334,"h":384},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "CinnamonToastKen_win0003.png",
+	"frame": {"x":2,"y":1184,"w":358,"h":388},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":17,"y":12,"w":358,"h":388},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "CinnamonToastKen_win0004.png",
+	"frame": {"x":2,"y":1184,"w":358,"h":388},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":17,"y":12,"w":358,"h":388},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "CinnamonToastKen_win0005.png",
+	"frame": {"x":716,"y":388,"w":358,"h":346},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":20,"y":54,"w":358,"h":346},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "CinnamonToastKen_win0006.png",
+	"frame": {"x":716,"y":388,"w":358,"h":346},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":20,"y":54,"w":358,"h":346},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "CinnamonToastKen_win0007.png",
+	"frame": {"x":688,"y":784,"w":348,"h":358},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":17,"y":42,"w":348,"h":358},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "CinnamonToastKen_win0008.png",
+	"frame": {"x":688,"y":784,"w":348,"h":358},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":17,"y":42,"w":348,"h":358},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "CinnamonToastKen_win0009.png",
+	"frame": {"x":362,"y":1182,"w":334,"h":370},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":21,"y":30,"w":334,"h":370},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "CinnamonToastKen_win0010.png",
+	"frame": {"x":362,"y":1182,"w":334,"h":370},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":21,"y":30,"w":334,"h":370},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "CinnamonToastKen_win0011.png",
+	"frame": {"x":362,"y":1182,"w":334,"h":370},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":21,"y":30,"w":334,"h":370},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "CinnamonToastKen_win0012.png",
+	"frame": {"x":2,"y":792,"w":338,"h":390},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":24,"y":10,"w":338,"h":390},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "CinnamonToastKen_win0013.png",
+	"frame": {"x":2,"y":792,"w":338,"h":390},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":24,"y":10,"w":338,"h":390},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "CinnamonToastKen_win0014.png",
+	"frame": {"x":350,"y":1574,"w":334,"h":378},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":13,"y":22,"w":334,"h":378},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "CinnamonToastKen_win0015.png",
+	"frame": {"x":350,"y":1574,"w":334,"h":378},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":13,"y":22,"w":334,"h":378},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "CinnamonToastKen_win0016.png",
+	"frame": {"x":2,"y":398,"w":350,"h":392},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":8,"w":350,"h":392},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "CinnamonToastKen_win0017.png",
+	"frame": {"x":342,"y":792,"w":344,"h":388},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":12,"w":344,"h":388},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "CinnamonToastKen_win0018.png",
+	"frame": {"x":342,"y":792,"w":344,"h":388},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":12,"w":344,"h":388},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "CinnamonToastKen_win0019.png",
+	"frame": {"x":352,"y":2,"w":350,"h":392},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":8,"w":350,"h":392},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "CinnamonToastKen_win0020.png",
+	"frame": {"x":342,"y":792,"w":344,"h":388},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":12,"w":344,"h":388},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "CinnamonToastKen_win0021.png",
+	"frame": {"x":342,"y":792,"w":344,"h":388},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":12,"w":344,"h":388},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "CinnamonToastKen_win0022.png",
+	"frame": {"x":354,"y":396,"w":360,"h":386},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":16,"y":14,"w":360,"h":386},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "CinnamonToastKen_win0023.png",
+	"frame": {"x":354,"y":396,"w":360,"h":386},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":16,"y":14,"w":360,"h":386},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "CinnamonToastKen_win0024.png",
+	"frame": {"x":354,"y":396,"w":360,"h":386},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":16,"y":14,"w":360,"h":386},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "CinnamonToastKen_win0025.png",
+	"frame": {"x":2,"y":1574,"w":346,"h":382},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":24,"y":18,"w":346,"h":382},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "CinnamonToastKen_win0026.png",
+	"frame": {"x":2,"y":1574,"w":346,"h":382},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":24,"y":18,"w":346,"h":382},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "CinnamonToastKen_win0027.png",
+	"frame": {"x":2,"y":2,"w":348,"h":394},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":30,"y":6,"w":348,"h":394},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "CinnamonToastKen_win0028.png",
+	"frame": {"x":2,"y":2,"w":348,"h":394},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":30,"y":6,"w":348,"h":394},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "CinnamonToastKen_win0029.png",
+	"frame": {"x":704,"y":2,"w":334,"h":384},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":30,"y":16,"w":334,"h":384},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+},
+{
+	"filename": "CinnamonToastKen_win0030.png",
+	"frame": {"x":704,"y":2,"w":334,"h":384},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":30,"y":16,"w":334,"h":384},
+	"sourceSize": {"w":400,"h":400},
+	"pivot": {"x":0.5,"y":0.5}
+}],
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "win_variant00.png",
+	"format": "RGBA8888",
+	"size": {"w":2048,"h":2048},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:023ff9481092f50f72b7aadffc3fa4b2:44f4628fb5761517b91a5d79ff720c74:f3541e6d0426558fd85434c5ba62c97c$"
+}
+}

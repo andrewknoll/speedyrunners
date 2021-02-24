@@ -1,0 +1,220 @@
+{"frames": [
+
+{
+	"filename": "ManekiNeko-win-variant02-0001.png",
+	"frame": {"x":2,"y":2,"w":350,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":25,"y":52,"w":350,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko-win-variant02-0002.png",
+	"frame": {"x":2,"y":2,"w":350,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":25,"y":52,"w":350,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko-win-variant02-0003.png",
+	"frame": {"x":352,"y":1322,"w":346,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":29,"y":52,"w":346,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko-win-variant02-0004.png",
+	"frame": {"x":352,"y":1322,"w":346,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":29,"y":52,"w":346,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko-win-variant02-0005.png",
+	"frame": {"x":2,"y":1652,"w":348,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":27,"y":52,"w":348,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko-win-variant02-0006.png",
+	"frame": {"x":2,"y":1652,"w":348,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":27,"y":52,"w":348,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko-win-variant02-0007.png",
+	"frame": {"x":2,"y":1322,"w":348,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":27,"y":52,"w":348,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko-win-variant02-0008.png",
+	"frame": {"x":2,"y":1322,"w":348,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":27,"y":52,"w":348,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko-win-variant02-0009.png",
+	"frame": {"x":352,"y":992,"w":348,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":27,"y":52,"w":348,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko-win-variant02-0010.png",
+	"frame": {"x":352,"y":992,"w":348,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":27,"y":52,"w":348,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko-win-variant02-0011.png",
+	"frame": {"x":2,"y":992,"w":348,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":27,"y":52,"w":348,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko-win-variant02-0012.png",
+	"frame": {"x":2,"y":992,"w":348,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":27,"y":52,"w":348,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko-win-variant02-0013.png",
+	"frame": {"x":352,"y":662,"w":348,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":27,"y":52,"w":348,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko-win-variant02-0014.png",
+	"frame": {"x":352,"y":662,"w":348,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":27,"y":52,"w":348,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko-win-variant02-0015.png",
+	"frame": {"x":2,"y":662,"w":348,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":27,"y":52,"w":348,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko-win-variant02-0016.png",
+	"frame": {"x":2,"y":662,"w":348,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":27,"y":52,"w":348,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko-win-variant02-0017.png",
+	"frame": {"x":352,"y":332,"w":348,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":27,"y":52,"w":348,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko-win-variant02-0018.png",
+	"frame": {"x":352,"y":332,"w":348,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":27,"y":52,"w":348,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko-win-variant02-0019.png",
+	"frame": {"x":2,"y":332,"w":348,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":27,"y":52,"w":348,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko-win-variant02-0020.png",
+	"frame": {"x":2,"y":332,"w":348,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":27,"y":52,"w":348,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko-win-variant02-0021.png",
+	"frame": {"x":354,"y":2,"w":348,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":27,"y":52,"w":348,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko-win-variant02-0022.png",
+	"frame": {"x":354,"y":2,"w":348,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":27,"y":52,"w":348,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko-win-variant02-0023.png",
+	"frame": {"x":352,"y":1322,"w":346,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":29,"y":52,"w":346,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko-win-variant02-0024.png",
+	"frame": {"x":352,"y":1322,"w":346,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":29,"y":52,"w":346,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko-win-variant02-0025.png",
+	"frame": {"x":352,"y":1322,"w":346,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":29,"y":52,"w":346,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko-win-variant02-0026.png",
+	"frame": {"x":704,"y":2,"w":1,"h":1},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":0,"w":1,"h":1},
+	"sourceSize": {"w":400,"h":380}
+}],
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker ",
+	"version": "1.0",
+	"image": "win_variant02.png",
+	"format": "RGBA8888",
+	"size": {"w":1024,"h":2048},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:96770f9e45e3729f03409df9f1c84694:4e283532bb87c23ad20f11a091a38d8c:db9b3a2786d7cfebc5ba2fc15c259265$"
+}
+}

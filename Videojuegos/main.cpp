@@ -1,3 +1,6 @@
+// Néstor Monzón y Andrés Otero
+// Sprite que rebota con los bordes
+// Para seleccionar el programa de las estrellas, cambiar linea 113 por Ejercicio::Estrellas
 
 #include <SFML/Graphics.hpp>
 #include <random>
@@ -23,6 +26,13 @@ void fixPosition(const sf::RenderWindow& window, sf::Sprite& sprite) {
 	}
 	if (sprite.getPosition().y + sprite.getGlobalBounds().height > window.getSize().y) {
 		sprite.setPosition(sprite.getPosition().x, window.getSize().y - sprite.getGlobalBounds().height);
+	}
+
+	if (sprite.getPosition().x < 0) {
+		sprite.setPosition(0, sprite.getPosition().y);
+	}
+	if (sprite.getPosition().y < 0) {
+		sprite.setPosition(sprite.getPosition().x, 0);
 	}
 }
 
@@ -57,7 +67,7 @@ void programaSpriteRebota() {
 
 	srand(time(NULL));
 
-	float randX = static_cast<float>(20.0 * rand() / RAND_MAX), randY = static_cast<float>(20.0 * rand() / RAND_MAX);
+	float randX = static_cast<float>(15.0 * rand() / RAND_MAX), randY = static_cast<float>(15.0 * rand() / RAND_MAX);
 
 	while (window.isOpen())
 	{

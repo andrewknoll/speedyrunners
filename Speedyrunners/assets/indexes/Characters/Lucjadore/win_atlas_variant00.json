@@ -1,0 +1,292 @@
+{"frames": [
+
+{
+	"filename": "LuchJ'adore-win0001.png",
+	"frame": {"x":392,"y":2,"w":382,"h":312},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":68,"w":382,"h":312},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LuchJ'adore-win0002.png",
+	"frame": {"x":392,"y":2,"w":382,"h":312},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":68,"w":382,"h":312},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LuchJ'adore-win0003.png",
+	"frame": {"x":2,"y":2,"w":388,"h":316},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":64,"w":388,"h":316},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LuchJ'adore-win0004.png",
+	"frame": {"x":776,"y":2,"w":374,"h":310},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":11,"y":70,"w":374,"h":310},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LuchJ'adore-win0005.png",
+	"frame": {"x":776,"y":2,"w":374,"h":310},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":11,"y":70,"w":374,"h":310},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LuchJ'adore-win0006.png",
+	"frame": {"x":1152,"y":2,"w":374,"h":298},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":2,"y":82,"w":374,"h":298},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LuchJ'adore-win0007.png",
+	"frame": {"x":1528,"y":2,"w":368,"h":296},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":84,"w":368,"h":296},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LuchJ'adore-win0008.png",
+	"frame": {"x":1528,"y":300,"w":364,"h":296},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":8,"y":84,"w":364,"h":296},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LuchJ'adore-win0009.png",
+	"frame": {"x":1152,"y":302,"w":360,"h":296},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":10,"y":84,"w":360,"h":296},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LuchJ'adore-win0010.png",
+	"frame": {"x":392,"y":316,"w":360,"h":294},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":10,"y":86,"w":360,"h":294},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LuchJ'adore-win0011.png",
+	"frame": {"x":776,"y":314,"w":360,"h":294},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":10,"y":86,"w":360,"h":294},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LuchJ'adore-win0012.png",
+	"frame": {"x":1514,"y":598,"w":356,"h":294},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":13,"y":86,"w":356,"h":294},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LuchJ'adore-win0013.png",
+	"frame": {"x":2,"y":320,"w":356,"h":294},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":13,"y":86,"w":356,"h":294},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LuchJ'adore-win0014.png",
+	"frame": {"x":1138,"y":600,"w":356,"h":292},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":13,"y":88,"w":356,"h":292},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LuchJ'adore-win0015.png",
+	"frame": {"x":356,"y":1184,"w":352,"h":292},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":15,"y":88,"w":352,"h":292},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LuchJ'adore-win0016.png",
+	"frame": {"x":2,"y":1482,"w":352,"h":292},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":15,"y":88,"w":352,"h":292},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LuchJ'adore-win0017.png",
+	"frame": {"x":2,"y":1188,"w":352,"h":292},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":15,"y":88,"w":352,"h":292},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LuchJ'adore-win0018.png",
+	"frame": {"x":2,"y":894,"w":352,"h":292},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":15,"y":88,"w":352,"h":292},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LuchJ'adore-win0019.png",
+	"frame": {"x":360,"y":890,"w":352,"h":292},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":15,"y":88,"w":352,"h":292},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LuchJ'adore-win0020.png",
+	"frame": {"x":718,"y":888,"w":352,"h":292},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":15,"y":88,"w":352,"h":292},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LuchJ'adore-win0021.png",
+	"frame": {"x":1012,"y":1182,"w":300,"h":292},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":16,"y":88,"w":300,"h":292},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LuchJ'adore-win0022.png",
+	"frame": {"x":710,"y":1184,"w":300,"h":292},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":16,"y":88,"w":300,"h":292},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LuchJ'adore-win0023.png",
+	"frame": {"x":686,"y":1478,"w":328,"h":292},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":15,"y":88,"w":328,"h":292},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LuchJ'adore-win0024.png",
+	"frame": {"x":356,"y":1478,"w":328,"h":292},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":15,"y":88,"w":328,"h":292},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LuchJ'adore-win0025.png",
+	"frame": {"x":1426,"y":894,"w":352,"h":284},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":16,"y":96,"w":352,"h":284},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LuchJ'adore-win0026.png",
+	"frame": {"x":1072,"y":894,"w":352,"h":284},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":16,"y":96,"w":352,"h":284},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LuchJ'adore-win0027.png",
+	"frame": {"x":1016,"y":1762,"w":346,"h":284},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":21,"y":96,"w":346,"h":284},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LuchJ'adore-win0028.png",
+	"frame": {"x":1016,"y":1762,"w":346,"h":284},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":21,"y":96,"w":346,"h":284},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LuchJ'adore-win0029.png",
+	"frame": {"x":1016,"y":1476,"w":346,"h":284},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":30,"y":96,"w":346,"h":284},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LuchJ'adore-win0030.png",
+	"frame": {"x":2,"y":616,"w":356,"h":276},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":20,"y":104,"w":356,"h":276},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LuchJ'adore-win0031.png",
+	"frame": {"x":2,"y":616,"w":356,"h":276},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":20,"y":104,"w":356,"h":276},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LuchJ'adore-win0032.png",
+	"frame": {"x":360,"y":612,"w":356,"h":276},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":20,"y":104,"w":356,"h":276},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LuchJ'adore-win0033.png",
+	"frame": {"x":360,"y":612,"w":356,"h":276},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":20,"y":104,"w":356,"h":276},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LuchJ'adore-win0034.png",
+	"frame": {"x":754,"y":610,"w":356,"h":276},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":20,"y":104,"w":356,"h":276},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LuchJ'adore-win0035.png",
+	"frame": {"x":754,"y":610,"w":356,"h":276},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":20,"y":104,"w":356,"h":276},
+	"sourceSize": {"w":400,"h":380}
+}],
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker ",
+	"version": "1.0",
+	"image": "win_variant00.png",
+	"format": "RGBA8888",
+	"size": {"w":2048,"h":2048},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:50589a95afbbe65627ad0616d5f7459f:9db698a8e933e7e47302c02ea4cb0086:f3541e6d0426558fd85434c5ba62c97c$"
+}
+}

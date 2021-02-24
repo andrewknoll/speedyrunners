@@ -1,0 +1,532 @@
+{"frames": [
+
+{
+	"filename": "SkullDuggery_win01_0001.png",
+	"frame": {"x":1774,"y":255,"w":268,"h":251},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":34,"w":268,"h":251},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0002.png",
+	"frame": {"x":266,"y":1538,"w":266,"h":251},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":13,"y":34,"w":266,"h":251},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0003.png",
+	"frame": {"x":1424,"y":1267,"w":274,"h":253},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":32,"w":274,"h":253},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0004.png",
+	"frame": {"x":830,"y":765,"w":274,"h":255},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":30,"w":274,"h":255},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0005.png",
+	"frame": {"x":2,"y":1299,"w":262,"h":255},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":17,"y":30,"w":262,"h":255},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0006.png",
+	"frame": {"x":276,"y":1281,"w":262,"h":255},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":17,"y":30,"w":262,"h":255},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0007.png",
+	"frame": {"x":602,"y":508,"w":226,"h":257},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":53,"y":28,"w":226,"h":257},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0008.png",
+	"frame": {"x":266,"y":1791,"w":228,"h":249},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":52,"y":36,"w":228,"h":249},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0009.png",
+	"frame": {"x":1720,"y":1520,"w":262,"h":251},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":17,"y":34,"w":262,"h":251},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0010.png",
+	"frame": {"x":816,"y":1532,"w":262,"h":253},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":17,"y":32,"w":262,"h":253},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0011.png",
+	"frame": {"x":2,"y":1042,"w":272,"h":255},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":30,"w":272,"h":255},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0012.png",
+	"frame": {"x":550,"y":767,"w":272,"h":255},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":30,"w":272,"h":255},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0013.png",
+	"frame": {"x":548,"y":1024,"w":270,"h":255},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":30,"w":270,"h":255},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0014.png",
+	"frame": {"x":302,"y":255,"w":270,"h":257},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":28,"w":270,"h":257},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0015.png",
+	"frame": {"x":1348,"y":1775,"w":268,"h":249},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":36,"w":268,"h":249},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0016.png",
+	"frame": {"x":540,"y":1536,"w":266,"h":251},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":13,"y":34,"w":266,"h":251},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0017.png",
+	"frame": {"x":540,"y":1281,"w":274,"h":253},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":32,"w":274,"h":253},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0018.png",
+	"frame": {"x":830,"y":508,"w":274,"h":255},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":30,"w":274,"h":255},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0019.png",
+	"frame": {"x":820,"y":1275,"w":262,"h":255},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":17,"y":30,"w":262,"h":255},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0020.png",
+	"frame": {"x":1124,"y":1014,"w":262,"h":255},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":17,"y":30,"w":262,"h":255},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0021.png",
+	"frame": {"x":2,"y":526,"w":226,"h":257},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":53,"y":28,"w":226,"h":257},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0022.png",
+	"frame": {"x":1080,"y":1779,"w":228,"h":249},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":52,"y":36,"w":228,"h":249},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0023.png",
+	"frame": {"x":2,"y":1556,"w":262,"h":251},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":17,"y":34,"w":262,"h":251},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0024.png",
+	"frame": {"x":1084,"y":1524,"w":262,"h":253},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":17,"y":32,"w":262,"h":253},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0025.png",
+	"frame": {"x":276,"y":767,"w":272,"h":255},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":30,"w":272,"h":255},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0026.png",
+	"frame": {"x":2,"y":785,"w":272,"h":255},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":30,"w":272,"h":255},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0027.png",
+	"frame": {"x":276,"y":1024,"w":270,"h":255},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":30,"w":270,"h":255},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0028.png",
+	"frame": {"x":1706,"y":763,"w":286,"h":245},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":14,"y":40,"w":286,"h":245},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0029.png",
+	"frame": {"x":1706,"y":763,"w":286,"h":245},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":14,"y":40,"w":286,"h":245},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0030.png",
+	"frame": {"x":1720,"y":1773,"w":280,"h":229},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":20,"y":56,"w":280,"h":229},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0031.png",
+	"frame": {"x":1720,"y":1773,"w":280,"h":229},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":20,"y":56,"w":280,"h":229},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0032.png",
+	"frame": {"x":534,"y":1789,"w":252,"h":223},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":42,"y":62,"w":252,"h":223},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0033.png",
+	"frame": {"x":534,"y":1789,"w":252,"h":223},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":42,"y":62,"w":252,"h":223},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0034.png",
+	"frame": {"x":808,"y":1787,"w":240,"h":225},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":39,"y":60,"w":240,"h":225},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0035.png",
+	"frame": {"x":808,"y":1787,"w":240,"h":225},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":39,"y":60,"w":240,"h":225},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0036.png",
+	"frame": {"x":1790,"y":2,"w":250,"h":243},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":20,"y":42,"w":250,"h":243},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0037.png",
+	"frame": {"x":1790,"y":2,"w":250,"h":243},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":20,"y":42,"w":250,"h":243},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0038.png",
+	"frame": {"x":1706,"y":508,"w":268,"h":253},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":17,"y":32,"w":268,"h":253},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0039.png",
+	"frame": {"x":2,"y":2,"w":286,"h":269},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":16,"w":286,"h":269},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0040.png",
+	"frame": {"x":1688,"y":1014,"w":298,"h":251},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":34,"w":298,"h":251},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0041.png",
+	"frame": {"x":1688,"y":1014,"w":298,"h":251},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":34,"w":298,"h":251},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0042.png",
+	"frame": {"x":1700,"y":1267,"w":292,"h":251},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":5,"y":34,"w":292,"h":251},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0043.png",
+	"frame": {"x":1424,"y":1522,"w":294,"h":251},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":3,"y":34,"w":294,"h":251},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0044.png",
+	"frame": {"x":1406,"y":761,"w":298,"h":251},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":34,"w":298,"h":251},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0045.png",
+	"frame": {"x":1474,"y":255,"w":298,"h":251},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":34,"w":298,"h":251},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0046.png",
+	"frame": {"x":1490,"y":2,"w":298,"h":251},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":34,"w":298,"h":251},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0047.png",
+	"frame": {"x":1406,"y":508,"w":298,"h":251},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":34,"w":298,"h":251},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0048.png",
+	"frame": {"x":1388,"y":1014,"w":298,"h":251},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":34,"w":298,"h":251},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0049.png",
+	"frame": {"x":1124,"y":1271,"w":298,"h":251},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":34,"w":298,"h":251},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0050.png",
+	"frame": {"x":1106,"y":761,"w":298,"h":251},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":34,"w":298,"h":251},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0051.png",
+	"frame": {"x":1174,"y":255,"w":298,"h":251},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":34,"w":298,"h":251},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0052.png",
+	"frame": {"x":1174,"y":255,"w":298,"h":251},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":34,"w":298,"h":251},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0053.png",
+	"frame": {"x":1190,"y":2,"w":298,"h":251},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":34,"w":298,"h":251},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0054.png",
+	"frame": {"x":1190,"y":2,"w":298,"h":251},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":34,"w":298,"h":251},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0055.png",
+	"frame": {"x":1106,"y":508,"w":298,"h":251},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":34,"w":298,"h":251},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0056.png",
+	"frame": {"x":824,"y":1022,"w":298,"h":251},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":34,"w":298,"h":251},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0057.png",
+	"frame": {"x":874,"y":255,"w":298,"h":251},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":34,"w":298,"h":251},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0058.png",
+	"frame": {"x":874,"y":255,"w":298,"h":251},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":34,"w":298,"h":251},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0059.png",
+	"frame": {"x":890,"y":2,"w":298,"h":251},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":34,"w":298,"h":251},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0060.png",
+	"frame": {"x":574,"y":255,"w":298,"h":251},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":34,"w":298,"h":251},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0061.png",
+	"frame": {"x":590,"y":2,"w":298,"h":251},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":34,"w":298,"h":251},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0062.png",
+	"frame": {"x":302,"y":514,"w":298,"h":251},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":34,"w":298,"h":251},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0063.png",
+	"frame": {"x":290,"y":2,"w":298,"h":251},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":34,"w":298,"h":251},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0064.png",
+	"frame": {"x":2,"y":273,"w":298,"h":251},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":34,"w":298,"h":251},
+	"sourceSize": {"w":300,"h":285}
+},
+{
+	"filename": "SkullDuggery_win01_0065.png",
+	"frame": {"x":2,"y":273,"w":298,"h":251},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":34,"w":298,"h":251},
+	"sourceSize": {"w":300,"h":285}
+}],
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker ",
+	"version": "1.0",
+	"image": "win_variant01.png",
+	"format": "RGBA8888",
+	"size": {"w":2048,"h":2048},
+	"scale": "0.75",
+	"smartupdate": "$TexturePacker:SmartUpdate:f7f3e4fbbad97bc1d1d3afb401119552:454c9cd03f63c3f2b25f37c507289a74:1997479c03471a584ac121b5bf78b225$"
+}
+}

@@ -1,0 +1,484 @@
+{"frames": [
+
+{
+	"filename": "Falcon_win0001.png",
+	"frame": {"x":2,"y":2,"w":221,"h":307},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":29,"y":10,"w":221,"h":307},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0002.png",
+	"frame": {"x":2,"y":2,"w":221,"h":307},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":29,"y":10,"w":221,"h":307},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0003.png",
+	"frame": {"x":2,"y":2,"w":221,"h":307},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":29,"y":10,"w":221,"h":307},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0004.png",
+	"frame": {"x":2,"y":2,"w":221,"h":307},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":29,"y":10,"w":221,"h":307},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0005.png",
+	"frame": {"x":2,"y":2,"w":221,"h":307},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":29,"y":10,"w":221,"h":307},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0006.png",
+	"frame": {"x":2,"y":2,"w":221,"h":307},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":29,"y":10,"w":221,"h":307},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0007.png",
+	"frame": {"x":2,"y":2,"w":221,"h":307},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":29,"y":10,"w":221,"h":307},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0008.png",
+	"frame": {"x":2,"y":2,"w":221,"h":307},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":29,"y":10,"w":221,"h":307},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0009.png",
+	"frame": {"x":2,"y":2,"w":221,"h":307},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":29,"y":10,"w":221,"h":307},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0010.png",
+	"frame": {"x":2,"y":2,"w":221,"h":307},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":29,"y":10,"w":221,"h":307},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0011.png",
+	"frame": {"x":2,"y":2,"w":221,"h":307},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":29,"y":10,"w":221,"h":307},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0012.png",
+	"frame": {"x":2,"y":2,"w":221,"h":307},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":29,"y":10,"w":221,"h":307},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0013.png",
+	"frame": {"x":2,"y":2,"w":221,"h":307},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":29,"y":10,"w":221,"h":307},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0014.png",
+	"frame": {"x":2,"y":311,"w":235,"h":305},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":23,"y":12,"w":235,"h":305},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0015.png",
+	"frame": {"x":2,"y":311,"w":235,"h":305},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":23,"y":12,"w":235,"h":305},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0016.png",
+	"frame": {"x":1749,"y":612,"w":241,"h":303},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":14,"w":241,"h":303},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0017.png",
+	"frame": {"x":225,"y":2,"w":259,"h":303},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":23,"y":14,"w":259,"h":303},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0018.png",
+	"frame": {"x":225,"y":2,"w":259,"h":303},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":23,"y":14,"w":259,"h":303},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0019.png",
+	"frame": {"x":2,"y":618,"w":251,"h":303},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":14,"w":251,"h":303},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0020.png",
+	"frame": {"x":2,"y":618,"w":251,"h":303},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":14,"w":251,"h":303},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0021.png",
+	"frame": {"x":1500,"y":612,"w":247,"h":303},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":14,"w":247,"h":303},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0022.png",
+	"frame": {"x":1500,"y":612,"w":247,"h":303},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":14,"w":247,"h":303},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0023.png",
+	"frame": {"x":1500,"y":612,"w":247,"h":303},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":14,"w":247,"h":303},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0024.png",
+	"frame": {"x":1251,"y":612,"w":247,"h":303},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":14,"w":247,"h":303},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0025.png",
+	"frame": {"x":1251,"y":612,"w":247,"h":303},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":14,"w":247,"h":303},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0026.png",
+	"frame": {"x":1002,"y":612,"w":247,"h":303},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":14,"w":247,"h":303},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0027.png",
+	"frame": {"x":1002,"y":612,"w":247,"h":303},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":14,"w":247,"h":303},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0028.png",
+	"frame": {"x":749,"y":1527,"w":247,"h":303},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":14,"w":247,"h":303},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0029.png",
+	"frame": {"x":749,"y":1527,"w":247,"h":303},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":14,"w":247,"h":303},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0030.png",
+	"frame": {"x":749,"y":1222,"w":247,"h":303},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":14,"w":247,"h":303},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0031.png",
+	"frame": {"x":749,"y":1222,"w":247,"h":303},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":14,"w":247,"h":303},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0032.png",
+	"frame": {"x":753,"y":612,"w":247,"h":303},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":14,"w":247,"h":303},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0033.png",
+	"frame": {"x":753,"y":612,"w":247,"h":303},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":14,"w":247,"h":303},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0034.png",
+	"frame": {"x":753,"y":612,"w":247,"h":303},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":14,"w":247,"h":303},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0035.png",
+	"frame": {"x":749,"y":917,"w":247,"h":303},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":14,"w":247,"h":303},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0036.png",
+	"frame": {"x":1733,"y":307,"w":247,"h":303},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":14,"w":247,"h":303},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0037.png",
+	"frame": {"x":1484,"y":307,"w":247,"h":303},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":14,"w":247,"h":303},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0038.png",
+	"frame": {"x":1235,"y":307,"w":247,"h":303},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":14,"w":247,"h":303},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0039.png",
+	"frame": {"x":986,"y":307,"w":247,"h":303},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":14,"w":247,"h":303},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0040.png",
+	"frame": {"x":500,"y":1527,"w":247,"h":303},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":14,"w":247,"h":303},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0041.png",
+	"frame": {"x":500,"y":1222,"w":247,"h":303},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":14,"w":247,"h":303},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0042.png",
+	"frame": {"x":737,"y":307,"w":247,"h":303},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":14,"w":247,"h":303},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0043.png",
+	"frame": {"x":504,"y":612,"w":247,"h":303},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":14,"w":247,"h":303},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0044.png",
+	"frame": {"x":500,"y":917,"w":247,"h":303},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":14,"w":247,"h":303},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0045.png",
+	"frame": {"x":1731,"y":2,"w":247,"h":303},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":14,"w":247,"h":303},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0046.png",
+	"frame": {"x":1482,"y":2,"w":247,"h":303},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":14,"w":247,"h":303},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0047.png",
+	"frame": {"x":1233,"y":2,"w":247,"h":303},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":14,"w":247,"h":303},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0048.png",
+	"frame": {"x":984,"y":2,"w":247,"h":303},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":14,"w":247,"h":303},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0049.png",
+	"frame": {"x":251,"y":1533,"w":247,"h":303},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":14,"w":247,"h":303},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0050.png",
+	"frame": {"x":251,"y":1228,"w":247,"h":303},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":14,"w":247,"h":303},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0051.png",
+	"frame": {"x":735,"y":2,"w":247,"h":303},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":14,"w":247,"h":303},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0052.png",
+	"frame": {"x":488,"y":307,"w":247,"h":303},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":14,"w":247,"h":303},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0053.png",
+	"frame": {"x":255,"y":612,"w":247,"h":303},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":14,"w":247,"h":303},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0054.png",
+	"frame": {"x":251,"y":923,"w":247,"h":303},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":14,"w":247,"h":303},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0055.png",
+	"frame": {"x":2,"y":1533,"w":247,"h":303},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":14,"w":247,"h":303},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0056.png",
+	"frame": {"x":2,"y":1228,"w":247,"h":303},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":14,"w":247,"h":303},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0057.png",
+	"frame": {"x":2,"y":923,"w":247,"h":303},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":14,"w":247,"h":303},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0058.png",
+	"frame": {"x":486,"y":2,"w":247,"h":303},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":14,"w":247,"h":303},
+	"sourceSize": {"w":333,"h":317}
+},
+{
+	"filename": "Falcon_win0059.png",
+	"frame": {"x":239,"y":307,"w":247,"h":303},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":14,"w":247,"h":303},
+	"sourceSize": {"w":333,"h":317}
+}],
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker ",
+	"version": "1.0",
+	"image": "win_variant00.png",
+	"format": "RGBA8888",
+	"size": {"w":2048,"h":2048},
+	"scale": "0.83333",
+	"smartupdate": "$TexturePacker:SmartUpdate:75e83c5e78588678a45d31e01c06e810:f6e3b9ecf32a606a540179bfb2731f48:dd2258e0dfc9c5b8ede9e2fc35cd7080$"
+}
+}

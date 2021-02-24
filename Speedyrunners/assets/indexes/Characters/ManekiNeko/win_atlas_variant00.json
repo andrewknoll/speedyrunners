@@ -1,0 +1,212 @@
+{"frames": [
+
+{
+	"filename": "ManekiNeko_win0001.png",
+	"frame": {"x":2,"y":2,"w":350,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":25,"y":52,"w":350,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko_win0002.png",
+	"frame": {"x":2,"y":2,"w":350,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":25,"y":52,"w":350,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko_win0003.png",
+	"frame": {"x":352,"y":1322,"w":346,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":29,"y":52,"w":346,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko_win0004.png",
+	"frame": {"x":352,"y":1322,"w":346,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":29,"y":52,"w":346,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko_win0005.png",
+	"frame": {"x":2,"y":1652,"w":348,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":27,"y":52,"w":348,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko_win0006.png",
+	"frame": {"x":2,"y":1652,"w":348,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":27,"y":52,"w":348,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko_win0007.png",
+	"frame": {"x":2,"y":1322,"w":348,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":27,"y":52,"w":348,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko_win0008.png",
+	"frame": {"x":2,"y":1322,"w":348,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":27,"y":52,"w":348,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko_win0009.png",
+	"frame": {"x":352,"y":992,"w":348,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":27,"y":52,"w":348,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko_win0010.png",
+	"frame": {"x":352,"y":992,"w":348,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":27,"y":52,"w":348,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko_win0011.png",
+	"frame": {"x":2,"y":992,"w":348,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":27,"y":52,"w":348,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko_win0012.png",
+	"frame": {"x":2,"y":992,"w":348,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":27,"y":52,"w":348,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko_win0013.png",
+	"frame": {"x":352,"y":662,"w":348,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":27,"y":52,"w":348,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko_win0014.png",
+	"frame": {"x":352,"y":662,"w":348,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":27,"y":52,"w":348,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko_win0015.png",
+	"frame": {"x":2,"y":662,"w":348,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":27,"y":52,"w":348,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko_win0016.png",
+	"frame": {"x":2,"y":662,"w":348,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":27,"y":52,"w":348,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko_win0017.png",
+	"frame": {"x":352,"y":332,"w":348,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":27,"y":52,"w":348,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko_win0018.png",
+	"frame": {"x":352,"y":332,"w":348,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":27,"y":52,"w":348,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko_win0019.png",
+	"frame": {"x":2,"y":332,"w":348,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":27,"y":52,"w":348,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko_win0020.png",
+	"frame": {"x":2,"y":332,"w":348,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":27,"y":52,"w":348,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko_win0021.png",
+	"frame": {"x":354,"y":2,"w":348,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":27,"y":52,"w":348,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko_win0022.png",
+	"frame": {"x":354,"y":2,"w":348,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":27,"y":52,"w":348,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko_win0023.png",
+	"frame": {"x":352,"y":1322,"w":346,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":29,"y":52,"w":346,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko_win0024.png",
+	"frame": {"x":352,"y":1322,"w":346,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":29,"y":52,"w":346,"h":328},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "ManekiNeko_win0025.png",
+	"frame": {"x":352,"y":1322,"w":346,"h":328},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":29,"y":52,"w":346,"h":328},
+	"sourceSize": {"w":400,"h":380}
+}],
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker ",
+	"version": "1.0",
+	"image": "win_variant00.png",
+	"format": "RGBA8888",
+	"size": {"w":1024,"h":2048},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:948933d3bcf5ca97424d5fefa1552177:7001cd9a33a82e0864c9fb4a66623879:dd2258e0dfc9c5b8ede9e2fc35cd7080$"
+}
+}

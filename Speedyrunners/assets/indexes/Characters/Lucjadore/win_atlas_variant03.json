@@ -1,0 +1,292 @@
+{"frames": [
+
+{
+	"filename": "LucJadore_WIN03_0001.png",
+	"frame": {"x":392,"y":2,"w":382,"h":326},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":54,"w":382,"h":326},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LucJadore_WIN03_0002.png",
+	"frame": {"x":392,"y":2,"w":382,"h":326},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":7,"y":54,"w":382,"h":326},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LucJadore_WIN03_0003.png",
+	"frame": {"x":2,"y":2,"w":388,"h":330},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":4,"y":50,"w":388,"h":330},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LucJadore_WIN03_0004.png",
+	"frame": {"x":776,"y":2,"w":374,"h":324},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":11,"y":56,"w":374,"h":324},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LucJadore_WIN03_0005.png",
+	"frame": {"x":776,"y":2,"w":374,"h":324},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":11,"y":56,"w":374,"h":324},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LucJadore_WIN03_0006.png",
+	"frame": {"x":1152,"y":2,"w":374,"h":312},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":2,"y":68,"w":374,"h":312},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LucJadore_WIN03_0007.png",
+	"frame": {"x":1528,"y":2,"w":368,"h":310},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":6,"y":70,"w":368,"h":310},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LucJadore_WIN03_0008.png",
+	"frame": {"x":1528,"y":314,"w":364,"h":310},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":8,"y":70,"w":364,"h":310},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LucJadore_WIN03_0009.png",
+	"frame": {"x":1152,"y":316,"w":360,"h":310},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":10,"y":70,"w":360,"h":310},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LucJadore_WIN03_0010.png",
+	"frame": {"x":392,"y":330,"w":360,"h":308},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":10,"y":72,"w":360,"h":308},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LucJadore_WIN03_0011.png",
+	"frame": {"x":776,"y":328,"w":360,"h":308},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":10,"y":72,"w":360,"h":308},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LucJadore_WIN03_0012.png",
+	"frame": {"x":1514,"y":626,"w":356,"h":308},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":13,"y":72,"w":356,"h":308},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LucJadore_WIN03_0013.png",
+	"frame": {"x":2,"y":334,"w":356,"h":308},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":13,"y":72,"w":356,"h":308},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LucJadore_WIN03_0014.png",
+	"frame": {"x":1138,"y":628,"w":356,"h":306},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":13,"y":74,"w":356,"h":306},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LucJadore_WIN03_0015.png",
+	"frame": {"x":356,"y":1240,"w":352,"h":306},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":15,"y":74,"w":352,"h":306},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LucJadore_WIN03_0016.png",
+	"frame": {"x":2,"y":1552,"w":352,"h":306},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":15,"y":74,"w":352,"h":306},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LucJadore_WIN03_0017.png",
+	"frame": {"x":2,"y":1244,"w":352,"h":306},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":15,"y":74,"w":352,"h":306},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LucJadore_WIN03_0018.png",
+	"frame": {"x":2,"y":936,"w":352,"h":306},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":15,"y":74,"w":352,"h":306},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LucJadore_WIN03_0019.png",
+	"frame": {"x":360,"y":932,"w":352,"h":306},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":15,"y":74,"w":352,"h":306},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LucJadore_WIN03_0020.png",
+	"frame": {"x":718,"y":930,"w":352,"h":306},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":15,"y":74,"w":352,"h":306},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LucJadore_WIN03_0021.png",
+	"frame": {"x":1012,"y":1238,"w":300,"h":306},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":16,"y":74,"w":300,"h":306},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LucJadore_WIN03_0022.png",
+	"frame": {"x":710,"y":1240,"w":300,"h":306},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":16,"y":74,"w":300,"h":306},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LucJadore_WIN03_0023.png",
+	"frame": {"x":686,"y":1548,"w":328,"h":306},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":15,"y":74,"w":328,"h":306},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LucJadore_WIN03_0024.png",
+	"frame": {"x":356,"y":1548,"w":328,"h":306},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":15,"y":74,"w":328,"h":306},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LucJadore_WIN03_0025.png",
+	"frame": {"x":1016,"y":1546,"w":352,"h":298},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":16,"y":82,"w":352,"h":298},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LucJadore_WIN03_0026.png",
+	"frame": {"x":1072,"y":936,"w":352,"h":298},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":16,"y":82,"w":352,"h":298},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LucJadore_WIN03_0027.png",
+	"frame": {"x":1426,"y":936,"w":346,"h":298},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":21,"y":82,"w":346,"h":298},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LucJadore_WIN03_0028.png",
+	"frame": {"x":1426,"y":936,"w":346,"h":298},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":21,"y":82,"w":346,"h":298},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LucJadore_WIN03_0029.png",
+	"frame": {"x":1314,"y":1236,"w":346,"h":298},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":30,"y":82,"w":346,"h":298},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LucJadore_WIN03_0030.png",
+	"frame": {"x":2,"y":644,"w":356,"h":290},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":20,"y":90,"w":356,"h":290},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LucJadore_WIN03_0031.png",
+	"frame": {"x":2,"y":644,"w":356,"h":290},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":20,"y":90,"w":356,"h":290},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LucJadore_WIN03_0032.png",
+	"frame": {"x":360,"y":640,"w":356,"h":290},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":20,"y":90,"w":356,"h":290},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LucJadore_WIN03_0033.png",
+	"frame": {"x":360,"y":640,"w":356,"h":290},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":20,"y":90,"w":356,"h":290},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LucJadore_WIN03_0034.png",
+	"frame": {"x":754,"y":638,"w":356,"h":290},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":20,"y":90,"w":356,"h":290},
+	"sourceSize": {"w":400,"h":380}
+},
+{
+	"filename": "LucJadore_WIN03_0035.png",
+	"frame": {"x":754,"y":638,"w":356,"h":290},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":20,"y":90,"w":356,"h":290},
+	"sourceSize": {"w":400,"h":380}
+}],
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker ",
+	"version": "1.0",
+	"image": "win_variant03.png",
+	"format": "RGBA8888",
+	"size": {"w":2048,"h":2048},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:dbcd3548af44d9aa6a772417704652f1:9e5e5b97aeed9874c3357935223415ca:4899fda4936836653220ff66f438bc87$"
+}
+}

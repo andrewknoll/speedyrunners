@@ -1,0 +1,356 @@
+{"frames": [
+
+{
+	"filename": "BB_SpeedRunner_WIN02_0001.png",
+	"frame": {"x":1138,"y":300,"w":324,"h":260},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":140,"w":324,"h":260},
+	"sourceSize": {"w":380,"h":400}
+},
+{
+	"filename": "BB_SpeedRunner_WIN02_0002.png",
+	"frame": {"x":1464,"y":300,"w":260,"h":264},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":136,"w":260,"h":264},
+	"sourceSize": {"w":380,"h":400}
+},
+{
+	"filename": "BB_SpeedRunner_WIN02_0003.png",
+	"frame": {"x":1130,"y":1774,"w":246,"h":270},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":130,"w":246,"h":270},
+	"sourceSize": {"w":380,"h":400}
+},
+{
+	"filename": "BB_SpeedRunner_WIN02_0004.png",
+	"frame": {"x":1130,"y":1774,"w":246,"h":270},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":130,"w":246,"h":270},
+	"sourceSize": {"w":380,"h":400}
+},
+{
+	"filename": "BB_SpeedRunner_WIN02_0005.png",
+	"frame": {"x":758,"y":620,"w":366,"h":308},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":92,"w":366,"h":308},
+	"sourceSize": {"w":380,"h":400}
+},
+{
+	"filename": "BB_SpeedRunner_WIN02_0006.png",
+	"frame": {"x":380,"y":620,"w":376,"h":296},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":104,"w":376,"h":296},
+	"sourceSize": {"w":380,"h":400}
+},
+{
+	"filename": "BB_SpeedRunner_WIN02_0007.png",
+	"frame": {"x":2,"y":620,"w":376,"h":296},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":104,"w":376,"h":296},
+	"sourceSize": {"w":380,"h":400}
+},
+{
+	"filename": "BB_SpeedRunner_WIN02_0008.png",
+	"frame": {"x":378,"y":2,"w":380,"h":296},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":104,"w":380,"h":296},
+	"sourceSize": {"w":380,"h":400}
+},
+{
+	"filename": "BB_SpeedRunner_WIN02_0009.png",
+	"frame": {"x":2,"y":322,"w":380,"h":296},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":104,"w":380,"h":296},
+	"sourceSize": {"w":380,"h":400}
+},
+{
+	"filename": "BB_SpeedRunner_WIN02_0010.png",
+	"frame": {"x":760,"y":292,"w":376,"h":288},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":112,"w":376,"h":288},
+	"sourceSize": {"w":380,"h":400}
+},
+{
+	"filename": "BB_SpeedRunner_WIN02_0011.png",
+	"frame": {"x":760,"y":2,"w":376,"h":288},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":112,"w":376,"h":288},
+	"sourceSize": {"w":380,"h":400}
+},
+{
+	"filename": "BB_SpeedRunner_WIN02_0012.png",
+	"frame": {"x":760,"y":2,"w":376,"h":288},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":112,"w":376,"h":288},
+	"sourceSize": {"w":380,"h":400}
+},
+{
+	"filename": "BB_SpeedRunner_WIN02_0013.png",
+	"frame": {"x":1506,"y":1162,"w":374,"h":288},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":112,"w":374,"h":288},
+	"sourceSize": {"w":380,"h":400}
+},
+{
+	"filename": "BB_SpeedRunner_WIN02_0014.png",
+	"frame": {"x":384,"y":300,"w":374,"h":318},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":82,"w":374,"h":318},
+	"sourceSize": {"w":380,"h":400}
+},
+{
+	"filename": "BB_SpeedRunner_WIN02_0015.png",
+	"frame": {"x":2,"y":2,"w":374,"h":318},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":82,"w":374,"h":318},
+	"sourceSize": {"w":380,"h":400}
+},
+{
+	"filename": "BB_SpeedRunner_WIN02_0016.png",
+	"frame": {"x":754,"y":930,"w":374,"h":302},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":98,"w":374,"h":302},
+	"sourceSize": {"w":380,"h":400}
+},
+{
+	"filename": "BB_SpeedRunner_WIN02_0017.png",
+	"frame": {"x":378,"y":918,"w":374,"h":302},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":98,"w":374,"h":302},
+	"sourceSize": {"w":380,"h":400}
+},
+{
+	"filename": "BB_SpeedRunner_WIN02_0018.png",
+	"frame": {"x":2,"y":918,"w":374,"h":302},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":98,"w":374,"h":302},
+	"sourceSize": {"w":380,"h":400}
+},
+{
+	"filename": "BB_SpeedRunner_WIN02_0019.png",
+	"frame": {"x":1506,"y":864,"w":374,"h":296},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":104,"w":374,"h":296},
+	"sourceSize": {"w":380,"h":400}
+},
+{
+	"filename": "BB_SpeedRunner_WIN02_0020.png",
+	"frame": {"x":754,"y":1532,"w":374,"h":296},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":104,"w":374,"h":296},
+	"sourceSize": {"w":380,"h":400}
+},
+{
+	"filename": "BB_SpeedRunner_WIN02_0021.png",
+	"frame": {"x":1130,"y":1476,"w":374,"h":296},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":104,"w":374,"h":296},
+	"sourceSize": {"w":380,"h":400}
+},
+{
+	"filename": "BB_SpeedRunner_WIN02_0022.png",
+	"frame": {"x":1130,"y":1476,"w":374,"h":296},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":104,"w":374,"h":296},
+	"sourceSize": {"w":380,"h":400}
+},
+{
+	"filename": "BB_SpeedRunner_WIN02_0023.png",
+	"frame": {"x":378,"y":1520,"w":374,"h":296},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":104,"w":374,"h":296},
+	"sourceSize": {"w":380,"h":400}
+},
+{
+	"filename": "BB_SpeedRunner_WIN02_0024.png",
+	"frame": {"x":378,"y":1520,"w":374,"h":296},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":104,"w":374,"h":296},
+	"sourceSize": {"w":380,"h":400}
+},
+{
+	"filename": "BB_SpeedRunner_WIN02_0025.png",
+	"frame": {"x":2,"y":1520,"w":374,"h":296},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":104,"w":374,"h":296},
+	"sourceSize": {"w":380,"h":400}
+},
+{
+	"filename": "BB_SpeedRunner_WIN02_0026.png",
+	"frame": {"x":2,"y":1520,"w":374,"h":296},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":104,"w":374,"h":296},
+	"sourceSize": {"w":380,"h":400}
+},
+{
+	"filename": "BB_SpeedRunner_WIN02_0027.png",
+	"frame": {"x":754,"y":1234,"w":374,"h":296},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":104,"w":374,"h":296},
+	"sourceSize": {"w":380,"h":400}
+},
+{
+	"filename": "BB_SpeedRunner_WIN02_0028.png",
+	"frame": {"x":754,"y":1234,"w":374,"h":296},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":104,"w":374,"h":296},
+	"sourceSize": {"w":380,"h":400}
+},
+{
+	"filename": "BB_SpeedRunner_WIN02_0029.png",
+	"frame": {"x":1130,"y":1178,"w":374,"h":296},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":104,"w":374,"h":296},
+	"sourceSize": {"w":380,"h":400}
+},
+{
+	"filename": "BB_SpeedRunner_WIN02_0030.png",
+	"frame": {"x":1130,"y":1178,"w":374,"h":296},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":104,"w":374,"h":296},
+	"sourceSize": {"w":380,"h":400}
+},
+{
+	"filename": "BB_SpeedRunner_WIN02_0031.png",
+	"frame": {"x":1502,"y":566,"w":374,"h":296},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":104,"w":374,"h":296},
+	"sourceSize": {"w":380,"h":400}
+},
+{
+	"filename": "BB_SpeedRunner_WIN02_0032.png",
+	"frame": {"x":1502,"y":566,"w":374,"h":296},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":104,"w":374,"h":296},
+	"sourceSize": {"w":380,"h":400}
+},
+{
+	"filename": "BB_SpeedRunner_WIN02_0033.png",
+	"frame": {"x":1130,"y":880,"w":374,"h":296},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":104,"w":374,"h":296},
+	"sourceSize": {"w":380,"h":400}
+},
+{
+	"filename": "BB_SpeedRunner_WIN02_0034.png",
+	"frame": {"x":1130,"y":880,"w":374,"h":296},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":104,"w":374,"h":296},
+	"sourceSize": {"w":380,"h":400}
+},
+{
+	"filename": "BB_SpeedRunner_WIN02_0035.png",
+	"frame": {"x":1514,"y":2,"w":374,"h":296},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":104,"w":374,"h":296},
+	"sourceSize": {"w":380,"h":400}
+},
+{
+	"filename": "BB_SpeedRunner_WIN02_0036.png",
+	"frame": {"x":1514,"y":2,"w":374,"h":296},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":104,"w":374,"h":296},
+	"sourceSize": {"w":380,"h":400}
+},
+{
+	"filename": "BB_SpeedRunner_WIN02_0037.png",
+	"frame": {"x":1138,"y":2,"w":374,"h":296},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":104,"w":374,"h":296},
+	"sourceSize": {"w":380,"h":400}
+},
+{
+	"filename": "BB_SpeedRunner_WIN02_0038.png",
+	"frame": {"x":1138,"y":2,"w":374,"h":296},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":104,"w":374,"h":296},
+	"sourceSize": {"w":380,"h":400}
+},
+{
+	"filename": "BB_SpeedRunner_WIN02_0039.png",
+	"frame": {"x":1126,"y":582,"w":374,"h":296},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":104,"w":374,"h":296},
+	"sourceSize": {"w":380,"h":400}
+},
+{
+	"filename": "BB_SpeedRunner_WIN02_0040.png",
+	"frame": {"x":1126,"y":582,"w":374,"h":296},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":104,"w":374,"h":296},
+	"sourceSize": {"w":380,"h":400}
+},
+{
+	"filename": "BB_SpeedRunner_WIN02_0041.png",
+	"frame": {"x":378,"y":1222,"w":374,"h":296},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":104,"w":374,"h":296},
+	"sourceSize": {"w":380,"h":400}
+},
+{
+	"filename": "BB_SpeedRunner_WIN02_0042.png",
+	"frame": {"x":378,"y":1222,"w":374,"h":296},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":104,"w":374,"h":296},
+	"sourceSize": {"w":380,"h":400}
+},
+{
+	"filename": "BB_SpeedRunner_WIN02_0043.png",
+	"frame": {"x":2,"y":1222,"w":374,"h":296},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":104,"w":374,"h":296},
+	"sourceSize": {"w":380,"h":400}
+}],
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker ",
+	"version": "1.0",
+	"image": "win_variant02.png",
+	"format": "RGBA8888",
+	"size": {"w":2048,"h":2048},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:62c57548c9ea8f757603def7035a32ac:1d02059654c0e1926612babd13e7b1b8:db9b3a2786d7cfebc5ba2fc15c259265$"
+}
+}

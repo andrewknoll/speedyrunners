@@ -1,0 +1,300 @@
+{"frames": [
+
+{
+	"filename": "Burger_WIN02_0001.png",
+	"frame": {"x":656,"y":338,"w":310,"h":334},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":42,"y":8,"w":310,"h":334},
+	"sourceSize": {"w":360,"h":342}
+},
+{
+	"filename": "Burger_WIN02_0002.png",
+	"frame": {"x":650,"y":678,"w":310,"h":334},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":42,"y":8,"w":310,"h":334},
+	"sourceSize": {"w":360,"h":342}
+},
+{
+	"filename": "Burger_WIN02_0003.png",
+	"frame": {"x":646,"y":1690,"w":308,"h":334},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":44,"y":8,"w":308,"h":334},
+	"sourceSize": {"w":360,"h":342}
+},
+{
+	"filename": "Burger_WIN02_0004.png",
+	"frame": {"x":336,"y":1690,"w":308,"h":334},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":44,"y":8,"w":308,"h":334},
+	"sourceSize": {"w":360,"h":342}
+},
+{
+	"filename": "Burger_WIN02_0005.png",
+	"frame": {"x":660,"y":2,"w":308,"h":334},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":44,"y":8,"w":308,"h":334},
+	"sourceSize": {"w":360,"h":342}
+},
+{
+	"filename": "Burger_WIN02_0006.png",
+	"frame": {"x":2,"y":1020,"w":314,"h":336},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":38,"y":6,"w":314,"h":336},
+	"sourceSize": {"w":360,"h":342}
+},
+{
+	"filename": "Burger_WIN02_0007.png",
+	"frame": {"x":2,"y":682,"w":314,"h":336},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":38,"y":6,"w":314,"h":336},
+	"sourceSize": {"w":360,"h":342}
+},
+{
+	"filename": "Burger_WIN02_0008.png",
+	"frame": {"x":318,"y":1018,"w":322,"h":334},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":30,"y":8,"w":322,"h":334},
+	"sourceSize": {"w":360,"h":342}
+},
+{
+	"filename": "Burger_WIN02_0009.png",
+	"frame": {"x":336,"y":2,"w":322,"h":334},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":30,"y":8,"w":322,"h":334},
+	"sourceSize": {"w":360,"h":342}
+},
+{
+	"filename": "Burger_WIN02_0010.png",
+	"frame": {"x":324,"y":342,"w":330,"h":334},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":22,"y":8,"w":330,"h":334},
+	"sourceSize": {"w":360,"h":342}
+},
+{
+	"filename": "Burger_WIN02_0011.png",
+	"frame": {"x":318,"y":682,"w":330,"h":334},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":22,"y":8,"w":330,"h":334},
+	"sourceSize": {"w":360,"h":342}
+},
+{
+	"filename": "Burger_WIN02_0012.png",
+	"frame": {"x":968,"y":338,"w":332,"h":332},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":20,"y":10,"w":332,"h":332},
+	"sourceSize": {"w":360,"h":342}
+},
+{
+	"filename": "Burger_WIN02_0013.png",
+	"frame": {"x":2,"y":1694,"w":332,"h":334},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":20,"y":8,"w":332,"h":334},
+	"sourceSize": {"w":360,"h":342}
+},
+{
+	"filename": "Burger_WIN02_0014.png",
+	"frame": {"x":2,"y":1358,"w":332,"h":334},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":20,"y":8,"w":332,"h":334},
+	"sourceSize": {"w":360,"h":342}
+},
+{
+	"filename": "Burger_WIN02_0015.png",
+	"frame": {"x":2,"y":2,"w":332,"h":338},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":20,"y":4,"w":332,"h":338},
+	"sourceSize": {"w":360,"h":342}
+},
+{
+	"filename": "Burger_WIN02_0016.png",
+	"frame": {"x":962,"y":674,"w":332,"h":332},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":20,"y":10,"w":332,"h":332},
+	"sourceSize": {"w":360,"h":342}
+},
+{
+	"filename": "Burger_WIN02_0017.png",
+	"frame": {"x":956,"y":1014,"w":332,"h":332},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":20,"y":10,"w":332,"h":332},
+	"sourceSize": {"w":360,"h":342}
+},
+{
+	"filename": "Burger_WIN02_0018.png",
+	"frame": {"x":970,"y":2,"w":326,"h":332},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":26,"y":10,"w":326,"h":332},
+	"sourceSize": {"w":360,"h":342}
+},
+{
+	"filename": "Burger_WIN02_0019.png",
+	"frame": {"x":1606,"y":2,"w":326,"h":330},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":26,"y":12,"w":326,"h":330},
+	"sourceSize": {"w":360,"h":342}
+},
+{
+	"filename": "Burger_WIN02_0020.png",
+	"frame": {"x":2,"y":342,"w":320,"h":338},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":32,"y":4,"w":320,"h":338},
+	"sourceSize": {"w":360,"h":342}
+},
+{
+	"filename": "Burger_WIN02_0021.png",
+	"frame": {"x":2,"y":342,"w":320,"h":338},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":32,"y":4,"w":320,"h":338},
+	"sourceSize": {"w":360,"h":342}
+},
+{
+	"filename": "Burger_WIN02_0022.png",
+	"frame": {"x":956,"y":1680,"w":312,"h":326},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":36,"y":16,"w":312,"h":326},
+	"sourceSize": {"w":360,"h":342}
+},
+{
+	"filename": "Burger_WIN02_0023.png",
+	"frame": {"x":1298,"y":2,"w":306,"h":332},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":33,"y":10,"w":306,"h":332},
+	"sourceSize": {"w":360,"h":342}
+},
+{
+	"filename": "Burger_WIN02_0024.png",
+	"frame": {"x":650,"y":1354,"w":304,"h":334},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":35,"y":8,"w":304,"h":334},
+	"sourceSize": {"w":360,"h":342}
+},
+{
+	"filename": "Burger_WIN02_0025.png",
+	"frame": {"x":642,"y":1018,"w":312,"h":334},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":33,"y":8,"w":312,"h":334},
+	"sourceSize": {"w":360,"h":342}
+},
+{
+	"filename": "Burger_WIN02_0026.png",
+	"frame": {"x":336,"y":1354,"w":312,"h":334},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":30,"y":8,"w":312,"h":334},
+	"sourceSize": {"w":360,"h":342}
+},
+{
+	"filename": "Burger_WIN02_0027.png",
+	"frame": {"x":956,"y":1348,"w":314,"h":330},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":12,"w":314,"h":330},
+	"sourceSize": {"w":360,"h":342}
+},
+{
+	"filename": "Burger_WIN02_0028.png",
+	"frame": {"x":1270,"y":1680,"w":314,"h":320},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":28,"y":22,"w":314,"h":320},
+	"sourceSize": {"w":360,"h":342}
+},
+{
+	"filename": "Burger_WIN02_0029.png",
+	"frame": {"x":1606,"y":334,"w":316,"h":314},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":26,"y":28,"w":316,"h":314},
+	"sourceSize": {"w":360,"h":342}
+},
+{
+	"filename": "Burger_WIN02_0030.png",
+	"frame": {"x":1606,"y":334,"w":316,"h":314},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":26,"y":28,"w":316,"h":314},
+	"sourceSize": {"w":360,"h":342}
+},
+{
+	"filename": "Burger_WIN02_0031.png",
+	"frame": {"x":1272,"y":1348,"w":310,"h":306},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":32,"y":36,"w":310,"h":306},
+	"sourceSize": {"w":360,"h":342}
+},
+{
+	"filename": "Burger_WIN02_0032.png",
+	"frame": {"x":1272,"y":1348,"w":310,"h":306},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":32,"y":36,"w":310,"h":306},
+	"sourceSize": {"w":360,"h":342}
+},
+{
+	"filename": "Burger_WIN02_0033.png",
+	"frame": {"x":1290,"y":1008,"w":308,"h":306},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":34,"y":36,"w":308,"h":306},
+	"sourceSize": {"w":360,"h":342}
+},
+{
+	"filename": "Burger_WIN02_0034.png",
+	"frame": {"x":1290,"y":1008,"w":308,"h":306},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":34,"y":36,"w":308,"h":306},
+	"sourceSize": {"w":360,"h":342}
+},
+{
+	"filename": "Burger_WIN02_0035.png",
+	"frame": {"x":1296,"y":672,"w":306,"h":306},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":36,"y":36,"w":306,"h":306},
+	"sourceSize": {"w":360,"h":342}
+},
+{
+	"filename": "Burger_WIN02_0036.png",
+	"frame": {"x":2,"y":2030,"w":1,"h":1},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":0,"w":1,"h":1},
+	"sourceSize": {"w":360,"h":342}
+}],
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker ",
+	"version": "1.0",
+	"image": "win_variant02.png",
+	"format": "RGBA8888",
+	"size": {"w":2048,"h":2048},
+	"scale": "0.9",
+	"smartupdate": "$TexturePacker:SmartUpdate:031f3f315d1460919e9152259e4ea8a0:142b8420ea6ae66525eeea334eb855bc:db9b3a2786d7cfebc5ba2fc15c259265$"
+}
+}
