@@ -270,3 +270,5 @@ practica0/pygame/pyvenv.cfg
 Speedyrunners/assets/
 
 
+
+*.vcxproj
