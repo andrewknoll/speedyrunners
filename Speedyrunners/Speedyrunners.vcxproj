@@ -70,10 +70,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <ReferencePath>$(VC_ReferencesPath_x64);$(VC_SourcePath)/Speedyrunners/bin;</ReferencePath>
+    <ReferencePath>$(VC_ReferencesPath_x64);</ReferencePath>
+    <LibraryPath>C:\Users\Andrés\Desktop\Videojuegos\Speedyrunners\bin;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <ReferencePath>$(VC_ReferencesPath_x64);$(VC_SourcePath)/Speedyrunners/bin;</ReferencePath>
+    <ReferencePath>$(VC_ReferencesPath_x64);</ReferencePath>
+    <LibraryPath>C:\Users\Andrés\Desktop\Videojuegos\Speedyrunners\bin;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
