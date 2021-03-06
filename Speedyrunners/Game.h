@@ -10,8 +10,10 @@ class Game
 protected:
 	mutable sf::RenderWindow window;
 	std::vector<Character> characters;
-	//Camera cam;
+	Camera cam;
 	Level lvl;
+
+
 
 
 	void update();

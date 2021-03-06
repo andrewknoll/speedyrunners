@@ -1,8 +1,10 @@
-#include "Game.h"
 #include <iostream>
 #include <time.h>
 
-Game::Game() : window(sf::VideoMode(800, 800), "SpeedyRunners")
+#include "Game.h"
+
+Game::Game() 
+	: window(sf::VideoMode(800, 800), "SpeedyRunners")
 {
 	window.setFramerateLimit(60); //60 FPS?
 }
@@ -49,7 +51,9 @@ void Game::update()
 
 			window.setView(sf::View(visibleArea));
 		}
+
 	}
+	//cam.pollEvents();
 	// TODO
 }
 
