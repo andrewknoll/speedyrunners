@@ -16,6 +16,11 @@ void Level::drawTile(sf::RenderTarget& target, sf::RenderStates states, const sf
 	collidableTiles.drawTile(target, states, pos, tileNumber);
 }
 
+void Level::setTile(const sf::Vector2i& pos, const int tileNumber)
+{
+	collidableTiles.setTile(pos, tileNumber);
+}
+
 
 Level::Level(const std::string& tilesetPath, const std::string& bgPath)
 {	// Adapted from: https://www.sfml-dev.org/tutorials/2.5/graphics-vertex-array.php#what-is-a-vertex-and-why-are-they-always-in-arrays

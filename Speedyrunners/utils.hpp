@@ -39,4 +39,6 @@ std::ostream& operator<<(std::ostream& os, const RNG& c);
 namespace utils {
 	sf::Vector2i clampMouseCoord(const sf::Vector2f& pos, const sf::RenderTarget& window);
 
+	int positiveMod(int i, int n);
+
 }

@@ -45,6 +45,12 @@ namespace utils {
 	sf::Vector2i clampMouseCoord(const sf::Vector2f& pos, const sf::RenderTarget& window) {
 		return sf::Vector2i(clamp(pos.x, 0, window.getSize().x-1), clamp(pos.y, 0, window.getSize().y-1));
 	}
+
+	// https://stackoverflow.com/a/14997413/14997419
+	int positiveMod(int i, int n) {
+		return (i % n + n) % n;
+	}
+
 }
 
 

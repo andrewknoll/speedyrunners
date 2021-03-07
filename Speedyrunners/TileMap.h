@@ -11,14 +11,18 @@ protected:
 	sf::Texture tileset;
 	sf::Vector2u tileSize;
 
+	int width, height;
+
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
     
 public:
 
-	bool load(const std::string& tileSetPath, sf::Vector2u tileSize, const int* tiles, const int width, const int height);
+	bool load(const std::string& tileSetPath, sf::Vector2u tileSize, const int* tiles, const int _width, const int _height);
 
 	void setQuad(sf::Vertex* quad, const int i, const int j, const int tu, const int tv) const;
+
+	void setTile(const sf::Vector2i& pos, const int tileNumber);
 
 	void drawTile(sf::RenderTarget& target, sf::RenderStates states, const sf::Vector2i& pos, const int tileNumber) const;
 
@@ -50,5 +54,6 @@ namespace Tiles {
 		WEIRD_RAMP_CEIL_DOWN,
 		WEIRD_RAMP_CEIL_UP
 	};
+	const int NB_COLLIDABLE = 16;
 
 }

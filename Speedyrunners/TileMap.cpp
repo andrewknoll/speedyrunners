@@ -15,8 +15,9 @@ void TileMap::draw(sf::RenderTarget& target, sf::RenderStates states) const
     target.draw(vertices, states);
 }
 
-bool TileMap::load(const std::string& tileSetPath, sf::Vector2u _tileSize, const int* tiles, const int width, const int height)
+bool TileMap::load(const std::string& tileSetPath, sf::Vector2u _tileSize, const int* tiles, const int _width, const int _height)
 {
+    width = _width; height = _height;
     // load the tileset texture
     if (!tileset.loadFromFile(tileSetPath))
         return false;
@@ -58,6 +59,27 @@ void TileMap::setQuad(sf::Vertex* quad, const int i, const int j, const int tu, 
     quad[2].texCoords = sf::Vector2f((tu + 1) * tileSize.x, (tv + 1) * tileSize.y);
     quad[3].texCoords = sf::Vector2f(tu * tileSize.x, (tv + 1) * tileSize.y);
 }
+
+void TileMap::setTile(const sf::Vector2i& pos, const int tileNumber)  {
+
+    // find its position in the tileset texture
+    int tu = tileNumber % (tileset.getSize().x / tileSize.x);
+    int tv = tileNumber / (tileset.getSize().x / tileSize.x);
+
+    // define its 4 corners
+    int i = pos.x / tileSize.x;
+    int j = pos.y / tileSize.y;
+    //std::cout << "drawing tile at " << pos.x << " " << pos.y << " " << tileNumber << std::endl;
+    if ((i + j * width) >= width * height) {
+        std::cerr << "Tile outside of array!!\n";
+    }
+    else {
+        // get a pointer to the current tile's quad
+        sf::Vertex* quad = &vertices[(i + j * width) * 4];
+        setQuad(quad, i, j, tu, tv);
+    }
+}
+            
 
 void TileMap::drawTile(sf::RenderTarget& target, sf::RenderStates states, const sf::Vector2i& pos, const int tileNumber) const
 {

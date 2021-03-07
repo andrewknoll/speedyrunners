@@ -53,6 +53,23 @@ void Game::update()
 
 			window.setView(sf::View(visibleArea));
 		}
+		if (state == State::Editing) {
+			if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+				sf::Vector2f pos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+				lvl.setTile(utils::clampMouseCoord(pos, window), selectedTile);
+			}
+			if (event.type == sf::Event::MouseWheelScrolled)
+			{
+				if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel) {
+					int add = 1;
+					if (event.mouseWheelScroll.y > 0) {
+						add = -1;
+					}
+					selectedTile = (Tiles::Collidable)utils::positiveMod((selectedTile + add), Tiles::NB_COLLIDABLE);
+					std::cout << "New tile selected: " << selectedTile << std::endl;
+				}
+			}
+		}
 	}
 	//cam.pollEvents();
 	// TODO
@@ -70,6 +87,11 @@ void Game::draw() const
 		sf::Vector2f pos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
 
 		lvl.drawTile(window, sf::RenderStates(), utils::clampMouseCoord(pos, window), selectedTile);
+		break;
+	}
+	default:
+	{
+		std::cout << "unknown game state\n" << (int)state;
 	}
 	}
 	//lvl.draw(window, cam);

@@ -29,6 +29,8 @@ public:
 
 	void drawTile(sf::RenderTarget& target, sf::RenderStates states, const sf::Vector2i& pos, const int tileNumber) const;
 
+	void setTile(const sf::Vector2i& pos, const int tileNumber);
+
 
 	//void draw(sf::RenderWindow& window, const Camera& cam) const;
 
