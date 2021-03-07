@@ -6,7 +6,8 @@
 
 Game::Game() 
 	: window(sf::VideoMode(800, 800), "SpeedyRunners"),
-	state(State::Editing), selectedTile(Tiles::Collidable::FLOOR)
+	state(State::Editing), selectedTile(Tiles::Collidable::FLOOR), 
+	dT(0)
 {
 	window.setFramerateLimit(60); //60 FPS?
 }

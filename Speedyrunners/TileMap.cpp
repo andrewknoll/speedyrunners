@@ -60,7 +60,7 @@ void TileMap::setQuad(sf::Vertex* quad, const int i, const int j, const int tu, 
     quad[3].texCoords = sf::Vector2f(tu * tileSize.x, (tv + 1) * tileSize.y);
 }
 
-void TileMap::setTile(const sf::Vector2i& pos, const int tileNumber)  {
+void TileMap::setTile(const sf::Vector2i& pos, const int tileNumber) {
 
     // find its position in the tileset texture
     int tu = tileNumber % (tileset.getSize().x / tileSize.x);
@@ -79,7 +79,7 @@ void TileMap::setTile(const sf::Vector2i& pos, const int tileNumber)  {
         setQuad(quad, i, j, tu, tv);
     }
 }
-            
+
 
 void TileMap::drawTile(sf::RenderTarget& target, sf::RenderStates states, const sf::Vector2i& pos, const int tileNumber) const
 {
@@ -107,6 +107,20 @@ void TileMap::drawTile(sf::RenderTarget& target, sf::RenderStates states, const 
 
     // draw the vertex array
     target.draw(tileVertices, states);
-
 }
 
+std::string TileMap::to_string() const {
+    std::string str = std::to_string(width) + " " + std::to_string(height) + "\n";
+    /*for (int i = 0; i < height; ++i) {
+        for (int j = 0; j < width; ++j){
+
+        }
+    }*/
+    return str;
+}
+
+
+std::ostream& operator<<(std::ostream& os, const TileMap& t) {
+    os << t.to_string();
+    return os;
+}

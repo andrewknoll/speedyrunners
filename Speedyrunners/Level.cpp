@@ -1,4 +1,5 @@
 #include <iostream> 
+#include <fstream>
 #include "Level.h"
 #include "SFML/Graphics.hpp"
 #include "Camera.h"
@@ -21,8 +22,24 @@ void Level::setTile(const sf::Vector2i& pos, const int tileNumber)
 	collidableTiles.setTile(pos, tileNumber);
 }
 
+void Level::save(const std::string& f_name) const
+{
+	std::string version = "0";
+	std::ofstream file("assets/levels/" + f_name);
+	if (!(file << version << std::endl)) { // formato, #MAX, # nombre fichero
+		std::cerr << "File <assets/levels/" + f_name + "> inaccesible\n";
+		//exit(1);
+	}
+	file << backgroundPath << std::endl;
+	file << collidableTiles << std::endl;
+	
+	std::cout << "Level saved\n";
 
-Level::Level(const std::string& tilesetPath, const std::string& bgPath)
+}
+
+
+Level::Level(const std::string& tilesetPath, const std::string& bgPath) :
+	backgroundPath(bgPath)
 {	// Adapted from: https://www.sfml-dev.org/tutorials/2.5/graphics-vertex-array.php#what-is-a-vertex-and-why-are-they-always-in-arrays
 	// define the level with an array of tile indices
 	const int lvlSize = 64 * 32;
@@ -46,7 +63,7 @@ Level::Level(const std::string& tilesetPath, const std::string& bgPath)
 		std::cerr << "Error abriendo tileset " << tilesetPath << std::endl;
 		//exit(1);
 	}
-
+	
 	if (!bgTexture.loadFromFile(bgPath))
 	{	// TODO: parametro del fondo
 		std::cerr << "Error cargando fondo\n";

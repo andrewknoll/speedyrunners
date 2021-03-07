@@ -26,17 +26,19 @@ public:
 
 	void drawTile(sf::RenderTarget& target, sf::RenderStates states, const sf::Vector2i& pos, const int tileNumber) const;
 
+	std::string to_string() const;
+
 	//void drawTile(sf::RenderTarget& target, sf::RenderStates states, const sf::Vector2u& pos, const int tileNumber) const;
-
-
-
 
 	//void drawTile(const sf::Vector2u& pos, const sf::Vector2u& idx, const int type) const;
 };
 
+std::ostream& operator<<(std::ostream& os, const TileMap& t);
+
+
 namespace Tiles {
 	//const int FLOOR = 0;
-	const enum Collidable { // En tiles_black_editor.png
+	enum Collidable { // En tiles_black_editor.png
 		AIR,
 		FLOOR,
 		JUMP_WALL_L,
@@ -54,6 +56,6 @@ namespace Tiles {
 		WEIRD_RAMP_CEIL_DOWN,
 		WEIRD_RAMP_CEIL_UP
 	};
-	const int NB_COLLIDABLE = 16;
 
+	const int NB_COLLIDABLE = 16;
 }

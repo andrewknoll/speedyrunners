@@ -16,6 +16,8 @@ class Level : public sf::Drawable
 	// Background:
 	sf::Texture bgTexture;
 	sf::Sprite background;
+
+	std::string backgroundPath;
 	//int rows, cols;
 	//std::vector<std::vector<TileMap>> tileMap;
 	//std::vector<sf::Texture> spriteSheets; // se deben mantener en memoria: https://www.sfml-dev.org/documentation/2.5.1/classsf_1_1Sprite.php
@@ -30,6 +32,8 @@ public:
 	void drawTile(sf::RenderTarget& target, sf::RenderStates states, const sf::Vector2i& pos, const int tileNumber) const;
 
 	void setTile(const sf::Vector2i& pos, const int tileNumber);
+
+	void save(const std::string& f_name) const;
 
 
 	//void draw(sf::RenderWindow& window, const Camera& cam) const;
