@@ -2,9 +2,11 @@
 #include <time.h>
 
 #include "Game.h"
+#include "utils.hpp"
 
 Game::Game() 
-	: window(sf::VideoMode(800, 800), "SpeedyRunners")
+	: window(sf::VideoMode(800, 800), "SpeedyRunners"),
+	state(State::Editing), selectedTile(Tiles::Collidable::FLOOR)
 {
 	window.setFramerateLimit(60); //60 FPS?
 }
@@ -51,17 +53,27 @@ void Game::update()
 
 			window.setView(sf::View(visibleArea));
 		}
-
 	}
 	//cam.pollEvents();
 	// TODO
 }
 
+
+
 void Game::draw() const
 {
 	window.clear();
 	window.draw(lvl);
+	switch (state) {
+	case State::Editing:
+	{// sf::Mouse::getPosition() - window.getPosition()
+		sf::Vector2f pos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+
+		lvl.drawTile(window, sf::RenderStates(), utils::clampMouseCoord(pos, window), selectedTile);
+	}
+	}
 	//lvl.draw(window, cam);
 	//window.draw();
 	window.display();
 }
+

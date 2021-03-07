@@ -7,13 +7,18 @@
 
 class Game
 {
+public:
+	enum class State { Playing, Paused, Editing };
 protected:
 	mutable sf::RenderWindow window;
 	std::vector<Character> characters;
 	Camera cam;
 	Level lvl;
 
-
+	State state;
+	// Editor:
+	//sf::Sprite selectedTile;
+	Tiles::Collidable selectedTile; // When editing
 
 
 	void update();
@@ -21,6 +26,7 @@ protected:
 	void draw() const;
 
 public:
+
 	Game();
 
 	void loadLevel(const std::string& lvlPath);
