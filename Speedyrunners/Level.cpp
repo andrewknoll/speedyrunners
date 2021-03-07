@@ -37,9 +37,11 @@ Level::Level(const std::string& tilesetPath, const std::string& bgPath)
 		2, 0, 1, 0, 3, 0, 2, 2, 2, 0, 1, 1, 1, 1, 1, 1,
 		0, 0, 1, 0, 3, 2, 2, 2, 0, 5, 6, 7, 4, 1, 1, 1,
 	};*/
-	RNG rng;
-	rng.fillRand(level, lvlSize, 0, 9);
-
+	//RNG rng;
+	//rng.fillRand(level, lvlSize, 0, 9);
+	for (int i = 0; i < lvlSize; i++) {
+		level[i] = 0;
+	}
 	if (!collidableTiles.load(tilesetPath, sf::Vector2u(16, 16), level, 64, 32)) {
 		std::cerr << "Error abriendo tileset " << tilesetPath << std::endl;
 		//exit(1);

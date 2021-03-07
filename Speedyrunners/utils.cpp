@@ -46,6 +46,12 @@ namespace utils {
 		return sf::Vector2i(clamp(pos.x, 0, window.getSize().x-1), clamp(pos.y, 0, window.getSize().y-1));
 	}
 
+	// Clamps the mouse coordinates in Vector2f position to window pixel coordinates
+	sf::Vector2i clampMouseCoord(const sf::RenderWindow& window) {
+		sf::Vector2f pos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+		return clampMouseCoord(pos, window);
+	}
+
 	// https://stackoverflow.com/a/14997413/14997419
 	int positiveMod(int i, int n) {
 		return (i % n + n) % n;

@@ -16,12 +16,16 @@ protected:
 	Level lvl;
 
 	State state;
+
+	float dT; // Time since last update
 	// Editor:
 	//sf::Sprite selectedTile;
 	Tiles::Collidable selectedTile; // When editing
 
 
 	void update();
+
+	void processEditingInputs(const sf::Event& event);
 
 	void draw() const;
 
