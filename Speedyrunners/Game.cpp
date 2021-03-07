@@ -40,6 +40,11 @@ void Game::loop()
 	}
 }
 
+void Game::addCharacter(const Character& character)
+{
+	characters.emplace_back(character);
+}
+
 void Game::update()
 {
 	sf::Event event;
@@ -94,6 +99,9 @@ void Game::draw() const
 	{
 		std::cout << "unknown game state\n" << (int)state;
 	}
+	}
+	for (auto c : characters) {
+		window.draw(c);
 	}
 	//lvl.draw(window, cam);
 	//window.draw();

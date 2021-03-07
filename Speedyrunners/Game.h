@@ -17,6 +17,8 @@ protected:
 
 	State state;
 
+
+
 	float dT; // Time since last update
 	// Editor:
 	//sf::Sprite selectedTile;
@@ -36,6 +38,8 @@ public:
 	void loadLevel(const std::string& lvlPath);
 
 	void loop();
+
+	void addCharacter(const Character& character);
 
 };
 
