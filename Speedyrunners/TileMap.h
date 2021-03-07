@@ -1,12 +1,17 @@
 #pragma once
+#include <array>
 #include "SFML/Graphics.hpp"
 
 // Adapted from: https://www.sfml-dev.org/tutorials/2.5/graphics-vertex-array.php#what-is-a-vertex-and-why-are-they-always-in-arrays
 
 
+const int MAX_TILEMAP_SIZE = 8192;//128*64
+
 class TileMap : public sf::Transformable, public sf::Drawable
 {
 protected:
+	std::array<int, MAX_TILEMAP_SIZE> tiles;
+
 	sf::VertexArray vertices;
 	sf::Texture tileset;
 	sf::Vector2u tileSize;
@@ -18,7 +23,7 @@ protected:
     
 public:
 
-	bool load(const std::string& tileSetPath, sf::Vector2u tileSize, const int* tiles, const int _width, const int _height);
+	bool load(const std::string& tileSetPath, sf::Vector2u tileSize, const int* _tiles, const int _width, const int _height);
 
 	void setQuad(sf::Vertex* quad, const int i, const int j, const int tu, const int tv) const;
 

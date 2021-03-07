@@ -57,6 +57,10 @@ namespace utils {
 		return (i % n + n) % n;
 	}
 
+	float lerp(float x, float y, float z) {
+		return ((1.0f - z) * x) + (z * y);
+	}
+
 }
 
 

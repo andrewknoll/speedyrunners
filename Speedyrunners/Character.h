@@ -1,5 +1,6 @@
 #pragma once
 #include "SFML/Graphics.hpp"
+
 class Character : public sf::Sprite
 {
 	sf::Texture texture;

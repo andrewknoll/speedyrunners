@@ -15,7 +15,7 @@ void TileMap::draw(sf::RenderTarget& target, sf::RenderStates states) const
     target.draw(vertices, states);
 }
 
-bool TileMap::load(const std::string& tileSetPath, sf::Vector2u _tileSize, const int* tiles, const int _width, const int _height)
+bool TileMap::load(const std::string& tileSetPath, sf::Vector2u _tileSize, const int* _tiles, const int _width, const int _height)
 {
     width = _width; height = _height;
     // load the tileset texture
@@ -27,12 +27,12 @@ bool TileMap::load(const std::string& tileSetPath, sf::Vector2u _tileSize, const
     vertices.resize(width * height * 4);
 
     // populate the vertex array, with one quad per tile
-    for (int i = 0; i < width; ++i)
-        for (int j = 0; j < height; ++j)
+    for (size_t i = 0; i < width; ++i)
+        for (size_t j = 0; j < height; ++j)
         {
             // get the current tile number
-            int tileNumber = tiles[i + j * width];
-
+            int tileNumber = _tiles[i + j * width];
+            tiles[i + j * width] = tileNumber;
             // find its position in the tileset texture
             int tu = tileNumber % (tileset.getSize().x / tileSize.x);
             int tv = tileNumber / (tileset.getSize().x / tileSize.x);
@@ -67,8 +67,9 @@ void TileMap::setTile(const sf::Vector2i& pos, const int tileNumber) {
     int tv = tileNumber / (tileset.getSize().x / tileSize.x);
 
     // define its 4 corners
-    int i = pos.x / tileSize.x;
-    int j = pos.y / tileSize.y;
+    size_t i = pos.x / tileSize.x;
+    size_t j = pos.y / tileSize.y;
+    tiles[i + j * width] = tileNumber;
     //std::cout << "drawing tile at " << pos.x << " " << pos.y << " " << tileNumber << std::endl;
     if ((i + j * width) >= width * height) {
         std::cerr << "Tile outside of array!!\n";
@@ -111,11 +112,12 @@ void TileMap::drawTile(sf::RenderTarget& target, sf::RenderStates states, const 
 
 std::string TileMap::to_string() const {
     std::string str = std::to_string(width) + " " + std::to_string(height) + "\n";
-    /*for (int i = 0; i < height; ++i) {
-        for (int j = 0; j < width; ++j){
-
+    for (size_t i = 0; i < height; ++i) {
+        for (size_t j = 0; j < width; ++j){
+            str += std::to_string(tiles[j + i * width]) + " ";
         }
-    }*/
+        str += "\n";
+    }
     return str;
 }
 

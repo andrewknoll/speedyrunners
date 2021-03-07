@@ -82,6 +82,9 @@ void Game::processEditingInputs(const sf::Event& event) {
 			std::cout << "New tile selected: " << selectedTile << std::endl;
 		}
 	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl) && sf::Keyboard::isKeyPressed(sf::Keyboard::S)) { // sf::Keyboard::isKeyPressed(sf::Keyboard::S) && 
+		lvl.save("first.csv");
+	}
 }
 
 

@@ -7,9 +7,7 @@
 
 // airport: "../assets/Content/tiles/tiles_airport.png"
 Level::Level() : Level("../assets/Content/tiles/tiles_black_editor.png", "../assets/Content/Backgrounds/ENV_Airport/sky_1280_720.png")
-{
-
-	
+{	
 }
 
 void Level::drawTile(sf::RenderTarget& target, sf::RenderStates states, const sf::Vector2i& pos, const int tileNumber) const
@@ -24,14 +22,15 @@ void Level::setTile(const sf::Vector2i& pos, const int tileNumber)
 
 void Level::save(const std::string& f_name) const
 {
+	std::cout << "Saving " << f_name << "\n";
 	std::string version = "0";
-	std::ofstream file("assets/levels/" + f_name);
+	std::ofstream file("../assets/levels/" + f_name);
 	if (!(file << version << std::endl)) { // formato, #MAX, # nombre fichero
 		std::cerr << "File <assets/levels/" + f_name + "> inaccesible\n";
 		//exit(1);
 	}
 	file << backgroundPath << std::endl;
-	file << collidableTiles << std::endl;
+	file << collidableTiles << std::endl; // TODO: mucho trabajo en TileMap::to_string
 	
 	std::cout << "Level saved\n";
 
@@ -42,7 +41,7 @@ Level::Level(const std::string& tilesetPath, const std::string& bgPath) :
 	backgroundPath(bgPath)
 {	// Adapted from: https://www.sfml-dev.org/tutorials/2.5/graphics-vertex-array.php#what-is-a-vertex-and-why-are-they-always-in-arrays
 	// define the level with an array of tile indices
-	const int lvlSize = 64 * 32;
+	const int lvlSize = 128 * 64;
 	int level[lvlSize];/* =
 	{
 		0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -57,15 +56,15 @@ Level::Level(const std::string& tilesetPath, const std::string& bgPath) :
 	//RNG rng;
 	//rng.fillRand(level, lvlSize, 0, 9);
 	for (int i = 0; i < lvlSize; i++) {
-		level[i] = 0;
+		level[i] = 0; // All air
 	}
-	if (!collidableTiles.load(tilesetPath, sf::Vector2u(16, 16), level, 64, 32)) {
+	if (!collidableTiles.load(tilesetPath, sf::Vector2u(16, 16), level, 128, 64)) {
 		std::cerr << "Error abriendo tileset " << tilesetPath << std::endl;
 		//exit(1);
 	}
 	
 	if (!bgTexture.loadFromFile(bgPath))
-	{	// TODO: parametro del fondo
+	{	
 		std::cerr << "Error cargando fondo\n";
 	}
 	background.setTexture(bgTexture);
