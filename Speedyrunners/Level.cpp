@@ -1,4 +1,4 @@
-#include <iostream> 
+﻿#include <iostream> 
 #include <fstream>
 #include "Level.h"
 #include "SFML/Graphics.hpp"
@@ -36,6 +36,33 @@ void Level::save(const std::string& f_name) const
 
 }
 
+void Level::load(const std::string& f_name)
+{
+	std::cout << "Loading " << f_name << "\n";
+
+	std::ifstream file("../assets/levels/" + f_name);
+	int format;
+	std::string s;
+	if (!(file >> format)) {
+		std::cerr << "File <assets/levels/" + f_name + "> inaccesible\n";
+		exit(1);
+	}
+	if (format != 0) {
+		std::cerr << "Unknown format\n";
+		exit(1);
+	}
+	std::string line;
+	file >> backgroundPath;
+	loadBackground(backgroundPath);
+	file.ignore(); // skip \n
+	if (!collidableTiles.load(file)) {
+		std::cerr << "Error loading tilemap\n";
+	}
+	else {
+		std::cout << "Level loaded\n";
+	}
+}
+
 
 Level::Level(const std::string& tilesetPath, const std::string& bgPath) :
 	backgroundPath(bgPath)
@@ -63,13 +90,19 @@ Level::Level(const std::string& tilesetPath, const std::string& bgPath) :
 		//exit(1);
 	}
 	
-	if (!bgTexture.loadFromFile(bgPath))
-	{	
+	loadBackground(bgPath);
+}
+
+
+
+void Level::loadBackground(const std::string& file) {
+	if (!bgTexture.loadFromFile(file))
+	{
 		std::cerr << "Error cargando fondo\n";
 	}
 	background.setTexture(bgTexture);
-}
 
+}
 
 void Level::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
