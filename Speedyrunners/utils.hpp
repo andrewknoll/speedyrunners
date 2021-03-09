@@ -43,4 +43,16 @@ namespace utils {
 
 	int positiveMod(int i, int n);
 
+	// Clamp + valor absoluto
+	float clampAbs(const float& val, const float& limit);
+
+	sf::Vector2f clampAbs(const sf::Vector2f& val, const float& limit);
+
+}
+
+
+
+namespace physics {
+	const float GRAVITY = 10*9.821;
+	const float MAX_FALL_SPEED = 300;
 }

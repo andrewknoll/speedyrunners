@@ -1,15 +1,22 @@
 #pragma once
+#include <array>
 #include "SFML/Graphics.hpp"
 
 // Adapted from: https://www.sfml-dev.org/tutorials/2.5/graphics-vertex-array.php#what-is-a-vertex-and-why-are-they-always-in-arrays
 
 
+const int MAX_TILEMAP_SIZE = 8192;//128*64
+
 class TileMap : public sf::Transformable, public sf::Drawable
 {
 protected:
+	std::array<int, MAX_TILEMAP_SIZE> tiles;
+
 	sf::VertexArray vertices;
 	sf::Texture tileset;
-	sf::Vector2u tileSize;
+	sf::Vector2u tileSize; 
+	std::string tileSetPath;
+
 
 	int width, height;
 
@@ -18,7 +25,9 @@ protected:
     
 public:
 
-	bool load(const std::string& tileSetPath, sf::Vector2u tileSize, const int* tiles, const int _width, const int _height);
+	bool load(const std::string& _tileSetPath, sf::Vector2u _tileSize, const int* _tiles, const int _width, const int _height);
+	// Loads the tilemap from a saved file (csv):
+	bool load(std::ifstream& file);
 
 	void setQuad(sf::Vertex* quad, const int i, const int j, const int tu, const int tv) const;
 
@@ -27,6 +36,7 @@ public:
 	void drawTile(sf::RenderTarget& target, sf::RenderStates states, const sf::Vector2i& pos, const int tileNumber) const;
 
 	std::string to_string() const;
+
 
 	//void drawTile(sf::RenderTarget& target, sf::RenderStates states, const sf::Vector2u& pos, const int tileNumber) const;
 

@@ -23,6 +23,8 @@ class Level : public sf::Drawable
 	//std::vector<sf::Texture> spriteSheets; // se deben mantener en memoria: https://www.sfml-dev.org/documentation/2.5.1/classsf_1_1Sprite.php
 
 
+	void loadBackground(const std::string& file);
+
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 public:
 	Level(const std::string& tilesetPath, const std::string& bgPath);
@@ -34,6 +36,9 @@ public:
 	void setTile(const sf::Vector2i& pos, const int tileNumber);
 
 	void save(const std::string& f_name) const;
+
+	void load(const std::string& f_name);
+
 
 
 	//void draw(sf::RenderWindow& window, const Camera& cam) const;
