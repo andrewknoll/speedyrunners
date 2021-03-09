@@ -24,31 +24,65 @@ bool Animation::insert(int where, sf::IntRect new_frame) {
 	return true;
 }
 
-sf::Sprite Animation::get_first_frame() {
+sf::Sprite Animation::get_first_frame(bool reverse) {
 	sf::Sprite sprite;
 	sprite.setTexture(*spritesheet);
-	sprite.setTextureRect(frames[0]);
+	sprite.setTextureRect(frames[reverse? frames.size() - 1 : 0]);
+	current_frame = reverse ? frames.size() - 1 : 0;
+	sprite.setPosition(this->get_position() - this->get_center_offset());
+	sprite.setOrigin(sprite.getOrigin());
 	return sprite;
 }
 
-//Returns 1 when animation was reset
-int Animation::advance_frame(sf::Sprite& sprite) {
+//Returns 1 if last frame
+int Animation::advance_frame(sf::Sprite& sprite, bool loop, bool reverse) {
+	int return_code = 0;
 	sf::Sprite new_sprite;
 	new_sprite.setTexture(*spritesheet);
-	if (current_frame < frames.size() -1) {
-		new_sprite.setTextureRect(frames[++current_frame]);
-		sprite = new_sprite;
-		return 0;
+	if (!reverse) {
+		if (current_frame < frames.size() - 1) {
+			new_sprite.setTextureRect(frames[++current_frame]);
+		}
+		else if (loop) {
+			current_frame = 0;
+			new_sprite.setTextureRect(frames[0]);
+		}
+		if (current_frame == frames.size() - 1) return_code = 1;
 	}
 	else {
-		current_frame = 0;
-		new_sprite.setTextureRect(frames[0]);
-		sprite = new_sprite;
-		return 1;
+		if (current_frame > 0) {
+			new_sprite.setTextureRect(frames[--current_frame]);
+		}
+		else if (loop) {
+			current_frame = frames.size() - 1;
+			new_sprite.setTextureRect(frames[current_frame]);
+		}
+		if (current_frame == 0) return_code = 1;
 	}
+	if (return_code == 0) {
+		new_sprite.setPosition(this->get_position() - this->get_center_offset());
+		new_sprite.setOrigin(sprite.getOrigin());
+		sprite = new_sprite;
+	}
+	return return_code;
 }
 
 int Animation::get_current_frame() {
 	return current_frame;
+}
+
+sf::Vector2f Animation::get_center_offset() {
+	sf::Vector2f v;
+	v.x = frames[current_frame].width / 2.0;
+	v.y = frames[current_frame].height / 2.0;
+	return v;
+}
+
+sf::Vector2f Animation::get_position() {
+	return position;
+}
+
+void Animation::set_position(sf::Vector2f new_position) {
+	position = new_position;
 }
 
