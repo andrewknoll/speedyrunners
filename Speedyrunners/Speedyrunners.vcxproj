@@ -130,6 +130,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug  (v141)|x64'">
     <ReferencePath>$(VC_ReferencesPath_x64);</ReferencePath>
     <LibraryPath>C:\Users\Andrés\Desktop\Videojuegos\Speedyrunners\bin;$(ProjectPath)/bin;$(LibraryPath)</LibraryPath>
+    <OutDir>$(ProjectDir)\bin</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ReferencePath>$(VC_ReferencesPath_x64);</ReferencePath>
