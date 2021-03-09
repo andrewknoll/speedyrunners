@@ -57,11 +57,27 @@ namespace utils {
 		return (i % n + n) % n;
 	}
 
+	float clampAbs(const float& val, const float& limit)
+	{
+		if (val > 0) {
+			return (val > limit) ? limit : val;
+		}
+		else {
+			return (val < -limit) ? -limit : val;
+		}
+	}
+
+	sf::Vector2f clampAbs(const sf::Vector2f& val, const float& limit)
+	{
+		return sf::Vector2f(clampAbs(val.x, limit), clampAbs(val.y, limit));
+	}
+
 	float lerp(float x, float y, float z) {
 		return ((1.0f - z) * x) + (z * y);
 	}
 
 }
+
 
 
 

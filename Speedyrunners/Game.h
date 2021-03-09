@@ -19,7 +19,7 @@ protected:
 
 
 
-	float dT; // Time since last update
+	sf::Time dT; // Time since last update
 	// Editor:
 	//sf::Sprite selectedTile;
 	Tiles::Collidable selectedTile; // When editing

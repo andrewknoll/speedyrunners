@@ -6,8 +6,8 @@
 
 Game::Game() 
 	: window(sf::VideoMode(800, 800), "SpeedyRunners"),
-	state(State::Editing), selectedTile(Tiles::Collidable::FLOOR), 
-	dT(0)
+	state(State::Editing), selectedTile(Tiles::Collidable::FLOOR) 
+	//dT(0)
 {
 	window.setFramerateLimit(60); //60 FPS?
 }
@@ -29,9 +29,9 @@ void Game::loop()
 
 		// https://en.sfml-dev.org/forums/index.php?topic=7018.0:
 		currentTime = clock.getElapsedTime();
-		dT = (currentTime.asSeconds() - previousTime.asSeconds());
-		fps = 1.0f / dT; // the asSeconds returns a float
-		if ((showPeriod -= dT) < 0) // Para que no este sacandolo todos los frames
+		dT = (currentTime- previousTime);
+		fps = 1.0f / dT.asSeconds(); // the asSeconds returns a float
+		if ((showPeriod -= dT.asSeconds()) < 0) // Para que no este sacandolo todos los frames
 		{
 			showPeriod = 2; // cada 2 s
 			std::cout << "fps = " << floor(fps) << std::endl; // flooring it will make the frame rate a rounded number
@@ -61,6 +61,12 @@ void Game::update()
 		if (state == State::Editing) { // Editing state
 			processEditingInputs(event);
 		} // End of editing state
+		
+	}
+	if (true) { // TODO: cambiar por state == State::Playing 
+		for (auto& c : characters) {
+			c.update(dT);
+		}
 	}
 	//cam.pollEvents();
 	// TODO
