@@ -66,6 +66,16 @@ void Game::update()
 		if (state == State::Editing) { // Editing state
 			processEditingInputs(event);
 		} // End of editing state
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::F10)) {
+			sf::VideoMode vMode = sf::VideoMode::getFullscreenModes().front();
+			if (!vMode.isValid()) {
+				std::cerr << "NOPE\n";
+			}
+			window.create(vMode, "SpeedyRunners", sf::Style::Fullscreen);
+			window.setFramerateLimit(60); //60 FPS?
+			cam = window.getDefaultView();
+			lvl.loadBackground(lvl.getBackgroundPath(), window);
+		}
 		
 	}
 	if (true) { // TODO: cambiar por state == State::Playing 

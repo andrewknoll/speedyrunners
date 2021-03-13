@@ -121,6 +121,10 @@ void Level::loadBackground(const std::string& file, const sf::RenderWindow& wind
 	bgVertices[2].texCoords = sf::Vector2f(texSize.x, texSize.y);
 	bgVertices[3].texCoords = sf::Vector2f(0, texSize.y);
 }
+std::string Level::getBackgroundPath() const
+{
+	return backgroundPath;
+}
 /*
 void Level::scaleBackground(sf::RenderTarget& target) {
 	//auto size = target.getSize();

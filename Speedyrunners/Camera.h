@@ -14,5 +14,5 @@ public:
 
 	void resetDrag();
 	
-
+	void operator= (const sf::View& v);
 };
