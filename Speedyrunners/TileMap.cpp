@@ -214,11 +214,11 @@ std::optional<physics::Collision> Tiles::collision(const Tiles::Collidable tile,
     // x overlap:
     float a_extent = (tileRect.width) / 2;
     float b_extent = (hitbox.width) / 2;
-    float x_overlap = a_extent + b_extent - std::abs(hitbox.left-tileRect.left);
+    float x_overlap = a_extent + b_extent - std::abs(hitbox.left+b_extent-(tileRect.left+a_extent)); // std::abs(hitbox.left-tileRect.left);
     // y overlap:
     a_extent = (tileRect.height) / 2;
     b_extent = (hitbox.height) / 2;
-    float y_overlap = a_extent + b_extent - std::abs(hitbox.top - tileRect.top);
+    float y_overlap = a_extent + b_extent - std::abs(hitbox.top+ b_extent - (tileRect.top+a_extent));
     if (x_overlap <= 0 || y_overlap <= 0) { // No overlap, no collision
         return {};
     } // Here we have a collision:
@@ -229,6 +229,7 @@ std::optional<physics::Collision> Tiles::collision(const Tiles::Collidable tile,
   
     
     sf::Vector2f n; // Normal
+    sf::Vector2f point; // Point
     float dist; // Distance
     if (x_overlap < y_overlap)
     {
@@ -236,13 +237,17 @@ std::optional<physics::Collision> Tiles::collision(const Tiles::Collidable tile,
         // Point towards B knowing that t points from A to B
         n = (hitbox.left - tileRect.left) < 0 ? sf::Vector2f(-1, 0) : sf::Vector2f(1, 0);
         dist = x_overlap;
+        point = collision1;
     }
     else
     {
+        std::cout << x_overlap << " " << y_overlap << "\n";
+
         // Point toward B knowing that t points from A to B
         n = (hitbox.top - tileRect.top) < 0 ? sf::Vector2f(0, -1) : sf::Vector2f(0, 1);
         dist = y_overlap;
+        point = collision2;
     }
 
-    return physics::Collision{ n, dist };
+    return physics::Collision{ point, n, dist };
 }

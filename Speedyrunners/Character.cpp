@@ -35,15 +35,16 @@ void Character::update(const sf::Time& dT, const TileMap& tiles)
 	fixPosition(hitBox);
 	auto collision = tiles.collision(hitBox);
 	if (collision) {
-		std::cout << "n: " << collision->normal.x << "," << collision->normal.y << " " << collision->distance << "\n";
+		std::cout << "n: " << collision->normal.x << "," << collision->normal.y << "\tpoint: " << collision->point.x << "," << collision->point.y << " " << collision->distance << "\n";
 		// New position:
 		sf::Vector2f pos(hitBox.left, hitBox.top);
-		pos = pos + (collision->normal * (collision->distance*1.05f));
+		pos = pos + (collision->normal * (collision->distance));
 		hitBox.left = pos.x; hitBox.top = pos.y;
 		setFillColor(sf::Color::Blue);
 		vel = sf::Vector2f(0, 0);
 		acc = sf::Vector2f(0, 0);
 		isGrounded = true; // supongo
+		//sf::sleep(sf::seconds(2));
 	}
 	else {
 		// Update vel:
