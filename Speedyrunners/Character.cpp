@@ -18,26 +18,28 @@ void Character::update(const sf::Time& dT, const TileMap& tiles)
 {
 	float dtSec = dT.asSeconds();
 
+	// Move:
+	hitBox.left += vel.x * dtSec;
+	hitBox.top += vel.y * dtSec;
+
 	auto collision = tiles.collision(hitBox);
 	if (collision) {
 		setFillColor(sf::Color::Blue);
 		vel = sf::Vector2f(0, 0);
 		acc = sf::Vector2f(0, 0);
+		isGrounded = true; // supongo
 	}
 	else {
-		// Move:
-		hitBox.left += vel.x * dtSec;
-		hitBox.top += vel.y * dtSec;
 		setPosition(hitBox.left, hitBox.top); // Del rectangulo
 		// Update vel:
 		vel = utils::clampAbs(vel + acc * dtSec, physics::MAX_FALL_SPEED);
 
 		// Update acc:
-		updateAcceleration();	
+		updateAcceleration();
 		// JUST DEBUG:
 		setFillColor(sf::Color::Red);
-
 	}
+
 	
 }
 
@@ -46,6 +48,28 @@ void Character::setPosition(float x, float y)
 	hitBox.left = x;
 	hitBox.top = y;
 	sf::RectangleShape::setPosition(x, y);
+}
+
+void Character::processInputs()
+{
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right)) {
+		if (isGrounded)
+			acc.x = runningAcceleration;
+		else
+			acc.x = flyingAcceleration;
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left)) {
+		if (isGrounded)
+			acc.x = -runningAcceleration;
+		else
+			acc.x = -flyingAcceleration;
+	}
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Z)) {
+		if (isGrounded)
+			vel.y = -jumpingSpeed;
+		else
+			vel.y = -jumpingSpeed; // TODO:Cambiar
+	}
 }
 
 void Character::updateAcceleration() {

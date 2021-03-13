@@ -7,7 +7,7 @@
 Game::Game() 
 	: window(sf::VideoMode(1600,900), "SpeedyRunners"),
 	lvl(window),
-	state(State::Editing), 
+	state(State::Playing), 
 	selectedTile(Tiles::Collidable::FLOOR),
 	cam(sf::FloatRect(0, 0, 1600, 900))
 	//dT(0)
@@ -63,9 +63,19 @@ void Game::update()
 
 			window.setView(sf::View(visibleArea));
 		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::F1)) {
+			state = State::Playing;
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::F2)) {
+			state = State::Editing;
+		}
 		if (state == State::Editing) { // Editing state
 			processEditingInputs(event);
 		} // End of editing state
+		if (state == State::Playing) { // Playing
+			characters.front().processInputs(); // Podemos cambiarlo por Player en el futuro
+		}
+
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::F10)) {
 			sf::VideoMode vMode = sf::VideoMode::getFullscreenModes().front();
 			if (!vMode.isValid()) {
@@ -134,7 +144,7 @@ void Game::draw() const
 	}
 	default:
 	{
-		std::cout << "unknown game state\n" << (int)state;
+		//std::cout << "unknown game state\n" << (int)state;
 	}
 	}
 	for (auto c : characters) {

@@ -186,7 +186,7 @@ std::optional<physics::Collision> TileMap::collision(const sf::FloatRect& charac
             if (tiles[(i + di) + (j + dj) * width] != 0) { // Tile isnt air 
                 auto c = Tiles::collision(Tiles::FLOOR, posRectTile, sizeRectTile, characterHitbox);
                 if (c) {
-                    std::cout << "Collided with tile " << di << " " << dj << "... " << i + di << " " << j+dj << "\n";
+                    //std::cout << "Collided with tile " << di << " " << dj << "... " << i + di << " " << j+dj << "\n";
                     return c; // collided, we return it, otherwise check the rest
                 }
             }
