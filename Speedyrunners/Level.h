@@ -49,7 +49,7 @@ public:
 
 	std::string getBackgroundPath() const;
 
-
+	const TileMap& getCollidableTiles() const;
 
 	//void draw(sf::RenderWindow& window, const Camera& cam) const;
 

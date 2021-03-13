@@ -1,3 +1,5 @@
+#pragma warning( disable : 4244 ) 
+
 #include <iostream>
 #include <fstream>
 #include "TileMap.h"
@@ -169,4 +171,37 @@ bool TileMap::load(std::ifstream& file) {
 std::ostream& operator<<(std::ostream& os, const TileMap& t) {
     os << t.to_string();
     return os;
+}
+
+std::optional<physics::Collision> TileMap::collision(const sf::FloatRect& characterHitbox) const
+{
+    // Tile coordinates of upper left tile:
+    int i = int(characterHitbox.left) / tileSize.x;
+    int j = int(characterHitbox.top) / tileSize.y;
+    for (int di = 0; di < 2; di++) { // Check the 2 horizontal tiles
+        for (int dj = 0; dj < 3; dj++) { // And 3 vertical
+            sf::Vector2f posRectTile = sf::Vector2f((i+di) * tileSize.x, (j+dj) * tileSize.y);
+
+            sf::Vector2f sizeRectTile(tileSize.x, tileSize.y);
+            if (tiles[(i + di) + (j + dj) * width] != 0) { // Tile isnt air 
+                auto c = Tiles::collision(Tiles::FLOOR, posRectTile, sizeRectTile, characterHitbox);
+                if (c) {
+                    std::cout << "Collided with tile " << di << " " << dj << "... " << i + di << " " << j+dj << "\n";
+                    return c; // collided, we return it, otherwise check the rest
+                }
+            }
+        }
+    }
+    
+    return {};
+}
+
+
+std::optional<physics::Collision> Tiles::collision(const Tiles::Collidable tile, const sf::Vector2f& tilePos, const sf::Vector2f& tileSize, const sf::FloatRect& hitbox)
+{
+    sf::FloatRect tileRect(tilePos.x, tilePos.y, tileSize.x, tileSize.y);
+    if (hitbox.intersects(tileRect)) {
+        return physics::Collision{ sf::Vector2f() };
+    }
+    return {}; // No intersection
 }

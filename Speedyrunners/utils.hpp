@@ -57,4 +57,9 @@ namespace utils {
 namespace physics {
 	const float GRAVITY = 10*9.821;
 	const float MAX_FALL_SPEED = 300;
+
+
+	struct Collision {
+		sf::Vector2f position;
+	};
 }

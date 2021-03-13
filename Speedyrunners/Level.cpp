@@ -125,6 +125,10 @@ std::string Level::getBackgroundPath() const
 {
 	return backgroundPath;
 }
+const TileMap& Level::getCollidableTiles() const
+{
+	return collidableTiles;
+}
 /*
 void Level::scaleBackground(sf::RenderTarget& target) {
 	//auto size = target.getSize();
@@ -134,7 +138,7 @@ void Level::scaleBackground(sf::RenderTarget& target) {
 
 void Level::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	auto v = target.getView();
+	const sf::View& v = target.getView();
 	auto s = states;
 	target.setView(target.getDefaultView()); // background shouldnt be moved
 	// apply the tileset texture
@@ -145,3 +149,5 @@ void Level::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	target.setView(v);
 	target.draw(collidableTiles, s);
 }
+
+

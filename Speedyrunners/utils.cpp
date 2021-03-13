@@ -1,3 +1,5 @@
+
+#pragma warning( disable : 4244 ) 
 #include <cmath>
 #include "utils.hpp"
 #include "SFML/Graphics.hpp"

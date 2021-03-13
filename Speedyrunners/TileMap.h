@@ -1,6 +1,8 @@
 #pragma once
 #include <array>
+#include <optional>
 #include "SFML/Graphics.hpp"
+#include "utils.hpp"
 
 // Adapted from: https://www.sfml-dev.org/tutorials/2.5/graphics-vertex-array.php#what-is-a-vertex-and-why-are-they-always-in-arrays
 
@@ -37,6 +39,10 @@ public:
 	std::string to_string() const;
 
 
+	std::optional<physics::Collision> collision(const sf::FloatRect& characterHitbox) const;
+
+
+
 	//void drawTile(sf::RenderTarget& target, sf::RenderStates states, const sf::Vector2u& pos, const int tileNumber) const;
 
 	//void drawTile(const sf::Vector2u& pos, const sf::Vector2u& idx, const int type) const;
@@ -67,4 +73,7 @@ namespace Tiles {
 	};
 
 	const int NB_COLLIDABLE = 16;
+
+	// Returns the collision, if any, between the hitbox of a character and a tile
+	std::optional<physics::Collision> collision(const Collidable tile, const sf::Vector2f& tilePos, const sf::Vector2f& tileSize, const sf::FloatRect& hitbox);
 }

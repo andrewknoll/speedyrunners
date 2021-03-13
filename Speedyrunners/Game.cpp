@@ -59,7 +59,7 @@ void Game::update()
 		if (event.type == sf::Event::Resized)
 		{
 			// sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
-			sf::FloatRect visibleArea(0, 0, event.size.width, event.size.width / aspectRatio);
+			sf::FloatRect visibleArea(0, 0, float(event.size.width), float(event.size.width) / aspectRatio);
 
 			window.setView(sf::View(visibleArea));
 		}
@@ -80,7 +80,7 @@ void Game::update()
 	}
 	if (true) { // TODO: cambiar por state == State::Playing 
 		for (auto& c : characters) {
-			c.update(dT);
+			c.update(dT, lvl.getCollidableTiles());
 		}
 	}
 	//cam.pollEvents();
@@ -138,8 +138,8 @@ void Game::draw() const
 	}
 	}
 	for (auto c : characters) {
-		//c.draw(window, dT);
-		//window.draw(c, dT);
+		//c.draw(window);// , dT);
+		window.draw(c);
 	}
 	//lvl.draw(window, cam);
 	//window.draw();
