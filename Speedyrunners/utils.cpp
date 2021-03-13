@@ -76,6 +76,11 @@ namespace utils {
 		return ((1.0f - z) * x) + (z * y);
 	}
 
+
+	sf::Vector2f toVector2f(const sf::Vector2i& v) {
+		return sf::Vector2f(float(v.x), float(v.y));
+	}
+
 }
 
 

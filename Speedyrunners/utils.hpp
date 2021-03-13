@@ -48,6 +48,8 @@ namespace utils {
 
 	sf::Vector2f clampAbs(const sf::Vector2f& val, const float& limit);
 
+	sf::Vector2f toVector2f(const sf::Vector2i& v);
+
 }
 
 

@@ -20,7 +20,6 @@ protected:
 
 	int width, height;
 
-
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
     
 public:

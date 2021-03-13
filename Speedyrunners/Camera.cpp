@@ -1,8 +1,9 @@
 #include "SFML/Graphics.hpp"
 #include "Camera.h"
+#include "utils.hpp"
 
 
-Camera::Camera(const sf::FloatRect& rect) : view(rect)
+Camera::Camera(const sf::FloatRect& rect) : sf::View(rect)
 {
 	// Initialize the view to a rectangle located at (100, 100) and with a size of 400x200
 	//view.reset(sf::FloatRect(100, 100, 400, 200));
@@ -20,10 +21,31 @@ Camera::Camera(const sf::FloatRect& rect) : view(rect)
 	//window.draw(someText);
 }
 
-void Camera::setView(sf::RenderWindow& window) const
+void Camera::moveByMouse(sf::Vector2i pos)
 {
-	window.setView(view);
+	if (!dragging) {
+		dragging = true;
+	}
+	else {
+		sf::Vector2f dif = utils::toVector2f(lastMousePos - pos);
+		move(dif);
+	}
+	lastMousePos = pos;
 }
+
+void Camera::resetDrag()
+{
+	dragging = false;
+}
+
+
+
+
+
+
+
+
+
 
 
 

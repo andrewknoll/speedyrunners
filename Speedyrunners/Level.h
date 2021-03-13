@@ -15,7 +15,9 @@ class Level : public sf::Drawable
 
 	// Background:
 	sf::Texture bgTexture;
-	sf::Sprite background;
+	//sf::Sprite background;
+	sf::VertexArray bgVertices;
+
 
 	std::string backgroundPath;
 	//int rows, cols;
@@ -29,13 +31,25 @@ class Level : public sf::Drawable
 public:
 	Level(const std::string& tilesetPath, const std::string& bgPath);
 
+	void loadBackground(const std::string& file, const sf::Vector2u& windowSize);
+
 	Level();
 
 	void drawTile(sf::RenderTarget& target, sf::RenderStates states, const sf::Vector2i& pos, const int tileNumber) const;
 
+	Level(const sf::RenderWindow& window);
+
 	void setTile(const sf::Vector2i& pos, const int tileNumber);
 
+	void save(const std::string& f_name, const sf::RenderWindow& window) const;
+
 	void save(const std::string& f_name) const;
+
+	void load(const std::string& f_name, const sf::RenderWindow& window);
+
+	Level(const std::string& tilesetPath, const std::string& bgPath, const sf::RenderWindow& window);
+
+	void loadBackground(const std::string& file, const sf::RenderWindow& window);
 
 	void load(const std::string& f_name);
 

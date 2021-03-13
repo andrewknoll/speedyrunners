@@ -6,7 +6,7 @@
 #include "utils.hpp"
 
 // airport: "../assets/Content/tiles/tiles_airport.png"
-Level::Level() : Level("../assets/Content/tiles/tiles_black_editor.png", "../assets/Content/Backgrounds/ENV_Airport/sky_1280_720.png")
+Level::Level(const sf::RenderWindow& window) : Level("../assets/Content/tiles/tiles_black_editor.png", "../assets/Content/Backgrounds/ENV_Airport/sky_1280_720.png", window)
 {	
 }
 
@@ -36,7 +36,7 @@ void Level::save(const std::string& f_name) const
 
 }
 
-void Level::load(const std::string& f_name)
+void Level::load(const std::string& f_name, const sf::RenderWindow& window)
 {
 	std::cout << "Loading " << f_name << "\n";
 
@@ -53,7 +53,7 @@ void Level::load(const std::string& f_name)
 	}
 	std::string line;
 	file >> backgroundPath;
-	loadBackground(backgroundPath);
+	loadBackground(backgroundPath, window);
 	file.ignore(); // skip \n
 	if (!collidableTiles.load(file)) {
 		std::cerr << "Error loading tilemap\n";
@@ -64,7 +64,7 @@ void Level::load(const std::string& f_name)
 }
 
 
-Level::Level(const std::string& tilesetPath, const std::string& bgPath) :
+Level::Level(const std::string& tilesetPath, const std::string& bgPath, const sf::RenderWindow& window) :
 	backgroundPath(bgPath)
 {	// Adapted from: https://www.sfml-dev.org/tutorials/2.5/graphics-vertex-array.php#what-is-a-vertex-and-why-are-they-always-in-arrays
 	// define the level with an array of tile indices
@@ -90,22 +90,54 @@ Level::Level(const std::string& tilesetPath, const std::string& bgPath) :
 		//exit(1);
 	}
 	
-	loadBackground(bgPath);
+	loadBackground(bgPath, window);
 }
 
 
 
-void Level::loadBackground(const std::string& file) {
+void Level::loadBackground(const std::string& file, const sf::RenderWindow& window) {
+	//window.mapCoordsToPixel(sf::Vector2u(window.getSize().x, window.getSize().y));
+	//window.mapCoordsToPixel(window.getSize());
+	sf::Vector2u windowSize = window.getSize();
+	//sf::Vector2u windowSize = window.mapCoordsToPixel(
+	//	window.getSize());
 	if (!bgTexture.loadFromFile(file))
 	{
 		std::cerr << "Error cargando fondo\n";
 	}
-	background.setTexture(bgTexture);
+	// Vertices for background:
+	bgVertices.setPrimitiveType(sf::Quads);
+	bgVertices.resize(4);
+	// define its 4 corners
+	bgVertices[0].position = sf::Vector2f(0,0);
+	bgVertices[1].position = sf::Vector2f(windowSize.x, 0);
+	bgVertices[2].position = sf::Vector2f(windowSize.x, windowSize.y);
+	bgVertices[3].position = sf::Vector2f(0, windowSize.y);
 
+	// define its 4 texture coordinates
+	auto texSize = bgTexture.getSize();
+	bgVertices[0].texCoords = sf::Vector2f(0, 0);
+	bgVertices[1].texCoords = sf::Vector2f(texSize.x, 0);
+	bgVertices[2].texCoords = sf::Vector2f(texSize.x, texSize.y);
+	bgVertices[3].texCoords = sf::Vector2f(0, texSize.y);
 }
+/*
+void Level::scaleBackground(sf::RenderTarget& target) {
+	//auto size = target.getSize();
+	auto size = target.getView().getSize();
+	
+}*/
 
 void Level::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	target.draw(background);
-	target.draw(collidableTiles, states);
+	auto v = target.getView();
+	auto s = states;
+	target.setView(target.getDefaultView()); // background shouldnt be moved
+	// apply the tileset texture
+	states.texture = &bgTexture;
+	states.transform = sf::Transform();
+	// draw the vertex array
+	target.draw(bgVertices, states);
+	target.setView(v);
+	target.draw(collidableTiles, s);
 }

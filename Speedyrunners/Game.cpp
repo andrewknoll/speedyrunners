@@ -5,8 +5,11 @@
 #include "utils.hpp"
 
 Game::Game() 
-	: window(sf::VideoMode(800, 800.0*9.0/16.0), "SpeedyRunners"),
-	state(State::Editing), selectedTile(Tiles::Collidable::FLOOR) 
+	: window(sf::VideoMode(1600,900), "SpeedyRunners"),
+	lvl(window),
+	state(State::Editing), 
+	selectedTile(Tiles::Collidable::FLOOR),
+	cam(sf::FloatRect(0, 0, 1600, 900))
 	//dT(0)
 {
 	window.setFramerateLimit(60); //60 FPS?
@@ -78,6 +81,13 @@ void Game::processEditingInputs(const sf::Event& event) {
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 		lvl.setTile(utils::clampMouseCoord(window), selectedTile);
 	}
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
+		cam.moveByMouse(sf::Mouse::getPosition());
+		//cam.move(sf::Vector2f(1, 0));
+	}
+	else {
+		cam.resetDrag();
+	}
 	if (event.type == sf::Event::MouseWheelScrolled)
 	{
 		if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel) {
@@ -94,7 +104,7 @@ void Game::processEditingInputs(const sf::Event& event) {
 			lvl.save("first.csv");
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::L)) {
-			lvl.load("first.csv");
+			lvl.load("first.csv", window);
 		}
 	}
 }
@@ -103,6 +113,7 @@ void Game::processEditingInputs(const sf::Event& event) {
 void Game::draw() const
 {
 	window.clear();
+	window.setView(cam);
 	window.draw(lvl);
 	switch (state) {
 	case State::Editing:
@@ -116,7 +127,8 @@ void Game::draw() const
 	}
 	}
 	for (auto c : characters) {
-		window.draw(c);
+		//c.draw(window, dT);
+		//window.draw(c, dT);
 	}
 	//lvl.draw(window, cam);
 	//window.draw();
