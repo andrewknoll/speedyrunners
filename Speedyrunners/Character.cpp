@@ -14,6 +14,16 @@ Character::Character(sf::Rect<float> _hitBox)
 	setFillColor(sf::Color::Red);
 }
 
+void fixPosition(sf::FloatRect& hitbox) {
+	if (hitbox.top < 0) {
+		hitbox.top = 0;
+	}
+	if (hitbox.left < 0) {
+		hitbox.left = 0;
+	}
+}
+
+
 void Character::update(const sf::Time& dT, const TileMap& tiles)
 {
 	float dtSec = dT.asSeconds();
@@ -22,15 +32,20 @@ void Character::update(const sf::Time& dT, const TileMap& tiles)
 	hitBox.left += vel.x * dtSec;
 	hitBox.top += vel.y * dtSec;
 
+	fixPosition(hitBox);
 	auto collision = tiles.collision(hitBox);
 	if (collision) {
+		std::cout << "n: " << collision->normal.x << "," << collision->normal.y << " " << collision->distance << "\n";
+		// New position:
+		sf::Vector2f pos(hitBox.left, hitBox.top);
+		pos = pos + (collision->normal * (collision->distance*1.05f));
+		hitBox.left = pos.x; hitBox.top = pos.y;
 		setFillColor(sf::Color::Blue);
 		vel = sf::Vector2f(0, 0);
 		acc = sf::Vector2f(0, 0);
 		isGrounded = true; // supongo
 	}
 	else {
-		setPosition(hitBox.left, hitBox.top); // Del rectangulo
 		// Update vel:
 		vel = utils::clampAbs(vel + acc * dtSec, physics::MAX_FALL_SPEED);
 
@@ -39,6 +54,7 @@ void Character::update(const sf::Time& dT, const TileMap& tiles)
 		// JUST DEBUG:
 		setFillColor(sf::Color::Red);
 	}
+	setPosition(hitBox.left, hitBox.top); // Del rectangulo
 
 	
 }
@@ -63,6 +79,9 @@ void Character::processInputs()
 			acc.x = -runningAcceleration;
 		else
 			acc.x = -flyingAcceleration;
+	}
+	else {
+		acc.x = 0;
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Z)) {
 		if (isGrounded)

@@ -60,6 +60,7 @@ namespace physics {
 
 
 	struct Collision {
-		sf::Vector2f position;
+		sf::Vector2f normal; // Normal
+		float distance; // Distancia de entrada en el segundo obj
 	};
 }

@@ -197,11 +197,52 @@ std::optional<physics::Collision> TileMap::collision(const sf::FloatRect& charac
 }
 
 
-std::optional<physics::Collision> Tiles::collision(const Tiles::Collidable tile, const sf::Vector2f& tilePos, const sf::Vector2f& tileSize, const sf::FloatRect& hitbox)
+/*std::optional<physics::Collision> Tiles::collision(const Tiles::Collidable tile, const sf::Vector2f& tilePos, const sf::Vector2f& tileSize, const sf::FloatRect& hitbox)
 {
     sf::FloatRect tileRect(tilePos.x, tilePos.y, tileSize.x, tileSize.y);
     if (hitbox.intersects(tileRect)) {
         return physics::Collision{ sf::Vector2f() };
     }
     return {}; // No intersection
+}*/
+
+
+// Adapted from the SAT method in https://laptrinhx.com/custom-physics-engine-part-2-manifold-generation-716517698/
+std::optional<physics::Collision> Tiles::collision(const Tiles::Collidable tile, const sf::Vector2f& tilePos, const sf::Vector2f& tileSize, const sf::FloatRect& hitbox)
+{
+    sf::FloatRect tileRect(tilePos.x, tilePos.y, tileSize.x, tileSize.y);
+    // x overlap:
+    float a_extent = (tileRect.width) / 2;
+    float b_extent = (hitbox.width) / 2;
+    float x_overlap = a_extent + b_extent - std::abs(hitbox.left-tileRect.left);
+    // y overlap:
+    a_extent = (tileRect.height) / 2;
+    b_extent = (hitbox.height) / 2;
+    float y_overlap = a_extent + b_extent - std::abs(hitbox.top - tileRect.top);
+    if (x_overlap <= 0 || y_overlap <= 0) { // No overlap, no collision
+        return {};
+    } // Here we have a collision:
+    // collision points:
+    sf::Vector2f collision1(std::max(tileRect.left, hitbox.left), std::max(tileRect.top, hitbox.top));
+    sf::Vector2f collision2(std::min(tileRect.left + tileRect.width, hitbox.left + hitbox.width),
+                            std::min(tileRect.top + tileRect.height, hitbox.top + hitbox.height) );
+  
+    
+    sf::Vector2f n; // Normal
+    float dist; // Distance
+    if (x_overlap < y_overlap)
+    {
+        std::cout << x_overlap << " " << y_overlap << "\n";
+        // Point towards B knowing that t points from A to B
+        n = (hitbox.left - tileRect.left) < 0 ? sf::Vector2f(-1, 0) : sf::Vector2f(1, 0);
+        dist = x_overlap;
+    }
+    else
+    {
+        // Point toward B knowing that t points from A to B
+        n = (hitbox.top - tileRect.top) < 0 ? sf::Vector2f(0, -1) : sf::Vector2f(0, 1);
+        dist = y_overlap;
+    }
+
+    return physics::Collision{ n, dist };
 }

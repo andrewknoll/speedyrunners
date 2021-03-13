@@ -72,7 +72,7 @@ void Game::update()
 		if (state == State::Editing) { // Editing state
 			processEditingInputs(event);
 		} // End of editing state
-		if (state == State::Playing) { // Playing
+		else if (state == State::Playing) { // Playing
 			characters.front().processInputs(); // Podemos cambiarlo por Player en el futuro
 		}
 
@@ -88,7 +88,7 @@ void Game::update()
 		}
 		
 	}
-	if (true) { // TODO: cambiar por state == State::Playing 
+	if (state == State::Playing) { //
 		for (auto& c : characters) {
 			c.update(dT, lvl.getCollidableTiles());
 		}
