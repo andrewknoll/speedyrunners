@@ -1,6 +1,7 @@
 
 #include "SFML/Graphics.hpp"
 #include "Game.h"
+#include "Spritesheet.h"
 
 int main() {
 	Game game;
@@ -9,6 +10,4 @@ int main() {
 	//falcon.setScale(0.5, 0.5);
 	game.addCharacter(falcon);
 	game.loop();
-	
-	return 0;
 }
