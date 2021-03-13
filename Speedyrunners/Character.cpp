@@ -35,14 +35,23 @@ void Character::update(const sf::Time& dT, const TileMap& tiles)
 	fixPosition(hitBox);
 	auto collision = tiles.collision(hitBox);
 	if (collision) {
-		std::cout << "n: " << collision->normal.x << "," << collision->normal.y << "\tpoint: " << collision->point.x << "," << collision->point.y << " " << collision->distance << "\n";
+		// std::cout << "n: " << collision->normal.x << "," << collision->normal.y << "\tpoint: " << collision->point.x << "," << collision->point.y << " " << collision->distance << "\n";
 		// New position:
 		sf::Vector2f pos(hitBox.left, hitBox.top);
 		pos = pos + (collision->normal * (collision->distance));
+		if (collision->normal.x != 0) { // Make 0 the component of the collision
+			vel.x = 0;
+			acc.x = 0;
+		}
+		else {
+			vel.y = 0;
+			acc.y = 0;
+		}
+		
 		hitBox.left = pos.x; hitBox.top = pos.y;
 		setFillColor(sf::Color::Blue);
-		vel = sf::Vector2f(0, 0);
-		acc = sf::Vector2f(0, 0);
+		//vel = sf::Vector2f(0, 0);
+		//acc = sf::Vector2f(0, 0);
 		isGrounded = true; // supongo
 		//sf::sleep(sf::seconds(2));
 	}
@@ -82,7 +91,8 @@ void Character::processInputs()
 			acc.x = -flyingAcceleration;
 	}
 	else {
-		acc.x = 0;
+		acc.x = -10;
+		
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Z)) {
 		if (isGrounded)

@@ -233,7 +233,6 @@ std::optional<physics::Collision> Tiles::collision(const Tiles::Collidable tile,
     float dist; // Distance
     if (x_overlap < y_overlap)
     {
-        std::cout << x_overlap << " " << y_overlap << "\n";
         // Point towards B knowing that t points from A to B
         n = (hitbox.left - tileRect.left) < 0 ? sf::Vector2f(-1, 0) : sf::Vector2f(1, 0);
         dist = x_overlap;
@@ -241,13 +240,14 @@ std::optional<physics::Collision> Tiles::collision(const Tiles::Collidable tile,
     }
     else
     {
-        std::cout << x_overlap << " " << y_overlap << "\n";
+        
 
         // Point toward B knowing that t points from A to B
         n = (hitbox.top - tileRect.top) < 0 ? sf::Vector2f(0, -1) : sf::Vector2f(0, 1);
         dist = y_overlap;
         point = collision2;
     }
+    std::cout << x_overlap << " " << y_overlap << "\n";
 
     return physics::Collision{ point, n, dist };
 }
