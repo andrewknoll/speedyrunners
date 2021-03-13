@@ -13,6 +13,7 @@ Game::Game()
 	//dT(0)
 {
 	window.setFramerateLimit(60); //60 FPS?
+	lvl.load("first.csv", window);
 }
 
 void Game::loadLevel(const std::string& lvlPath)
