@@ -17,6 +17,8 @@ protected:
 
 	State state;
 
+	float aspectRatio = 16.0 / 9.0;
+
 
 
 	sf::Time dT; // Time since last update

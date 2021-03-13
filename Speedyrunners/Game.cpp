@@ -5,7 +5,7 @@
 #include "utils.hpp"
 
 Game::Game() 
-	: window(sf::VideoMode(800, 800), "SpeedyRunners"),
+	: window(sf::VideoMode(800, 800.0*9.0/16.0), "SpeedyRunners"),
 	state(State::Editing), selectedTile(Tiles::Collidable::FLOOR) 
 	//dT(0)
 {
@@ -54,7 +54,8 @@ void Game::update()
 			window.close();
 		if (event.type == sf::Event::Resized)
 		{
-			sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
+			// sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
+			sf::FloatRect visibleArea(0, 0, event.size.width, event.size.width / aspectRatio);
 
 			window.setView(sf::View(visibleArea));
 		}
