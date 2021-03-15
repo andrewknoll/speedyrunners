@@ -27,7 +27,9 @@ void Camera::moveByMouse(sf::Vector2i pos)
 		dragging = true;
 	}
 	else {
+
 		sf::Vector2f dif = utils::toVector2f(lastMousePos - pos);
+
 		move(dif);
 	}
 	lastMousePos = pos;

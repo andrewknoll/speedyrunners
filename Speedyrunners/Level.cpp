@@ -138,7 +138,7 @@ void Level::scaleBackground(sf::RenderTarget& target) {
 
 void Level::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	const sf::View& v = target.getView();
+	auto v = target.getView();
 	auto s = states;
 	target.setView(target.getDefaultView()); // background shouldnt be moved
 	// apply the tileset texture

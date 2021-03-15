@@ -236,7 +236,7 @@ std::optional<physics::Collision> Tiles::collision(const Tiles::Collidable tile,
         // Point towards B knowing that t points from A to B
         n = (hitbox.left - tileRect.left) < 0 ? sf::Vector2f(-1, 0) : sf::Vector2f(1, 0);
         dist = x_overlap;
-        point = collision1;
+        point = collision1; // TODO: This is wrong! -> we have to return both points i think
     }
     else
     {
@@ -249,5 +249,5 @@ std::optional<physics::Collision> Tiles::collision(const Tiles::Collidable tile,
     }
     std::cout << x_overlap << " " << y_overlap << "\n";
 
-    return physics::Collision{ point, n, dist };
+    return physics::Collision{ point, n, dist };// TODO: This is wrong!
 }

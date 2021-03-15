@@ -32,10 +32,13 @@ protected:
 	void processEditingInputs(const sf::Event& event);
 
 	void draw() const;
+	void setUpWindow();
+
 
 public:
 
 	Game();
+
 
 	void loadLevel(const std::string& lvlPath);
 

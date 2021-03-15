@@ -12,8 +12,14 @@ Game::Game()
 	cam(sf::FloatRect(0, 0, 1600, 900))
 	//dT(0)
 {
-	window.setFramerateLimit(60); //60 FPS?
+	setUpWindow();
 	lvl.load("first.csv", window);
+}
+
+void Game::setUpWindow() {
+
+	window.setFramerateLimit(60); //60 FPS?
+	window.setVerticalSyncEnabled(true);
 }
 
 void Game::loadLevel(const std::string& lvlPath)
@@ -76,13 +82,13 @@ void Game::update()
 			characters.front().processInputs(); // Podemos cambiarlo por Player en el futuro
 		}
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::F10)) {
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::F10)) { // Change to fullscreen (change back to window not implemented)
 			sf::VideoMode vMode = sf::VideoMode::getFullscreenModes().front();
 			if (!vMode.isValid()) {
 				std::cerr << "NOPE\n";
 			}
 			window.create(vMode, "SpeedyRunners", sf::Style::Fullscreen);
-			window.setFramerateLimit(60); //60 FPS?
+			setUpWindow();
 			cam = window.getDefaultView();
 			lvl.loadBackground(lvl.getBackgroundPath(), window);
 		}
