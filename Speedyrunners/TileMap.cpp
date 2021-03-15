@@ -240,14 +240,12 @@ std::optional<physics::Collision> Tiles::collision(const Tiles::Collidable tile,
     }
     else
     {
-        
-
         // Point toward B knowing that t points from A to B
         n = (hitbox.top - tileRect.top) < 0 ? sf::Vector2f(0, -1) : sf::Vector2f(0, 1);
         dist = y_overlap;
         point = collision2;
     }
-    std::cout << x_overlap << " " << y_overlap << "\n";
+    //std::cout << x_overlap << " " << y_overlap << "\n";
 
     return physics::Collision{ point, n, dist };// TODO: This is wrong!
 }

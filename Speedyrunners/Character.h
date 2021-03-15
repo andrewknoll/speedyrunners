@@ -19,23 +19,29 @@ protected:
 	bool isGrounded = false;
 	bool hasDoubleJumped = false;
 
+	bool isRunning = false;
 
 	// parameters, here so they can be different e.g for bots:
 	// Horizontal accelerations:
-	float runningAcceleration = 200; // acceleration in the floor
-	float flyingAcceleration = 100; // or in the air
+	float runningAcceleration = 800; // acceleration in the floor
+	float flyingAcceleration = 400; // or in the air
 	float jumpingSpeed = 200; // or in the air
 
 	void updateAcceleration();
+
+	void setFriction();
 
 public:
 	Character(sf::Rect<float> _hitBox = sf::Rect<float>(20,20,14, 30));
 	void update(const sf::Time& dT, const TileMap& tiles);
 
+	void updateGrounded(const sf::Vector2f& normal);
+
 
 	void setPosition(float x, float y);
 
 	void processInputs();
+	void processInput(sf::Event& e);
 
 	Character(const std::string& _path);
 };

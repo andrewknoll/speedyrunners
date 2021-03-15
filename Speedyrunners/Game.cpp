@@ -79,7 +79,7 @@ void Game::update()
 			processEditingInputs(event);
 		} // End of editing state
 		else if (state == State::Playing) { // Playing
-			characters.front().processInputs(); // Podemos cambiarlo por Player en el futuro
+			characters.front().processInput(event); // Podemos cambiarlo por Player en el futuro
 		}
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::F10)) { // Change to fullscreen (change back to window not implemented)
