@@ -196,6 +196,11 @@ window.onload = function init() {
 	gl.clearColor(0.0, 0.0, 0.0, 1.0);
 	gl.enable(gl.DEPTH_TEST);
 
+
+	// ------- Add our stuff:
+	let nCubes = 20;
+	addCubes(objectsToDraw, nCubes);
+
 	setPrimitive(objectsToDraw);
 
 	// Set up a WebGL program
@@ -234,19 +239,60 @@ window.onload = function init() {
 
 };
 
+
+function randColor() {
+	let end = false;
+	let c = [];
+	while (!end) {
+		c = [Math.random(),Math.random(),Math.random(),1] // random color with alpha=1
+		let sum = 0;
+		for (var i = 0; i < c.length-1; i++) {
+			sum += c[i];
+		}
+		end = sum>1.5;
+	}
+	return c;
+}
+
+
+function randSpeed() {
+	let s = 2.0*(Math.random()-0.5);
+	if (Math.abs(s) < 0.05) {
+		s = (s<0) ? 0.05 : -0.05;
+	}
+	return s;
+}
+
 // ------------------------------------
 // Add our n cubes to objects:
 function addCubes(objects, n) {
+	let maxX = 12
+	let maxY = 8
+	let maxZ = 10
 	for (var i = 0; i < n; i++) {
-		// Algo asi:
-		// objects.add(newcube(i));
+		let color = randColor()
+		objects.push({
+			programInfo: programInfo,
+		  pointsArray: pointsCube,
+		  colorsArray: Array(36).fill(color),
+		  uniforms: {
+			u_colorMult: [0.5, 0.5, 0.5, 1.0],
+			u_model: new mat4(),
+		  },
+		  primType: "triangles",
+			translation: translate(maxX*(Math.random()-0.5), maxY*(Math.random()-0.5), maxZ*(Math.random()-0.5)),
+			locRotAxis: vec3(Math.random(), Math.random(), Math.random()),
+			locRotSpeed: randSpeed(),
+			worldRotAxis: vec3(Math.random(), Math.random(), Math.random()),
+			worldRotSpeed: 2.0*(Math.random()-0.5),
+		});
 	}
 }
 
 // Returns a new cube?
-function newCube(i) {
-
-}
+// function newCube(i) {
+//
+// }
 
 //----------------------------------------------------------------------------
 // Rendering Event Function
@@ -268,6 +314,17 @@ function render() {
 
 	objectsToDraw[3].uniforms.u_model = translate(1.0, 0.0, 3.0);
 	objectsToDraw[3].uniforms.u_model = mult(R, objectsToDraw[3].uniforms.u_model);
+
+	// Our rotations:
+	for (var i = 4; i < objectsToDraw.length; i++) {
+		// Local rotation
+		let R = rotate(rotAngle*objectsToDraw[i].locRotSpeed*5.0, objectsToDraw[i].locRotAxis)
+		objectsToDraw[i].uniforms.u_model = mult(R, objectsToDraw[i].translation);
+		// World rotation:
+		R = rotate(rotAngle*objectsToDraw[i].worldRotSpeed*5.0, objectsToDraw[i].worldRotAxis)
+		objectsToDraw[i].uniforms.u_model = mult(objectsToDraw[i].uniforms.u_model, R);
+	}
+
 
 	//----------------------------------------------------------------------------
 	// DRAW
