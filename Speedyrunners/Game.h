@@ -4,6 +4,7 @@
 #include "Character.h"
 #include "Level.h"
 #include "Camera.h"
+#include "Player.h"
 
 class Game
 {
@@ -19,7 +20,8 @@ protected:
 
 	float aspectRatio = 16.0 / 9.0;
 
-
+	Player players[4];
+	int numberPlayers = 0;
 
 	sf::Time dT; // Time since last update
 	// Editor:
@@ -43,5 +45,6 @@ public:
 
 	void addCharacter(const Character& character);
 
+	void playerJoin(Player newPlayer);
 };
 

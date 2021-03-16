@@ -3,6 +3,7 @@
 
 #include "Game.h"
 #include "utils.hpp"
+#include "Player.h"
 
 Game::Game() 
 	: window(sf::VideoMode(800, 800.0*9.0/16.0), "SpeedyRunners"),
@@ -10,6 +11,13 @@ Game::Game()
 	//dT(0)
 {
 	window.setFramerateLimit(60); //60 FPS?
+}
+
+void Game::playerJoin(Player newPlayer) {
+	if (numberPlayers < 4) {
+		players[numberPlayers] = newPlayer;
+		numberPlayers++;
+	}
 }
 
 void Game::loadLevel(const std::string& lvlPath)
@@ -37,6 +45,11 @@ void Game::loop()
 			std::cout << "fps = " << floor(fps) << std::endl; // flooring it will make the frame rate a rounded number
 		}
 		previousTime = currentTime;
+		//T. H. R. E. A. D. S.
+		for (int i = 0; i < numberPlayers; i++) {
+			players[i].captureEvents(window);
+			characters[i].draw(window, dT);
+		}
 	}
 }
 
@@ -115,9 +128,9 @@ void Game::draw() const
 		std::cout << "unknown game state\n" << (int)state;
 	}
 	}
-	for (auto c : characters) {
+	/*for (auto c : characters) {
 		window.draw(c);
-	}
+	}*/
 	//lvl.draw(window, cam);
 	//window.draw();
 	window.display();

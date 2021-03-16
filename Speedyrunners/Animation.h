@@ -11,14 +11,20 @@ private:
 	std::vector<sf::IntRect> frames;
 	int current_frame = 0;
 	sf::Vector2f position;
+	bool loop = false;
+	bool reverse = false;
 public:
 	sf::Vector2f get_position();
 	void set_position(sf::Vector2f new_position);
 	void set_spritesheet(std::shared_ptr<sf::Texture> spritesheet);
 	bool insert(int where, sf::IntRect new_frame);
-	sf::Sprite get_first_frame(bool reverse);
-	int advance_frame(sf::Sprite& sprite, bool loop, bool reverse);
+	sf::Sprite get_first_frame();
+	int advance_frame(sf::Sprite& sprite);
 	int get_current_frame();
 	sf::Vector2f get_center_offset();
+	void set_loop(bool loop);
+	bool get_loop() const;
+	void set_reverse(bool reverse);
+	bool get_reverse() const;
 };
 

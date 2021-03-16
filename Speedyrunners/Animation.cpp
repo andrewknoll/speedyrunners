@@ -24,7 +24,7 @@ bool Animation::insert(int where, sf::IntRect new_frame) {
 	return true;
 }
 
-sf::Sprite Animation::get_first_frame(bool reverse) {
+sf::Sprite Animation::get_first_frame() {
 	sf::Sprite sprite;
 	sprite.setTexture(*spritesheet);
 	sprite.setTextureRect(frames[reverse? frames.size() - 1 : 0]);
@@ -35,7 +35,7 @@ sf::Sprite Animation::get_first_frame(bool reverse) {
 }
 
 //Returns 1 if last frame
-int Animation::advance_frame(sf::Sprite& sprite, bool loop, bool reverse) {
+int Animation::advance_frame(sf::Sprite& sprite) {
 	int return_code = 0;
 	sf::Sprite new_sprite;
 	new_sprite.setTexture(*spritesheet);
@@ -84,5 +84,21 @@ sf::Vector2f Animation::get_position() {
 
 void Animation::set_position(sf::Vector2f new_position) {
 	position = new_position;
+}
+
+void Animation::set_loop(bool loop) {
+	this->loop = loop;
+}
+
+bool Animation::get_loop() const {
+	return loop;
+}
+
+void Animation::set_reverse(bool reverse) {
+	this->reverse = reverse;
+}
+
+bool Animation::get_reverse() const {
+	return reverse;
 }
 

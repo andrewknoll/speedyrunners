@@ -271,6 +271,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Animation.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="Spritesheet.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Character.cpp" />
@@ -282,6 +283,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
+    <ClInclude Include="Globals.hpp" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="Spritesheet.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Character.h" />
