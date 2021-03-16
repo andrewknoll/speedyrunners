@@ -1,17 +1,17 @@
 /*
-* 
+*
 * Practica_02_base.js
 * Videojuegos (30262) - Curso 2019-2020
-* 
+*
 * Parte adaptada de: Alex Clarke, 2016, y Ed Angel, 2015.
-* 
+*
 */
 
 // Variable to store the WebGL rendering context
 var gl;
 
 //----------------------------------------------------------------------------
-// MODEL DATA 
+// MODEL DATA
 //----------------------------------------------------------------------------
 
 //Define points' position vectors
@@ -36,12 +36,12 @@ const wireCubeIndices = [
 	6,7,3,2,6, //bottom
 ];
 
-const cubeIndices = [	
+const cubeIndices = [
 //Solid Cube - use TRIANGLES, starts at 0, 36 vertices
 	0,4,6, //front
 	0,6,2,
 	1,0,2, //right
-	1,2,3, 
+	1,2,3,
 	5,1,3, //back
 	5,3,7,
 	4,5,7, //left
@@ -56,7 +56,7 @@ const pointsAxes = [];
 pointsAxes.push([ 2.0, 0.0, 0.0, 1.0]); //x axis is green
 pointsAxes.push([-2.0, 0.0, 0.0, 1.0]);
 pointsAxes.push([ 0.0, 2.0, 0.0, 1.0]); //y axis is red
-pointsAxes.push([ 0.0,-2.0, 0.0, 1.0]); 
+pointsAxes.push([ 0.0,-2.0, 0.0, 1.0]);
 pointsAxes.push([ 0.0, 0.0, 2.0, 1.0]); //z axis is blue
 pointsAxes.push([ 0.0, 0.0,-2.0, 1.0]);
 
@@ -77,7 +77,7 @@ const shapes = {
 	cube: {Start: 0, Vertices: 36},
 	axes: {Start: 0, Vertices: 6}
 };
-	
+
 const red =			[1.0, 0.0, 0.0, 1.0];
 const green =		[0.0, 1.0, 0.0, 1.0];
 const blue =		[0.0, 0.0, 1.0, 1.0];
@@ -90,7 +90,7 @@ const colorsAxes = [
 	green, green, //x
 	red, red,     //y
 	blue, blue,   //z
-];	
+];
 
 const colorsWireCube = [
 	white, white, white, white, white,
@@ -101,17 +101,17 @@ const colorsWireCube = [
 	white, white, white, white, white,
 ];
 
-const colorsCube = [	
+const colorsCube = [
 	lightblue, lightblue, lightblue, lightblue, lightblue, lightblue,
 	lightgreen, lightgreen, lightgreen, lightgreen, lightgreen, lightgreen,
 	lightred, lightred, lightred, lightred, lightred, lightred,
 	blue, blue, blue, blue, blue, blue,
 	red, red, red, red, red, red,
 	green, green, green, green, green, green,
-];	
+];
 
 //----------------------------------------------------------------------------
-// OTHER DATA 
+// OTHER DATA
 //----------------------------------------------------------------------------
 
 var model = new mat4();   		// create a model matrix and set it to the identity matrix
@@ -136,8 +136,8 @@ var programInfo = {
 var objectsToDraw = [
 		{
 		  programInfo: programInfo,
-		  pointsArray: pointsAxes, 
-		  colorsArray: colorsAxes, 
+		  pointsArray: pointsAxes,
+		  colorsArray: colorsAxes,
 		  uniforms: {
 			u_colorMult: [1.0, 1.0, 1.0, 1.0],
 			u_model: new mat4(),
@@ -147,41 +147,44 @@ var objectsToDraw = [
 		{
 		  programInfo: programInfo,
 		  pointsArray: pointsWireCube,
-		  colorsArray: colorsWireCube, 
+		  colorsArray: colorsWireCube,
 		  uniforms: {
 			u_colorMult: [1.0, 1.0, 1.0, 1.0],
 			u_model: new mat4(),
 		  },
 		  primType: "line_strip",
-		},	
+		},
 		{
 		  programInfo: programInfo,
-		  pointsArray: pointsCube, 
-		  colorsArray: colorsCube, 
+		  pointsArray: pointsCube,
+		  colorsArray: colorsCube,
 		  uniforms: {
 			u_colorMult: [1.0, 1.0, 1.0, 1.0],
 			u_model: new mat4(),
 		  },
 		  primType: "triangles",
-		},		
+		},
 		{
 		  programInfo: programInfo,
-		  pointsArray: pointsCube, 
-		  colorsArray: colorsCube, 
+		  pointsArray: pointsCube,
+		  colorsArray: colorsCube,
 		  uniforms: {
 			u_colorMult: [0.5, 0.5, 0.5, 1.0],
 			u_model: new mat4(),
 		  },
 		  primType: "triangles",
-		},				
+		},
 ];
+
+
+
 
 //----------------------------------------------------------------------------
 // Initialization function
 //----------------------------------------------------------------------------
 
 window.onload = function init() {
-	
+
 	// Set up a WebGL Rendering Context in an HTML5 Canvas
 	var canvas = document.getElementById("gl-canvas");
 	gl = WebGLUtils.setupWebGL(canvas);
@@ -198,7 +201,7 @@ window.onload = function init() {
 	// Set up a WebGL program
 	// Load shaders and initialize attribute buffers
 	program = initShaders(gl, "vertex-shader", "fragment-shader");
-	  
+
 	// Save the attribute and uniform locations
 	uLocations.model = gl.getUniformLocation(program, "model");
 	uLocations.view = gl.getUniformLocation(program, "view");
@@ -212,8 +215,8 @@ window.onload = function init() {
 	programInfo.program = program;
 
 	gl.useProgram(programInfo.program);
-	
-	// Set up viewport 
+
+	// Set up viewport
 	gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
 
 	// Set up camera
@@ -226,10 +229,24 @@ window.onload = function init() {
 	up =  vec3(0.0, 1.0, 0.0);
 	view = lookAt(eye,target,up);
 	gl.uniformMatrix4fv(programInfo.uniformLocations.view, gl.FALSE, view); // copy view to uniform value in shader
-	
+
 	requestAnimFrame(render);
-  
+
 };
+
+// ------------------------------------
+// Add our n cubes to objects:
+function addCubes(objects, n) {
+	for (var i = 0; i < n; i++) {
+		// Algo asi:
+		// objects.add(newcube(i));
+	}
+}
+
+// Returns a new cube?
+function newCube(i) {
+
+}
 
 //----------------------------------------------------------------------------
 // Rendering Event Function
@@ -238,20 +255,20 @@ window.onload = function init() {
 function render() {
 
 	gl.clear(gl.DEPTH_BUFFER_BIT | gl.COLOR_BUFFER_BIT);
-	
+
 	//----------------------------------------------------------------------------
 	// MOVE STUFF AROUND
 	//----------------------------------------------------------------------------
 
 	let ejeY = vec3(0.0, 1.0, 0.0);
-	let R = rotate(rotAngle, ejeY);	
+	let R = rotate(rotAngle, ejeY);
 
 	objectsToDraw[2].uniforms.u_model = translate(1.0, 1.0, 3.0);
 	objectsToDraw[2].uniforms.u_model = mult(objectsToDraw[2].uniforms.u_model, R);
-	
+
 	objectsToDraw[3].uniforms.u_model = translate(1.0, 0.0, 3.0);
 	objectsToDraw[3].uniforms.u_model = mult(R, objectsToDraw[3].uniforms.u_model);
-	
+
 	//----------------------------------------------------------------------------
 	// DRAW
 	//----------------------------------------------------------------------------
@@ -268,20 +285,20 @@ function render() {
 
 		// Draw
 		gl.drawArrays(object.primitive, 0, object.pointsArray.length);
-    });	
-    
+    });
+
 	rotAngle += rotChange;
-	
+
 	requestAnimationFrame(render);
-	
+
 }
 
 //----------------------------------------------------------------------------
 // Utils functions
 //----------------------------------------------------------------------------
 
-function setPrimitive(objectsToDraw) {	
-	
+function setPrimitive(objectsToDraw) {
+
 	objectsToDraw.forEach(function(object) {
 		switch(object.primType) {
 		  case "lines":
@@ -296,8 +313,8 @@ function setPrimitive(objectsToDraw) {
 		  default:
 			object.primitive = gl.TRIANGLES;
 		}
-	});	
-}	
+	});
+}
 
 function setUniforms(pInfo, uniforms) {
 	// Copy uniform model values to corresponding values in shaders
