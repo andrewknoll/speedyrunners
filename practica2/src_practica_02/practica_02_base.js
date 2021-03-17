@@ -257,10 +257,16 @@ function randColor() {
 
 function randSpeed() {
 	let s = 2.0*(Math.random()-0.5);
-	if (Math.abs(s) < 0.05) {
-		s = (s<0) ? 0.05 : -0.05;
+	let mins = 0.3;
+	if (Math.abs(s) < mins) {
+		s = (s<0) ? -mins : mins;
 	}
 	return s;
+}
+
+// Not really uniform spherical distribution but probably good enough here:
+function randNormalVec3() {
+	return normalize(vec3(Math.random(), Math.random(), Math.random()));
 }
 
 // ------------------------------------
@@ -270,7 +276,8 @@ function addCubes(objects, n) {
 	let maxY = 8
 	let maxZ = 10
 	for (var i = 0; i < n; i++) {
-		let color = randColor()
+		let pos = vec3(maxX*(Math.random()-0.5), maxY*(Math.random()-0.5), maxZ*(Math.random()-0.5));
+		let color = randColor();
 		objects.push({
 			programInfo: programInfo,
 		  pointsArray: pointsCube,
@@ -280,19 +287,15 @@ function addCubes(objects, n) {
 			u_model: new mat4(),
 		  },
 		  primType: "triangles",
-			translation: translate(maxX*(Math.random()-0.5), maxY*(Math.random()-0.5), maxZ*(Math.random()-0.5)),
-			locRotAxis: vec3(Math.random(), Math.random(), Math.random()),
+			translation: translate(pos[0], pos[1], pos[2]),
+			locRotAxis: randNormalVec3(),
 			locRotSpeed: randSpeed(),
-			worldRotAxis: vec3(Math.random(), Math.random(), Math.random()),
-			worldRotSpeed: 2.0*(Math.random()-0.5),
+			// world rot axis must be perpendicular to pos-origin, so we cross it with a random vector:
+			worldRotAxis: normalize(cross(randNormalVec3(),pos)), 
+			worldRotSpeed: randSpeed(),
 		});
 	}
 }
-
-// Returns a new cube?
-// function newCube(i) {
-//
-// }
 
 //----------------------------------------------------------------------------
 // Rendering Event Function
@@ -318,11 +321,12 @@ function render() {
 	// Our rotations:
 	for (var i = 4; i < objectsToDraw.length; i++) {
 		// Local rotation
-		let R = rotate(rotAngle*objectsToDraw[i].locRotSpeed*5.0, objectsToDraw[i].locRotAxis)
-		objectsToDraw[i].uniforms.u_model = mult(R, objectsToDraw[i].translation);
+		let R = rotate(rotAngle*objectsToDraw[i].locRotSpeed*5.0, objectsToDraw[i].locRotAxis);
+		objectsToDraw[i].uniforms.u_model = mult(objectsToDraw[i].translation, R);
 		// World rotation:
-		R = rotate(rotAngle*objectsToDraw[i].worldRotSpeed*5.0, objectsToDraw[i].worldRotAxis)
-		objectsToDraw[i].uniforms.u_model = mult(objectsToDraw[i].uniforms.u_model, R);
+		R = rotate(rotAngle*objectsToDraw[i].worldRotSpeed*5.0, objectsToDraw[i].worldRotAxis);
+		//objectsToDraw[i].uniforms.u_model = objectsToDraw[i].translation;
+		objectsToDraw[i].uniforms.u_model = mult(R, objectsToDraw[i].uniforms.u_model);
 	}
 
 
