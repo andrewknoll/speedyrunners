@@ -280,13 +280,13 @@ function addCubes(objects, n) {
 		let color = randColor();
 		objects.push({
 			programInfo: programInfo,
-		  pointsArray: pointsCube,
-		  colorsArray: Array(36).fill(color),
-		  uniforms: {
+			pointsArray: pointsCube,
+			colorsArray: Array(36).fill(color),
+			uniforms: {
 			u_colorMult: [0.5, 0.5, 0.5, 1.0],
 			u_model: new mat4(),
-		  },
-		  primType: "triangles",
+			},
+			primType: "triangles",
 			translation: translate(pos[0], pos[1], pos[2]),
 			locRotAxis: randNormalVec3(),
 			locRotSpeed: randSpeed(),
