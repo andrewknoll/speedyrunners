@@ -321,11 +321,12 @@ function mousePressedHandler(event, x0, y0) {
 			rotY = -90 - yaw;
 			yaw = -90
 		}
-		console.log(rotP,"         ", rotY)
+		console.log(rotP, "         ", rotY)
 		return mult(rotate(rotP, ejeX), rotate(rotY, ejeY));
 	}
 	return null;
 	//console.log(event.clientX-x, "   ", event.clientY-y);
+}
 
 function randColor() {
 	let end = false;
