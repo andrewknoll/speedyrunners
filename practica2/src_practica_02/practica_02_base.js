@@ -127,6 +127,8 @@ var program;
 var uLocations = {};
 var aLocations = {};
 
+const rotSpeed = 100.0 //100 pixels = 1 degree
+
 var programInfo = {
 			program,
 			uniformLocations: {},
@@ -176,8 +178,11 @@ var objectsToDraw = [
 		},
 ];
 
-
-
+var pitch = 0;
+var yaw = 0;
+var default_proj = perspective(45.0, canvas.width / canvas.height, 0.1, 100.0);
+//function ortho( left, right, bottom, top, near, far )
+var ortho_proj = ortho();
 
 //----------------------------------------------------------------------------
 // Initialization function
@@ -195,6 +200,32 @@ window.onload = function init() {
 	//  Configure WebGL
 	gl.clearColor(0.0, 0.0, 0.0, 1.0);
 	gl.enable(gl.DEPTH_TEST);
+	var transform;
+	var originalProjection;
+	window.addEventListener("keydown", keyPressedHandler);
+	var click_x;
+	var click_y;
+	var original_view;
+
+	window.addEventListener("mousedown", function (event) {
+		click_x = event.clientX;
+		click_y = event.clientY;
+		original_view = mat4(gl.getUniform(program, gl.getUniformLocation(program, "view")));
+		console.log(click_x,"         ", click_y)
+	});
+
+	window.addEventListener("mousemove", function (event) {
+		// Cambiar para que al llegar a determinado punto de la pantalla, se llegue al máximo de rotación
+		// para ello, se puede rotar en el ángulo que queda para llegar a esa posición
+		transform = mousePressedHandler(event, click_x, click_y);
+		if (transform != null) {
+			//console.log(originalView);
+			gl.uniformMatrix4fv( programInfo.uniformLocations.view, gl.FALSE, mult(original_view, transform) );
+		}
+		click_x = event.clientX;
+		click_y = event.clientY;
+		original_view = mat4(gl.getUniform(program, gl.getUniformLocation(program, "view")));
+	});
 
 	setPrimitive(objectsToDraw);
 
@@ -221,7 +252,7 @@ window.onload = function init() {
 
 	// Set up camera
 	// Projection matrix
-	projection = perspective( 45.0, canvas.width/canvas.height, 0.1, 100.0 );
+	projection = default_proj;
 	gl.uniformMatrix4fv( programInfo.uniformLocations.projection, gl.FALSE, projection ); // copy projection to uniform value in shader
     // View matrix (static cam)
 	eye = vec3(-5.0, 5.0, 10.0);
@@ -233,6 +264,63 @@ window.onload = function init() {
 	requestAnimFrame(render);
 
 };
+
+function keyPressedHandler(event) {
+	switch (event.code) {
+		case "ArrowDown":
+			transform = translate(0.0, 0.0, -1.0)
+		case "ArrowUp":
+			transform = translate(0.0, 0.0, 1.0)
+		case "ArrowLeft":
+			transform = translate(-0.2, 0.0, 0.0)
+		case "ArrowRight":
+			transform = translate(0.2, 0.0, 0.0)
+		
+			transform = keyPressedHandler(event);
+			if (transform != null) {
+				original = mat4(gl.getUniform(program, gl.getUniformLocation(program, "view")));
+				//console.log(originalView);
+				gl.uniformMatrix4fv(programInfo.uniformLocations.view, gl.FALSE, mult(original, transform));
+			}
+			break;
+		case "P":
+			perspective = default_proj;
+	}
+	return null;
+}
+
+function mousePressedHandler(event, x0, y0) {
+	let ejeX = vec3(1.0, 0.0, 0.0);
+	let ejeY = vec3(0.0, 1.0, 0.0);
+	if (event.buttons == 1) {
+		rotP = (event.clientX - x0);
+		pitch += rotP;
+		if (pitch > 90) {
+			rotP = 90 - pitch;
+			pitch = 90
+		}
+		else if (pitch < -90) {
+			rotP = -90 - pitch;
+			pitch = -90
+		}
+
+		rotY = (event.clientY - y0);
+		yaw += rotY;
+		if (yaw > 90) {
+			rotY = 90 - yaw;
+			yaw = 90
+
+		}
+		else if (yaw < -90) {
+			rotY = -90 - yaw;
+			yaw = -90
+		}
+		console.log(rotP,"         ", rotY)
+		return mult(rotate(rotP, ejeX), rotate(rotY, ejeY));
+	}
+	return null;
+	//console.log(event.clientX-x, "   ", event.clientY-y);
+}
 
 // ------------------------------------
 // Add our n cubes to objects:
