@@ -180,9 +180,9 @@ var objectsToDraw = [
 
 var pitch = 0;
 var yaw = 0;
-var default_proj = perspective(45.0, canvas.width / canvas.height, 0.1, 100.0);
+var default_proj;
 //function ortho( left, right, bottom, top, near, far )
-var ortho_proj = ortho();
+var ortho_proj;
 
 //----------------------------------------------------------------------------
 // Initialization function
@@ -257,6 +257,7 @@ window.onload = function init() {
 
 	// Set up camera
 	// Projection matrix
+	default_proj = perspective(45.0, canvas.width / canvas.height, 0.1, 100.0);
 	projection = default_proj;
 	gl.uniformMatrix4fv( programInfo.uniformLocations.projection, gl.FALSE, projection ); // copy projection to uniform value in shader
     // View matrix (static cam)
