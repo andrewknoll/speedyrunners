@@ -272,6 +272,7 @@ window.onload = function init() {
 };
 
 function keyPressedHandler(event) {
+	transform = null;
 	switch (event.code) {
 		case "ArrowDown":
 			transform = translate(0.0, 0.0, -1.0)
@@ -281,8 +282,7 @@ function keyPressedHandler(event) {
 			transform = translate(-0.2, 0.0, 0.0)
 		case "ArrowRight":
 			transform = translate(0.2, 0.0, 0.0)
-		
-			transform = keyPressedHandler(event);
+
 			if (transform != null) {
 				original = mat4(gl.getUniform(program, gl.getUniformLocation(program, "view")));
 				//console.log(originalView);
