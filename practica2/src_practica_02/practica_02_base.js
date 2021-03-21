@@ -207,12 +207,12 @@ window.onload = function init() {
 	window.addEventListener("keydown", keyPressedHandler);
 	var click_x;
 	var click_y;
-	var original_view;
+	var original_projection;
 
 	window.addEventListener("mousedown", function (event) {
 		click_x = event.clientX;
 		click_y = event.clientY;
-		original_view = mat4(gl.getUniform(program, gl.getUniformLocation(program, "view")));
+		original_projection = mat4(gl.getUniform(program, gl.getUniformLocation(program, "projection")));
 	});
 
 	window.addEventListener("mousemove", function (event) {
@@ -221,11 +221,11 @@ window.onload = function init() {
 		transform = mousePressedHandler(event, click_x, click_y);
 		if (transform != null) {
 			//console.log(originalView);
-			gl.uniformMatrix4fv( programInfo.uniformLocations.view, gl.FALSE, mult(original_view, transform) );
+			gl.uniformMatrix4fv( programInfo.uniformLocations.projection, gl.FALSE, mult(original_projection, transform) );
 		}
 		click_x = event.clientX;
 		click_y = event.clientY;
-		original_view = mat4(gl.getUniform(program, gl.getUniformLocation(program, "view")));
+		original_projection = mat4(gl.getUniform(program, gl.getUniformLocation(program, "projection")));
 	});
 
 
@@ -293,14 +293,16 @@ function keyPressedHandler(event) {
 			if(transform == null) transform = translate(0.2, 0.0, 0.0)
 
 			if (transform != null) {
-				original = mat4(gl.getUniform(program, gl.getUniformLocation(program, "view")));
+				original = mat4(gl.getUniform(program, gl.getUniformLocation(program, "projection")));
 				//console.log(originalView);
-				gl.uniformMatrix4fv(programInfo.uniformLocations.view, gl.FALSE, mult(original, transform));
+				gl.uniformMatrix4fv(programInfo.uniformLocations.projection, gl.FALSE, mult(original, transform));
 			}
 			break;
 		case "P":
 		case "p":
 			console.log("P");
+			fov = 45.0;
+			changeFOV(default_proj, fov);
 			projection = default_proj;
 			projection_type = "perspective"
 			gl.uniformMatrix4fv(programInfo.uniformLocations.projection, gl.FALSE, projection);
@@ -341,10 +343,10 @@ function keyPressedHandler(event) {
 }
 
 function mousePressedHandler(event, x0, y0) {
-	let ejeX = vec3(1.0, 0.0, 0.0);
-	let ejeY = vec3(0.0, 1.0, 0.0);
+	let ejeX = vec3(0.0, 1.0, 0.0);
+	let ejeY = vec3(1.0, 0.0, 0.0);
 	if (event.buttons == 1) {
-		rotP = (event.clientX - x0);
+		rotP = (event.clientX - x0) /rotSpeed;
 		if (pitch + rotP >= 90) {
 			rotP = pitch - 90;
 			pitch = 90
@@ -357,7 +359,7 @@ function mousePressedHandler(event, x0, y0) {
 			pitch += rotP;
 		}
 
-		rotY = (event.clientY - y0);
+		rotY = (event.clientY - y0) / rotSpeed;
 		if (yaw + rotY >= 90) {
 			rotY = yaw - 90;
 			yaw = 90
