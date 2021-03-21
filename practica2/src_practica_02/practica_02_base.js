@@ -180,9 +180,11 @@ var objectsToDraw = [
 
 var pitch = 0;
 var yaw = 0;
+var projection_type;
 var default_proj;
-//function ortho( left, right, bottom, top, near, far )
 var ortho_proj;
+var fov;
+var aspect;
 
 //----------------------------------------------------------------------------
 // Initialization function
@@ -257,8 +259,12 @@ window.onload = function init() {
 
 	// Set up camera
 	// Projection matrix
-	default_proj = perspective(45.0, canvas.width / canvas.height, 0.1, 100.0);
+	fov = 45.0;
+	aspect = canvas.width / canvas.height;
+	default_proj = perspective(fov, aspect, 0.1, 100.0);
+	ortho_proj = ortho(-canvas.width/100, canvas.width/100, -canvas.height/100, canvas.height/100, 0.1, 100.0);
 	projection = default_proj;
+	projection_type = "perspective"
 	gl.uniformMatrix4fv( programInfo.uniformLocations.projection, gl.FALSE, projection ); // copy projection to uniform value in shader
     // View matrix (static cam)
 	eye = vec3(-5.0, 5.0, 10.0);
@@ -273,15 +279,19 @@ window.onload = function init() {
 
 function keyPressedHandler(event) {
 	transform = null;
-	switch (event.code) {
+	switch (event.key) {
+		case "Down":
 		case "ArrowDown":
-			transform = translate(0.0, 0.0, -1.0)
+			if(transform == null) transform = translate(0.0, 0.0, -1.0)
+		case "Up":
 		case "ArrowUp":
-			transform = translate(0.0, 0.0, 1.0)
+			if(transform == null) transform = translate(0.0, 0.0, 1.0)
+		case "Left":
 		case "ArrowLeft":
-			transform = translate(-0.2, 0.0, 0.0)
+			if(transform == null) transform = translate(-0.2, 0.0, 0.0)
+		case "Right":
 		case "ArrowRight":
-			transform = translate(0.2, 0.0, 0.0)
+			if(transform == null) transform = translate(0.2, 0.0, 0.0)
 
 			if (transform != null) {
 				original = mat4(gl.getUniform(program, gl.getUniformLocation(program, "view")));
@@ -290,7 +300,45 @@ function keyPressedHandler(event) {
 			}
 			break;
 		case "P":
-			perspective = default_proj;
+		case "p":
+			console.log("P");
+			projection = default_proj;
+			projection_type = "perspective"
+			gl.uniformMatrix4fv(programInfo.uniformLocations.projection, gl.FALSE, projection);
+			break;
+		case "O":
+		case "o":
+			console.log("O");
+			projection = ortho_proj;
+			projection_type = "orthogonal"
+			gl.uniformMatrix4fv(programInfo.uniformLocations.projection, gl.FALSE, projection);
+			break;
+		case "Add":
+		case "+":
+			//console.log("+");
+			if (fov < 179) {
+				fov += 1.0;
+				changeFOV(default_proj, fov);
+				if (projection_type == "perspective") {
+					projection = default_proj;
+					gl.uniformMatrix4fv(programInfo.uniformLocations.projection, gl.FALSE, projection);
+				}
+			}
+			console.log(fov);
+			break;
+		case "Substract":
+		case "-":
+			//console.log("-");
+			if (fov > 6.0) {
+				fov -= 1.0;
+				changeFOV(default_proj, fov - 5.0);
+				if (projection_type == "perspective") {
+					projection = default_proj;
+					gl.uniformMatrix4fv(programInfo.uniformLocations.projection, gl.FALSE, projection);
+				}
+			}
+			console.log(fov);
+			break;
 	}
 	return null;
 }
@@ -300,28 +348,32 @@ function mousePressedHandler(event, x0, y0) {
 	let ejeY = vec3(0.0, 1.0, 0.0);
 	if (event.buttons == 1) {
 		rotP = (event.clientX - x0);
-		pitch += rotP;
-		if (pitch > 90) {
-			rotP = 90 - pitch;
+		if (pitch + rotP >= 90) {
+			rotP = pitch - 90;
 			pitch = 90
 		}
-		else if (pitch < -90) {
-			rotP = -90 - pitch;
+		else if (pitch + rotP <= -90) {
+			rotP = pitch + 90;
 			pitch = -90
+		}
+		else {
+			pitch += rotP;
 		}
 
 		rotY = (event.clientY - y0);
-		yaw += rotY;
-		if (yaw > 90) {
-			rotY = 90 - yaw;
+		if (yaw + rotY >= 90) {
+			rotY = yaw - 90;
 			yaw = 90
 
 		}
-		else if (yaw < -90) {
-			rotY = -90 - yaw;
+		else if (yaw + rotY <= -90) {
+			rotY = yaw + 90;
 			yaw = -90
 		}
-		console.log(rotP, "         ", rotY)
+		else {
+			yaw += rotY;
+		}
+		//console.log(rotP, "           ", rotY);
 		return mult(rotate(rotP, ejeX), rotate(rotY, ejeY));
 	}
 	return null;
@@ -486,4 +538,11 @@ function setBuffersAndAttributes(pInfo, ptsArray, colArray) {
 	gl.bufferData( gl.ARRAY_BUFFER,  flatten(colArray), gl.STATIC_DRAW );
 	gl.vertexAttribPointer( pInfo.attribLocations.vColor, 4, gl.FLOAT, gl.FALSE, 0, 0 );
 	gl.enableVertexAttribArray( pInfo.attribLocations.vColor );
+}
+
+function changeFOV(proj, fovy) {
+	var f = 1.0 / Math.tan( radians(fovy) / 2 );
+	
+	proj[0] = f / aspect;
+	proj[5] = f;
 }
