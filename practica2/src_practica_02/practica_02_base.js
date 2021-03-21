@@ -213,7 +213,6 @@ window.onload = function init() {
 		click_x = event.clientX;
 		click_y = event.clientY;
 		original_view = mat4(gl.getUniform(program, gl.getUniformLocation(program, "view")));
-		console.log(click_x,"         ", click_y)
 	});
 
 	window.addEventListener("mousemove", function (event) {
@@ -315,7 +314,7 @@ function keyPressedHandler(event) {
 			break;
 		case "Add":
 		case "+":
-			//console.log("+");
+			console.log("+");
 			if (fov < 179) {
 				fov += 1.0;
 				changeFOV(default_proj, fov);
@@ -324,11 +323,10 @@ function keyPressedHandler(event) {
 					gl.uniformMatrix4fv(programInfo.uniformLocations.projection, gl.FALSE, projection);
 				}
 			}
-			console.log(fov);
 			break;
 		case "Substract":
 		case "-":
-			//console.log("-");
+			console.log("-");
 			if (fov > 6.0) {
 				fov -= 1.0;
 				changeFOV(default_proj, fov - 5.0);
@@ -337,7 +335,6 @@ function keyPressedHandler(event) {
 					gl.uniformMatrix4fv(programInfo.uniformLocations.projection, gl.FALSE, projection);
 				}
 			}
-			console.log(fov);
 			break;
 	}
 	return null;
