@@ -227,6 +227,11 @@ window.onload = function init() {
 		original_view = mat4(gl.getUniform(program, gl.getUniformLocation(program, "view")));
 	});
 
+
+	// ------- Add our stuff:
+	let nCubes = 20;
+	addCubes(objectsToDraw, nCubes);
+
 	setPrimitive(objectsToDraw);
 
 	// Set up a WebGL program
@@ -320,20 +325,62 @@ function mousePressedHandler(event, x0, y0) {
 	}
 	return null;
 	//console.log(event.clientX-x, "   ", event.clientY-y);
+
+function randColor() {
+	let end = false;
+	let c = [];
+	while (!end) {
+		c = [Math.random(),Math.random(),Math.random(),1] // random color with alpha=1
+		let sum = 0;
+		for (var i = 0; i < c.length-1; i++) {
+			sum += c[i];
+		}
+		end = sum>1.5;
+	}
+	return c;
+}
+
+
+function randSpeed() {
+	let s = 2.0*(Math.random()-0.5);
+	let mins = 0.3;
+	if (Math.abs(s) < mins) {
+		s = (s<0) ? -mins : mins;
+	}
+	return s;
+}
+
+// Not really uniform spherical distribution but probably good enough here:
+function randNormalVec3() {
+	return normalize(vec3(Math.random(), Math.random(), Math.random()));
 }
 
 // ------------------------------------
 // Add our n cubes to objects:
 function addCubes(objects, n) {
+	let maxX = 12
+	let maxY = 8
+	let maxZ = 10
 	for (var i = 0; i < n; i++) {
-		// Algo asi:
-		// objects.add(newcube(i));
+		let pos = vec3(maxX*(Math.random()-0.5), maxY*(Math.random()-0.5), maxZ*(Math.random()-0.5));
+		let color = randColor();
+		objects.push({
+			programInfo: programInfo,
+			pointsArray: pointsCube,
+			colorsArray: Array(36).fill(color),
+			uniforms: {
+			u_colorMult: [0.5, 0.5, 0.5, 1.0],
+			u_model: new mat4(),
+			},
+			primType: "triangles",
+			translation: translate(pos[0], pos[1], pos[2]),
+			locRotAxis: randNormalVec3(),
+			locRotSpeed: randSpeed(),
+			// world rot axis must be perpendicular to pos-origin, so we cross it with a random vector:
+			worldRotAxis: normalize(cross(randNormalVec3(),pos)), 
+			worldRotSpeed: randSpeed(),
+		});
 	}
-}
-
-// Returns a new cube?
-function newCube(i) {
-
 }
 
 //----------------------------------------------------------------------------
@@ -356,6 +403,18 @@ function render() {
 
 	objectsToDraw[3].uniforms.u_model = translate(1.0, 0.0, 3.0);
 	objectsToDraw[3].uniforms.u_model = mult(R, objectsToDraw[3].uniforms.u_model);
+
+	// Our rotations:
+	for (var i = 4; i < objectsToDraw.length; i++) {
+		// Local rotation
+		let R = rotate(rotAngle*objectsToDraw[i].locRotSpeed*5.0, objectsToDraw[i].locRotAxis);
+		objectsToDraw[i].uniforms.u_model = mult(objectsToDraw[i].translation, R);
+		// World rotation:
+		R = rotate(rotAngle*objectsToDraw[i].worldRotSpeed*5.0, objectsToDraw[i].worldRotAxis);
+		//objectsToDraw[i].uniforms.u_model = objectsToDraw[i].translation;
+		objectsToDraw[i].uniforms.u_model = mult(R, objectsToDraw[i].uniforms.u_model);
+	}
+
 
 	//----------------------------------------------------------------------------
 	// DRAW
