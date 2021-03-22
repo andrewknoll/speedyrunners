@@ -321,9 +321,9 @@ function keyPressedHandler(event) {
 
 			if (fov > 6.0) {
 				fov -= 1.0;
-				changeFOV(default_proj, fov - 5.0);
+				projection = mat4(gl.getUniform(program, gl.getUniformLocation(program, "projection")));
+				changeFOV(projection, fov);
 				if (projection_type == "perspective") {
-					projection = default_proj;
 					gl.uniformMatrix4fv(programInfo.uniformLocations.projection, gl.FALSE, projection);
 				}
 			}
@@ -333,9 +333,10 @@ function keyPressedHandler(event) {
 			console.log("-");
 			if (fov < 179) {
 				fov += 1.0;
-				changeFOV(default_proj, fov);
+				projection = mat4(gl.getUniform(program, gl.getUniformLocation(program, "projection")));
+
+				changeFOV(projection, fov);
 				if (projection_type == "perspective") {
-					projection = default_proj;
 					gl.uniformMatrix4fv(programInfo.uniformLocations.projection, gl.FALSE, projection);
 				}
 			}
