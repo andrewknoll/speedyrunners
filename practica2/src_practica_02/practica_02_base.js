@@ -127,7 +127,7 @@ var program;
 var uLocations = {};
 var aLocations = {};
 
-const rotSpeed = 100.0 //100 pixels = 1 degree
+const pixelPerDegree = 20.0 //100 pixels = 1 degree
 
 var programInfo = {
 			program,
@@ -318,11 +318,11 @@ function keyPressedHandler(event) {
 		case "+":
 			console.log("+");
 			if (fov < 179) {
-				fov += 1.0;
-				changeFOV(default_proj, fov);
+				proj = mat4(gl.getUniform(program, gl.getUniformLocation(program, "projection")));
+				changeFOV(proj, fov, 1.0);
 				if (projection_type == "perspective") {
 					projection = default_proj;
-					gl.uniformMatrix4fv(programInfo.uniformLocations.projection, gl.FALSE, projection);
+					gl.uniformMatrix4fv(programInfo.uniformLocations.projection, gl.FALSE, proj);
 				}
 			}
 			break;
@@ -330,11 +330,11 @@ function keyPressedHandler(event) {
 		case "-":
 			console.log("-");
 			if (fov > 6.0) {
-				fov -= 1.0;
-				changeFOV(default_proj, fov - 5.0);
+				proj = mat4(gl.getUniform(program, gl.getUniformLocation(program, "projection")));
+				changeFOV(proj, fov, -1.0);
 				if (projection_type == "perspective") {
 					projection = default_proj;
-					gl.uniformMatrix4fv(programInfo.uniformLocations.projection, gl.FALSE, projection);
+					gl.uniformMatrix4fv(programInfo.uniformLocations.projection, gl.FALSE, proj);
 				}
 			}
 			break;
@@ -346,7 +346,7 @@ function mousePressedHandler(event, x0, y0) {
 	let ejeX = vec3(0.0, 1.0, 0.0);
 	let ejeY = vec3(1.0, 0.0, 0.0);
 	if (event.buttons == 1) {
-		rotP = (event.clientX - x0) /rotSpeed;
+		rotP = (event.clientX - x0) / pixelPerDegree;
 		if (pitch + rotP >= 90) {
 			rotP = pitch - 90;
 			pitch = 90
@@ -359,7 +359,7 @@ function mousePressedHandler(event, x0, y0) {
 			pitch += rotP;
 		}
 
-		rotY = (event.clientY - y0) / rotSpeed;
+		rotY = (event.clientY - y0) / pixelPerDegree;
 		if (yaw + rotY >= 90) {
 			rotY = yaw - 90;
 			yaw = 90
@@ -539,9 +539,14 @@ function setBuffersAndAttributes(pInfo, ptsArray, colArray) {
 	gl.enableVertexAttribArray( pInfo.attribLocations.vColor );
 }
 
-function changeFOV(proj, fovy) {
-	var f = 1.0 / Math.tan( radians(fovy) / 2 );
+function changeFOV(proj, fov0, delta) {
+	//proj[0] =  1.0 / Math.tan( radians(fovy) / 2 ) / aspect
+	//proj[5] =  1.0 / Math.tan( radians(fovy) / 2 )
+	//Multiplicamos por el valor del anterior fov y realizamos de nuevo el cálculo de las dos líneas anteriores
+	var f = Math.tan( radians(fov0) / 2 ) / Math.tan( radians(fov0 + delta) / 2 );
 	
-	proj[0] = f / aspect;
-	proj[5] = f;
+	proj[0] *= f;
+	proj[5] *= f;
+	//Asignamos el nuevo valor de fov0
+	fov0 += delta;
 }
