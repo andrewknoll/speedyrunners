@@ -281,10 +281,10 @@ function keyPressedHandler(event) {
 	switch (event.key) {
 		case "Down":
 		case "ArrowDown":
-			if(transform == null) transform = translate(0.0, 0.0, -1.0)
+			if(transform == null) transform = translate(0.0, 0.0, 1.0) // Z axis towards camera
 		case "Up":
 		case "ArrowUp":
-			if(transform == null) transform = translate(0.0, 0.0, 1.0)
+			if(transform == null) transform = translate(0.0, 0.0, -1.0)
 		case "Left":
 		case "ArrowLeft":
 			if(transform == null) transform = translate(-0.2, 0.0, 0.0)
@@ -295,7 +295,8 @@ function keyPressedHandler(event) {
 			if (transform != null) {
 				original = mat4(gl.getUniform(program, gl.getUniformLocation(program, "projection")));
 				//console.log(originalView);
-				gl.uniformMatrix4fv(programInfo.uniformLocations.projection, gl.FALSE, mult(original, transform));
+				// inverse of the transform:
+				gl.uniformMatrix4fv(programInfo.uniformLocations.projection, gl.FALSE, mult(original, inverse(transform)));
 			}
 			break;
 		case "P":
@@ -317,9 +318,10 @@ function keyPressedHandler(event) {
 		case "Add":
 		case "+":
 			console.log("+");
-			if (fov < 179) {
-				fov += 1.0;
-				changeFOV(default_proj, fov);
+
+			if (fov > 6.0) {
+				fov -= 1.0;
+				changeFOV(default_proj, fov - 5.0);
 				if (projection_type == "perspective") {
 					projection = default_proj;
 					gl.uniformMatrix4fv(programInfo.uniformLocations.projection, gl.FALSE, projection);
@@ -329,9 +331,9 @@ function keyPressedHandler(event) {
 		case "Substract":
 		case "-":
 			console.log("-");
-			if (fov > 6.0) {
-				fov -= 1.0;
-				changeFOV(default_proj, fov - 5.0);
+			if (fov < 179) {
+				fov += 1.0;
+				changeFOV(default_proj, fov);
 				if (projection_type == "perspective") {
 					projection = default_proj;
 					gl.uniformMatrix4fv(programInfo.uniformLocations.projection, gl.FALSE, projection);
@@ -430,7 +432,7 @@ function addCubes(objects, n) {
 			locRotAxis: randNormalVec3(),
 			locRotSpeed: randSpeed(),
 			// world rot axis must be perpendicular to pos-origin, so we cross it with a random vector:
-			worldRotAxis: normalize(cross(randNormalVec3(),pos)), 
+			worldRotAxis: normalize(cross(randNormalVec3(),pos)),
 			worldRotSpeed: randSpeed(),
 		});
 	}
@@ -541,7 +543,7 @@ function setBuffersAndAttributes(pInfo, ptsArray, colArray) {
 
 function changeFOV(proj, fovy) {
 	var f = 1.0 / Math.tan( radians(fovy) / 2 );
-	
+
 	proj[0] = f / aspect;
 	proj[5] = f;
 }
