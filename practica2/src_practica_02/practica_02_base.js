@@ -281,10 +281,10 @@ function keyPressedHandler(event) {
 	switch (event.key) {
 		case "Down":
 		case "ArrowDown":
-			if(transform == null) transform = translate(0.0, 0.0, -1.0)
+			if(transform == null) transform = translate(0.0, 0.0, 1.0) // Z axis towards camera
 		case "Up":
 		case "ArrowUp":
-			if(transform == null) transform = translate(0.0, 0.0, 1.0)
+			if(transform == null) transform = translate(0.0, 0.0, -1.0)
 		case "Left":
 		case "ArrowLeft":
 			if(transform == null) transform = translate(-0.2, 0.0, 0.0)
@@ -295,7 +295,8 @@ function keyPressedHandler(event) {
 			if (transform != null) {
 				original = mat4(gl.getUniform(program, gl.getUniformLocation(program, "projection")));
 				//console.log(originalView);
-				gl.uniformMatrix4fv(programInfo.uniformLocations.projection, gl.FALSE, mult(original, transform));
+				// inverse of the transform:
+				gl.uniformMatrix4fv(programInfo.uniformLocations.projection, gl.FALSE, mult(original, inverse(transform)));
 			}
 			break;
 		case "P":
@@ -430,7 +431,7 @@ function addCubes(objects, n) {
 			locRotAxis: randNormalVec3(),
 			locRotSpeed: randSpeed(),
 			// world rot axis must be perpendicular to pos-origin, so we cross it with a random vector:
-			worldRotAxis: normalize(cross(randNormalVec3(),pos)), 
+			worldRotAxis: normalize(cross(randNormalVec3(),pos)),
 			worldRotSpeed: randSpeed(),
 		});
 	}
