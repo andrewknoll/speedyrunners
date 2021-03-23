@@ -6,8 +6,7 @@
 #include "Spritesheet.h"
 
 Character::Character(Spritesheet sp): 
-	hitBox(glb::default_hitbox),
-	state(State::InAir) {
+	hitBox(glb::default_hitbox) {
 	getSpritesVectorFromMap(sp.get_animations());
 	setAnimation(StartAnim);
 }
@@ -17,7 +16,6 @@ sf::Sprite Character::getSprite() {
 }
 
 void Character::setPosition(float x, float y) {
-	mySprite.setPosition(x, y);
 	hitBox.top = y;
 	hitBox.left = x;
 	sf::Transformable::setPosition(x, y);
@@ -38,7 +36,6 @@ void fixPosition(sf::FloatRect& hitbox) {
 
 void Character::update(const sf::Time& dT, const TileMap& tiles)
 {
-	return;
 	setFriction();
 	float dtSec = dT.asSeconds();
 
@@ -60,6 +57,10 @@ void Character::update(const sf::Time& dT, const TileMap& tiles)
 		if (collision->normal.x != 0) { // Make 0 the component of the collision
 			vel.x = 0;
 			acc.x = 0;
+			isRunning = false;
+			if (isGrounded) {
+				setAnimation(StandAnim);
+			}
 		}
 		else {
 			vel.y = 0;
@@ -83,21 +84,30 @@ void Character::update(const sf::Time& dT, const TileMap& tiles)
 		//setFillColor(sf::Color::Red);
 	}
 	setPosition(hitBox.left, hitBox.top); // Del rectangulo
+	if (vel.y > 0) {
+		if (hasDoubleJumped) {
+			setAnimation(DoubleJumpFallAnim);
+		}
+		else {
+			setAnimation(FallAnim);
+		}
+	}
 }
 
 void Character::updateGrounded(const sf::Vector2f& normal) {
 	isGrounded = (normal == sf::Vector2f(0, -1));
 	if (isGrounded) hasDoubleJumped = false;
+	if (isRunning) setAnimation(RunAnim, true);
 	//std::cout << "grounded? " << isGrounded << "\n";
 }
 
 void Character::run(bool right){
-	isRunning = true;
+	
 	facingRight = right;
 	if (isGrounded){
 		acc.x = runningAcceleration;
-		if (state == State::Standing) {
-			setState(State::Running);
+		if (!isRunning) {
+			setAnimation(RunAnim, true);
 		}
 	}
 	else
@@ -105,10 +115,25 @@ void Character::run(bool right){
 	if(!right){
 		acc.x = -acc.x;
 	}
+	isRunning = true;
 }
 
 void Character::stop(){
 	isRunning = false;
+}
+
+void Character::jump() {
+	if (isGrounded) {
+		vel.y = -jumpingSpeed;
+		isGrounded = false;
+		setAnimation(JumpAnim);
+	}
+	else if (!hasDoubleJumped) { // in air and hasnt double jumped yet
+		vel.y = -jumpingSpeed;
+		hasDoubleJumped = true;
+		setAnimation(DoubleJumpAnim);
+	}
+	isGrounded = false;
 }
 /*
 void Character::processInput(sf::Event& e)
@@ -150,7 +175,7 @@ void Character::processInput(sf::Event& e)
 }
 */
 void Character::updateAcceleration() {
-	if (state == State::InAir)
+	if (!isGrounded)
 		acc.y = physics::GRAVITY;
 }
 
@@ -170,6 +195,9 @@ void Character::setFriction() {
 			//std::cout << "Cerca de 0: " << vel.x << "\n";
 			acc.x = 0;
 			vel.x = 0;
+			if (isGrounded){
+				setAnimation(StandAnim);
+			}
 		}
 	}
 	
@@ -202,35 +230,15 @@ void Character::setVerticalSpeed(float vel) {
 	this->vel.y = vel;
 }
 
-void Character::setState(State s) {
-	state = s;
-	switch (state) {
-	case State::Standing:
-		setAnimation(StandAnim);
-		break;
-	case State::Running:
-		setAnimation(RunAnim);
-		break;
-	case State::Sliding:
-		setAnimation(SlideAnim);
-		break;
-	case State::WallJumping:
-		setAnimation(WallHangAnim);
-		break;
-	}
-	currentAnimation->update_orientation(facingRight);
-}
-
-Character::State Character::getState() const {
-	return state;
-}
-
-void Character::setAnimation(AnimationIndex i) {
+void Character::setAnimation(AnimationIndex i, bool loop, bool reverse) {
 	if (animIdx != i) {
 		currentAnimation = animations[i];
 		mySprite = currentAnimation->get_first_frame();
 		animIdx = i;
 	}
+	currentAnimation->set_loop(loop);
+	currentAnimation->set_reverse(reverse);
+	currentAnimation->update_orientation(facingRight);
 }
 
 

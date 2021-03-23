@@ -29,8 +29,8 @@ sf::Sprite Animation::get_first_frame() {
 	sprite.setTexture(*spritesheet);
 	sprite.setTextureRect(frames[reverse? frames.size() - 1 : 0]);
 	current_frame = reverse ? frames.size() - 1 : 0;
-	sprite.setPosition(this->get_position() - this->get_center_offset());
-	sprite.setOrigin(sprite.getOrigin());
+	//sprite.setPosition(this->get_position() - this->get_center_offset());
+	sprite.setOrigin(this->get_center_offset());
 	if(!facing_right){
 		sprite.setScale(-1.0,1.0);
 	}
@@ -66,8 +66,8 @@ int Animation::advance_frame(sf::Sprite& sprite) {
 		if (current_frame == 0) return_code = 1;
 	}
 	if (return_code == 0) {
-		new_sprite.setPosition(this->get_position() - this->get_center_offset());
-		new_sprite.setOrigin(sprite.getOrigin());
+		//new_sprite.setPosition(this->get_position() - this->get_center_offset());
+		new_sprite.setOrigin(this->get_center_offset());
 		sprite = new_sprite;
 	}
 	if(!facing_right){
@@ -94,8 +94,12 @@ sf::Vector2f Animation::get_position() {
 	return position;
 }
 
-void Animation::set_position(sf::Vector2f new_position) {
+void Animation::setPosition(sf::Vector2f new_position) {
 	position = new_position;
+}
+
+void Animation::setPosition(float x, float y) {
+	position = sf::Vector2f(x, y);
 }
 
 void Animation::set_loop(bool loop) {

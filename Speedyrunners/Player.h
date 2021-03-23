@@ -2,7 +2,6 @@
 #include "Character.h"
 class Player
 {
-	using CharState = Character::State;
 	using CharPtr = std::shared_ptr<Character>;
 private:
 	CharPtr me;
