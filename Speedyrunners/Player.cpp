@@ -15,22 +15,12 @@ void Player::captureEvents(const sf::Event& event) {
 		else if (event.key.code == sf::Keyboard::Key::Right) {
 			me->run(true);
 		}
-		/*
 		else if (event.key.code == sf::Keyboard::Key::Z) {
-			//Comprobar WallJumping
-			if (me->getState() == CharState::Standing) {
-				me->setState(CharState::InAir);
-			}
-			if (me->getState() == CharState::Running) {
-				//Considerar long presses
-				//me->setVerticalSpeed(JUMP_VEL);
-			}
-			else if (me->getState() == CharState::InAir) {
-				//Doble salto
-				//me->setVerticalSpeed(JUMP_VEL);
-			}
+			//TODO: Comprobar WallJumping
+			//TODO: Considerar long presses
+			me->jump();
 		}
-		else if (event.key.code == sf::Keyboard::Key::Down) {
+		/*else if (event.key.code == sf::Keyboard::Key::Down) {
 			if (me->getState() == CharState::Standing ||
 				me->getState() == CharState::InAir ||
 				me->getState() == CharState::Running) {
@@ -39,6 +29,11 @@ void Player::captureEvents(const sf::Event& event) {
 			}
 
 		}*/
+	}
+	if (event.type == sf::Event::KeyReleased) {
+		if (event.key.code == sf::Keyboard::Right || event.key.code == sf::Keyboard::Left) {
+			me->stop();
+		}
 	}
 }
 

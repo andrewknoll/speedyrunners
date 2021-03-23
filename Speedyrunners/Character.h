@@ -12,7 +12,7 @@ typedef std::shared_ptr<Animation> AnimationPtr;
 class Character : public sf::Transformable, public sf::Drawable
 {
 public:
-	enum class State {Standing, Running, Sliding, InAir, Grappling, WallJumping, Stunned, Tripped};
+	//enum class State {Standing, Running, Sliding, InAir, Grappling, WallJumping, Stunned, Tripped};
 	enum AnimationIndex {
 		StandAnim, RunAnim, SlideAnim, SlidingAnim, FallAnim, JumpAnim,
 		LongFallAnim, LongJumpAnim, DoubleJumpAnim, DoubleJumpFallAnim, HookshotAnim,
@@ -20,7 +20,7 @@ public:
 		GrabbedAnim, SkidAnim, SpikedAnim, TauntAnim, StartAnim
 	};
 protected:
-	State state = State::Standing;
+	//State state = State::InAir;
 
 	sf::Rect<float> hitBox;
 
@@ -62,18 +62,19 @@ public:
 
 	sf::Sprite getSprite();
 	void tickAnimation(sf::Time dT);
-	void setAnimation(AnimationIndex i);
+	void setAnimation(AnimationIndex i, bool loop = false, bool reverse = false);
 
 	void update(const sf::Time& dT, const TileMap& tiles);
 
 	void setHorizontalAcc(float acc);
 	void setVerticalSpeed(float vel);
 
-	void setState(State s);
-	State getState() const;
+	//void setState(State s);
+	//State getState() const;
 
 	void run(bool right);
 	void stop();
+	void jump();
 	
 };
 

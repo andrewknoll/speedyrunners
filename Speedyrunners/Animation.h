@@ -16,7 +16,8 @@ private:
 	bool facing_right = true;
 public:
 	sf::Vector2f get_position();
-	void set_position(sf::Vector2f new_position);
+	void setPosition(sf::Vector2f new_position);
+	void setPosition(float x, float y);
 	void set_spritesheet(std::shared_ptr<sf::Texture> spritesheet);
 	bool insert(int where, sf::IntRect new_frame);
 	sf::Sprite get_first_frame();

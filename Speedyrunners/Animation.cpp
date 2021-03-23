@@ -73,7 +73,7 @@ int Animation::advance_frame(sf::Sprite& sprite) {
 	}
 	if (return_code == 0) {
 		//new_sprite.setPosition(this->get_position() - this->get_center_offset());
-		new_sprite.setOrigin(sprite.getOrigin());
+		new_sprite.setOrigin(this->get_center_offset());
 		sprite = new_sprite;
 	}
 	flip(sprite);
@@ -95,8 +95,12 @@ sf::Vector2f Animation::get_position() {
 	return position;
 }
 
-void Animation::set_position(sf::Vector2f new_position) {
+void Animation::setPosition(sf::Vector2f new_position) {
 	position = new_position;
+}
+
+void Animation::setPosition(float x, float y) {
+	position = sf::Vector2f(x, y);
 }
 
 void Animation::set_loop(bool loop) {
