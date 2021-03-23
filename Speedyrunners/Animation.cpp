@@ -29,8 +29,9 @@ sf::Sprite Animation::get_first_frame() {
 	sprite.setTexture(*spritesheet);
 	sprite.setTextureRect(frames[reverse? frames.size() - 1 : 0]);
 	current_frame = reverse ? frames.size() - 1 : 0;
-	sprite.setPosition(this->get_position() - this->get_center_offset());
-	sprite.setOrigin(sprite.getOrigin());
+	//sprite.setPosition(this->get_position() - this->get_center_offset());
+	sprite.setOrigin(sprite.getLocalBounds().width / 2.0, 0);
+	//sprite.setOrigin(sprite.getOrigin());
 	flip(sprite);
 	return sprite;
 }
@@ -71,7 +72,7 @@ int Animation::advance_frame(sf::Sprite& sprite) {
 		if (current_frame == 0) return_code = 1;
 	}
 	if (return_code == 0) {
-		new_sprite.setPosition(this->get_position() - this->get_center_offset());
+		//new_sprite.setPosition(this->get_position() - this->get_center_offset());
 		new_sprite.setOrigin(sprite.getOrigin());
 		sprite = new_sprite;
 	}

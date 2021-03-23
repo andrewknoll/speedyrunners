@@ -17,7 +17,7 @@ sf::Sprite Character::getSprite() {
 }
 
 void Character::setPosition(float x, float y) {
-	mySprite.setPosition(x, y);
+	//mySprite.setPosition(x, y);
 	hitBox.top = y;
 	hitBox.left = x;
 	sf::Transformable::setPosition(x, y);
