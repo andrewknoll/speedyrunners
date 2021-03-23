@@ -31,15 +31,20 @@ sf::Sprite Animation::get_first_frame() {
 	current_frame = reverse ? frames.size() - 1 : 0;
 	sprite.setPosition(this->get_position() - this->get_center_offset());
 	sprite.setOrigin(sprite.getOrigin());
-	if(!facing_right){
-		sprite.setScale(-1.0,1.0);
-	}
-	else{
-		sprite.setScale(1.0,1.0);
-	}
+	flip(sprite);
 	return sprite;
 }
 
+
+void Animation::flip(sf::Sprite& sprite) {
+	sprite.setOrigin(sprite.getLocalBounds().width / 2.0, 0);
+	if (!facing_right) {
+		sprite.setScale(-1.0, 1.0);
+	}
+	else {
+		sprite.setScale(1.0, 1.0);
+	}
+}
 //Returns 1 if last frame
 int Animation::advance_frame(sf::Sprite& sprite) {
 	int return_code = 0;
@@ -70,12 +75,7 @@ int Animation::advance_frame(sf::Sprite& sprite) {
 		new_sprite.setOrigin(sprite.getOrigin());
 		sprite = new_sprite;
 	}
-	if(!facing_right){
-		sprite.setScale(-1.0,1.0);
-	}
-	else{
-		sprite.setScale(1.0,1.0);
-	}
+	flip(sprite);
 	return return_code;
 }
 

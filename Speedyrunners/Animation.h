@@ -20,6 +20,7 @@ public:
 	void set_spritesheet(std::shared_ptr<sf::Texture> spritesheet);
 	bool insert(int where, sf::IntRect new_frame);
 	sf::Sprite get_first_frame();
+	void flip(sf::Sprite& sprite);
 	int advance_frame(sf::Sprite& sprite);
 	int get_current_frame();
 	sf::Vector2f get_center_offset();

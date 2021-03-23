@@ -92,6 +92,9 @@ void Character::updateGrounded(const sf::Vector2f& normal) {
 }
 
 void Character::run(bool right){
+	std::cout << "Running " << right << " \n";
+	state = State::Standing;
+	isGrounded = true;
 	isRunning = true;
 	facingRight = right;
 	if (isGrounded){
