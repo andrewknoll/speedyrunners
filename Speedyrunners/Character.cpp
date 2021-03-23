@@ -3,6 +3,7 @@
 #include "Character.h"
 #include "utils.hpp" // physics
 #include "Globals.hpp" //animation names
+#include "Spritesheet.h"
 
 
 /*Character::Character(sf::Rect<float> _hitBox) : hitBox(_hitBox), RectangleShape(sf::Vector2f(_hitBox.width, _hitBox.height))
@@ -10,6 +11,23 @@
 	setPosition(_hitBox.left, _hitBox.top); // Del rectangulo
 	setFillColor(sf::Color::Red);
 }*/
+sf::Sprite Character::getSprite() {
+	return mySprite;
+}
+
+Character::Character(Spritesheet sp) {
+	getSpritesVectorFromMap(sp.get_animations());
+	setAnimation(StartAnim);
+}
+
+void Character::setPosition(float x, float y) {
+	mySprite.setPosition(x, y);
+	sf::Transformable::setPosition(x, y);
+}
+
+void Character::setPosition(const sf::Vector2f pos) {
+	setPosition(pos.x, pos.y);
+}
 
 void Character::update(const sf::Time& dT)
 {
@@ -22,7 +40,7 @@ void Character::update(const sf::Time& dT)
 	vel = utils::clampAbs(vel + acc * dtSec, physics::MAX_FALL_SPEED);
 	// Update acc:
 	acc.y = physics::GRAVITY;
-
+	
 	switch (state) {
 	case State::Standing:
 		setAnimation(StandAnim);
@@ -47,13 +65,12 @@ void Character::update(const sf::Time& dT)
 	setTextureRect(sf::IntRect(300, 200, 100,100));
 }*/
 
-void Character::draw(sf::RenderTarget& target, sf::Time dT) {
+void Character::tickAnimation(sf::Time dT) {
 	countdown -= dT;
 	if (countdown <= sf::Time::Zero) {
-		currentAnimation.advance_frame(mySprite);
+		currentAnimation->advance_frame(mySprite);
 		countdown = PERIOD;
 	}
-	target.draw(*this);
 }
 
 void Character::draw(sf::RenderTarget& target, sf::RenderStates states) const {
@@ -64,7 +81,6 @@ void Character::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	// apply the animation texture
 	states.texture = mySprite.getTexture();
 
-	// draw the vertex array
 	target.draw(mySprite, states);
 }
 
@@ -87,12 +103,13 @@ Character::State Character::getState() const {
 void Character::setAnimation(AnimationIndex i) {
 	if (animIdx != i) {
 		currentAnimation = animations[i];
-		mySprite = currentAnimation.get_first_frame();
+		mySprite = currentAnimation->get_first_frame();
+		animIdx = i;
 	}
 }
 
 
-void Character::getSpritesVectorFromMap(std::map<std::string, Animation> map) {
+void Character::getSpritesVectorFromMap(std::map<std::string, AnimationPtr> map) {
 	for (auto const& pair : map) {
 		if (pair.first == glb::anim::STAND_ANIM) {
 			animations[StandAnim] = pair.second;

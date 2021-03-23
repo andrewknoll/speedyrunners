@@ -3,10 +3,12 @@
 class Player
 {
 	using CharState = Character::State;
+	using CharPtr = std::shared_ptr<Character>;
 private:
-	Character* me;
+	CharPtr me;
 public:
-	void captureEvents(sf::RenderWindow& window);
-	void setCharacter(Character* you);
+	void captureEvents(const sf::Event& event);
+	void setCharacter(CharPtr you);
+	CharPtr getCharacter() const;
 };
 

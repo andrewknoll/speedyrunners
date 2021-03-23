@@ -3,9 +3,10 @@
 //#include <Rect.hpp>
 #include "Animation.h"
 #include "Globals.hpp"
+#include "Spritesheet.h"
 
 #define PERIOD sf::milliseconds(1000/30)
-
+typedef std::shared_ptr<Animation> AnimationPtr;
 
 class Character : public sf::Transformable, public sf::Drawable
 {
@@ -29,20 +30,22 @@ protected:
 	bool hasDoubleJumped = false;
 
 	AnimationIndex animIdx;
-	mutable Animation currentAnimation;
+	std::shared_ptr<Animation> currentAnimation;
 	mutable sf::Sprite mySprite;
 	sf::Time countdown = PERIOD;
 
-	std::vector<Animation> animations = std::vector<Animation>(glb::NUMBER_OF_ANIMATIONS);
+	std::vector<AnimationPtr> animations = std::vector<AnimationPtr>(glb::NUMBER_OF_ANIMATIONS);
 	
 	
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
-
-	
+	void getSpritesVectorFromMap(std::map<std::string, AnimationPtr> map);
 
 public:
 	//Character(sf::Rect<float> _hitBox = sf::Rect<float>(20,20,14, 30));
-	void draw(sf::RenderTarget& target, sf::Time dT);
+	Character(Spritesheet);
+	void setPosition(const sf::Vector2f pos);
+	void setPosition(float x, float y);
+	void tickAnimation(sf::Time dT);
 	void update(const sf::Time& dT);
 	//Character(const std::string& _path);
 
@@ -52,7 +55,8 @@ public:
 	void setState(State s);
 	State getState() const;
 
-	void getSpritesVectorFromMap(std::map<std::string, Animation> map);
+	sf::Sprite getSprite();
+	
 
 	void setAnimation(AnimationIndex i);
 };

@@ -33,7 +33,7 @@ void Game::loop()
 	sf::Time currentTime, previousTime = clock.getElapsedTime();
 	while (window.isOpen()) {
 		update();
-		draw();
+		draw(dT);
 
 		// https://en.sfml-dev.org/forums/index.php?topic=7018.0:
 		currentTime = clock.getElapsedTime();
@@ -45,15 +45,10 @@ void Game::loop()
 			std::cout << "fps = " << floor(fps) << std::endl; // flooring it will make the frame rate a rounded number
 		}
 		previousTime = currentTime;
-		//T. H. R. E. A. D. S.
-		for (int i = 0; i < numberPlayers; i++) {
-			players[i].captureEvents(window);
-			characters[i].draw(window, dT);
-		}
 	}
 }
 
-void Game::addCharacter(const Character& character)
+void Game::addCharacter(const CharPtr character)
 {
 	characters.emplace_back(character);
 }
@@ -74,12 +69,18 @@ void Game::update()
 		}
 		if (state == State::Editing) { // Editing state
 			processEditingInputs(event);
-		} // End of editing state
+		}// End of editing state
+		else if(state == State::Playing){
+			for (auto& p : players) {
+				p.captureEvents(event);
+			}
+		}
 		
 	}
 	if (true) { // TODO: cambiar por state == State::Playing 
-		for (auto& c : characters) {
-			c.update(dT);
+		for (auto c : characters) {
+			c->update(dT);
+			
 		}
 	}
 	//cam.pollEvents();
@@ -113,7 +114,7 @@ void Game::processEditingInputs(const sf::Event& event) {
 }
 
 
-void Game::draw() const
+void Game::draw(sf::Time dT)
 {
 	window.clear();
 	window.draw(lvl);
@@ -128,9 +129,10 @@ void Game::draw() const
 		std::cout << "unknown game state\n" << (int)state;
 	}
 	}
-	/*for (auto c : characters) {
-		window.draw(c);
-	}*/
+	for (auto& c : characters) {
+		c->tickAnimation(dT);
+		window.draw(*c);
+	}
 	//lvl.draw(window, cam);
 	//window.draw();
 	window.display();

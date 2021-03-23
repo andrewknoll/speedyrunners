@@ -8,11 +8,12 @@
 
 class Game
 {
+	using CharPtr = std::shared_ptr<Character>;
 public:
 	enum class State { Playing, Paused, Editing };
 protected:
 	mutable sf::RenderWindow window;
-	std::vector<Character> characters;
+	std::vector<CharPtr> characters;
 	Camera cam;
 	Level lvl;
 
@@ -33,7 +34,7 @@ protected:
 
 	void processEditingInputs(const sf::Event& event);
 
-	void draw() const;
+	void draw(sf::Time dT);
 
 public:
 
@@ -43,7 +44,7 @@ public:
 
 	void loop();
 
-	void addCharacter(const Character& character);
+	void addCharacter(const CharPtr character);
 
 	void playerJoin(Player newPlayer);
 };

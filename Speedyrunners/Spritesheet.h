@@ -6,6 +6,9 @@
 #include <fstream>
 #include <ctype.h>
 #include <memory>
+
+typedef std::shared_ptr<Animation> AnimationPtr;
+
 class Spritesheet
 {
 private:
@@ -42,7 +45,7 @@ private:
 		MetaSubscope = 14
 	};
 
-	std::map<std::string, Animation> animations;
+	std::map<std::string, AnimationPtr> animations;
 	bool flags[15];
 	std::shared_ptr<sf::Texture> texture;
 
@@ -50,6 +53,6 @@ private:
 	int process_token(std::string matched);
 public:
 	int parse_spritesheet(std::string image_filename, std::string data_filename);
-	std::map<std::string, Animation> get_animations();
+	std::map<std::string, AnimationPtr> get_animations();
 };
 

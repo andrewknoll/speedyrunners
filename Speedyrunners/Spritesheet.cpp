@@ -61,11 +61,11 @@ int Spritesheet::process_token(std::string matched) {
 			if (flags[FilenameRead] && flags[Position_H]) { //No errors occurred
 				sf::IntRect new_rect = sf::IntRect(coord_cache[0], coord_cache[1], coord_cache[2], coord_cache[3]);
 				if (animations.count(last_animation_name) == 0) {	//Create Animation if this is the first frame added
-					Animation new_animation;
-					animations.insert(std::pair<std::string, Animation>(last_animation_name, new_animation));
-					animations[last_animation_name].set_spritesheet(texture);
+					AnimationPtr new_animation = std::make_shared<Animation>();
+					animations.insert(std::pair<std::string, AnimationPtr>(last_animation_name, new_animation));
+					animations[last_animation_name]->set_spritesheet(texture);
 				}
-				if (!animations[last_animation_name].insert(last_frame_index, new_rect)) return DuplicatedFrame;
+				if (!animations[last_animation_name]->insert(last_frame_index, new_rect)) return DuplicatedFrame;
 			}
 			flags[SingleFrameScope] = false;
 			flags[FilenameToken] = false;
@@ -209,6 +209,6 @@ int Spritesheet::parse_spritesheet(std::string image_filename, std::string data_
 	return return_code;
 }
 
-std::map<std::string, Animation> Spritesheet::get_animations() {
+std::map<std::string, AnimationPtr> Spritesheet::get_animations() {
 	return animations;
 }
