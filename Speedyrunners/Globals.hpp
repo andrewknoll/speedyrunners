@@ -1,4 +1,5 @@
 #pragma once
+#include <SFML/Graphics.hpp>
 #include <string>
 namespace glb
 {
@@ -27,5 +28,11 @@ namespace glb
 		const std::string TAUNT_ANIM = "Taunt";
 		const std::string START_ANIM = "321GO";
 	};
+
+	const sf::Rect<float> default_hitbox = sf::Rect<float>(20,20,14, 30);
+
+	const float runningAcceleration = 800;
+	const float flyingAcceleration = 400;
+	const float jumpingSpeed = 200;
 };
 

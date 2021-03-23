@@ -21,8 +21,7 @@ protected:
 
 	float aspectRatio = 16.0 / 9.0;
 
-	Player players[4];
-	int numberPlayers = 0;
+	std::vector<Player> players;
 
 	sf::Time dT; // Time since last update
 	// Editor:
@@ -35,10 +34,12 @@ protected:
 	void processEditingInputs(const sf::Event& event);
 
 	void draw(sf::Time dT);
+	void setUpWindow();
 
 public:
 
 	Game();
+
 
 	void loadLevel(const std::string& lvlPath);
 

@@ -6,17 +6,26 @@
 #include "Player.h"
 
 Game::Game() 
-	: window(sf::VideoMode(800, 800.0*9.0/16.0), "SpeedyRunners"),
-	state(State::Editing), selectedTile(Tiles::Collidable::FLOOR) 
+	: window(sf::VideoMode(1600,900), "SpeedyRunners"),
+	lvl(window),
+	state(State::Playing), 
+	selectedTile(Tiles::Collidable::FLOOR),
+	cam(sf::FloatRect(0, 0, 1600, 900))
 	//dT(0)
 {
+	setUpWindow();
+	lvl.load("first.csv", window);
+}
+
+void Game::setUpWindow() {
+
 	window.setFramerateLimit(60); //60 FPS?
+	window.setVerticalSyncEnabled(true);
 }
 
 void Game::playerJoin(Player newPlayer) {
-	if (numberPlayers < 4) {
-		players[numberPlayers] = newPlayer;
-		numberPlayers++;
+	if (players.size() < 4) {
+		players.emplace_back(newPlayer);
 	}
 }
 
@@ -63,24 +72,41 @@ void Game::update()
 		if (event.type == sf::Event::Resized)
 		{
 			// sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
-			sf::FloatRect visibleArea(0, 0, event.size.width, event.size.width / aspectRatio);
+			sf::FloatRect visibleArea(0, 0, float(event.size.width), float(event.size.width) / aspectRatio);
 
 			window.setView(sf::View(visibleArea));
 		}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::F1)) {
+			state = State::Playing;
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::F2)) {
+			state = State::Editing;
+		}
 		if (state == State::Editing) { // Editing state
 			processEditingInputs(event);
-		}// End of editing state
-		else if(state == State::Playing){
+		} // End of editing state
+		else if (state == State::Playing) { // Playing
+			//characters.front().processInput(event); // Podemos cambiarlo por Player en el futuro
 			for (auto& p : players) {
 				p.captureEvents(event);
 			}
 		}
+
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::F10)) { // Change to fullscreen (change back to window not implemented)
+			sf::VideoMode vMode = sf::VideoMode::getFullscreenModes().front();
+			if (!vMode.isValid()) {
+				std::cerr << "NOPE\n";
+			}
+			window.create(vMode, "SpeedyRunners", sf::Style::Fullscreen);
+			setUpWindow();
+			cam = window.getDefaultView();
+			lvl.loadBackground(lvl.getBackgroundPath(), window);
+		}
 		
 	}
-	if (true) { // TODO: cambiar por state == State::Playing 
+	if (state == State::Playing) { //
 		for (auto c : characters) {
-			c->update(dT);
-			
+			c->update(dT, lvl.getCollidableTiles());
 		}
 	}
 	//cam.pollEvents();
@@ -91,6 +117,13 @@ void Game::update()
 void Game::processEditingInputs(const sf::Event& event) {
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 		lvl.setTile(utils::clampMouseCoord(window), selectedTile);
+	}
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
+		cam.moveByMouse(sf::Mouse::getPosition());
+		//cam.move(sf::Vector2f(1, 0));
+	}
+	else {
+		cam.resetDrag();
 	}
 	if (event.type == sf::Event::MouseWheelScrolled)
 	{
@@ -108,7 +141,7 @@ void Game::processEditingInputs(const sf::Event& event) {
 			lvl.save("first.csv");
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::L)) {
-			lvl.load("first.csv");
+			lvl.load("first.csv", window);
 		}
 	}
 }
@@ -117,6 +150,7 @@ void Game::processEditingInputs(const sf::Event& event) {
 void Game::draw(sf::Time dT)
 {
 	window.clear();
+	window.setView(cam);
 	window.draw(lvl);
 	switch (state) {
 	case State::Editing:
@@ -126,7 +160,7 @@ void Game::draw(sf::Time dT)
 	}
 	default:
 	{
-		std::cout << "unknown game state\n" << (int)state;
+		//std::cout << "unknown game state\n" << (int)state;
 	}
 	}
 	for (auto& c : characters) {

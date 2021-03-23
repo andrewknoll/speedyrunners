@@ -10,21 +10,12 @@ void Player::setCharacter(CharPtr you){
 void Player::captureEvents(const sf::Event& event) {
 	if (event.type == sf::Event::KeyPressed) {
 		if (event.key.code == sf::Keyboard::Key::Left) {
-			if (me->getState() == CharState::Standing) {
-				me->setState(CharState::Running);
-			}
-			if (me->getState() == CharState::Running || me->getState() == CharState::InAir) {
-				//me->setHorizontalAcc(-NORMAL_RUNNING_ACC);
-			}
+			me->run(false);
 		}
 		else if (event.key.code == sf::Keyboard::Key::Right) {
-			if (me->getState() == CharState::Standing) {
-				me->setState(CharState::Running);
-			}
-			if (me->getState() == CharState::Running || me->getState() == CharState::InAir) {
-				//me->setHorizontalAcc(NORMAL_RUNNING_ACC);
-			}
+			me->run(true);
 		}
+		/*
 		else if (event.key.code == sf::Keyboard::Key::Z) {
 			//Comprobar WallJumping
 			if (me->getState() == CharState::Standing) {
@@ -47,7 +38,7 @@ void Player::captureEvents(const sf::Event& event) {
 				//me->setHorizontalAcc(SLIDING_FRICTION);
 			}
 
-		}
+		}*/
 	}
 }
 

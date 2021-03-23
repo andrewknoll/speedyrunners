@@ -1,5 +1,6 @@
 #pragma once
 #include "SFML/Graphics.hpp"
+#include "TileMap.h"
 //#include <Rect.hpp>
 #include "Animation.h"
 #include "Globals.hpp"
@@ -22,7 +23,7 @@ protected:
 	State state = State::Standing;
 
 	sf::Rect<float> hitBox;
-	//sf::RectangleShape temporaryRectangle;
+
 	sf::Vector2f vel; // Velocity
 	sf::Vector2f acc; // Acceleration
 
@@ -30,24 +31,40 @@ protected:
 	bool hasDoubleJumped = false;
 
 	AnimationIndex animIdx;
+	bool facingRight = true;
+	bool isRunning = false;
+
 	std::shared_ptr<Animation> currentAnimation;
 	mutable sf::Sprite mySprite;
 	sf::Time countdown = PERIOD;
 
 	std::vector<AnimationPtr> animations = std::vector<AnimationPtr>(glb::NUMBER_OF_ANIMATIONS);
 	
+	// parameters, here so they can be different e.g for bots:
+	// Horizontal accelerations:
+	float runningAcceleration = glb::runningAcceleration; // acceleration in the floor
+	float flyingAcceleration = glb::flyingAcceleration; // or in the air
+	float jumpingSpeed = glb::jumpingSpeed; // or in the air
 	
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 	void getSpritesVectorFromMap(std::map<std::string, AnimationPtr> map);
 
+	void updateAcceleration();
+	void setFriction();
+
+	void updateGrounded(const sf::Vector2f& normal);
+
 public:
-	//Character(sf::Rect<float> _hitBox = sf::Rect<float>(20,20,14, 30));
 	Character(Spritesheet);
+	
 	void setPosition(const sf::Vector2f pos);
 	void setPosition(float x, float y);
+
+	sf::Sprite getSprite();
 	void tickAnimation(sf::Time dT);
-	void update(const sf::Time& dT);
-	//Character(const std::string& _path);
+	void setAnimation(AnimationIndex i);
+
+	void update(const sf::Time& dT, const TileMap& tiles);
 
 	void setHorizontalAcc(float acc);
 	void setVerticalSpeed(float vel);
@@ -55,9 +72,8 @@ public:
 	void setState(State s);
 	State getState() const;
 
-	sf::Sprite getSprite();
+	void run(bool right);
+	void stop();
 	
-
-	void setAnimation(AnimationIndex i);
 };
 

@@ -1,13 +1,18 @@
 #pragma once
 
 
-class Camera
+class Camera : public sf::View
 {
-	sf::View view;
+	//sf::View view;
+	sf::Vector2i lastMousePos; 
+	bool dragging = false;
 public:
 	Camera(const sf::FloatRect& rect = sf::FloatRect(0,0,10,10));
 	//sf::Rect<float> view;
 
-	void setView(sf::RenderWindow& window) const;
+	void moveByMouse(sf::Vector2i pos);
 
+	void resetDrag();
+	
+	void operator= (const sf::View& v);
 };

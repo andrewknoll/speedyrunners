@@ -31,6 +31,12 @@ sf::Sprite Animation::get_first_frame() {
 	current_frame = reverse ? frames.size() - 1 : 0;
 	sprite.setPosition(this->get_position() - this->get_center_offset());
 	sprite.setOrigin(sprite.getOrigin());
+	if(!facing_right){
+		sprite.setScale(-1.0,1.0);
+	}
+	else{
+		sprite.setScale(1.0,1.0);
+	}
 	return sprite;
 }
 
@@ -63,6 +69,12 @@ int Animation::advance_frame(sf::Sprite& sprite) {
 		new_sprite.setPosition(this->get_position() - this->get_center_offset());
 		new_sprite.setOrigin(sprite.getOrigin());
 		sprite = new_sprite;
+	}
+	if(!facing_right){
+		sprite.setScale(-1.0,1.0);
+	}
+	else{
+		sprite.setScale(1.0,1.0);
 	}
 	return return_code;
 }
@@ -100,5 +112,9 @@ void Animation::set_reverse(bool reverse) {
 
 bool Animation::get_reverse() const {
 	return reverse;
+}
+
+void Animation::update_orientation(bool right){
+	facing_right = right;
 }
 

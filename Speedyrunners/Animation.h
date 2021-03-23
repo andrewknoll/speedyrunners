@@ -13,6 +13,7 @@ private:
 	sf::Vector2f position;
 	bool loop = false;
 	bool reverse = false;
+	bool facing_right = true;
 public:
 	sf::Vector2f get_position();
 	void set_position(sf::Vector2f new_position);
@@ -26,5 +27,6 @@ public:
 	bool get_loop() const;
 	void set_reverse(bool reverse);
 	bool get_reverse() const;
+	void update_orientation(bool right);
 };
 

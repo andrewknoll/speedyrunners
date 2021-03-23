@@ -48,11 +48,21 @@ namespace utils {
 
 	sf::Vector2f clampAbs(const sf::Vector2f& val, const float& limit);
 
+	sf::Vector2f toVector2f(const sf::Vector2i& v);
+
 }
 
 
 
 namespace physics {
-	const float GRAVITY = 10*9.821;
+	const float GRAVITY = 20*9.821;
 	const float MAX_FALL_SPEED = 300;
+	const float FLOOR_FRICTION = GRAVITY*1.5;
+	const float AIR_FRICTION = GRAVITY * 0.5;
+
+	struct Collision {
+		sf::Vector2f point; // point
+		sf::Vector2f normal; // Normal
+		float distance; // Distancia de entrada en el segundo obj
+	};
 }

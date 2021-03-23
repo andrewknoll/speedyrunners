@@ -15,7 +15,9 @@ class Level : public sf::Drawable
 
 	// Background:
 	sf::Texture bgTexture;
-	sf::Sprite background;
+	//sf::Sprite background;
+	sf::VertexArray bgVertices;
+
 
 	std::string backgroundPath;
 	//int rows, cols;
@@ -23,23 +25,31 @@ class Level : public sf::Drawable
 	//std::vector<sf::Texture> spriteSheets; // se deben mantener en memoria: https://www.sfml-dev.org/documentation/2.5.1/classsf_1_1Sprite.php
 
 
-	void loadBackground(const std::string& file);
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 public:
 	Level(const std::string& tilesetPath, const std::string& bgPath);
 
-	Level();
 
 	void drawTile(sf::RenderTarget& target, sf::RenderStates states, const sf::Vector2i& pos, const int tileNumber) const;
 
+	Level(const sf::RenderWindow& window);
+
 	void setTile(const sf::Vector2i& pos, const int tileNumber);
+
 
 	void save(const std::string& f_name) const;
 
-	void load(const std::string& f_name);
+	void load(const std::string& f_name, const sf::RenderWindow& window);
+
+	Level(const std::string& tilesetPath, const std::string& bgPath, const sf::RenderWindow& window);
+
+	void loadBackground(const std::string& file, const sf::RenderWindow& window);
 
 
+	std::string getBackgroundPath() const;
+
+	const TileMap& getCollidableTiles() const;
 
 	//void draw(sf::RenderWindow& window, const Camera& cam) const;
 
