@@ -65,7 +65,7 @@ void Character::update(const sf::Time& dT, const TileMap& tiles)
 		}
 		else {
 			vel.y = 0;
-			acc.y = 0;
+			acc.y = physics::GRAVITY;
 		}
 		updateGrounded(collision->normal);
 
@@ -104,7 +104,7 @@ void Character::updateGrounded(const sf::Vector2f& normal) {
 
 void Character::run(bool right){
 	std::cout << "Running " << right << " \n";
-	isGrounded = true;
+	//isGrounded = true;
 	//isRunning = true;
 	facingRight = right;
 	if (isGrounded){
