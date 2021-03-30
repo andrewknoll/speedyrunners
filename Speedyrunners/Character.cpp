@@ -105,7 +105,7 @@ void Character::updateGrounded(const sf::Vector2f& normal) {
 void Character::run(bool right){
 	std::cout << "Running " << right << " \n";
 	isGrounded = true;
-	isRunning = true;
+	//isRunning = true;
 	facingRight = right;
 	if (isGrounded){
 		acc.x = runningAcceleration;

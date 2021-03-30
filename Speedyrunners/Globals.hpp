@@ -4,7 +4,7 @@
 namespace glb
 {
 	const int NUMBER_OF_ANIMATIONS = 22;
-	namespace anim{
+	namespace anim {
 		const std::string STAND_ANIM = "Stand";
 		const std::string RUN_ANIM = "Run";
 		const std::string SLIDE_ANIM = "Slide";
