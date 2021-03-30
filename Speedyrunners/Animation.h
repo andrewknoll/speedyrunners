@@ -24,7 +24,7 @@ public:
 	void flip(sf::Sprite& sprite);
 	int advance_frame(sf::Sprite& sprite);
 	int get_current_frame();
-	sf::Vector2f get_center_offset();
+	sf::Vector2f get_origin_point();
 	void set_loop(bool loop);
 	bool get_loop() const;
 	void set_reverse(bool reverse);

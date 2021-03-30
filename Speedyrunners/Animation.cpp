@@ -30,7 +30,7 @@ sf::Sprite Animation::get_first_frame() {
 	sprite.setTextureRect(frames[reverse? frames.size() - 1 : 0]);
 	current_frame = reverse ? frames.size() - 1 : 0;
 	//sprite.setPosition(this->get_position() - this->get_center_offset());
-	sprite.setOrigin(sprite.getLocalBounds().width / 2.0, 0);
+	sprite.setOrigin(this->get_origin_point());
 	//sprite.setOrigin(sprite.getOrigin());
 	flip(sprite);
 	return sprite;
@@ -38,7 +38,7 @@ sf::Sprite Animation::get_first_frame() {
 
 
 void Animation::flip(sf::Sprite& sprite) {
-	sprite.setOrigin(sprite.getLocalBounds().width / 2.0, 0);
+	sprite.setOrigin(this->get_origin_point());
 	if (!facing_right) {
 		sprite.setScale(-1.0, 1.0);
 	}
@@ -73,7 +73,7 @@ int Animation::advance_frame(sf::Sprite& sprite) {
 	}
 	if (return_code == 0) {
 		//new_sprite.setPosition(this->get_position() - this->get_center_offset());
-		new_sprite.setOrigin(this->get_center_offset());
+		new_sprite.setOrigin(this->get_origin_point());
 		sprite = new_sprite;
 	}
 	flip(sprite);
@@ -84,10 +84,10 @@ int Animation::get_current_frame() {
 	return current_frame;
 }
 
-sf::Vector2f Animation::get_center_offset() {
+sf::Vector2f Animation::get_origin_point() {
 	sf::Vector2f v;
 	v.x = frames[current_frame].width / 2.0;
-	v.y = frames[current_frame].height / 2.0;
+	v.y = frames[current_frame].height;
 	return v;
 }
 
