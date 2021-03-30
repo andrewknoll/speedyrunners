@@ -5,10 +5,11 @@
 #include "Globals.hpp" //animation names
 #include "Spritesheet.h"
 
-Character::Character(Spritesheet sp): 
+Character::Character(Spritesheet sp):
 	hitBox(glb::default_hitbox) {
 	getSpritesVectorFromMap(sp.get_animations());
 	setAnimation(StartAnim);
+	this->setScale(0.35, 0.35);
 }
 
 sf::Sprite Character::getSprite() {
@@ -19,7 +20,7 @@ void Character::setPosition(float x, float y) {
 	//mySprite.setPosition(x, y);
 	hitBox.top = y;
 	hitBox.left = x;
-	sf::Transformable::setPosition(x, y);
+	sf::Transformable::setPosition(x, y + 1.75 * glb::tileSize.y);
 }
 
 void Character::setPosition(const sf::Vector2f pos) {
@@ -104,8 +105,6 @@ void Character::updateGrounded(const sf::Vector2f& normal) {
 
 void Character::run(bool right){
 	std::cout << "Running " << right << " \n";
-	//isGrounded = true;
-	//isRunning = true;
 	facingRight = right;
 	if (isGrounded){
 		acc.x = runningAcceleration;
@@ -174,7 +173,7 @@ void Character::processInput(sf::Event& e)
 			isRunning = false;
 		}
 	}
-	
+
 }
 */
 void Character::updateAcceleration() {
@@ -203,7 +202,7 @@ void Character::setFriction() {
 			}
 		}
 	}
-	
+
 }
 
 void Character::tickAnimation(sf::Time dT) {

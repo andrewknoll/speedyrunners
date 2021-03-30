@@ -182,8 +182,8 @@ std::optional<physics::Collision> TileMap::collision(const sf::FloatRect& charac
     // Tile coordinates of upper left tile:
     int i = int(characterHitbox.left) / tileSizeWorld.x;
     int j = int(characterHitbox.top) / tileSizeWorld.y;
-    for (int di = 0; di < 2; di++) { // Check the 2 horizontal tiles
-        for (int dj = 0; dj < 3; dj++) { // And 3 vertical
+	for (int dj = 0; dj < 3; dj++) { // And 3 vertical
+		for (int di = 0; di < 2; di++) { // Check the 2 horizontal tiles
             sf::Vector2f posRectTile = sf::Vector2f((i+di) * tileSizeWorld.x, (j+dj) * tileSizeWorld.y);
 
             sf::Vector2f sizeRectTile(tileSizeWorld.x, tileSizeWorld.y);

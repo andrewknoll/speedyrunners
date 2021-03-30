@@ -14,6 +14,7 @@ void Player::captureEvents(const sf::Event& event) {
 		}
 		else if (event.key.code == sf::Keyboard::Key::Right) {
 			me->run(true);
+			std::cout << "asdijgaodjgaoeiraoernoairha" << std::endl;
 		}
 		else if (event.key.code == sf::Keyboard::Key::Z) {
 			//TODO: Comprobar WallJumping
