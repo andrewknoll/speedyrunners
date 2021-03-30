@@ -4,7 +4,7 @@
 namespace glb
 {
 	const int NUMBER_OF_ANIMATIONS = 22;
-	namespace anim{
+	namespace anim {
 		const std::string STAND_ANIM = "Stand";
 		const std::string RUN_ANIM = "Run";
 		const std::string SLIDE_ANIM = "Slide";
@@ -34,5 +34,7 @@ namespace glb
 	const float runningAcceleration = 800;
 	const float flyingAcceleration = 400;
 	const float jumpingSpeed = 200;
+
+	const sf::Vector2f tileSize = sf::Vector2f(18.0, 18.0);
 };
 

@@ -24,6 +24,7 @@ bool TileMap::load(const std::string& _tileSetPath, sf::Vector2u _tileSize, cons
     // load the tileset texture
     tileSetPath = _tileSetPath;
     tileSize = _tileSize;
+    //tileSizeWorld = tileSize;
     if (!tileset.loadFromFile(_tileSetPath))
         return false;
     tileSize = _tileSize;
@@ -53,10 +54,10 @@ bool TileMap::load(const std::string& _tileSetPath, sf::Vector2u _tileSize, cons
 void TileMap::setQuad(sf::Vertex* quad, const int i, const int j, const int tu, const int tv) const {
 
     // define its 4 corners
-    quad[0].position = sf::Vector2f(i * tileSize.x, j * tileSize.y);
-    quad[1].position = sf::Vector2f((i + 1) * tileSize.x, j * tileSize.y);
-    quad[2].position = sf::Vector2f((i + 1) * tileSize.x, (j + 1) * tileSize.y);
-    quad[3].position = sf::Vector2f(i * tileSize.x, (j + 1) * tileSize.y);
+    quad[0].position = sf::Vector2f(i * tileSizeWorld.x, j * tileSizeWorld.y);
+    quad[1].position = sf::Vector2f((i + 1) * tileSizeWorld.x, j * tileSizeWorld.y);
+    quad[2].position = sf::Vector2f((i + 1) * tileSizeWorld.x, (j + 1) * tileSizeWorld.y);
+    quad[3].position = sf::Vector2f(i * tileSizeWorld.x, (j + 1) * tileSizeWorld.y);
 
     // define its 4 texture coordinates
     quad[0].texCoords = sf::Vector2f(tu * tileSize.x, tv * tileSize.y);
@@ -72,8 +73,8 @@ void TileMap::setTile(const sf::Vector2i& pos, const int tileNumber) {
     int tv = tileNumber / (tileset.getSize().x / tileSize.x);
 
     // define its 4 corners
-    size_t i = pos.x / tileSize.x;
-    size_t j = pos.y / tileSize.y;
+    size_t i = pos.x / tileSizeWorld.x;
+    size_t j = pos.y / tileSizeWorld.y;
     tiles[i + j * width] = tileNumber;
     //std::cout << "drawing tile at " << pos.x << " " << pos.y << " " << tileNumber << std::endl;
     if ((i + j * width) >= width * height) {
@@ -100,8 +101,8 @@ void TileMap::drawTile(sf::RenderTarget& target, sf::RenderStates states, const 
     sf::Vertex* quad = &tileVertices[0];// = &vertices[(i + j * width) * 4];
 
     // define its 4 corners
-    int i = pos.x / tileSize.x;
-    int j = pos.y / tileSize.y;
+    int i = pos.x / tileSizeWorld.x;
+    int j = pos.y / tileSizeWorld.y;
     //std::cout << "drawing tile at " << pos.x << " " << pos.y << " " << tileNumber << std::endl;
 
     //std::cout << i << " " << j << std::endl;
@@ -117,7 +118,8 @@ void TileMap::drawTile(sf::RenderTarget& target, sf::RenderStates states, const 
 
 std::string TileMap::to_string() const {
     std::string str = std::to_string(width) + " " + std::to_string(height) + "\n";
-    str += tileSetPath + "\n" + std::to_string(tileSize.x) + " " + std::to_string(tileSize.y) + "\n";
+    str += tileSetPath + "\n" + std::to_string(tileSize.x) + " " + std::to_string(tileSize.y) 
+        + " " + std::to_string(tileSizeWorld.x) + " " + std::to_string(tileSizeWorld.y) + "\n";
     for (size_t i = 0; i < height; ++i) {
         for (size_t j = 0; j < width; ++j){
             str += std::to_string(tiles[j + i * width]) + " ";
@@ -133,7 +135,10 @@ bool TileMap::load(std::ifstream& file) {
     file.ignore();
     file >> tileSetPath;
     file.ignore();
-    file >> tileSize.x >> tileSize.y;
+    std::string xstr, ystr;
+    file >> tileSize.x >> tileSize.y >> xstr >> ystr;
+    tileSizeWorld.x = stof(xstr);
+    tileSizeWorld.y = stof(ystr);
     file.ignore();
 
     for (size_t i = 0; i < height; ++i) {
@@ -176,13 +181,13 @@ std::ostream& operator<<(std::ostream& os, const TileMap& t) {
 std::optional<physics::Collision> TileMap::collision(const sf::FloatRect& characterHitbox) const
 {
     // Tile coordinates of upper left tile:
-    int i = int(characterHitbox.left) / tileSize.x;
-    int j = int(characterHitbox.top) / tileSize.y;
-    for (int di = 0; di < 2; di++) { // Check the 2 horizontal tiles
-        for (int dj = 0; dj < 3; dj++) { // And 3 vertical
-            sf::Vector2f posRectTile = sf::Vector2f((i+di) * tileSize.x, (j+dj) * tileSize.y);
+    int i = int(characterHitbox.left) / tileSizeWorld.x;
+    int j = int(characterHitbox.top) / tileSizeWorld.y;
+	for (int dj = 0; dj < 3; dj++) { // And 3 vertical
+		for (int di = 0; di < 2; di++) { // Check the 2 horizontal tiles
+            sf::Vector2f posRectTile = sf::Vector2f((i+di) * tileSizeWorld.x, (j+dj) * tileSizeWorld.y);
 
-            sf::Vector2f sizeRectTile(tileSize.x, tileSize.y);
+            sf::Vector2f sizeRectTile(tileSizeWorld.x, tileSizeWorld.y);
             if (tiles[(i + di) + (j + dj) * width] != 0) { // Tile isnt air 
                 auto c = Tiles::collision(Tiles::FLOOR, posRectTile, sizeRectTile, characterHitbox);
                 if (c) {

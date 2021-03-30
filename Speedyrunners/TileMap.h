@@ -16,7 +16,8 @@ protected:
 
 	sf::VertexArray vertices;
 	sf::Texture tileset;
-	sf::Vector2u tileSize; 
+	sf::Vector2u tileSize;
+	sf::Vector2u tileSizeWorld;
 	std::string tileSetPath;
 
 
