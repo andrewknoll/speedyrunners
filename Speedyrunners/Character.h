@@ -54,6 +54,9 @@ protected:
 
 	void updateGrounded(const sf::Vector2f& normal);
 
+	void updateRunning();
+
+
 public:
 	Character(Spritesheet);
 	
@@ -71,6 +74,7 @@ public:
 
 	//void setState(State s);
 	//State getState() const;
+
 
 	void run(bool right);
 	void stop();

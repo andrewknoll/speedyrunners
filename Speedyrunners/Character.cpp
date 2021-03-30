@@ -9,7 +9,7 @@ Character::Character(Spritesheet sp):
 	hitBox(glb::default_hitbox) {
 	getSpritesVectorFromMap(sp.get_animations());
 	setAnimation(StartAnim);
-	this->setScale(0.35, 0.35);
+	this->setScale(0.45, 0.45);
 }
 
 sf::Sprite Character::getSprite() {
@@ -38,6 +38,7 @@ void fixPosition(sf::FloatRect& hitbox) {
 
 void Character::update(const sf::Time& dT, const TileMap& tiles)
 {
+	updateRunning();
 	setFriction();
 	float dtSec = dT.asSeconds();
 
@@ -103,19 +104,25 @@ void Character::updateGrounded(const sf::Vector2f& normal) {
 	//std::cout << "grounded? " << isGrounded << "\n";
 }
 
+
+void Character::updateRunning() {
+	if (isRunning) {
+		if (isGrounded) {
+			acc.x = runningAcceleration;
+		}
+		else
+			acc.x = flyingAcceleration;
+		if (!facingRight) {
+			acc.x = -acc.x;
+		}
+	}
+}
+
 void Character::run(bool right){
 	std::cout << "Running " << right << " \n";
 	facingRight = right;
-	if (isGrounded){
-		acc.x = runningAcceleration;
-		if (!isRunning) {
-			setAnimation(RunAnim, true);
-		}
-	}
-	else
-		acc.x = flyingAcceleration;
-	if(!right){
-		acc.x = -acc.x;
+	if (!isRunning && isGrounded) {
+		setAnimation(RunAnim, true);
 	}
 	isRunning = true;
 }
