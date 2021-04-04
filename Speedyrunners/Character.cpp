@@ -51,13 +51,16 @@ void Character::update(const sf::Time& dT, const TileMap& tiles)
 	hitBox.top += vel.y * dtSec;
 
 	fixPosition(hitBox);
-	auto collision = tiles.collision(hitBox);
-	if (collision) {
+	auto collisions = tiles.collision(hitBox);
+	
+	if (!collisions.empty()) {
+		auto collision = collisions.front();
+		//for (const auto& collision : collisions) {
 		// std::cout << "n: " << collision->normal.x << "," << collision->normal.y << "\tpoint: " << collision->point.x << "," << collision->point.y << " " << collision->distance << "\n";
 		// New position:
 		sf::Vector2f pos(hitBox.left, hitBox.top);
-		pos = pos + (collision->normal * (collision->distance));
-		if (collision->normal.x != 0) { // Make 0 the component of the collision
+		pos = pos + (collision.normal * (collision.distance));
+		if (collision.normal.x != 0) { // Make 0 the component of the collision
 			vel.x = 0;
 			acc.x = 0;
 			isRunning = false;
@@ -69,7 +72,7 @@ void Character::update(const sf::Time& dT, const TileMap& tiles)
 			vel.y = 0;
 			acc.y = physics::GRAVITY;
 		}
-		updateGrounded(collision->normal);
+		updateGrounded(collision.normal);
 
 		hitBox.left = pos.x; hitBox.top = pos.y;
 		//setFillColor(sf::Color::Blue);

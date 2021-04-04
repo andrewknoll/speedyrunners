@@ -40,7 +40,7 @@ public:
 	std::string to_string() const;
 
 
-	std::optional<physics::Collision> collision(const sf::FloatRect& characterHitbox) const;
+	std::vector<physics::Collision> collision(const sf::FloatRect& characterHitbox) const;
 
 
 
