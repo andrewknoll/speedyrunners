@@ -293,12 +293,14 @@ function keyPressedHandler(event) {
 			if(transform == null) transform = translate(0.2, 0.0, 0.0)
 
 			if (transform != null) {
-				original = mat4(gl.getUniform(program, gl.getUniformLocation(program, "projection")));
+				original = mat4(gl.getUniform(program, gl.getUniformLocation(program, "view")));
 				//console.log(originalView);
 				// inverse of the transform:
-				view = mat4(gl.getUniform(program, gl.getUniformLocation(program, "view")));
-				let m = mult(mult(view, inverse(transform)), original);
-				gl.uniformMatrix4fv(programInfo.uniformLocations.projection, gl.FALSE, m);
+				//view = mat4(gl.getUniform(program, gl.getUniformLocation(program, "view")));
+				let m = mult(inverse(transform), original);
+				// m = mult(m, original);
+				// gl.uniformMatrix4fv(programInfo.uniformLocations.projection, gl.FALSE, m);
+				gl.uniformMatrix4fv(programInfo.uniformLocations.view, gl.FALSE, m);
 			}
 			break;
 		case "P":
