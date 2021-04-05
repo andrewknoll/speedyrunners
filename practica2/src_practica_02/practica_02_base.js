@@ -296,7 +296,9 @@ function keyPressedHandler(event) {
 				original = mat4(gl.getUniform(program, gl.getUniformLocation(program, "projection")));
 				//console.log(originalView);
 				// inverse of the transform:
-				gl.uniformMatrix4fv(programInfo.uniformLocations.projection, gl.FALSE, mult(original, inverse(transform)));
+				view = mat4(gl.getUniform(program, gl.getUniformLocation(program, "view")));
+				let m = mult(mult(view, inverse(transform)), original);
+				gl.uniformMatrix4fv(programInfo.uniformLocations.projection, gl.FALSE, m);
 			}
 			break;
 		case "P":
@@ -545,7 +547,7 @@ function changeFOV(proj, fov0, delta) {
 	//proj[5] =  1.0 / Math.tan( radians(fovy) / 2 )
 	//Multiplicamos por el valor del anterior fov y realizamos de nuevo el cálculo de las dos líneas anteriores
 	var f = Math.tan( radians(fov0) / 2 ) / Math.tan( radians(fov0 + delta) / 2 );
-	
+
 	proj[0] *= f;
 	proj[5] *= f;
 	//Asignamos el nuevo valor de fov0
