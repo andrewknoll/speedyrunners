@@ -190,6 +190,15 @@ var aspect;
 // Initialization function
 //----------------------------------------------------------------------------
 
+function copyMat(col1, fil1, col2, fil2) {
+	for (var i = 0; i < array.length; i++) {
+		array[i]
+	}
+}
+
+
+var translation = new mat4();
+
 window.onload = function init() {
 
 	// Set up a WebGL Rendering Context in an HTML5 Canvas
@@ -202,17 +211,21 @@ window.onload = function init() {
 	//  Configure WebGL
 	gl.clearColor(0.0, 0.0, 0.0, 1.0);
 	gl.enable(gl.DEPTH_TEST);
-	var transform;
 	window.addEventListener("keydown", keyPressedHandler);
 	var click_x;
 	var click_y;
 	var original_view;
 
+	var transform;
 	window.addEventListener("mousedown", function (event) {
 		click_x = event.clientX;
 		click_y = event.clientY;
-		original_view = mat4(gl.getUniform(program, gl.getUniformLocation(program, "view")));
+		//original_view = mat4(gl.getUniform(program, gl.getUniformLocation(program, "view")));
 	});
+
+
+	let ejeX = vec3(1.0, 0.0, 0.0);
+	let ejeY = vec3(0.0, 1.0, 0.0);
 
 	window.addEventListener("mousemove", function (event) {
 		// Cambiar para que al llegar a determinado punto de la pantalla, se llegue al máximo de rotación
@@ -220,11 +233,20 @@ window.onload = function init() {
 		transform = mousePressedHandler(event, click_x, click_y);
 		if (transform != null) {
 			//console.log(originalView);
-			gl.uniformMatrix4fv( programInfo.uniformLocations.view, gl.FALSE, mult(transform, original_view) );
+			transform = mult(rotate(yaw, ejeX),rotate(pitch, ejeY));
+			//let v = mat4(gl.getUniform(program, gl.getUniformLocation(program, "view")))
+			// v = mult(transform, new mat4())
+			// for (var i = 0; i < 4; i++) {
+			// 	v[3*(i+1)] = view[3*(i+1)]
+			// 	console.log(view[3*(i+1)])
+			// }
+			// // mat4.translate(v, [view[3], view[])
+			// console.log(v[3])
+
 		}
 		click_x = event.clientX;
 		click_y = event.clientY;
-		original_view = mat4(gl.getUniform(program, gl.getUniformLocation(program, "view")));
+		//original_view = mat4(gl.getUniform(program, gl.getUniformLocation(program, "view")));
 	});
 
 
@@ -292,9 +314,10 @@ function keyPressedHandler(event) {
 			if(transform == null) transform = translate(1.0, 0.0, 0.0)
 
 			if (transform != null) {
-				original = mat4(gl.getUniform(program, gl.getUniformLocation(program, "view")));
+				//original = mat4(gl.getUniform(program, gl.getUniformLocation(program, "view")));
+				translation = mult(inverse(transform), translation)
+				//gl.uniformMatrix4fv(programInfo.uniformLocations.view, gl.FALSE, );
 				// inverse of the transform:
-				gl.uniformMatrix4fv(programInfo.uniformLocations.view, gl.FALSE, mult(inverse(transform), original));
 			}
 			break;
 		case "P":
@@ -341,8 +364,8 @@ function keyPressedHandler(event) {
 }
 
 function mousePressedHandler(event, x0, y0) {
-	let ejeX = vec3(0.0, 1.0, 0.0);
-	let ejeY = vec3(1.0, 0.0, 0.0);
+	let ejeX = vec3(1.0, 0.0, 0.0);
+	let ejeY = vec3(0.0, 1.0, 0.0);
 	if (event.buttons == 1) {
 		rotP = (event.clientX - x0) / pixelPerDegree;
 		if (pitch + rotP >= 90) {
@@ -371,7 +394,7 @@ function mousePressedHandler(event, x0, y0) {
 			yaw += rotY;
 		}
 		//console.log(pitch, "         ", yaw);
-		return mult(rotate(rotP, ejeX), rotate(rotY, ejeY));
+		return mult(rotate(rotY, ejeX),rotate(rotP, ejeY));
 	}
 	return null;
 	//console.log(event.clientX-x, "   ", event.clientY-y);
@@ -486,6 +509,13 @@ function render() {
     });
 
 	rotAngle += rotChange;
+
+	// Transform view:
+	v = new mat4();
+	v = mult(rotate(pitch, vec3(0.0, 1.0, 0.0)), v);
+	v = mult(rotate(yaw, vec3(1.0, 0.0, 0.0)), v);
+	v = mult( translation,  v);
+	gl.uniformMatrix4fv(programInfo.uniformLocations.view, gl.FALSE, v);
 
 	requestAnimationFrame(render);
 
