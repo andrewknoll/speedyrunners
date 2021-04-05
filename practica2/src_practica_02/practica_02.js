@@ -211,18 +211,20 @@ window.onload = function init() {
 	gl.clearColor(0.0, 0.0, 0.0, 1.0);
 	gl.enable(gl.DEPTH_TEST);
 
+	//Add the event listener for when a key is pressed
 	window.addEventListener("keydown", keyPressedHandler);
 
 	var click_x;
 	var click_y;
-	var transform;
 
+	//Add the event listener for when the mouse registers a click
 	window.addEventListener("mousedown", function (event) {
 		click_x = event.clientX;
 		click_y = event.clientY;
 		original_view = mat4(gl.getUniform(program, gl.getUniformLocation(program, "view")));
 	});
 
+	//Add the event listener for when the mouse is moved
 	window.addEventListener("mousemove", function (event) {
 		// Cambiar para que al llegar a determinado punto de la pantalla, se llegue al máximo de rotación
 		// para ello, se puede rotar en el ángulo que queda para llegar a esa posición
