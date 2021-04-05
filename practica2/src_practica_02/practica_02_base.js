@@ -304,8 +304,9 @@ function keyPressedHandler(event) {
 		case "P":
 		case "p":
 			console.log("P");
-			fov = 45.0;
-			changeFOV(default_proj, fov);
+			newFov = 45.0
+			changeFOV(default_proj, fov, newFov - fov); //Change from one fov to another
+			fov = newFov;
 			projection = default_proj;
 			projection_type = "perspective"
 			gl.uniformMatrix4fv(programInfo.uniformLocations.projection, gl.FALSE, projection);
@@ -322,9 +323,9 @@ function keyPressedHandler(event) {
 			console.log("+");
 			if (fov < 179) {
 				proj = mat4(gl.getUniform(program, gl.getUniformLocation(program, "projection")));
-				changeFOV(proj, fov, 1.0);
+				fov = changeFOV(proj, fov, 1.0);
 				if (projection_type == "perspective") {
-					projection = default_proj;
+					//projection = default_proj;
 					gl.uniformMatrix4fv(programInfo.uniformLocations.projection, gl.FALSE, proj);
 				}
 			}
@@ -334,9 +335,9 @@ function keyPressedHandler(event) {
 			console.log("-");
 			if (fov > 6.0) {
 				proj = mat4(gl.getUniform(program, gl.getUniformLocation(program, "projection")));
-				changeFOV(proj, fov, -1.0);
+				fov = changeFOV(proj, fov, -1.0);
 				if (projection_type == "perspective") {
-					projection = default_proj;
+					//projection = default_proj;
 					gl.uniformMatrix4fv(programInfo.uniformLocations.projection, gl.FALSE, proj);
 				}
 			}
@@ -375,7 +376,7 @@ function mousePressedHandler(event, x0, y0) {
 		else {
 			yaw += rotY;
 		}
-		//console.log(rotP, "           ", rotY);
+		//console.log(pitch, "         ", yaw);
 		return mult(rotate(rotP, ejeX), rotate(rotY, ejeY));
 	}
 	return null;
@@ -552,4 +553,5 @@ function changeFOV(proj, fov0, delta) {
 	proj[5] *= f;
 	//Asignamos el nuevo valor de fov0
 	fov0 += delta;
+	return fov0;
 }
