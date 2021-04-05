@@ -54,6 +54,10 @@ const cubeIndices = [
 	6,3,2,
 ];
 
+
+var ejeX = vec3(1.0, 0.0, 0.0);
+var ejeY = vec3(0.0, 1.0, 0.0);
+
 const pointsAxes = [];
 pointsAxes.push([ 2.0, 0.0, 0.0, 1.0]); //x axis is green
 pointsAxes.push([-2.0, 0.0, 0.0, 1.0]);
@@ -283,24 +287,28 @@ window.onload = function init() {
 
 };
 
+
 function keyPressedHandler(event) {
-	transform = null;
+	vec = null;
 	switch (event.key) {
 		case "Down":
 		case "ArrowDown":
-			if(transform == null) transform = translate(0.0, 0.0, 1.0) // Z axis towards camera
+			if(vec == null) vec = new vec4(0.0, 0.0, 1.0,0);//transform = translate(0.0, 0.0, 1.0) // Z axis towards camera
 		case "Up":
 		case "ArrowUp":
-			if(transform == null) transform = translate(0.0, 0.0, -1.0)
+			if(vec == null)  vec = new vec4(0.0, 0.0, -1.0,0);//transform = translate(0.0, 0.0, -1.0)
 		case "Left":
 		case "ArrowLeft":
-			if(transform == null) transform = translate(-1.0, 0.0, 0.0)
+			if(vec == null)  vec = new vec4(-1.0, 0.0, 0.0,0);//transform = translate(-1.0, 0.0, 0.0)
 		case "Right":
 		case "ArrowRight":
-			if(transform == null) transform = translate(1.0, 0.0, 0.0)
+			if(vec == null)  vec = new vec4(1.0, 0.0, 0.0,0);//transform = translate(1.0, 0.0, 0.0)
 
-			if (transform != null) {
-				//original = mat4(gl.getUniform(program, gl.getUniformLocation(program, "view")));
+			if (vec != null) {
+				vec = mult((rotate(pitch,ejeY)),vec )
+				vec = mult((rotate(yaw,ejeX)),vec)
+				let transform = translate(vec[0], vec[1], vec[2]);
+				// transform = mult(rot, transform)
 				translation = mult(inverse(transform), translation)
 				updateView();
 			}
@@ -349,8 +357,6 @@ function keyPressedHandler(event) {
 }
 
 function mousePressedHandler(event, x0, y0) {
-	let ejeX = vec3(1.0, 0.0, 0.0);
-	let ejeY = vec3(0.0, 1.0, 0.0);
 	if (event.buttons == 1) {
 		rotP = (event.clientX - x0) / pixelPerDegree;
 		if (pitch + rotP >= 90) {
