@@ -320,7 +320,6 @@ function keyPressedHandler(event) {
 				vec = mult((rotate(pitch,ejeY)),vec )
 				vec = mult((rotate(yaw,ejeX)),vec)
 				let transform = translate(vec[0], vec[1], vec[2]);
-				// transform = mult(rot, transform)
 				translation = mult(inverse(transform), translation)
 				updateView();
 			}
