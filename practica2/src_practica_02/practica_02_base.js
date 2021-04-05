@@ -293,7 +293,6 @@ function keyPressedHandler(event) {
 
 			if (transform != null) {
 				original = mat4(gl.getUniform(program, gl.getUniformLocation(program, "view")));
-				//console.log(originalView);
 				// inverse of the transform:
 				gl.uniformMatrix4fv(programInfo.uniformLocations.view, gl.FALSE, mult(inverse(transform), original));
 			}
@@ -301,9 +300,7 @@ function keyPressedHandler(event) {
 		case "P":
 		case "p":
 			console.log("P");
-			newFov = 45.0
-			changeFOV(default_proj, fov, newFov - fov); //Change from one fov to another
-			fov = newFov;
+			fov = 45.0
 			projection = default_proj;
 			projection_type = "perspective"
 			gl.uniformMatrix4fv(programInfo.uniformLocations.projection, gl.FALSE, projection);
