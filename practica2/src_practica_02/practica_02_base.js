@@ -230,20 +230,8 @@ window.onload = function init() {
 	window.addEventListener("mousemove", function (event) {
 		// Cambiar para que al llegar a determinado punto de la pantalla, se llegue al máximo de rotación
 		// para ello, se puede rotar en el ángulo que queda para llegar a esa posición
-		transform = mousePressedHandler(event, click_x, click_y);
-		if (transform != null) {
-			//console.log(originalView);
-			transform = mult(rotate(yaw, ejeX),rotate(pitch, ejeY));
-			//let v = mat4(gl.getUniform(program, gl.getUniformLocation(program, "view")))
-			// v = mult(transform, new mat4())
-			// for (var i = 0; i < 4; i++) {
-			// 	v[3*(i+1)] = view[3*(i+1)]
-			// 	console.log(view[3*(i+1)])
-			// }
-			// // mat4.translate(v, [view[3], view[])
-			// console.log(v[3])
-
-		}
+		mousePressedHandler(event, click_x, click_y);
+		updateView();
 		click_x = event.clientX;
 		click_y = event.clientY;
 		//original_view = mat4(gl.getUniform(program, gl.getUniformLocation(program, "view")));
@@ -292,7 +280,7 @@ window.onload = function init() {
 	up =  vec3(0.0, 1.0, 0.0);
 	view = lookAt(eye,target,up);
 	gl.uniformMatrix4fv(programInfo.uniformLocations.view, gl.FALSE, view); // copy view to uniform value in shader
-
+	translation = view;
 	requestAnimFrame(render);
 
 };
@@ -316,8 +304,7 @@ function keyPressedHandler(event) {
 			if (transform != null) {
 				//original = mat4(gl.getUniform(program, gl.getUniformLocation(program, "view")));
 				translation = mult(inverse(transform), translation)
-				//gl.uniformMatrix4fv(programInfo.uniformLocations.view, gl.FALSE, );
-				// inverse of the transform:
+				updateView();
 			}
 			break;
 		case "P":
@@ -394,9 +381,9 @@ function mousePressedHandler(event, x0, y0) {
 			yaw += rotY;
 		}
 		//console.log(pitch, "         ", yaw);
-		return mult(rotate(rotY, ejeX),rotate(rotP, ejeY));
+		//return mult(rotate(rotY, ejeX),rotate(rotP, ejeY));
 	}
-	return null;
+	//return null;
 	//console.log(event.clientX-x, "   ", event.clientY-y);
 }
 
@@ -511,14 +498,16 @@ function render() {
 	rotAngle += rotChange;
 
 	// Transform view:
-	v = new mat4();
-	v = mult(rotate(pitch, vec3(0.0, 1.0, 0.0)), v);
-	v = mult(rotate(yaw, vec3(1.0, 0.0, 0.0)), v);
-	v = mult( translation,  v);
-	gl.uniformMatrix4fv(programInfo.uniformLocations.view, gl.FALSE, v);
-
 	requestAnimationFrame(render);
 
+}
+
+function updateView() {
+	v = new mat4();
+	v = mult( translation,  v);
+	v = mult(rotate(pitch, vec3(0.0, 1.0, 0.0)), v);
+	v = mult(rotate(yaw, vec3(1.0, 0.0, 0.0)), v);
+	gl.uniformMatrix4fv(programInfo.uniformLocations.view, gl.FALSE, v);
 }
 
 //----------------------------------------------------------------------------
