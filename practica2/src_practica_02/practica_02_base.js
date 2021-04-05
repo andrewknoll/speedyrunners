@@ -546,7 +546,7 @@ function changeFOV(proj, fov0, delta) {
 	//proj[5] =  1.0 / Math.tan( radians(fovy) / 2 )
 	//Multiplicamos por el valor del anterior fov y realizamos de nuevo el cálculo de las dos líneas anteriores
 	var f = Math.tan( radians(fov0) / 2 ) / Math.tan( radians(fov0 + delta) / 2 );
-	
+
 	proj[0] *= f;
 	proj[5] *= f;
 	//Asignamos el nuevo valor de fov0
