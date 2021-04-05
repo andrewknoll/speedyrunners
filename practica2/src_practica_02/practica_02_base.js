@@ -223,10 +223,6 @@ window.onload = function init() {
 		//original_view = mat4(gl.getUniform(program, gl.getUniformLocation(program, "view")));
 	});
 
-
-	let ejeX = vec3(1.0, 0.0, 0.0);
-	let ejeY = vec3(0.0, 1.0, 0.0);
-
 	window.addEventListener("mousemove", function (event) {
 		// Cambiar para que al llegar a determinado punto de la pantalla, se llegue al máximo de rotación
 		// para ello, se puede rotar en el ángulo que queda para llegar a esa posición
@@ -380,13 +376,10 @@ function mousePressedHandler(event, x0, y0) {
 		else {
 			yaw += rotY;
 		}
-		//console.log(pitch, "         ", yaw);
-		//return mult(rotate(rotY, ejeX),rotate(rotP, ejeY));
 	}
-	//return null;
-	//console.log(event.clientX-x, "   ", event.clientY-y);
 }
 
+// Returns a random rgb color
 function randColor() {
 	let end = false;
 	let c = [];
@@ -401,7 +394,7 @@ function randColor() {
 	return c;
 }
 
-
+// Returns a random speed (between 0.3 and 1, either sign)
 function randSpeed() {
 	let s = 2.0*(Math.random()-0.5);
 	let mins = 0.3;
@@ -502,9 +495,11 @@ function render() {
 
 }
 
+// Updates the gl view according to the pitch, yaw (x and y rotations), and the translation
+// Called every time either changes
 function updateView() {
 	v = new mat4();
-	v = mult( translation,  v);
+	v = mult(translation,  v);
 	v = mult(rotate(pitch, vec3(0.0, 1.0, 0.0)), v);
 	v = mult(rotate(yaw, vec3(1.0, 0.0, 0.0)), v);
 	gl.uniformMatrix4fv(programInfo.uniformLocations.view, gl.FALSE, v);
@@ -558,8 +553,6 @@ function setBuffersAndAttributes(pInfo, ptsArray, colArray) {
 
 function changeFOV(proj, fov0, delta) {
 	console.log("changeFov:", fov0, delta)
-	//proj[0] =  1.0 / Math.tan( radians(fovy) / 2 ) / aspect
-	//proj[5] =  1.0 / Math.tan( radians(fovy) / 2 )
 	//Multiplicamos por el valor del anterior fov y realizamos de nuevo el cálculo de las dos líneas anteriores
 	var f = Math.tan( radians(fov0) / 2 ) / Math.tan( radians(fov0 + delta) / 2 );
 
