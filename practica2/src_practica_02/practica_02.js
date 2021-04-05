@@ -5,6 +5,8 @@
 *
 * Parte adaptada de: Alex Clarke, 2016, y Ed Angel, 2015.
 *
+* Modificada por Andrés Otero y Néstor Monzón
+* 05/04/2021
 */
 
 // Variable to store the WebGL rendering context
@@ -51,6 +53,10 @@ const cubeIndices = [
 	6,7,3, //bottom
 	6,3,2,
 ];
+
+
+var ejeX = vec3(1.0, 0.0, 0.0);
+var ejeY = vec3(0.0, 1.0, 0.0);
 
 const pointsAxes = [];
 pointsAxes.push([ 2.0, 0.0, 0.0, 1.0]); //x axis is green
@@ -186,6 +192,8 @@ var ortho_proj;
 var fov;
 var aspect;
 
+var translation = new mat4();
+
 //----------------------------------------------------------------------------
 // Initialization function
 //----------------------------------------------------------------------------
@@ -202,11 +210,12 @@ window.onload = function init() {
 	//  Configure WebGL
 	gl.clearColor(0.0, 0.0, 0.0, 1.0);
 	gl.enable(gl.DEPTH_TEST);
-	var transform;
+
 	window.addEventListener("keydown", keyPressedHandler);
+
 	var click_x;
 	var click_y;
-	var original_view;
+	var transform;
 
 	window.addEventListener("mousedown", function (event) {
 		click_x = event.clientX;
@@ -217,14 +226,10 @@ window.onload = function init() {
 	window.addEventListener("mousemove", function (event) {
 		// Cambiar para que al llegar a determinado punto de la pantalla, se llegue al máximo de rotación
 		// para ello, se puede rotar en el ángulo que queda para llegar a esa posición
-		transform = mousePressedHandler(event, click_x, click_y);
-		if (transform != null) {
-			//console.log(originalView);
-			gl.uniformMatrix4fv( programInfo.uniformLocations.view, gl.FALSE, mult(transform, original_view) );
-		}
+		mousePressedHandler(event, click_x, click_y);
+		updateView();
 		click_x = event.clientX;
 		click_y = event.clientY;
-		original_view = mat4(gl.getUniform(program, gl.getUniformLocation(program, "view")));
 	});
 
 
@@ -271,39 +276,59 @@ window.onload = function init() {
 	view = lookAt(eye,target,up);
 	gl.uniformMatrix4fv(programInfo.uniformLocations.view, gl.FALSE, view); // copy view to uniform value in shader
 
+	translation = view;
+
 	requestAnimFrame(render);
 
 };
 
+/*
+	Handles the event of a key press
+	On any arrow key:
+		Moves the camera in the direction of the arrow key.
+		For that, modifies the 'translation' matrix in this manner:
+			Creates a vector with the desired relative transform
+			Rotates the vectors in the direction of the current pitch and yaw 
+			Multiplies inverse(transform) * translation 
+		Updates the view matrix of the system with the new transformation
+	On key 'P':
+		Resets FOV and sets the projection to perspective
+	On key 'O':
+		Sets the projection to orthogonal
+	On key '+':
+		Increments FOV if projection is perspective
+	On key '-':
+		Decrements FOV if projection is perspective
+*/
 function keyPressedHandler(event) {
-	transform = null;
+	vec = null;
 	switch (event.key) {
 		case "Down":
 		case "ArrowDown":
-			if(transform == null) transform = translate(0.0, 0.0, 1.0) // Z axis towards camera
+			if(vec == null) vec = new vec4(0.0, 0.0, 1.0, 0.0);//transform = translate(0.0, 0.0, 1.0) // Z axis towards camera
 		case "Up":
 		case "ArrowUp":
-			if(transform == null) transform = translate(0.0, 0.0, -1.0)
+			if(vec == null) vec = new vec4(0.0, 0.0, -1.0, 0.0);//transform = translate(0.0, 0.0, -1.0)
 		case "Left":
 		case "ArrowLeft":
-			if(transform == null) transform = translate(-1.0, 0.0, 0.0)
+			if(vec == null) vec = new vec4(-1.0, 0.0, 0.0, 0.0);//transform = translate(-1.0, 0.0, 0.0)
 		case "Right":
 		case "ArrowRight":
-			if(transform == null) transform = translate(1.0, 0.0, 0.0)
+			if(vec == null) vec = new vec4(1.0, 0.0, 0.0, 0.0);//transform = translate(1.0, 0.0, 0.0)
 
-			if (transform != null) {
-				original = mat4(gl.getUniform(program, gl.getUniformLocation(program, "view")));
-				//console.log(originalView);
-				// inverse of the transform:
-				gl.uniformMatrix4fv(programInfo.uniformLocations.view, gl.FALSE, mult(inverse(transform), original));
+			if (vec != null) {
+				vec = mult((rotate(pitch,ejeY)),vec )
+				vec = mult((rotate(yaw,ejeX)),vec)
+				let transform = translate(vec[0], vec[1], vec[2]);
+				// transform = mult(rot, transform)
+				translation = mult(inverse(transform), translation)
+				updateView();
 			}
 			break;
 		case "P":
 		case "p":
 			console.log("P");
-			newFov = 45.0
-			changeFOV(default_proj, fov, newFov - fov); //Change from one fov to another
-			fov = newFov;
+			fov = 45.0;
 			projection = default_proj;
 			projection_type = "perspective"
 			gl.uniformMatrix4fv(programInfo.uniformLocations.projection, gl.FALSE, projection);
@@ -343,14 +368,18 @@ function keyPressedHandler(event) {
 	return null;
 }
 
+/*
+	Handles the event of a mouse move:
+		Stores the new pitch and yaw angles depending on the movement of the mouse.
+		(horizontal -> yaw
+		 vertical -> pitch)
+
+		Takes the mouse move event, and the initial position of the mouse.
+	
+*/
 function mousePressedHandler(event, x0, y0) {
-	let ejeX = vec3(0.0, 1.0, 0.0);
-	let ejeY = vec3(1.0, 0.0, 0.0);
 	if (event.buttons == 1) {
 		rotP = (event.clientX - x0) / pixelPerDegree;
-		if (Math.abs(rotP) < 1) {
-			rotP = 0;
-		}
 		if (pitch + rotP >= 90) {
 			rotP = pitch - 90;
 			pitch = 90
@@ -364,9 +393,6 @@ function mousePressedHandler(event, x0, y0) {
 		}
 
 		rotY = (event.clientY - y0) / pixelPerDegree;
-		if (Math.abs(rotY) < 1) {
-			rotY = 0;
-		}
 		if (yaw + rotY >= 90) {
 			rotY = yaw - 90;
 			yaw = 90
@@ -379,13 +405,10 @@ function mousePressedHandler(event, x0, y0) {
 		else {
 			yaw += rotY;
 		}
-		//console.log(pitch, "         ", yaw);
-		return mult(rotate(rotP, ejeX), rotate(rotY, ejeY));
 	}
-	return null;
-	//console.log(event.clientX-x, "   ", event.clientY-y);
 }
 
+// Returns a random rgb color
 function randColor() {
 	let end = false;
 	let c = [];
@@ -400,7 +423,7 @@ function randColor() {
 	return c;
 }
 
-
+// Returns a random speed (between 0.3 and 1, either sign)
 function randSpeed() {
 	let s = 2.0*(Math.random()-0.5);
 	let mins = 0.3;
@@ -500,6 +523,16 @@ function render() {
 
 }
 
+// Updates the gl view according to the pitch, yaw (x and y rotations), and the translation
+// Called every time either changes
+function updateView() {
+	v = new mat4();
+	v = mult(translation,  v);
+	v = mult(rotate(pitch, vec3(0.0, 1.0, 0.0)), v);
+	v = mult(rotate(yaw, vec3(1.0, 0.0, 0.0)), v);
+	gl.uniformMatrix4fv(programInfo.uniformLocations.view, gl.FALSE, v);
+}
+
 //----------------------------------------------------------------------------
 // Utils functions
 //----------------------------------------------------------------------------
@@ -546,16 +579,14 @@ function setBuffersAndAttributes(pInfo, ptsArray, colArray) {
 	gl.enableVertexAttribArray( pInfo.attribLocations.vColor );
 }
 
+//Change the matrix 'proj' to have a new FOV = fov0 + delta
+//fov0 must be the current FOV
 function changeFOV(proj, fov0, delta) {
-	console.log("changeFov:", fov0, delta)
-	//proj[0] =  1.0 / Math.tan( radians(fovy) / 2 ) / aspect
-	//proj[5] =  1.0 / Math.tan( radians(fovy) / 2 )
-	//Multiplicamos por el valor del anterior fov y realizamos de nuevo el cálculo de las dos líneas anteriores
+	//We multiply the value of the previous FOV (so it cancels out) and we divide by the value of the new FOV
 	var f = Math.tan( radians(fov0) / 2 ) / Math.tan( radians(fov0 + delta) / 2 );
 
 	proj[0] *= f;
 	proj[5] *= f;
-	//Asignamos el nuevo valor de fov0
-	fov0 += delta;
+	
 	return fov0;
 }

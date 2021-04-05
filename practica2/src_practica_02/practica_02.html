@@ -11,10 +11,10 @@
          attribute vec3 vPosition;
          attribute vec4 vColor;
 		 uniform mat4 model; // model matrix
-		 uniform mat4 view; // view matrix 
+		 uniform mat4 view; // view matrix
 		 uniform mat4 projection; // projection matrix
          varying vec4 varColor;
-         void main() 
+         void main()
          {
               gl_Position = projection * view * model * vec4(vPosition, 1);
               varColor = vColor;
@@ -26,19 +26,19 @@
     	precision mediump float;
     	varying vec4 varColor;
     	uniform vec4 colorMult;
-    	void main() 
-    	{ 
+    	void main()
+    	{
             gl_FragColor = varColor * colorMult;
     	}
     </script>
 
-    <!-- Ficheros Javascript externos. 
-		Los tres primeros son utilidades comunes (Ed Angel's code: https://www.cs.unm.edu/~angel/BOOK/INTERACTIVE_COMPUTER_GRAPHICS/SEVENTH_EDITION/) 
+    <!-- Ficheros Javascript externos.
+		Los tres primeros son utilidades comunes (Ed Angel's code: https://www.cs.unm.edu/~angel/BOOK/INTERACTIVE_COMPUTER_GRAPHICS/SEVENTH_EDITION/)
 		El cuarto es nuestro código Javascript que editaremos para la práctica -->
     <script type="text/javascript" src="../Common/webgl-utils.js"></script>
     <script type="text/javascript" src="../Common/initShaders.js"></script>
     <script type="text/javascript" src="../Common/MVnew.js"></script>
-    <script type="text/javascript" src="practica_02_base.js"></script>
+    <script type="text/javascript" src="practica_02.js"></script>
 </head>
 
 <body>
