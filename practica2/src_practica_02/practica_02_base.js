@@ -5,6 +5,8 @@
 *
 * Parte adaptada de: Alex Clarke, 2016, y Ed Angel, 2015.
 *
+* Modificada por Andrés Otero y Néstor Monzón
+* 05/04/2021
 */
 
 // Variable to store the WebGL rendering context
