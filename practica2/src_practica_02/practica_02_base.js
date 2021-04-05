@@ -203,16 +203,15 @@ window.onload = function init() {
 	gl.clearColor(0.0, 0.0, 0.0, 1.0);
 	gl.enable(gl.DEPTH_TEST);
 	var transform;
-	var originalProjection;
 	window.addEventListener("keydown", keyPressedHandler);
 	var click_x;
 	var click_y;
-	var original_projection;
+	var original_view;
 
 	window.addEventListener("mousedown", function (event) {
 		click_x = event.clientX;
 		click_y = event.clientY;
-		original_projection = mat4(gl.getUniform(program, gl.getUniformLocation(program, "projection")));
+		original_view = mat4(gl.getUniform(program, gl.getUniformLocation(program, "view")));
 	});
 
 	window.addEventListener("mousemove", function (event) {
@@ -221,11 +220,11 @@ window.onload = function init() {
 		transform = mousePressedHandler(event, click_x, click_y);
 		if (transform != null) {
 			//console.log(originalView);
-			gl.uniformMatrix4fv( programInfo.uniformLocations.projection, gl.FALSE, mult(original_projection, transform) );
+			gl.uniformMatrix4fv( programInfo.uniformLocations.view, gl.FALSE, mult(transform, original_view) );
 		}
 		click_x = event.clientX;
 		click_y = event.clientY;
-		original_projection = mat4(gl.getUniform(program, gl.getUniformLocation(program, "projection")));
+		original_view = mat4(gl.getUniform(program, gl.getUniformLocation(program, "view")));
 	});
 
 
@@ -287,20 +286,16 @@ function keyPressedHandler(event) {
 			if(transform == null) transform = translate(0.0, 0.0, -1.0)
 		case "Left":
 		case "ArrowLeft":
-			if(transform == null) transform = translate(-0.2, 0.0, 0.0)
+			if(transform == null) transform = translate(-1.0, 0.0, 0.0)
 		case "Right":
 		case "ArrowRight":
-			if(transform == null) transform = translate(0.2, 0.0, 0.0)
+			if(transform == null) transform = translate(1.0, 0.0, 0.0)
 
 			if (transform != null) {
 				original = mat4(gl.getUniform(program, gl.getUniformLocation(program, "view")));
 				//console.log(originalView);
 				// inverse of the transform:
-				//view = mat4(gl.getUniform(program, gl.getUniformLocation(program, "view")));
-				let m = mult(inverse(transform), original);
-				// m = mult(m, original);
-				// gl.uniformMatrix4fv(programInfo.uniformLocations.projection, gl.FALSE, m);
-				gl.uniformMatrix4fv(programInfo.uniformLocations.view, gl.FALSE, m);
+				gl.uniformMatrix4fv(programInfo.uniformLocations.view, gl.FALSE, mult(inverse(transform), original));
 			}
 			break;
 		case "P":
@@ -546,6 +541,7 @@ function setBuffersAndAttributes(pInfo, ptsArray, colArray) {
 }
 
 function changeFOV(proj, fov0, delta) {
+	console.log("changeFov:", fov0, delta)
 	//proj[0] =  1.0 / Math.tan( radians(fovy) / 2 ) / aspect
 	//proj[5] =  1.0 / Math.tan( radians(fovy) / 2 )
 	//Multiplicamos por el valor del anterior fov y realizamos de nuevo el cálculo de las dos líneas anteriores
