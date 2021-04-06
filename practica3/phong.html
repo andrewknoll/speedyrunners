@@ -29,7 +29,7 @@
             Normal length:
             <input type="range" id="normalLengthRange" min="0.02" max="0.5" step="0.02" value="0.3" oninput="setNormalLength(this.value)">
             Exposure:
-            <input type="range" id="exposureRange" min="10.0" max="18.0" step="0.5" value="14.0" oninput="setUniformLog('exposure', this.value)">
+            <input type="range" id="exposureRange" min="-10.0" max="18.0" step="0.5" value="14.0" oninput="setUniformLog('exposure', this.value)">
             Roughness:
             <input type="range" id="roughnessRange" min="-16.0" max="0.0" step="0.5" value="-8.0" oninput="setUniformLog('roughness', this.value)">
             <br>
@@ -39,7 +39,7 @@
 
         <script src="js/three.min.js"></script>
         <!-- <script src="http://cdnjs.cloudflare.com/ajax/libs/three.js/r84/three.min.js"></script> -->
-        <script src="js/BufferGeometryUtils.js"></script> 
+        <script src="js/BufferGeometryUtils.js"></script>
         <script src="js/Detector.js"></script>
         <script src="js/OrbitControls.js"></script>
         <script src="js/OBJLoader.js"></script>
@@ -82,7 +82,10 @@ void main() {
     // El vertex shader debe proporcionar gl_Position (en espacio homogeneo o de pantalla)
     // Transformar posiciones a espacio homogeneo
     gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-
+    vPosition = vec4(position,1.);
+    // vNormal = normalize(normalMatrix* normal);
+    vNormal = normal;
+    vUv = uv;
 }
         </script>
 <!-----------------------------------------------------------------------------
@@ -90,8 +93,8 @@ void main() {
 ------------------------------------------------------------------------------>
         <script id="fragmentShader" type="x-shader/x-fragment">
 
-// Intensidad (color) y posicion de las luces. 
-// NUM_LIGHTS es una constante que contiene el numero de luces.			
+// Intensidad (color) y posicion de las luces.
+// NUM_LIGHTS es una constante que contiene el numero de luces.
 uniform vec3 lightColors[ NUM_LIGHTS ];
 uniform vec3 lightPositions[ NUM_LIGHTS ]; // in eye space
 
@@ -101,34 +104,58 @@ uniform float exposure;
 
 // Roughness o rugosidad: tal y como se define aqui, roughness = 1.0 / m
 // Su valor es controlado por un slider
-uniform float roughness; 
+uniform float roughness;
 
 varying vec2 vUv;
 varying vec3 vNormal; // normal del fragment en espacio de la camara
 varying vec4 vPosition; // posicion del fragment en espacio de la camara
 
-// Sampler utilizado para acceder a la textura difusa 
+// Sampler utilizado para acceder a la textura difusa
 // (que se carga con el boton correspondiente del interfaz)
 uniform sampler2D diffuseTexture;
 
 vec3 to_sRGB(vec3 c) { return pow(c, vec3(1.0/2.2)); }
 vec3 from_sRGB(vec3 c) { return pow(c, vec3(2.2)); }
 
+vec3 bisectriz(vec3 v, vec3 w) {
+  return normalize(normalize(v) + normalize(w));
+}
+
+vec3 phong(vec3 n) {
+  vec3 col = vec3(0.0);
+  vec3 v = normalize(cameraPosition-vPosition.xyz);// punto a camara
+  for (int i = 0; i < NUM_LIGHTS; i++) {
+    vec3 l = lightPositions[i]-vPosition.xyz;
+    float r = length(l);
+    l = normalize(l);
+    float dotnl = dot(n,l);
+    if (dotnl < 0.0) break;
+    vec3 h = bisectriz(v,l);
+    float dotnh = dot(n,h);
+    if (dotnh < 0.) break;
+    vec3 cdif = texture2D(diffuseTexture, vUv).rgb;
+    col += 1./(r*r)*(cdif+pow(dotnh,roughness))*lightColors[i]*dotnl;
+  }
+  return col;
+  // return vPosition.xyz;
+}
+
 void main() {
 
-    vec3 finalColor = vec3(0.0, 0.0, 0.0);
-    
+    vec3 finalColor = vec3(0.0,1.0, 0.0);
+
     // Calculos necesarios para la iluminacion aqui
-    
+    finalColor = phong(vNormal);
     // finalColor debe acabar conteniendo la intensidad/color resultante en el fragment
-    
+
     // Solo se sombrea si esta "de cara", si no se le da un color fijo
     if (gl_FrontFacing) {
-        gl_FragColor = vec4(to_sRGB(finalColor * exposure), 1.0); 
+        gl_FragColor = vec4(to_sRGB(finalColor * exposure), 1.0);
+        // gl_FragColor = vec4(exposure*finalColor, 1.0);
     } else {
-        gl_FragColor = vec4(170.0/255.0, 160.0/255.0, 0.0, 1.0); 
+        gl_FragColor = vec4(170.0/255.0, 160.0/255.0, 0.0, 1.0);
     }
-    
+
 }
         </script>
 <!-----------------------------------------------------------------------------
@@ -139,14 +166,14 @@ void main() {
             commonInit();
             init();
             animate();
-            
+
             function init() {
                 defaultTextureTarget = 'diffuseTexture';
                 meshMaterial.uniforms.diffuseTexture = { type: 't', value: null };
-            
+
                 addLight(new THREE.Vector3(50, 50, 100), new THREE.Vector3(0.8, 0.8, 0.8));
                 addLight(new THREE.Vector3(-50, -50, -50), new THREE.Vector3(0.5, 0.5, 0.6));
-                
+
                 document.getElementById('roughnessRange').oninput();
             }
         </script>
