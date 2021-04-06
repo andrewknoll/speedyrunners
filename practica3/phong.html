@@ -121,38 +121,33 @@ vec3 bisectriz(vec3 v, vec3 w) {
   return normalize(normalize(v) + normalize(w));
 }
 
+// Devuelve el color con shading de phong del fragmento
 vec3 phong(vec3 n) {
-  vec3 col = vec3(0.0);
+  vec3 col = vec3(0.); // Color final
   vec3 v = normalize(vPosition.xyz); // punto a camara
-  vec3 cdif = from_sRGB(texture2D(diffuseTexture, vUv).rgb);
-  for (int i = 0; i < NUM_LIGHTS; i++) {
-    vec3 l = lightPositions[i]-vPosition.xyz;
-    float r = length(l);
+  vec3 cdif = from_sRGB(texture2D(diffuseTexture, vUv).rgb); // Coef difuso, textura
+  vec3 cspec = vec3(1.); // Coef especular, 1
+  for (int i = 0; i < NUM_LIGHTS; i++) { // Contribucion de cada luz
+    vec3 l = lightPositions[i]-vPosition.xyz; // Vector a la luz
+    float r = length(l); // Dist a la luz
     l = normalize(l);
-    float dotnl = dot(n,l);
-    if (dotnl > 0.0) {
-      vec3 h = bisectriz(v,l);
+    float dotnl = dot(n,l); // escalar normal, luz
+    if (dotnl > 0.) {
+      vec3 h = bisectriz(v,l); // h, entre camara y luz
       float dotnh = dot(n,h);
       if (dotnh >= 0.) {
-        vec3 cspec = vec3(1.);
-        col += (cdif+cspec*pow(dotnh,1.0/roughness))
+        col += (cdif+cspec*pow(dotnh,1./roughness))
             * lightColors[i] * dotnl / (r*r);
       }
     }
     // break;
   }
   return col;
-  // return vPosition.xyz;
 }
 
 void main() {
-
-    // vec3 finalColor = vec3(0.0,1.0, 0.0);
-
     // Calculos necesarios para la iluminacion aqui
     vec3 finalColor = phong(vNormal);
-    // finalColor debe acabar conteniendo la intensidad/color resultante en el fragment
-
     // Solo se sombrea si esta "de cara", si no se le da un color fijo
     if (gl_FrontFacing) {
         gl_FragColor = vec4(to_sRGB(finalColor * exposure), 1.0);
