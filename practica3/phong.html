@@ -132,15 +132,14 @@ vec3 phong(vec3 n) {
     float r = length(l); // Dist a la luz
     l = normalize(l);
     float dotnl = dot(n,l); // escalar normal, luz
-    if (dotnl > 0.) {
+    if (dotnl > 0.) { // dotnl debe ser mayor que 0 (y si es 0, c es 0)
       vec3 h = bisectriz(v,l); // h, entre camara y luz
       float dotnh = dot(n,h);
-      if (dotnh >= 0.) {
+      if (dotnh >= 0.) { // dotnh puede ser 0
         col += (cdif+cspec*pow(dotnh,1./roughness))
             * lightColors[i] * dotnl / (r*r);
       }
     }
-    // break;
   }
   return col;
 }
