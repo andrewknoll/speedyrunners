@@ -33,6 +33,7 @@ protected:
 	AnimationIndex animIdx;
 	bool facingRight = true;
 	bool isRunning = false;
+	bool isAtWallJump = false;
 
 	std::shared_ptr<Animation> currentAnimation;
 	mutable sf::Sprite mySprite;

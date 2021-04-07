@@ -177,22 +177,26 @@ std::ostream& operator<<(std::ostream& os, const TileMap& t) {
     return os;
 }
 
-std::vector<physics::Collision> TileMap::collision(const sf::FloatRect& characterHitbox) const
+std::vector<struct TileCollision> TileMap::collision(const sf::FloatRect& characterHitbox) const
 {
     // Tile coordinates of upper left tile:
     int i = int(characterHitbox.left) / tileSizeWorld.x;
     int j = int(characterHitbox.top) / tileSizeWorld.y;
-    std::vector<physics::Collision> collisions;
+    std::vector<struct TileCollision> collisions;
 	for (int dj = 0; dj < 3; dj++) { // And 3 vertical
         //bool bothHorizontal = false; // Both horizontal tiles are collidable
 		for (int di = 0; di < 2; di++) { // Check the 2 horizontal tiles
             sf::Vector2f posRectTile = sf::Vector2f((i+di) * tileSizeWorld.x, (j+dj) * tileSizeWorld.y);
 
             sf::Vector2f sizeRectTile(tileSizeWorld.x, tileSizeWorld.y);
-            if (tiles[(i + di) + (j + dj) * width] != 0) { // Tile isnt air 
+			auto tile = tiles[(i + di) + (j + dj) * width];
+            if (tile != 0) { // Tile isnt air 
                 auto c = Tiles::collision(Tiles::FLOOR, posRectTile, sizeRectTile, characterHitbox);
                 if (c) {
-                    collisions.emplace_back(*c);
+					struct TileCollision tc;
+					tc.tileType = (Tiles::Collidable)tile;
+					tc.collision = *c;
+                    collisions.emplace_back(tc);
                     //std::cout << "Collided with tile " << di << " " << dj << "... " << i + di << " " << j+dj << "\n";
                     //return c; // collided, we return it, otherwise check the rest
                 }
@@ -200,8 +204,8 @@ std::vector<physics::Collision> TileMap::collision(const sf::FloatRect& characte
         }
     }
     std::sort(collisions.begin(), collisions.end(),
-        [](physics::Collision a, physics::Collision b) {
-            return (a.distance > b.distance);
+        [](struct TileCollision a, struct TileCollision b) {
+            return (a.collision.distance > b.collision.distance);
         }
     );
     return collisions;

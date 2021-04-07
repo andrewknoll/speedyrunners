@@ -9,6 +9,38 @@
 
 const int MAX_TILEMAP_SIZE = 8192;//128*64
 
+namespace Tiles {
+	//const int FLOOR = 0;
+	enum Collidable { // En tiles_black_editor.png
+		AIR,
+		FLOOR,
+		JUMP_WALL_L,
+		GRAPPLABLE,
+		JUMP_WALL_R,
+		WEIRD_SQUARES, // No se que es esto
+		RAMP_UP,
+		RAMP_DOWN,
+		STAIRS_UP,
+		STAIRS_DOWN,
+		WEIRD_RAMP_UP, // Estas dos tampoco
+		WEIRD_RAMP_DOWN, // "    "
+		RAMP_CEIL_DOWN,
+		RAMP_CEIL_UP,
+		WEIRD_RAMP_CEIL_DOWN,
+		WEIRD_RAMP_CEIL_UP
+	};
+
+	const int NB_COLLIDABLE = 16;
+
+	// Returns the collision, if any, between the hitbox of a character and a tile
+	std::optional<physics::Collision> collision(const Collidable tile, const sf::Vector2f& tilePos, const sf::Vector2f& tileSize, const sf::FloatRect& hitbox);
+}
+
+struct TileCollision {
+	Tiles::Collidable tileType;
+	physics::Collision collision;
+};
+
 class TileMap : public sf::Transformable, public sf::Drawable
 {
 protected:
@@ -40,7 +72,7 @@ public:
 	std::string to_string() const;
 
 
-	std::vector<physics::Collision> collision(const sf::FloatRect& characterHitbox) const;
+	std::vector<struct TileCollision> collision(const sf::FloatRect& characterHitbox) const;
 
 
 
@@ -50,31 +82,3 @@ public:
 };
 
 std::ostream& operator<<(std::ostream& os, const TileMap& t);
-
-
-namespace Tiles {
-	//const int FLOOR = 0;
-	enum Collidable { // En tiles_black_editor.png
-		AIR,
-		FLOOR,
-		JUMP_WALL_L,
-		GRAPPLABLE,
-		JUMP_WALL_R,
-		WEIRD_SQUARES, // No se que es esto
-		RAMP_UP,
-		RAMP_DOWN,
-		STAIRS_UP,
-		STAIRS_DOWN,
-		WEIRD_RAMP_UP, // Estas dos tampoco
-		WEIRD_RAMP_DOWN, // "    "
-		RAMP_CEIL_DOWN,
-		RAMP_CEIL_UP,
-		WEIRD_RAMP_CEIL_DOWN,
-		WEIRD_RAMP_CEIL_UP
-	};
-
-	const int NB_COLLIDABLE = 16;
-
-	// Returns the collision, if any, between the hitbox of a character and a tile
-	std::optional<physics::Collision> collision(const Collidable tile, const sf::Vector2f& tilePos, const sf::Vector2f& tileSize, const sf::FloatRect& hitbox);
-}

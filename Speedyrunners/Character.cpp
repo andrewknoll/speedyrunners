@@ -54,31 +54,42 @@ void Character::update(const sf::Time& dT, const TileMap& tiles)
 	auto collisions = tiles.collision(hitBox);
 	
 	if (!collisions.empty()) {
-		auto collision = collisions.front();
-		//for (const auto& collision : collisions) {
-		// std::cout << "n: " << collision->normal.x << "," << collision->normal.y << "\tpoint: " << collision->point.x << "," << collision->point.y << " " << collision->distance << "\n";
-		// New position:
-		sf::Vector2f pos(hitBox.left, hitBox.top);
-		pos = pos + (collision.normal * (collision.distance));
-		if (collision.normal.x != 0) { // Make 0 the component of the collision
-			vel.x = 0;
-			acc.x = 0;
-			isRunning = false;
-			if (isGrounded) {
-				setAnimation(StandAnim);
+		//auto c = collisions.front();
+		for (const auto& c : collisions) {
+			// std::cout << "n: " << c.collision->normal.x << "," << c.collision->normal.y << "\tpoint: " << c.collision->point.x << "," << c.collision->point.y << " " << c.collision->distance << "\n";
+			// New position:
+			sf::Vector2f pos(hitBox.left, hitBox.top);
+			pos = pos + (c.collision.normal * (c.collision.distance));
+			if (c.collision.normal.x != 0) { // Make 0 the component of the collision
+				vel.x = 0;
+				acc.x = 0;
+				isRunning = false;
+				if (isGrounded) {
+					setAnimation(StandAnim);
+				}
+				if (c.tileType == Tiles::JUMP_WALL_L) {
+					facingRight = false;
+					isAtWallJump = true;
+					setAnimation(WallHangAnim);
+				}
+				else if (c.tileType == Tiles::JUMP_WALL_R) {
+					facingRight = true;
+					isAtWallJump = true;
+					setAnimation(WallHangAnim);
+				}
 			}
-		}
-		else {
-			vel.y = 0;
-			acc.y = physics::GRAVITY;
-		}
-		updateGrounded(collision.normal);
+			else {
+				vel.y = 0;
+				acc.y = physics::GRAVITY;
+			}
+			updateGrounded(c.collision.normal);
 
-		hitBox.left = pos.x; hitBox.top = pos.y;
-		//setFillColor(sf::Color::Blue);
-		//vel = sf::Vector2f(0, 0);
-		//acc = sf::Vector2f(0, 0);
-		//sf::sleep(sf::seconds(2));
+			hitBox.left = pos.x; hitBox.top = pos.y;
+			//setFillColor(sf::Color::Blue);
+			//vel = sf::Vector2f(0, 0);
+			//acc = sf::Vector2f(0, 0);
+			//sf::sleep(sf::seconds(2));
+		}
 	}
 	else {
 		// Update vel:
@@ -91,6 +102,9 @@ void Character::update(const sf::Time& dT, const TileMap& tiles)
 	}
 	setPosition(hitBox.left, hitBox.top); // Del rectangulo
 	if (vel.y > 0) {
+		if (isAtWallJump) {
+			setAnimation(WallHangAnim);
+		}
 		if (hasDoubleJumped) {
 			setAnimation(DoubleJumpFallAnim);
 		}
@@ -138,6 +152,12 @@ void Character::jump() {
 	if (isGrounded) {
 		vel.y = -jumpingSpeed;
 		isGrounded = false;
+		setAnimation(JumpAnim);
+	}
+	else if (isAtWallJump) {
+		vel.y = -jumpingSpeed;
+		if (facingRight) vel.x = jumpingSpeed;
+		else vel.x = -jumpingSpeed;
 		setAnimation(JumpAnim);
 	}
 	else if (!hasDoubleJumped) { // in air and hasnt double jumped yet
