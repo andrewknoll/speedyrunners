@@ -77,25 +77,40 @@ attribute vec3 tangent;
 attribute vec3 tangent2;
 
 // Declarar aqui varying necesarias para la resolucion
+// Para phong:
+varying vec2 vUv;
+varying vec4 vPosition; // posicion del vertice en espacio de la camara
 
+// Normal (espacio de la cam):
+varying vec3 vNormal;
+// Tangentes en espacio de la camara:
+varying vec3 vTangent;
+varying vec3 vTangent2;
 
 void main() {
-	
+
 	// Calculos para dar valor a las varying aqui
 
     // El vertex shader debe proporcionar gl_Position (en espacio homogeneo o de pantalla)
     // Transformar posiciones a espacio homogeneo
     gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-     
+    vPosition = gl_Position;
+    // Necesitamos la base (del espacio tangente) en espacio de la camara:
+    vNormal = normalize(normalMatrix* normal);
+    vTangent = normalize(normalMatrix * tangent);
+    vTangent2 = normalize(normalMatrix * tangent2);
+    // vTangent = normalize( tangent);
+    // vTangent2 = normalize(tangent2);
+    vUv = uv;
 }
         </script>
 <!-----------------------------------------------------------------------------
         FRAGMENT SHADER
 ------------------------------------------------------------------------------>
         <script id="fragmentShader" type="x-shader/x-fragment">
-			
-// Intensidad (color) y posicion de las luces. 
-// NUM_LIGHTS es una constante que contiene el numero de luces.				
+
+// Intensidad (color) y posicion de las luces.
+// NUM_LIGHTS es una constante que contiene el numero de luces.
 uniform vec3 lightColors[ NUM_LIGHTS ];
 uniform vec3 lightPositions[ NUM_LIGHTS ]; // in view coordinates
 
@@ -117,28 +132,105 @@ uniform sampler2D diffuseTexture;
 uniform sampler2D normalMap;
 
 // Declarar aqui varying necesarias para la resolucion
+// Para phong:
+varying vec2 vUv;
+varying vec4 vPosition; // posicion del vertice en espacio de la camara
 
+// Normal original del vertice (espacio de la cam):
+varying vec3 vNormal;
+// Tangentes en espacio de la camara:
+varying vec3 vTangent;
+varying vec3 vTangent2;
 
 vec3 to_sRGB(vec3 c) { return pow(c, vec3(1.0/2.2)); }
 vec3 from_sRGB(vec3 c) { return pow(c, vec3(2.2)); }
 
+vec3 bisectriz(vec3 v, vec3 w) {
+  return normalize(normalize(v) + normalize(w));
+}
+
+// Devuelve el color con shading de phong del fragmento
+vec3 phong(vec3 n) {
+  vec3 col = vec3(0.); // Color final
+  vec3 v = normalize(vPosition.xyz); // punto a camara
+  vec3 cdif = from_sRGB(texture2D(diffuseTexture, vUv).rgb); // Coef difuso, textura
+  vec3 cspec = vec3(1.); // Coef especular, 1
+  for (int i = 0; i < NUM_LIGHTS; i++) { // Contribucion de cada luz
+    vec3 l = lightPositions[i]-vPosition.xyz; // Vector a la luz
+    float r = length(l); // Dist a la luz
+    l = normalize(l);
+    float dotnl = dot(n,l); // escalar normal, luz
+    if (dotnl > 0.) { // dotnl debe ser mayor que 0 (y si es 0, c es 0)
+      vec3 h = bisectriz(v,l); // h, entre camara y luz
+      float dotnh = dot(n,h);
+      if (dotnh >= 0.) { // dotnh puede ser 0
+        col += (cdif+cspec*pow(dotnh,1./roughness))
+            * lightColors[i] * dotnl / (r*r);
+      }
+    }
+  }
+  return col;
+}
+
+
+// No esta definida en esta version de glsl..
+mat3 transpose(mat3 m) {
+  mat3 r;
+  for (int i = 0; i<3; i++) {
+    for (int j = 0; j<3; j++) {
+      r[i][j] = m[j][i];
+    }
+  }
+  if (r==m) return mat3(0.);
+  return r;
+}
+// No esta definida en esta version de glsl..
+mat4 transpose(mat4 m) {
+  mat4 r;
+  for (int i = 0; i<4; i++) {
+    for (int j = 0; j<4; j++) {
+      r[i][j] = m[j][i];
+    }
+  }
+  return r;
+}
+
+// Devuelve la matriz de cambio de base del espacio tangente al de la camara
+mat4 getMatrixTangentToCamera() {
+  return transpose(mat4(vec4(vNormal,0.), vec4(vTangent,0.), vec4(vTangent2,0.),vec4(0.,0.,0.,1.)));
+}
+
+// Devuelve la matriz de cambio de base del espacio tangente al de la camara
+mat3 getMat3TangentToCamera() {
+  // return (mat3(vNormal, vTangent,vTangent2));
+  return transpose(mat3(vTangent,vTangent2,vNormal));
+}
+
+// Devuelve la normal del mapa de normales en espacio de la camara:
+vec3 normalFromUV(vec2 uv) {
+  vec3 n = 2.0*((texture2D(normalMap, uv).rgb)-0.5); // -0.5 para que puedan ser negativas
+  // TODO: REVISAR la inversion esta:
+  // n.y = -n.y; // En el guion pone que es el y, pero funciona bien con el x:
+  n.x = -n.x; // cambiar de formato de DirectX
+  n.xy = n.xy * bumpiness; // Mas relieve
+  mat3 matTangentToCam = getMat3TangentToCamera();
+  return matTangentToCam*normalize(n);
+
+}
+
+
 void main() {
-	
-	vec3 finalColor = vec3(0.0, 0.0, 0.0);
-	
-	// Calculos necesarios para obtener la normal de la textura en espacio de la camara aqui
-	
-	// Calculos necesarios para la iluminacion aqui
-    
-    // finalColor debe acabar conteniendo la intensidad/color resultante en el fragment
-    
+    // Normal del mapa:
+    vec3 n = normalFromUV(vUv);
+    // Shading con phong con esa normal:
+    vec3 finalColor = phong(n);
     // Solo se sombrea si esta "de cara", si no se le da un color fijo
     if (gl_FrontFacing) {
-        gl_FragColor = vec4(to_sRGB(finalColor * exposure), 1.0); 
+        gl_FragColor = vec4(to_sRGB(finalColor * exposure), 1.0);
     } else {
-        gl_FragColor = vec4(170.0/255.0, 160.0/255.0, 0.0, 1.0); 
+        gl_FragColor = vec4(170.0/255.0, 160.0/255.0, 0.0, 1.0);
     }
-	    
+
 }
         </script>
 <!-----------------------------------------------------------------------------
@@ -149,15 +241,15 @@ void main() {
             commonInit();
             init();
             animate();
-            
+
             function init() {
                 defaultTextureTarget = 'diffuseTexture';
                 meshMaterial.uniforms.diffuseTexture = { type: 't', value: null };
                 meshMaterial.uniforms.normalMap = { type: 't', value: null };
-            
+
                 addLight(new THREE.Vector3(50, 50, 100), new THREE.Vector3(0.8, 0.8, 0.8));
                 addLight(new THREE.Vector3(-50, -50, -50), new THREE.Vector3(0.5, 0.5, 0.6));
-                
+
                 document.getElementById('roughnessRange').oninput();
                 document.getElementById('bumpinessRange').oninput();
             }
