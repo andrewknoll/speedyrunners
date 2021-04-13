@@ -114,7 +114,7 @@ void Game::update()
 			c->update(dT, lvl.getCollidableTiles());
 		}
 		// ALGO ASI:
-		cam.follow(characters[getFirstCharacterIdx()]->getPosition()); 
+		//cam.follow(characters[getFirstCharacterIdx()]->getPosition()); 
 	}
 	//cam.pollEvents();
 	// TODO
