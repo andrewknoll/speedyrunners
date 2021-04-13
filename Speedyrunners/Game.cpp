@@ -29,6 +29,11 @@ void Game::playerJoin(Player newPlayer) {
 	}
 }
 
+int Game::getFirstCharacterIdx() const
+{
+	return 0;
+}
+
 void Game::loadLevel(const std::string& lvlPath)
 {
 	// TODO
@@ -108,6 +113,8 @@ void Game::update()
 		for (auto c : characters) {
 			c->update(dT, lvl.getCollidableTiles());
 		}
+		// ALGO ASI:
+		cam.follow(characters[getFirstCharacterIdx()]->getPosition()); 
 	}
 	//cam.pollEvents();
 	// TODO
