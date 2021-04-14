@@ -2,6 +2,7 @@
 
 #include <string>
 #include "TileMap.h"
+#include "Checkpoint.h"
 
 
 class Camera; // Pre-declaracion mejor que include en el hpp
@@ -23,6 +24,8 @@ class Level : public sf::Drawable
 	//int rows, cols;
 	//std::vector<std::vector<TileMap>> tileMap;
 	//std::vector<sf::Texture> spriteSheets; // se deben mantener en memoria: https://www.sfml-dev.org/documentation/2.5.1/classsf_1_1Sprite.php
+
+	std::vector<Checkpoint> checkpoints;
 
 
 
@@ -51,6 +54,11 @@ public:
 
 	const TileMap& getCollidableTiles() const;
 
+	void setCheckpoints(const std::vector<Checkpoint>& cps);
+
+	void addCheckpoint(const sf::Vector2f& pos, float r);
+
+	void getCheckpoints(std::vector<Checkpoint>& _checkpoints) const;
 	//void draw(sf::RenderWindow& window, const Camera& cam) const;
 
 };

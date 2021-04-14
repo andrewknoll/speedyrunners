@@ -37,6 +37,7 @@ std::ostream& operator<<(std::ostream& os, const RNG& c);
 
 
 namespace utils {
+	sf::Vector2f mousePosition2f(const sf::RenderWindow& window);
 	sf::Vector2i clampMouseCoord(const sf::Vector2f& pos, const sf::RenderTarget& window);
 
 	sf::Vector2i clampMouseCoord(const sf::RenderWindow& window);
@@ -50,6 +51,11 @@ namespace utils {
 
 	sf::Vector2f toVector2f(const sf::Vector2i& v);
 
+	// Distance between the points p1 and p2
+	float distance(const sf::Vector2f& p1, const sf::Vector2f& p2);
+
+	// Length (modulo) of vector v
+	float length(const sf::Vector2f& v);
 }
 
 

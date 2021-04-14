@@ -5,6 +5,9 @@
 #include "utils.hpp"
 #include "Player.h"
 
+
+//#define VERBOSE_DEBUG // Cambiar para quitar couts
+
 Game::Game() 
 	: window(sf::VideoMode(1600,900), "SpeedyRunners"),
 	lvl(window),
@@ -15,12 +18,44 @@ Game::Game()
 {
 	setUpWindow();
 	lvl.load("first.csv", window);
+	lvl.getCheckpoints(checkpoints);
 }
 
 void Game::setUpWindow() {
 
 	window.setFramerateLimit(60); //60 FPS?
 	window.setVerticalSyncEnabled(true);
+}
+
+
+// update the positions based on distance to the active checkpoint
+void Game::updatePositions()
+{
+	Checkpoint cp = checkpoints[activeCheckpoint];
+	auto cpPos = cp.getPos();
+	for (auto c : characters) {
+		float d = utils::distance(c->getPosition(), cpPos);
+		c->setDToCheckpoint(d);
+		// get distance d to active checkpoint
+		// if d < r: next checkpoint
+	}
+	// order characters based on distance
+	std::sort(characters.begin(), characters.end(), 
+		[](std::shared_ptr<Character> c1, std::shared_ptr<Character> c2) {
+			return c1->getDToCheckpoint() < c2->getDToCheckpoint();
+		}
+	);
+	// Check if one has reached the checkpoint
+	if (characters[0]->getDToCheckpoint() <= cp.getRadius()) {
+		// Checkpoint reached, cycle to next
+#ifdef VERBOSE_DEBUG
+		std::cout << "Checkpoint " << activeCheckpoint <<" reached\n";
+#endif
+		activeCheckpoint = (activeCheckpoint + 1) % checkpoints.size();
+#ifdef VERBOSE_DEBUG
+		std::cout << "(new = " << activeCheckpoint << ")\n";
+#endif
+	}
 }
 
 void Game::playerJoin(Player newPlayer) {
@@ -109,10 +144,11 @@ void Game::update()
 		}
 		
 	}
-	if (state == State::Playing) { //
+	if (state == State::Playing && dT.asSeconds() < 0.1) { //
 		for (auto c : characters) {
 			c->update(dT, lvl.getCollidableTiles());
 		}
+		updatePositions();
 		// ALGO ASI:
 		//cam.follow(characters[getFirstCharacterIdx()]->getPosition()); 
 	}
@@ -145,13 +181,60 @@ void Game::processEditingInputs(const sf::Event& event) {
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) { // sf::Keyboard::isKeyPressed(sf::Keyboard::S) && 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+			lvl.setCheckpoints(checkpoints);
 			lvl.save("first.csv");
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::L)) {
 			lvl.load("first.csv", window);
+			lvl.getCheckpoints(checkpoints);
 		}
 	}
+	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::C) {
+		std::cout << "adding circle to " << utils::mousePosition2f(window).x << " " << utils::mousePosition2f(window).y<< "\n";
+		checkpoints.emplace_back(utils::mousePosition2f(window), currentRadius);
+	}
+	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::BackSpace && !checkpoints.empty()) {
+		std::cout << "removing last checkpoint\n";
+		checkpoints.pop_back();
+	}else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Add)) {
+		std::cout << "Resizing circle...\n";
+		currentRadius += 10;
+	}else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Subtract) && currentRadius > 10) {
+		std::cout << "Resizing circle...\n";
+		currentRadius -= 10;
+	}
+	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::J) { // For debug, add Falcon to mouse position
+		// Add player
+		Spritesheet sprsht;
+		sprsht.parse_spritesheet("../assets/Content/Characters/Falcon/animation_variant01.png", "../assets/indexes/Characters/Falcon/animation_atlas_variant00.json");
+		std::shared_ptr<Character> falcon = std::make_shared<Character>(sprsht); //"../assets/Content/Characters/Falcon/");
+		falcon->setPosition(utils::mousePosition2f(window));
+		falcon->setName(std::string("falcon ") + std::to_string(characters.size()));
+		//falcon.setScale(0.5, 0.5);
+		addCharacter(falcon);
+
+	}
+	
+	// Debug player positions (P to show):
+	printCharacterPositions(event);
+
 }
+
+void Game::printCharacterPositions(const sf::Event& e) const {
+	
+	if (e.type == sf::Event::KeyPressed && e.key.code == (sf::Keyboard::P)) {
+		std::cout << "Character positions:\n";
+		for (auto c : characters) {
+			std::cout << c->getName() << " | ";
+		}
+		std::cout << "\nCharacter distances:\n";
+		for (auto c : characters) {
+			std::cout << c->getDToCheckpoint() << " | ";
+		}
+		std::cout << "\n";
+	}
+}
+
 
 
 void Game::draw(sf::Time dT)
@@ -162,7 +245,24 @@ void Game::draw(sf::Time dT)
 	switch (state) {
 	case State::Editing:
 	{// sf::Mouse::getPosition() - window.getPosition()
+		// Visualizar checkpoints:
+		for (auto cp : checkpoints) {
+			window.draw(cp);
+		}
+		// characters:
+		for (auto c : characters) {
+			window.draw(*c);
+		}
+		// Selected tile 
 		lvl.drawTile(window, sf::RenderStates(), utils::clampMouseCoord(window), selectedTile);
+		break;
+	}
+	case State::Playing:
+	{ // Animaciones de personajes:
+		for (auto c : characters) {
+			c->tickAnimation(dT);
+			window.draw(*c);
+		}
 		break;
 	}
 	default:
@@ -170,10 +270,8 @@ void Game::draw(sf::Time dT)
 		//std::cout << "unknown game state\n" << (int)state;
 	}
 	}
-	for (auto& c : characters) {
-		c->tickAnimation(dT);
-		window.draw(*c);
-	}
+
+	
 	//lvl.draw(window, cam);
 	//window.draw();
 	window.display();

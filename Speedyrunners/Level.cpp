@@ -29,8 +29,16 @@ void Level::save(const std::string& f_name) const
 		std::cerr << "File <assets/levels/" + f_name + "> inaccesible\n";
 		//exit(1);
 	}
+	// Save background:
 	file << backgroundPath << std::endl;
-	file << collidableTiles << std::endl; // TODO: mucho trabajo en TileMap::to_string
+	// Save checkpoints:
+	file << checkpoints.size() << "\n";
+	for (auto cp : checkpoints) {
+		file << cp.getPos().x << " " << cp.getPos().y << " " << cp.getRadius() << " ";
+	}
+	file << "\n";
+	// Save tilemap:
+	file << collidableTiles << std::endl;
 	
 	std::cout << "Level saved\n";
 
@@ -55,6 +63,21 @@ void Level::load(const std::string& f_name, const sf::RenderWindow& window)
 	file >> backgroundPath;
 	loadBackground(backgroundPath, window);
 	file.ignore(); // skip \n
+
+	// Load checkpoints:
+	
+	int nCheckpoints;
+	file >> nCheckpoints;
+	file.ignore();
+	for (int i = 0; i < nCheckpoints; i++) {
+		std::string sx, sy, sr;
+		file >> sx >> sy >> sr;
+		float x = std::stof(sx), y = std::stof(sy), r = std::stof(sr);
+		checkpoints.emplace_back(sf::Vector2f(x, y), r);
+	}
+	file.ignore();
+	
+	// Load tilemap:
 	if (!collidableTiles.load(file)) {
 		std::cerr << "Error loading tilemap\n";
 	}
@@ -129,6 +152,10 @@ const TileMap& Level::getCollidableTiles() const
 {
 	return collidableTiles;
 }
+void Level::setCheckpoints(const std::vector<Checkpoint>& cps)
+{
+	checkpoints = cps;
+}
 /*
 void Level::scaleBackground(sf::RenderTarget& target) {
 	//auto size = target.getSize();
@@ -151,3 +178,13 @@ void Level::draw(sf::RenderTarget& target, sf::RenderStates states) const
 }
 
 
+
+void Level::addCheckpoint(const sf::Vector2f& pos, float r)
+{
+	checkpoints.emplace_back(pos, r);
+}
+
+void Level::getCheckpoints(std::vector<Checkpoint>& _checkpoints) const
+{
+	_checkpoints = checkpoints;
+}

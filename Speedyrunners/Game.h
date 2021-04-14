@@ -29,12 +29,25 @@ protected:
 	Tiles::Collidable selectedTile; // When editing
 
 
+	// Checkpoints:
+	std::vector<Checkpoint> checkpoints;
+	int activeCheckpoint;
+	int firstCharacter;
+	float currentRadius = 200.0;
+
+
+
 	void update();
 
 	void processEditingInputs(const sf::Event& event);
 
+	void printCharacterPositions(const sf::Event& e) const;
+
+
 	void draw(sf::Time dT);
 	void setUpWindow();
+
+	void updatePositions();
 
 public:
 

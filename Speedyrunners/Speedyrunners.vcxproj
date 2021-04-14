@@ -275,6 +275,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Animation.cpp" />
+    <ClCompile Include="Checkpoint.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Spritesheet.cpp" />
     <ClCompile Include="Camera.cpp" />
@@ -287,6 +288,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
+    <ClInclude Include="Checkpoint.h" />
     <ClInclude Include="Globals.hpp" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Spritesheet.h" />

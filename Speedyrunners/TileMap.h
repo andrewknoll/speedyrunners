@@ -4,6 +4,7 @@
 #include "SFML/Graphics.hpp"
 #include "utils.hpp"
 
+
 // Adapted from: https://www.sfml-dev.org/tutorials/2.5/graphics-vertex-array.php#what-is-a-vertex-and-why-are-they-always-in-arrays
 
 
@@ -53,11 +54,13 @@ protected:
 	std::string tileSetPath;
 
 
+
 	int width, height;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
     
 public:
+
 
 	bool load(const std::string& _tileSetPath, sf::Vector2u _tileSize, const int* _tiles, const int _width, const int _height);
 	// Loads the tilemap from a saved file (csv):
