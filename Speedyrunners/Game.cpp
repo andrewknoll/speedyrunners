@@ -8,12 +8,13 @@
 
 //#define VERBOSE_DEBUG // Cambiar para quitar couts
 
-Game::Game() 
-	: window(sf::VideoMode(1600,900), "SpeedyRunners"),
+Game::Game()
+	: window(sf::VideoMode(1600, 900), "SpeedyRunners"),
 	lvl(window),
-	state(State::Playing), 
+	state(State::Countdown),
 	selectedTile(Tiles::Collidable::FLOOR),
-	cam(sf::FloatRect(0, 0, 1600, 900))
+	cam(sf::FloatRect(0, 0, 1600, 900)),
+	countdown(window)
 	//dT(0)
 {
 	setUpWindow();
@@ -152,6 +153,12 @@ void Game::update()
 		// ALGO ASI:
 		//cam.follow(characters[getFirstCharacterIdx()]->getPosition()); 
 	}
+	else if (state == State::Countdown) {
+		countdown.update(dT);
+		if (countdown.ended()) {
+			state = State::Playing;
+		}
+	}
 	//cam.pollEvents();
 	// TODO
 }
@@ -257,6 +264,11 @@ void Game::draw(sf::Time dT)
 		lvl.drawTile(window, sf::RenderStates(), utils::clampMouseCoord(window), selectedTile);
 		break;
 	}
+	case State::Countdown:
+	{
+		countdown.draw(window);
+		//window.draw(countdown);
+	} // no break, we also animate the characters
 	case State::Playing:
 	{ // Animaciones de personajes:
 		for (auto c : characters) {

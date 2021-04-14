@@ -48,6 +48,9 @@
     <ClCompile Include="Checkpoint.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Countdown.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Character.h">
@@ -81,6 +84,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Checkpoint.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Countdown.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

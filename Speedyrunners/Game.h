@@ -5,12 +5,13 @@
 #include "Level.h"
 #include "Camera.h"
 #include "Player.h"
+#include "Countdown.h"
 
 class Game
 {
 	using CharPtr = std::shared_ptr<Character>;
 public:
-	enum class State { Playing, Paused, Editing };
+	enum class State { Countdown, Playing, Paused, Editing };
 protected:
 	mutable sf::RenderWindow window;
 	std::vector<CharPtr> characters;
@@ -34,6 +35,11 @@ protected:
 	int activeCheckpoint;
 	int firstCharacter;
 	float currentRadius = 200.0;
+
+	// Countdown:
+	Countdown countdown;
+
+
 
 
 
