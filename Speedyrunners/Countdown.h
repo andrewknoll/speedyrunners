@@ -1,6 +1,7 @@
 #pragma once
 
 #include "SFML/Graphics.hpp"
+#include "Globals.hpp"
 
 class Countdown 
 {
@@ -9,11 +10,11 @@ class Countdown
 
 	sf::Time period;
 
-	std::string bgPath = "../assets/Content/UI/Countdown/Background.png";
+	std::string bgPath = glb::CONTENT_PATH + "UI/Countdown/Background.png";
 	sf::Texture bg;
 	sf::Sprite bgSprite;
 
-	std::string textPath = "../assets/Content/UI/Countdown/Text.png";
+	std::string textPath = glb::CONTENT_PATH + "UI/Countdown/Text.png";
 	sf::Texture text;
 	sf::Sprite textSprite;
 

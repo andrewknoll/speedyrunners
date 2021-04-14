@@ -256,7 +256,7 @@ void Game::draw(sf::Time dT)
 		for (auto cp : checkpoints) {
 			window.draw(cp);
 		}
-		// characters:
+		// characters (sin hacer tick a las animaciones):
 		for (auto c : characters) {
 			window.draw(*c);
 		}
@@ -268,6 +268,7 @@ void Game::draw(sf::Time dT)
 	{
 		countdown.draw(window);
 		//window.draw(countdown);
+		
 	} // no break, we also animate the characters
 	case State::Playing:
 	{ // Animaciones de personajes:
