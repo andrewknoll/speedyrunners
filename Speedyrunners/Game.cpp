@@ -62,7 +62,7 @@ void Game::updatePositions()
 	}
 }
 
-void Game::playerJoin(Player newPlayer) {
+void Game::playerJoin(PlayerPtr newPlayer) {
 	if (players.size() < 4) {
 		players.emplace_back(newPlayer);
 	}
@@ -143,7 +143,7 @@ void Game::update()
 		else if (state == State::Playing) { // Playing
 			//characters.front().processInput(event); // Podemos cambiarlo por Player en el futuro
 			for (auto& p : players) {
-				p.captureEvents(event);
+				p->captureEvents(event);
 			}
 		}
 

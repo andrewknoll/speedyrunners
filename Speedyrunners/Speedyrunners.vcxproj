@@ -279,6 +279,7 @@
     <ClCompile Include="Checkpoint.cpp" />
     <ClCompile Include="Countdown.cpp" />
     <ClCompile Include="Menu.cpp" />
+    <ClCompile Include="NPC.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Settings.cpp" />
     <ClCompile Include="Spritesheet.cpp" />
@@ -300,6 +301,7 @@
     <ClInclude Include="Countdown.h" />
     <ClInclude Include="Globals.hpp" />
     <ClInclude Include="Menu.h" />
+    <ClInclude Include="NPC.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Settings.h" />
     <ClInclude Include="Spritesheet.h" />

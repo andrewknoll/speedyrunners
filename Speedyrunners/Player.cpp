@@ -7,6 +7,10 @@ void Player::setCharacter(CharPtr you){
 	me = you;
 }
 
+Player::CharPtr Player::getCharacter() const {
+	return me;
+}
+
 void Player::captureEvents(const sf::Event& event) {
 	if (event.type == sf::Event::KeyPressed) {
 		if (event.key.code == sf::Keyboard::Key::Left) {
@@ -35,8 +39,4 @@ void Player::captureEvents(const sf::Event& event) {
 			me->stop();
 		}
 	}
-}
-
-Player::CharPtr Player::getCharacter() const{
-	return me;
 }

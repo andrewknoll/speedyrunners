@@ -6,8 +6,9 @@ class Player
 private:
 	CharPtr me;
 public:
-	void captureEvents(const sf::Event& event);
 	void setCharacter(CharPtr you);
 	CharPtr getCharacter() const;
+
+	virtual void captureEvents(const sf::Event& event);
 };
 

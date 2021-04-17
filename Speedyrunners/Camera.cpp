@@ -65,9 +65,13 @@ void Camera::follow(std::vector<CharPtr> characters, int first) {
 	}
 	avg /= (float)characters.size();
 
+	//Calculate scale, depending on the average of the distance of each character to the center
 	for (int i = 0; i < characters.size(); i++) {
 		distance += avg - characters[i]->getPosition();
 	}
+	distance.x /= characters.size();
+	distance.y /= characters.size();
+	
 	setSize(size0*((distance.x * distance.x + distance.y + distance.y) * glb::cameraZoomFunctionSteepness + 1.0f));
 	
 	//Ensure first player is inside bounds
