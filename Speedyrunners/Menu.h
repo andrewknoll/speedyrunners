@@ -11,7 +11,7 @@ class Menu
 	sf::RenderWindow* window;
 
 	std::vector<Background> backgrounds;
-	std::vector<std::shared_ptr<UIElement>> elements;
+	std::vector<std::unique_ptr<UIElement>> elements;
 
 
 	// Main menu:
@@ -31,7 +31,9 @@ public:
 
 	Menu(sf::RenderWindow* _window);
 
-	void addElement(std::shared_ptr<UIElement> e);
+	void addElement(std::unique_ptr<UIElement> e);
+
+	//void addElement(std::shared_ptr<UIElement> e);
 
 	void setMainMenu(const Settings& settings);
 
