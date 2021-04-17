@@ -38,8 +38,8 @@ namespace glb
 
 	const sf::Vector2f tileSize = sf::Vector2f(18.0, 18.0);
 
-	const float viewMarginFactor = 0.001;
+	const float viewMarginFactor = 0.94;
 
-	const float cameraZoomFunctionSteepness = 2.5e-5;
+	const float cameraZoomFunctionSteepness = 1e-4;
 };
 
