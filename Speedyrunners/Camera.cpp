@@ -47,6 +47,7 @@ void Camera::operator=(const sf::View& v)
 	setCenter(v.getCenter());
 	setRotation(v.getRotation());
 	setSize(v.getSize());
+	
 
 }
 

@@ -5,13 +5,18 @@
 #include "Level.h"
 #include "Camera.h"
 #include "Player.h"
+#include "Countdown.h"
+#include "Settings.h"
 
 class Game
 {
 	using CharPtr = std::shared_ptr<Character>;
 public:
-	enum class State { Playing, Paused, Editing };
+	enum class State { Countdown, Playing, Paused, Editing, MainMenu };
 protected:
+	// Settings:
+	Settings settings;
+	// Main components:
 	mutable sf::RenderWindow window;
 	std::vector<CharPtr> characters;
 	Camera cam;
@@ -29,12 +34,30 @@ protected:
 	Tiles::Collidable selectedTile; // When editing
 
 
+	// Checkpoints:
+	std::vector<Checkpoint> checkpoints;
+	int activeCheckpoint;
+	int firstCharacter;
+	float currentRadius = 200.0;
+
+	// Countdown:
+	Countdown countdown;
+
+
+
+
+
 	void update();
 
 	void processEditingInputs(const sf::Event& event);
 
+	void printCharacterPositions(const sf::Event& e) const;
+
+
 	void draw(sf::Time dT);
 	void setUpWindow();
+
+	void updatePositions();
 
 public:
 
@@ -46,6 +69,8 @@ public:
 	void loadLevel(const std::string& lvlPath);
 
 	void loop();
+
+	void loopMenu();
 
 	void addCharacter(const CharPtr character);
 

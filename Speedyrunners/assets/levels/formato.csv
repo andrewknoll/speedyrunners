@@ -1,5 +1,7 @@
 <version (int)>
 <path del background (str)>
+<numero de checkpoints>
+<x y r> (para cada checkpoint)
 <cols (int)> <filas (int)>
 <path de los tiles colisionables>
 <tamaño de cada tile en pixeles de la tex original (x,y)> <tam de cada tile en el juego (x,y)>

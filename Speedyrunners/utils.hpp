@@ -5,6 +5,7 @@
 #include <random>
 
 #include "SFML/Graphics.hpp"
+#include "Settings.h"
 
 class RNG {
 	// Para generacion de nums aleatorios, //(de https://en.cppreference.com/w/cpp/numeric/random/uniform_real_distribution)
@@ -37,6 +38,7 @@ std::ostream& operator<<(std::ostream& os, const RNG& c);
 
 
 namespace utils {
+	sf::Vector2f mousePosition2f(const sf::RenderWindow& window);
 	sf::Vector2i clampMouseCoord(const sf::Vector2f& pos, const sf::RenderTarget& window);
 
 	sf::Vector2i clampMouseCoord(const sf::RenderWindow& window);
@@ -49,6 +51,23 @@ namespace utils {
 	sf::Vector2f clampAbs(const sf::Vector2f& val, const float& limit);
 
 	sf::Vector2f toVector2f(const sf::Vector2i& v);
+
+	// Distance between the points p1 and p2
+	float distance(const sf::Vector2f& p1, const sf::Vector2f& p2);
+
+	// Length (modulo) of vector v
+	float length(const sf::Vector2f& v);
+
+
+
+	// Scale sprite to full window size
+	void scaleToFullScreen(sf::Sprite& s, const float& windowHeight);
+
+	// Scale sprite to full window size
+	void scaleToFullScreen(sf::Sprite& s, const sf::RenderWindow& window);
+
+	// Scale sprite to full window size
+	void scaleToFullScreen(sf::Sprite& s, const Settings& settings);
 
 }
 

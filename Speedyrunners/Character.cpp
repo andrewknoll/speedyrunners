@@ -168,6 +168,22 @@ void Character::jump() {
 	}
 	isGrounded = false;
 }
+void Character::setDToCheckpoint(float d)
+{
+	dToCheckpoint = d;
+}
+float Character::getDToCheckpoint() const
+{
+	return dToCheckpoint;
+}
+void Character::setName(std::string s)
+{
+	name = s;
+}
+std::string Character::getName() const
+{
+	return name;
+}
 /*
 void Character::processInput(sf::Event& e)
 {

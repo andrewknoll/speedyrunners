@@ -43,6 +43,11 @@ int clamp(int val, int min, int max) {
 
 
 namespace utils {
+
+	sf::Vector2f mousePosition2f(const sf::RenderWindow& window) {
+		return window.mapPixelToCoords(sf::Mouse::getPosition(window));
+	}
+
 	// Clamps the mouse coordinates in Vector2f position to window pixel coordinates
 	sf::Vector2i clampMouseCoord(const sf::Vector2f& pos, const sf::RenderTarget& window) {
 		return sf::Vector2i(clamp(pos.x, 0, window.getSize().x-1), clamp(pos.y, 0, window.getSize().y-1));
@@ -81,6 +86,32 @@ namespace utils {
 
 	sf::Vector2f toVector2f(const sf::Vector2i& v) {
 		return sf::Vector2f(float(v.x), float(v.y));
+	}
+
+	float distance(const sf::Vector2f& p1, const sf::Vector2f& p2)
+	{
+		return length(p2-p1);
+	}
+
+	float length(const sf::Vector2f& v)
+	{
+		return sqrt(v.x*v.x+v.y*v.y);
+	}
+
+	void scaleToFullScreen(sf::Sprite& s, const float& windowHeight)
+	{
+		float relation = windowHeight / s.getGlobalBounds().height;
+		s.setScale(relation, relation);
+	}
+
+	void scaleToFullScreen(sf::Sprite& s, const sf::RenderWindow& window)
+	{
+		scaleToFullScreen(s, window.getSize().y);
+	}
+
+	void scaleToFullScreen(sf::Sprite& s, const Settings& settings)
+	{
+		scaleToFullScreen(s, settings.windowResolution().y);
 	}
 
 }

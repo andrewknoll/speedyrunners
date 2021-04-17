@@ -17,6 +17,7 @@ void TileMap::draw(sf::RenderTarget& target, sf::RenderStates states) const
     target.draw(vertices, states);
 }
 
+
 bool TileMap::load(const std::string& _tileSetPath, sf::Vector2u _tileSize, const int* _tiles, const int _width, const int _height)
 {
     width = _width; height = _height;

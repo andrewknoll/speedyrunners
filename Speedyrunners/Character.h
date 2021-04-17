@@ -46,7 +46,14 @@ protected:
 	float runningAcceleration = glb::runningAcceleration; // acceleration in the floor
 	float flyingAcceleration = glb::flyingAcceleration; // or in the air
 	float jumpingSpeed = glb::jumpingSpeed; // or in the air
-	
+
+
+	// For checkpoints, distance to active checkpoint:
+	float dToCheckpoint;
+
+	// Name:
+	std::string name;
+
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 	void getSpritesVectorFromMap(std::map<std::string, AnimationPtr> map);
 
@@ -80,6 +87,13 @@ public:
 	void run(bool right);
 	void stop();
 	void jump();
-	
+
+
+	void setDToCheckpoint(float d);
+	float getDToCheckpoint() const;
+
+	void setName(std::string s);
+	std::string getName() const;
+
 };
 

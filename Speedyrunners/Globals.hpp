@@ -3,6 +3,7 @@
 #include <string>
 namespace glb
 {
+	const std::string CONTENT_PATH = "../assets/Content/";
 	const int NUMBER_OF_ANIMATIONS = 22;
 	namespace anim {
 		const std::string STAND_ANIM = "Stand";
