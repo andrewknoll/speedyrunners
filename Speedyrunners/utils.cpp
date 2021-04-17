@@ -98,6 +98,22 @@ namespace utils {
 		return sqrt(v.x*v.x+v.y*v.y);
 	}
 
+	void scaleToFullScreen(sf::Sprite& s, const float& windowHeight)
+	{
+		float relation = windowHeight / s.getGlobalBounds().height;
+		s.setScale(relation, relation);
+	}
+
+	void scaleToFullScreen(sf::Sprite& s, const sf::RenderWindow& window)
+	{
+		scaleToFullScreen(s, window.getSize().y);
+	}
+
+	void scaleToFullScreen(sf::Sprite& s, const Settings& settings)
+	{
+		scaleToFullScreen(s, settings.windowResolution().y);
+	}
+
 }
 
 

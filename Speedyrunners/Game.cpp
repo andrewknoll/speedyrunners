@@ -4,6 +4,7 @@
 #include "Game.h"
 #include "utils.hpp"
 #include "Player.h"
+#include "Menu.h"
 
 
 //#define VERBOSE_DEBUG // Cambiar para quitar couts
@@ -18,8 +19,10 @@ Game::Game()
 	//dT(0)
 {
 	setUpWindow();
-	lvl.load("first.csv", window);
-	lvl.getCheckpoints(checkpoints);
+
+	loadLevel("first.csv");
+
+	settings.setResolution(sf::Vector2i(1600, 900));
 }
 
 void Game::setUpWindow() {
@@ -72,7 +75,8 @@ int Game::getFirstCharacterIdx() const
 
 void Game::loadLevel(const std::string& lvlPath)
 {
-	// TODO
+	lvl.load(lvlPath, window);
+	lvl.getCheckpoints(checkpoints);
 }
 
 void Game::loop()
@@ -96,6 +100,13 @@ void Game::loop()
 		}
 		previousTime = currentTime;
 	}
+}
+
+void Game::loopMenu()
+{
+	Menu menu(window);
+	menu.setMainMenu(settings);
+	menu.loop(settings); // , this);
 }
 
 void Game::addCharacter(const CharPtr character)
@@ -122,6 +133,9 @@ void Game::update()
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::F2)) {
 			state = State::Editing;
+		}
+		else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F4) {
+			loopMenu();
 		}
 		if (state == State::Editing) { // Editing state
 			processEditingInputs(event);
@@ -192,8 +206,7 @@ void Game::processEditingInputs(const sf::Event& event) {
 			lvl.save("first.csv");
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::L)) {
-			lvl.load("first.csv", window);
-			lvl.getCheckpoints(checkpoints);
+			loadLevel("first.csv");
 		}
 	}
 	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::C) {
@@ -220,7 +233,7 @@ void Game::processEditingInputs(const sf::Event& event) {
 		//falcon.setScale(0.5, 0.5);
 		addCharacter(falcon);
 
-	}
+	} 
 	
 	// Debug player positions (P to show):
 	printCharacterPositions(event);

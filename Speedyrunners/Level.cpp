@@ -61,7 +61,7 @@ void Level::load(const std::string& f_name, const sf::RenderWindow& window)
 	}
 	std::string line;
 	file >> backgroundPath;
-	loadBackground(backgroundPath, window);
+	background.load(backgroundPath, window);
 	file.ignore(); // skip \n
 
 	// Load checkpoints:
@@ -88,7 +88,7 @@ void Level::load(const std::string& f_name, const sf::RenderWindow& window)
 
 
 Level::Level(const std::string& tilesetPath, const std::string& bgPath, const sf::RenderWindow& window) :
-	backgroundPath(bgPath)
+	backgroundPath(bgPath), background(bgPath,window)
 {	// Adapted from: https://www.sfml-dev.org/tutorials/2.5/graphics-vertex-array.php#what-is-a-vertex-and-why-are-they-always-in-arrays
 	// define the level with an array of tile indices
 	const int lvlSize = 128 * 64;
@@ -113,37 +113,15 @@ Level::Level(const std::string& tilesetPath, const std::string& bgPath, const sf
 		//exit(1);
 	}
 	
-	loadBackground(bgPath, window);
+	//loadBackground(bgPath, window);
+}
+
+void Level::loadBackground(const std::string& file, const sf::RenderWindow& window)
+{
+	background.load(file, window);
 }
 
 
-
-void Level::loadBackground(const std::string& file, const sf::RenderWindow& window) {
-	//window.mapCoordsToPixel(sf::Vector2u(window.getSize().x, window.getSize().y));
-	//window.mapCoordsToPixel(window.getSize());
-	sf::Vector2u windowSize = window.getSize();
-	//sf::Vector2u windowSize = window.mapCoordsToPixel(
-	//	window.getSize());
-	if (!bgTexture.loadFromFile(file))
-	{
-		std::cerr << "Error cargando fondo\n";
-	}
-	// Vertices for background:
-	bgVertices.setPrimitiveType(sf::Quads);
-	bgVertices.resize(4);
-	// define its 4 corners
-	bgVertices[0].position = sf::Vector2f(0,0);
-	bgVertices[1].position = sf::Vector2f(windowSize.x, 0);
-	bgVertices[2].position = sf::Vector2f(windowSize.x, windowSize.y);
-	bgVertices[3].position = sf::Vector2f(0, windowSize.y);
-
-	// define its 4 texture coordinates
-	auto texSize = bgTexture.getSize();
-	bgVertices[0].texCoords = sf::Vector2f(0, 0);
-	bgVertices[1].texCoords = sf::Vector2f(texSize.x, 0);
-	bgVertices[2].texCoords = sf::Vector2f(texSize.x, texSize.y);
-	bgVertices[3].texCoords = sf::Vector2f(0, texSize.y);
-}
 std::string Level::getBackgroundPath() const
 {
 	return backgroundPath;
@@ -165,6 +143,10 @@ void Level::scaleBackground(sf::RenderTarget& target) {
 
 void Level::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
+	//background.draw(target, states);
+	target.draw(background);
+	target.draw(collidableTiles, states);
+	/*
 	auto v = target.getView();
 	auto s = states;
 	target.setView(target.getDefaultView()); // background shouldnt be moved
@@ -175,6 +157,7 @@ void Level::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	target.draw(bgVertices, states);
 	target.setView(v);
 	target.draw(collidableTiles, s);
+	*/
 }
 
 

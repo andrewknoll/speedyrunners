@@ -3,6 +3,7 @@
 #include <string>
 #include "TileMap.h"
 #include "Checkpoint.h"
+#include "Background.h"
 
 
 class Camera; // Pre-declaracion mejor que include en el hpp
@@ -15,9 +16,10 @@ class Level : public sf::Drawable
 	TileMap decorationTiles;
 
 	// Background:
-	sf::Texture bgTexture;
+	Background background;
+	//sf::Texture bgTexture;
 	//sf::Sprite background;
-	sf::VertexArray bgVertices;
+	//sf::VertexArray bgVertices;
 
 
 	std::string backgroundPath;

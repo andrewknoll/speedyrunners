@@ -6,13 +6,17 @@
 #include "Camera.h"
 #include "Player.h"
 #include "Countdown.h"
+#include "Settings.h"
 
 class Game
 {
 	using CharPtr = std::shared_ptr<Character>;
 public:
-	enum class State { Countdown, Playing, Paused, Editing };
+	enum class State { Countdown, Playing, Paused, Editing, MainMenu };
 protected:
+	// Settings:
+	Settings settings;
+	// Main components:
 	mutable sf::RenderWindow window;
 	std::vector<CharPtr> characters;
 	Camera cam;
@@ -65,6 +69,8 @@ public:
 	void loadLevel(const std::string& lvlPath);
 
 	void loop();
+
+	void loopMenu();
 
 	void addCharacter(const CharPtr character);
 

@@ -5,6 +5,7 @@
 #include <random>
 
 #include "SFML/Graphics.hpp"
+#include "Settings.h"
 
 class RNG {
 	// Para generacion de nums aleatorios, //(de https://en.cppreference.com/w/cpp/numeric/random/uniform_real_distribution)
@@ -56,6 +57,18 @@ namespace utils {
 
 	// Length (modulo) of vector v
 	float length(const sf::Vector2f& v);
+
+
+
+	// Scale sprite to full window size
+	void scaleToFullScreen(sf::Sprite& s, const float& windowHeight);
+
+	// Scale sprite to full window size
+	void scaleToFullScreen(sf::Sprite& s, const sf::RenderWindow& window);
+
+	// Scale sprite to full window size
+	void scaleToFullScreen(sf::Sprite& s, const Settings& settings);
+
 }
 
 
