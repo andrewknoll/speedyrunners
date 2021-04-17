@@ -88,6 +88,11 @@ namespace utils {
 		return sf::Vector2f(float(v.x), float(v.y));
 	}
 
+	sf::IntRect floatToIntRect(const sf::FloatRect& fr)
+	{
+		return sf::IntRect(fr.left, fr.top, fr.width, fr.height);
+	}
+
 	float distance(const sf::Vector2f& p1, const sf::Vector2f& p2)
 	{
 		return length(p2-p1);

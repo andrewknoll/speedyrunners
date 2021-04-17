@@ -52,6 +52,8 @@ namespace utils {
 
 	sf::Vector2f toVector2f(const sf::Vector2i& v);
 
+	sf::IntRect floatToIntRect(const sf::FloatRect& fr);
+
 	// Distance between the points p1 and p2
 	float distance(const sf::Vector2f& p1, const sf::Vector2f& p2);
 

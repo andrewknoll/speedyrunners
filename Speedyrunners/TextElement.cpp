@@ -1,7 +1,9 @@
 #include "TextElement.h"
+#include "utils.hpp"
+
 
 TextElement::TextElement(const Settings& settings, const std::string& fontPath, const std::string& strText, 
-	const float& relativeSize, const sf::Vector2f& relativePosition) 
+	const float& relativeSize, const sf::Vector2f& relativePosition, bool clickable, const sf::Color& c) 
 {
 	font.loadFromFile(fontPath);
 
@@ -18,18 +20,76 @@ TextElement::TextElement(const Settings& settings, const std::string& fontPath, 
 
 
 	// set the color
-	text.setFillColor(sf::Color::Red);
+	text.setFillColor(c);
+
+	if (clickable) makeClickable();
 
 	// set the text style
-	text.setStyle(sf::Text::Bold | sf::Text::Underlined);
+	//text.setStyle(sf::Text::Bold);
 }
+
+
+void TextElement::setColor(const sf::Color& c)
+{
+	text.setFillColor(c);
+}
+
+void TextElement::setSecondColor(const sf::Color& c)
+{
+	secondColor = c;
+}
+
+void TextElement::swapColors()
+{
+	sf::Color aux = secondColor;
+	secondColor = text.getFillColor();
+	text.setFillColor(aux);
+}
+
+
 
 void TextElement::setPosition(const sf::Vector2f& pos)
 {
 	text.setPosition(pos);
 }
 
+void TextElement::makeClickable()
+{
+	setClickableArea(text.getGlobalBounds());
+}
+
 void TextElement::draw(sf::RenderWindow& window) const
 {
 	window.draw(text);
+}
+
+void TextElement::draw(sf::RenderWindow* window) const
+{
+	window->draw(text);
+}
+
+void TextElement::selectSecondColor() {
+	if (firstColorSelected) {
+		firstColorSelected = false;
+		swapColors();
+	} 
+}
+
+void TextElement::selectFirstColor() {
+	if (!firstColorSelected) {
+		firstColorSelected = true;
+		swapColors();
+	}
+}
+
+bool TextElement::mouseInside(const sf::RenderWindow& window)
+{
+	if (UIElement::mouseInside(window)) {
+		selectSecondColor();
+		return true;
+	}
+	else {
+		selectFirstColor();
+		return false;
+	}
 }
