@@ -36,5 +36,9 @@ namespace glb
 	const float jumpingSpeed = 200;
 
 	const sf::Vector2f tileSize = sf::Vector2f(18.0, 18.0);
+
+	const float viewMarginFactor = 0.001;
+
+	const float cameraZoomFunctionSteepness = 2.5e-5;
 };
 

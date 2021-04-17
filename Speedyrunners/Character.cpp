@@ -135,7 +135,7 @@ void Character::updateRunning() {
 }
 
 void Character::run(bool right){
-	std::cout << "Running " << right << " \n";
+	//std::cout << "Running " << right << " \n";
 	facingRight = right;
 	if (!isRunning && isGrounded) {
 		setAnimation(RunAnim, true);

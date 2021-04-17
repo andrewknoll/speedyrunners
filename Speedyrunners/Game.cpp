@@ -114,7 +114,7 @@ void Game::update()
 			c->update(dT, lvl.getCollidableTiles());
 		}
 		// ALGO ASI:
-		cam.follow(characters[getFirstCharacterIdx()]->getPosition()); 
+		cam.follow(characters, 0); 
 	}
 	//cam.pollEvents();
 	// TODO
@@ -140,7 +140,7 @@ void Game::processEditingInputs(const sf::Event& event) {
 				add = 1;
 			}
 			selectedTile = (Tiles::Collidable)utils::positiveMod((selectedTile + add), Tiles::NB_COLLIDABLE);
-			std::cout << "New tile selected: " << selectedTile << std::endl;
+			//std::cout << "New tile selected: " << selectedTile << std::endl;
 		}
 	}
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) { // sf::Keyboard::isKeyPressed(sf::Keyboard::S) && 
