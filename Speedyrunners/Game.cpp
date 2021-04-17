@@ -172,7 +172,6 @@ void Game::update()
 		if (countdown.ended()) {
 			state = State::Playing;
 		}
->>>>>>> 9389c23e3000827cd09fa3a27cbd2d3f8d395512
 	}
 	//cam.pollEvents();
 	// TODO
