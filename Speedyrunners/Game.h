@@ -11,6 +11,7 @@
 class Game
 {
 	using CharPtr = std::shared_ptr<Character>;
+	using PlayerPtr = std::shared_ptr<Player>;
 public:
 	enum class State { Countdown, Playing, Paused, Editing, MainMenu };
 protected:
@@ -26,7 +27,7 @@ protected:
 
 	float aspectRatio = 16.0 / 9.0;
 
-	std::vector<Player> players;
+	std::vector<PlayerPtr> players;
 
 	sf::Time dT; // Time since last update
 	// Editor:
@@ -74,6 +75,6 @@ public:
 
 	void addCharacter(const CharPtr character);
 
-	void playerJoin(Player newPlayer);
+	void playerJoin(PlayerPtr newPlayer);
 };
 
