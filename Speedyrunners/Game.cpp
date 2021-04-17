@@ -164,8 +164,7 @@ void Game::update()
 			c->update(dT, lvl.getCollidableTiles());
 		}
 		updatePositions();
-		// ALGO ASI:
-		cam.follow(characters, 0); 
+		cam.follow(characters); 
 	}
 	else if (state == State::Countdown) {
 		countdown.update(dT);
