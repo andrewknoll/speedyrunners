@@ -51,7 +51,7 @@ void Camera::operator=(const sf::View& v)
 
 }
 
-void Camera::follow(std::vector<CharPtr> characters, int first = 0) {
+void Camera::follow(std::vector<CharPtr> characters, int first) {
 	sf::Vector2f avg = sf::Vector2f(0.0, 0.0);
 	sf::Vector2f distance = sf::Vector2f(0.0, 0.0);
 	float avgDistance = 0.0f;

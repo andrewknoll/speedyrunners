@@ -7,6 +7,7 @@
 #include "Player.h"
 #include "Countdown.h"
 #include "Settings.h"
+#include "MusicPlayer.h"
 
 class Game
 {
@@ -22,6 +23,8 @@ protected:
 	std::vector<CharPtr> characters;
 	Camera cam;
 	Level lvl;
+
+	MusicPlayer mp;
 
 	State state;
 
@@ -74,6 +77,8 @@ public:
 	void loopMenu();
 
 	void addCharacter(const CharPtr character);
+
+	MusicPlayer& music();
 
 	void playerJoin(PlayerPtr newPlayer);
 };
