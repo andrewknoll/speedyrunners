@@ -15,12 +15,16 @@ Game::Game()
 	state(State::Countdown),
 	selectedTile(Tiles::Collidable::FLOOR),
 	cam(sf::FloatRect(0, 0, 1600, 900)),
-	countdown(window)
+	countdown(window),
+	mp()
 	//dT(0)
 {
 	setUpWindow();
 
 	loadLevel("first.csv");
+	//TO-DO: Utilizar "sets" de musica predeterminados
+	//o asignarlas al nivel
+	
 
 	settings.setResolution(sf::Vector2i(1600, 900));
 }
@@ -85,7 +89,12 @@ void Game::loop()
 	float fps, showPeriod = 2;
 	sf::Clock clock = sf::Clock::Clock();
 	sf::Time currentTime, previousTime = clock.getElapsedTime();
+	
 	while (window.isOpen()) {
+		if (!mp.isPlaying(MusicPlayer::MusicType::REGULAR)) {
+			mp.playMusicTrack(MusicPlayer::MusicType::REGULAR);
+		}
+		//TO-DO: Sudden Death
 		update();
 		draw(dT);
 
@@ -105,6 +114,9 @@ void Game::loop()
 void Game::loopMenu()
 {
 	Menu menu(window);
+	if (!mp.isPlaying(MusicPlayer::MusicType::MENU)) {
+		mp.playMusicTrack(MusicPlayer::MusicType::MENU);
+	}
 	menu.setMainMenu(settings);
 	menu.loop(settings); // , this);
 }
@@ -112,6 +124,10 @@ void Game::loopMenu()
 void Game::addCharacter(const CharPtr character)
 {
 	characters.emplace_back(character);
+}
+
+MusicPlayer& Game::music() {
+	return mp;
 }
 
 void Game::update()
@@ -164,8 +180,7 @@ void Game::update()
 			c->update(dT, lvl.getCollidableTiles());
 		}
 		updatePositions();
-		// ALGO ASI:
-		cam.follow(characters, 0); 
+		cam.follow(characters); 
 	}
 	else if (state == State::Countdown) {
 		countdown.update(dT);
