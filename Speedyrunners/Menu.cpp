@@ -80,7 +80,8 @@ void Menu::draw()
 		window->draw(bg);
 	}
 	for (const auto& e : elements) {
-		e->draw(window);
+		window->draw(*e);
+		//e->draw(window);
 	}
 
 	window->display();

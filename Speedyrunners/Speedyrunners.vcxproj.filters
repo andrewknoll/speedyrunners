@@ -85,6 +85,7 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Resources.cpp">
+    <ClCompile Include="InGameUI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -159,6 +160,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Resources.h">
+    <ClInclude Include="InGameUI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

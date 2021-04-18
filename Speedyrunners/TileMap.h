@@ -8,7 +8,7 @@
 // Adapted from: https://www.sfml-dev.org/tutorials/2.5/graphics-vertex-array.php#what-is-a-vertex-and-why-are-they-always-in-arrays
 
 
-const int MAX_TILEMAP_SIZE = 8192;//128*64
+const int MAX_TILEMAP_SIZE = 8192*8;//128*64
 
 namespace Tiles {
 	//const int FLOOR = 0;
@@ -72,7 +72,7 @@ public:
 
 	void drawTile(sf::RenderTarget& target, sf::RenderStates states, const sf::Vector2i& pos, const int tileNumber) const;
 
-	std::string to_string() const;
+	std::string to_string(bool duplicarHorizontal = false) const;
 
 
 	std::vector<struct TileCollision> collision(const sf::FloatRect& characterHitbox) const;

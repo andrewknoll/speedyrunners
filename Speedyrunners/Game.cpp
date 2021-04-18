@@ -20,7 +20,9 @@ Game::Game()
 	//dT(0)
 {
 	setUpWindow();
-	
+
+	ui.setWindow(window);
+
 	loadLevel("first.csv");
 	//TO-DO: Utilizar "sets" de musica predeterminados
 	//o asignarlas al nivel
@@ -124,6 +126,7 @@ void Game::loopMenu()
 void Game::addCharacter(const CharPtr character)
 {
 	characters.emplace_back(character);
+	ui.setCharacters(characters);
 }
 
 MusicPlayer& Game::music() {
@@ -304,6 +307,8 @@ void Game::draw(sf::Time dT)
 			c->tickAnimation(dT);
 			window.draw(*c);
 		}
+		// UI:
+		window.draw(ui);
 		break;
 	}
 	default:
