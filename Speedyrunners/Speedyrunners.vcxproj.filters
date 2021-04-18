@@ -162,8 +162,8 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Resources.h">
-	<Filter>Header Files</Filter>
-    </ClCompile>
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="InGameUI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
