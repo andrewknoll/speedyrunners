@@ -48,9 +48,25 @@ namespace utils {
 		return window.mapPixelToCoords(sf::Mouse::getPosition(window));
 	}
 
+
+	/*sf::Vector2i mousePosition2i(const sf::RenderWindow& window) {
+		return window.mapPixelToCoords(sf::Mouse::getPosition(window));
+	}*/
+
+	// Clamps the mouse coordinates in Vector2f position to window pixel coordinates
+	sf::Vector2i clampMouseCoord_old(const sf::Vector2f& pos, const sf::RenderTarget& window) {
+		return sf::Vector2i(clamp(pos.x, 0, window.getSize().x-1), clamp(pos.y, 0, window.getSize().y-1));
+	}
+
+	// Clamps the mouse coordinates in Vector2f position to window pixel coordinates
+	sf::Vector2i clampMouseCoord_old(const sf::RenderWindow& window) {
+		sf::Vector2f pos = window.mapPixelToCoords(sf::Mouse::getPosition(window));
+		return clampMouseCoord(pos, window);
+	}
+
 	// Clamps the mouse coordinates in Vector2f position to window pixel coordinates
 	sf::Vector2i clampMouseCoord(const sf::Vector2f& pos, const sf::RenderTarget& window) {
-		return sf::Vector2i(clamp(pos.x, 0, window.getSize().x-1), clamp(pos.y, 0, window.getSize().y-1));
+		return sf::Vector2i(clamp(pos.x, 0, window.getSize().x *4-1), clamp(pos.y, 0, window.getSize().y *4- 1));
 	}
 
 	// Clamps the mouse coordinates in Vector2f position to window pixel coordinates
