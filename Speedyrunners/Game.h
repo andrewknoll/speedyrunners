@@ -7,7 +7,7 @@
 #include "Player.h"
 #include "Countdown.h"
 #include "Settings.h"
-#include "MusicPlayer.h"
+#include "Resources.h"
 
 class Game
 {
@@ -24,7 +24,7 @@ protected:
 	Camera cam;
 	Level lvl;
 
-	MusicPlayer mp;
+	Resources& src;
 
 	State state;
 

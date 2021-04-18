@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include "Animation.h"
+#include "Globals.hpp"
 #include <map>
 #include <iostream>
 #include <fstream>
@@ -45,14 +46,18 @@ private:
 		MetaSubscope = 14
 	};
 
-	std::map<std::string, AnimationPtr> animations;
+	std::map<std::string, AnimationPtr> animationMap;
+	std::vector<AnimationPtr> animationVector = std::vector<AnimationPtr>(glb::NUMBER_OF_ANIMATIONS);
 	bool flags[15];
 	std::shared_ptr<sf::Texture> texture;
 
 	bool remove_commas_or_spaces(std::string& matched);
 	int process_token(std::string matched);
+	void getSpritesVectorFromMap();
+
 public:
 	int parse_spritesheet(std::string image_filename, std::string data_filename);
-	std::map<std::string, AnimationPtr> get_animations();
+	std::vector<AnimationPtr> get_animations();
+	
 };
 

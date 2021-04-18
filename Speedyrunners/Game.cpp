@@ -16,11 +16,11 @@ Game::Game()
 	selectedTile(Tiles::Collidable::FLOOR),
 	cam(sf::FloatRect(0, 0, 1600, 900)),
 	countdown(window),
-	mp()
+	src(Resources::getInstance())
 	//dT(0)
 {
 	setUpWindow();
-
+	
 	loadLevel("first.csv");
 	//TO-DO: Utilizar "sets" de musica predeterminados
 	//o asignarlas al nivel
@@ -91,8 +91,8 @@ void Game::loop()
 	sf::Time currentTime, previousTime = clock.getElapsedTime();
 	
 	while (window.isOpen()) {
-		if (!mp.isPlaying(MusicPlayer::MusicType::REGULAR)) {
-			mp.playMusicTrack(MusicPlayer::MusicType::REGULAR);
+		if (!src.musicPlayer.isPlaying(MusicPlayer::MusicType::REGULAR)) {
+			src.musicPlayer.playMusicTrack(MusicPlayer::MusicType::REGULAR);
 		}
 		//TO-DO: Sudden Death
 		update();
@@ -114,8 +114,8 @@ void Game::loop()
 void Game::loopMenu()
 {
 	Menu menu(window);
-	if (!mp.isPlaying(MusicPlayer::MusicType::MENU)) {
-		mp.playMusicTrack(MusicPlayer::MusicType::MENU);
+	if (!src.musicPlayer.isPlaying(MusicPlayer::MusicType::MENU)) {
+		src.musicPlayer.playMusicTrack(MusicPlayer::MusicType::MENU);
 	}
 	menu.setMainMenu(settings);
 	menu.loop(settings); // , this);
@@ -127,7 +127,7 @@ void Game::addCharacter(const CharPtr character)
 }
 
 MusicPlayer& Game::music() {
-	return mp;
+	return src.musicPlayer;
 }
 
 void Game::update()

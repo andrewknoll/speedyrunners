@@ -55,7 +55,6 @@ protected:
 	std::string name;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
-	void getSpritesVectorFromMap(std::map<std::string, AnimationPtr> map);
 
 	void updateAcceleration();
 	void setFriction();
