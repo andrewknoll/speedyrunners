@@ -37,12 +37,18 @@ void RNG::fillRand(int* arr, const int size, const int min, const int max) const
 	}
 }
 
-int clamp(int val, int min, int max) {
-	return (val < min) ? min : (val >= max) ? max : val;
-}
+
 
 
 namespace utils {
+
+	int clamp(int val, int min, int max) {
+		return (val < min) ? min : (val >= max) ? max : val;
+	}
+
+	float clampf(float val, float min, float max) {
+		return (val < min) ? min : (val >= max) ? max : val;
+	}
 
 	sf::Vector2f mousePosition2f(const sf::RenderWindow& window) {
 		return window.mapPixelToCoords(sf::Mouse::getPosition(window));

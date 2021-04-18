@@ -45,6 +45,10 @@ namespace utils {
 
 	int positiveMod(int i, int n);
 
+	int clamp(int val, int min, int max);
+
+	float clampf(float val, float min, float max);
+
 	// Clamp + valor absoluto
 	float clampAbs(const float& val, const float& limit);
 
