@@ -9,7 +9,6 @@ class TextElement : public UIElement
 	bool firstColorSelected;
 
 public:
-
 	TextElement(const Settings& settings, const std::string& fontPath, const std::string& strText, 
 		const float& relativeSize, const sf::Vector2f& relativePosition, 
 		bool clickable = false, const sf::Color& c = sf::Color(51, 153, 255));

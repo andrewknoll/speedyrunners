@@ -183,6 +183,9 @@ std::vector<struct TileCollision> TileMap::collision(const sf::FloatRect& charac
     // Tile coordinates of upper left tile:
     int i = int(characterHitbox.left) / tileSizeWorld.x;
     int j = int(characterHitbox.top) / tileSizeWorld.y;
+    if (i + 2 >= width) {
+
+    }
     std::vector<struct TileCollision> collisions;
 	for (int dj = 0; dj < 3; dj++) { // And 3 vertical
         //bool bothHorizontal = false; // Both horizontal tiles are collidable
@@ -190,6 +193,9 @@ std::vector<struct TileCollision> TileMap::collision(const sf::FloatRect& charac
             sf::Vector2f posRectTile = sf::Vector2f((i+di) * tileSizeWorld.x, (j+dj) * tileSizeWorld.y);
 
             sf::Vector2f sizeRectTile(tileSizeWorld.x, tileSizeWorld.y);
+            if ((i + di) + (j + dj) * width >= tiles.size()) {
+                continue;
+            }
 			auto tile = tiles[(i + di) + (j + dj) * width];
             if (tile != 0) { // Tile isnt air 
                 auto c = Tiles::collision(Tiles::FLOOR, posRectTile, sizeRectTile, characterHitbox);

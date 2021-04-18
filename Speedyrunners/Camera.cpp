@@ -78,8 +78,8 @@ void Camera::follow(std::vector<CharPtr> characters, int first) {
 		avgDistance += std::sqrtf(distance.x * distance.x + distance.y + distance.y);
 	}
 	avgDistance /= characters.size();
-
-	setSize(size0*(avgDistance * glb::cameraZoomFunctionSteepness + 1.0f));
+	sf::Vector2f size = size0 * (avgDistance * glb::cameraZoomFunctionSteepness + 1.0f);
+	setSize(size);
 	
 	//Ensure camera doesn't go out of bounds
 	avg.x = std::max(avg.x, viewport.width / 2.0f);
