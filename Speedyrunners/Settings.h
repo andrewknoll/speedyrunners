@@ -17,5 +17,8 @@ public:
 
 	std::string getLocalisationPath() const;
 
+	void save(const std::string& file) const;
+
+	void load(const std::string& file);
 };
 

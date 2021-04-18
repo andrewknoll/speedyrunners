@@ -68,10 +68,9 @@ void Camera::follow(std::vector<CharPtr>& characters, int first) {
 	
 	//Ensure first player is inside bounds
 	avg.x -= std::min(0.0f, firstPos.x - (avg.x - viewport.width /2.0f * glb::viewMarginFactor));
-	avg.x -= std::max(0.0f, firstPos.x - (avg.x + viewport.width /2.0f * glb::viewMarginFactor));
+	avg.x += std::max(0.0f, firstPos.x - (avg.x + viewport.width /2.0f * glb::viewMarginFactor));
 	avg.y += std::min(0.0f, firstPos.y - (avg.y - viewport.height /2.0f * glb::viewMarginFactor));
-	avg.y += std::max(0.0f, firstPos.y - (avg.y + viewport.height /2.0f* glb::viewMarginFactor));
-	std::cout << firstPos.x - (avg.x + viewport.width / 2.0f * glb::viewMarginFactor) << std::endl;
+	avg.y -= std::max(0.0f, firstPos.y - (avg.y + viewport.height /2.0f* glb::viewMarginFactor));
 
 	//Calculate scale, depending on the average of the distance of each character to the center
 	for (int i = 0; i < characters.size(); i++) {
@@ -79,12 +78,13 @@ void Camera::follow(std::vector<CharPtr>& characters, int first) {
 		avgDistance += utils::length(distance);
 	}
 	avgDistance /= characters.size();
-
-	setSize(size0*(avgDistance * glb::cameraZoomFunctionSteepness + 1.0f));
+	sf::Vector2f size = size0 * (avgDistance * glb::cameraZoomFunctionSteepness + 1.0f);
+	setSize(size);
+	//std::cout << "Size: " << size.x << " " << size.y << " avg: " << "\n";
 	
 	//Ensure camera doesn't go out of bounds
-	//avg.x = std::max(avg.x, viewport.width / 2.0f);
-	//avg.y = std::max(avg.y, viewport.height / 2.0f);
+	avg.x = std::max(avg.x, viewport.width / 2.0f);
+	avg.y = std::max(avg.y, viewport.height / 2.0f);
 	//TO-DO: Check max value
 
 	setCenter(avg);

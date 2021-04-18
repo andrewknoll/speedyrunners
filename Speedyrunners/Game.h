@@ -41,7 +41,7 @@ protected:
 	// Checkpoints:
 	std::vector<Checkpoint> checkpoints;
 	int activeCheckpoint;
-	int firstCharacter;
+	// int firstCharacter;
 	float currentRadius = 200.0;
 
 	// Countdown:

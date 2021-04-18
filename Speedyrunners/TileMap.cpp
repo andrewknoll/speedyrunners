@@ -117,15 +117,22 @@ void TileMap::drawTile(sf::RenderTarget& target, sf::RenderStates states, const 
 }
 
 std::string TileMap::to_string() const {
-    std::string str = std::to_string(width) + " " + std::to_string(height) + "\n";
+    std::string str = std::to_string(2*width) + " " + std::to_string(height) + "\n";
+    //std::string str = std::to_string(width) + " " + std::to_string(height) + "\n";
     str += tileSetPath + "\n" + std::to_string(tileSize.x) + " " + std::to_string(tileSize.y) 
         + " " + std::to_string(tileSizeWorld.x) + " " + std::to_string(tileSizeWorld.y) + "\n";
     for (size_t i = 0; i < height; ++i) {
         for (size_t j = 0; j < width; ++j){
             str += std::to_string(tiles[j + i * width]) + " ";
         }
+        /* duplicar mapa */
+        for (size_t j = 0; j < width; ++j) {
+            str += std::to_string(tiles[width - j - 1 + i * width]) + " ";
+        }
+        /**************************/
         str += "\n";
     }
+    
     return str;
 }
 
@@ -190,6 +197,9 @@ std::vector<struct TileCollision> TileMap::collision(const sf::FloatRect& charac
             sf::Vector2f posRectTile = sf::Vector2f((i+di) * tileSizeWorld.x, (j+dj) * tileSizeWorld.y);
 
             sf::Vector2f sizeRectTile(tileSizeWorld.x, tileSizeWorld.y);
+            if ((i + di) + (j + dj) * width >= tiles.size()) {
+                continue;
+            }
 			auto tile = tiles[(i + di) + (j + dj) * width];
             if (tile != 0) { // Tile isnt air 
                 auto c = Tiles::collision(Tiles::FLOOR, posRectTile, sizeRectTile, characterHitbox);
