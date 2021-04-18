@@ -51,7 +51,7 @@ void Camera::operator=(const sf::View& v)
 
 }
 
-void Camera::follow(std::vector<CharPtr> characters, int first) {
+void Camera::follow(std::vector<CharPtr>& characters, int first) {
 	sf::Vector2f avg = sf::Vector2f(0.0, 0.0);
 	sf::Vector2f distance = sf::Vector2f(0.0, 0.0);
 	float avgDistance = 0.0f;
@@ -75,7 +75,7 @@ void Camera::follow(std::vector<CharPtr> characters, int first) {
 	//Calculate scale, depending on the average of the distance of each character to the center
 	for (int i = 0; i < characters.size(); i++) {
 		distance = avg - characters[i]->getPosition();
-		avgDistance += utils::length(distance); 
+		avgDistance += utils::length(distance);
 	}
 	avgDistance /= characters.size();
 	sf::Vector2f size = size0 * (avgDistance * glb::cameraZoomFunctionSteepness + 1.0f);
@@ -85,6 +85,7 @@ void Camera::follow(std::vector<CharPtr> characters, int first) {
 	//Ensure camera doesn't go out of bounds
 	avg.x = std::max(avg.x, viewport.width / 2.0f);
 	avg.y = std::max(avg.y, viewport.height / 2.0f);
+	//TO-DO: Check max value
 
 	setCenter(avg);
 }

@@ -19,5 +19,5 @@ public:
 	
 	void operator= (const sf::View& v);
 
-	void follow(std::vector<CharPtr> characters, int first = 0);
+	void follow(std::vector<CharPtr>& characters, int first = 0);
 };
