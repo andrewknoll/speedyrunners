@@ -117,15 +117,22 @@ void TileMap::drawTile(sf::RenderTarget& target, sf::RenderStates states, const 
 }
 
 std::string TileMap::to_string() const {
-    std::string str = std::to_string(width) + " " + std::to_string(height) + "\n";
+    std::string str = std::to_string(2*width) + " " + std::to_string(height) + "\n";
+    //std::string str = std::to_string(width) + " " + std::to_string(height) + "\n";
     str += tileSetPath + "\n" + std::to_string(tileSize.x) + " " + std::to_string(tileSize.y) 
         + " " + std::to_string(tileSizeWorld.x) + " " + std::to_string(tileSizeWorld.y) + "\n";
     for (size_t i = 0; i < height; ++i) {
         for (size_t j = 0; j < width; ++j){
             str += std::to_string(tiles[j + i * width]) + " ";
         }
+        /* duplicar mapa */
+        for (size_t j = 0; j < width; ++j) {
+            str += std::to_string(tiles[width - j - 1 + i * width]) + " ";
+        }
+        /**************************/
         str += "\n";
     }
+    
     return str;
 }
 
@@ -183,9 +190,6 @@ std::vector<struct TileCollision> TileMap::collision(const sf::FloatRect& charac
     // Tile coordinates of upper left tile:
     int i = int(characterHitbox.left) / tileSizeWorld.x;
     int j = int(characterHitbox.top) / tileSizeWorld.y;
-    if (i + 2 >= width) {
-
-    }
     std::vector<struct TileCollision> collisions;
 	for (int dj = 0; dj < 3; dj++) { // And 3 vertical
         //bool bothHorizontal = false; // Both horizontal tiles are collidable
