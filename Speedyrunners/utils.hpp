@@ -75,6 +75,13 @@ namespace utils {
 	// Scale sprite to full window size
 	void scaleToFullScreen(sf::Sprite& s, const Settings& settings);
 
+	void scaleToFullScreenRatio(sf::Sprite& s, const sf::RenderWindow& window, const float& verticalRatio);
+
+
+	sf::Vector2f relativeToGlobal(sf::Vector2f relative, const sf::RenderWindow& window);
+
+
+	sf::IntRect relativeToGlobalTextureRect(const sf::FloatRect& relative, const sf::Texture& tex);
 }
 
 

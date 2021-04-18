@@ -21,6 +21,8 @@ Game::Game()
 {
 	setUpWindow();
 
+	ui.setWindow(window);
+
 	loadLevel("first.csv");
 	//TO-DO: Utilizar "sets" de musica predeterminados
 	//o asignarlas al nivel

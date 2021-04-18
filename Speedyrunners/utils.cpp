@@ -141,6 +141,21 @@ namespace utils {
 		scaleToFullScreen(s, settings.windowResolution().y);
 	}
 
+	void scaleToFullScreenRatio(sf::Sprite& s, const sf::RenderWindow& window, const float& verticalRatio) {
+		scaleToFullScreen(s, window.getSize().y * verticalRatio);
+	}
+
+	sf::Vector2f relativeToGlobal(sf::Vector2f relative, const sf::RenderWindow& window)
+	{
+		return sf::Vector2f(relative.x * window.getSize().x, relative.y * window.getSize().y);
+	}
+
+	sf::IntRect relativeToGlobalTextureRect(const sf::FloatRect& relative, const sf::Texture& tex)
+	{
+		auto size = tex.getSize();
+		return sf::IntRect(relative.left * size.x, relative.top * size.y, relative.width*size.x, relative.height*size.y);
+	}
+
 }
 
 
