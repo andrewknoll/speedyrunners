@@ -24,9 +24,7 @@ void UISprite::loadTexture(std::string texturePath)
 	} catch (std::exception& e)
 	{
 		std::cerr << e.what() << std::endl;
-	}
-
-	
+	}	
 }
 
 /*void UISprite::draw(sf::RenderWindow& window) const

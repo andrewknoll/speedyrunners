@@ -124,6 +124,7 @@ void Game::loopMenu()
 void Game::addCharacter(const CharPtr character)
 {
 	characters.emplace_back(character);
+	ui.setCharacters(characters);
 }
 
 MusicPlayer& Game::music() {
@@ -304,6 +305,8 @@ void Game::draw(sf::Time dT)
 			c->tickAnimation(dT);
 			window.draw(*c);
 		}
+		// UI:
+		window.draw(ui);
 		break;
 	}
 	default:

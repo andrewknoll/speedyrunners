@@ -2,10 +2,9 @@
 #include <vector>
 #include <memory>
 #include "SFML/Graphics.hpp"
-//#include "UIElement.h"
+#include "UIElement.h"
 
 class Character;
-class UIElement;
 
 class InGameUI : public sf::Drawable
 {
@@ -15,9 +14,11 @@ class InGameUI : public sf::Drawable
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
+
 public:
-	InGameUI(std::vector<CharPtr> characters);
+	//InGameUI(std::vector<CharPtr> characters);
 
 
+	void setCharacters(std::vector<CharPtr> characters);
 };
 

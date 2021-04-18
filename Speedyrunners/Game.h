@@ -8,6 +8,7 @@
 #include "Countdown.h"
 #include "Settings.h"
 #include "MusicPlayer.h"
+#include "InGameUI.h"
 
 class Game
 {
@@ -47,7 +48,8 @@ protected:
 	// Countdown:
 	Countdown countdown;
 
-
+	// UI:
+	InGameUI ui;
 
 
 
