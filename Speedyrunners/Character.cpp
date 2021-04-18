@@ -184,6 +184,18 @@ std::string Character::getName() const
 {
 	return name;
 }
+void Character::setSpritesheetsPath(std::string path) 
+{
+	spritesheetsPath = path;
+}
+std::string Character::getSpritesheetsPath() const
+{
+	return spritesheetsPath;
+}
+std::string Character::getUIIconPath() const
+{
+	return getSpritesheetsPath() + "heads.png";
+}
 /*
 void Character::processInput(sf::Event& e)
 {

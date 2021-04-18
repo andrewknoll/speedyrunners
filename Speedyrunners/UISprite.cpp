@@ -1,6 +1,16 @@
 #include <iostream>
 #include "UISprite.h"
 
+void UISprite::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
+	target.draw(sprite);
+}
+
+UISprite::UISprite(std::string texturePath)
+{
+	loadTexture(texturePath);
+}
+
 void UISprite::loadTexture(std::string texturePath)
 {
 	try {
@@ -9,7 +19,7 @@ void UISprite::loadTexture(std::string texturePath)
 		}
 		else {
 			std::cout << texturePath << " texture loaded\n";
-			setTexture(texture);
+			sprite.setTexture(texture);
 		}
 	} catch (std::exception& e)
 	{
@@ -19,9 +29,9 @@ void UISprite::loadTexture(std::string texturePath)
 	
 }
 
-void UISprite::draw(sf::RenderWindow& window) const
+/*void UISprite::draw(sf::RenderWindow& window) const
 {
 	//Sprite::draw(window, sf::RenderStates());
 	window.draw(*this);
 	//window.draw(sprite);
-}
+}*/

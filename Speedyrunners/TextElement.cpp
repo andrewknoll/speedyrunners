@@ -2,7 +2,8 @@
 #include "utils.hpp"
 
 
-TextElement::TextElement(const Settings& settings, const std::string& fontPath, const std::string& strText, 
+
+TextElement::TextElement(const Settings& settings, const std::string& fontPath, const std::string& strText,
 	const float& relativeSize, const sf::Vector2f& relativePosition, bool clickable, const sf::Color& c) 
 {
 	font.loadFromFile(fontPath);
@@ -58,6 +59,12 @@ void TextElement::makeClickable()
 	setClickableArea(text.getGlobalBounds());
 }
 
+
+void TextElement::draw(sf::RenderTarget& target, sf::RenderStates states) const
+{
+	target.draw(text);
+}
+/**
 void TextElement::draw(sf::RenderWindow& window) const
 {
 	window.draw(text);
@@ -66,7 +73,7 @@ void TextElement::draw(sf::RenderWindow& window) const
 void TextElement::draw(sf::RenderWindow* window) const
 {
 	window->draw(text);
-}
+}*/
 
 void TextElement::selectSecondColor() {
 	if (firstColorSelected) {

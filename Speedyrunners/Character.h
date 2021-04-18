@@ -54,6 +54,9 @@ protected:
 	// Name:
 	std::string name;
 
+	// All spritesheets path:
+	std::string spritesheetsPath = glb::CONTENT_PATH + "Characters/Speedrunner/"; 
+
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 	void getSpritesVectorFromMap(std::map<std::string, AnimationPtr> map);
 
@@ -94,6 +97,12 @@ public:
 
 	void setName(std::string s);
 	std::string getName() const;
+
+	void setSpritesheetsPath(std::string path);
+	std::string getSpritesheetsPath() const;
+
+	// for UI:
+	std::string getUIIconPath() const;
 
 };
 

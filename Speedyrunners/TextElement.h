@@ -8,6 +8,13 @@ class TextElement : public UIElement
 	sf::Color secondColor = sf::Color::White;
 	bool firstColorSelected;
 
+
+
+	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+
+	/*void draw(sf::RenderWindow& window) const override;
+	void draw(sf::RenderWindow* window) const override;
+	*/
 public:
 	TextElement(const Settings& settings, const std::string& fontPath, const std::string& strText, 
 		const float& relativeSize, const sf::Vector2f& relativePosition, 
@@ -23,8 +30,6 @@ public:
 
 	void setPosition(const sf::Vector2f& pos);
 
-	void draw(sf::RenderWindow& window) const override;
-	void draw(sf::RenderWindow* window) const override;
 
 	void selectSecondColor();
 
