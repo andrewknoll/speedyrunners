@@ -3,7 +3,15 @@
 #include "utils.hpp"
 void UISprite::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	target.draw(sprite);
+	if (ignoreCamera) {
+		auto view = target.getView();
+		target.setView(target.getDefaultView());
+		target.draw(sprite);
+		target.setView(view);
+	}
+	else {
+		target.draw(sprite);
+	}
 }
 
 UISprite::UISprite(std::string texturePath)
@@ -41,9 +49,22 @@ void UISprite::setHead(const sf::Vector2f& pos, const float& scale, const sf::Re
 	sf::IntRect textRect = utils::relativeToGlobalTextureRect(relTexRect, texture);
 	sprite.setTextureRect(textRect);
 	setPosition(pos);
-	utils::scaleToFullScreenRatio(sprite, window, scale);
+	//utils::scaleToFullScreenRatio(sprite, window, scale);
+	setRelativeScale(scale, window);
 	// setScale();
 }
+
+void UISprite::setRelativeScale(const float& scale, const sf::RenderWindow& window)
+{
+	utils::scaleToFullScreenRatio(sprite, window, scale);
+}
+
+void UISprite::setIgnoreCamera(bool ignore)
+{
+	ignoreCamera = ignore;
+}
+
+
 
 /*void UISprite::draw(sf::RenderWindow& window) const
 {

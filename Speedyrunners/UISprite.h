@@ -4,6 +4,8 @@ class UISprite : public UIElement//, public sf::Sprite
 {
 	sf::Texture texture;
 	sf::Sprite sprite;
+	bool ignoreCamera = false;
+
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 public:
@@ -18,6 +20,9 @@ public:
 
 	void setHead(const sf::Vector2f& pos, const float& scale, const sf::RenderWindow& window);
 
+	void setRelativeScale(const float& scale, const sf::RenderWindow& window);
+
+	void setIgnoreCamera(bool ignore);
 	//void setHead(const sf::Vector2f& pos, const float& scale);
 
 	//virtual void draw(sf::RenderWindow& window) const override;

@@ -23,14 +23,14 @@ int main() {
 	game.playerJoin(me);
 	speedyrunner->setName("Player");
 	game.addCharacter(speedyrunner);
-	
+
 
 	std::shared_ptr<Player> other = std::make_shared<NPC>();
 	other->setCharacter(cosmonaut);
 	game.playerJoin(other);
 	cosmonaut->setName("NPC");
 	game.addCharacter(cosmonaut);
-	
+
 	game.music().loadMusicFile("../assets/Content/Audio/Music/Track 01 - Level.ogg", MusicPlayer::MusicType::REGULAR);
 	game.music().loadMusicFile("../assets/Content/Audio/Music/Track02 - SD.ogg", MusicPlayer::MusicType::SUDDENDEATH);
 	game.music().loadMusicFile("../assets/Content/Audio/Music/Track 03 - Menu.ogg", MusicPlayer::MusicType::MENU);
