@@ -71,7 +71,7 @@ varying vec3 vNormal;
 
 
 void main() {
-    
+
 	// Calculos para dar valor a las varying aqui
 
     // El vertex shader debe proporcionar gl_Position (en espacio homogeneo o de pantalla)
@@ -85,32 +85,35 @@ void main() {
         FRAGMENT SHADER
 ------------------------------------------------------------------------------>
         <script id="fragmentShader" type="x-shader/x-fragment">
-			
+
 // Exposicion; no tendreis que hacer nada con ella
 // Su valor es controlado por un slider
 uniform float exposure;
 
-// Sampler utilizado para acceder al mapa de entorno 
-uniform samplerCube environmentMap; 
+// Sampler utilizado para acceder al mapa de entorno
+uniform samplerCube environmentMap;
 
 // Declarar aqui varying necesarias para la resolucion
 varying vec4 vPosition;
 varying vec3 vNormal;
 
 void main() {
-    
+
     // Calculos necesarios para la reflexion y el acceso al mapa de entorno aqui
     vec3 v = normalize(-vPosition.xyz); // camara a punto
+    //vec3 v = vec3(0,0,-1);
+    vec3 r = (reflect(v, vNormal));
 
-    vec3 r = normalize(reflect(v, vNormal));
+
 
     vec4 colorRef = textureCube(environmentMap, r);
-    
+    // vec4 colorRef = vec4(0.5*r+0.5, 1); // descomentar para visualizar r directamente
+
     // colorRef debe acabar conteniendo la intensidad/color resultante en el fragment (el valor obtenido del mapa de entorno)
-    
+
     // gl_FragColor
     gl_FragColor = colorRef;
-    
+
 }
         </script>
 <!-----------------------------------------------------------------------------
@@ -121,10 +124,10 @@ void main() {
             commonInit(false);
             init();
             animate();
-            
+
             function init() {
                 loadEnvironmentMap('data/textures/LancellottiChapel/');
-            
+
                 addLight(new THREE.Vector3(50, 50, 100), new THREE.Vector3(0.8, 0.8, 0.8));
                 addLight(new THREE.Vector3(-50, -50, -50), new THREE.Vector3(0.5, 0.5, 0.6));
             }
