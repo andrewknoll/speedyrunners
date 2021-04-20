@@ -82,7 +82,8 @@ void main() {
     // El vertex shader debe proporcionar gl_Position (en espacio homogeneo o de pantalla)
     // Transformar posiciones a espacio homogeneo
     gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-    vPosition = gl_Position;
+
+    vPosition = modelViewMatrix * vec4(position, 1.0);
     vNormal = normalize(normalMatrix* normal);
     // vNormal = normal;
     vUv = uv;
@@ -124,7 +125,7 @@ vec3 bisectriz(vec3 v, vec3 w) {
 // Devuelve el color con shading de phong del fragmento
 vec3 phong(vec3 n) {
   vec3 col = vec3(0.); // Color final
-  vec3 v = normalize(vPosition.xyz); // punto a camara
+  vec3 v = normalize(-vPosition.xyz); // punto a camara
   vec3 cdif = from_sRGB(texture2D(diffuseTexture, vUv).rgb); // Coef difuso, textura
   vec3 cspec = vec3(1.); // Coef especular, 1
   for (int i = 0; i < NUM_LIGHTS; i++) { // Contribucion de cada luz
