@@ -28,31 +28,31 @@
     <Filter Include="Game">
       <UniqueIdentifier>{547e61b9-26e6-4a30-a7db-7335580d416e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI\InGame">
+      <UniqueIdentifier>{b3f121b3-7598-4eae-8ec9-5fddbc713708}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Elements">
+      <UniqueIdentifier>{293d564f-e966-4ec1-948d-77bca79aa5da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Menus">
+      <UniqueIdentifier>{1d9dda49-8182-42cb-84ee-21aa24e6e7f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Background">
+      <UniqueIdentifier>{c5a7525a-7759-4d6c-b77f-e9300fd6248d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Elements\Text">
+      <UniqueIdentifier>{9ff7cad5-d7c7-40a1-aa51-0fc32ff9c5ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Elements\Sprites">
+      <UniqueIdentifier>{49f8899f-b598-4623-b34a-2ab38547bbb8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="InGameUI.cpp">
-      <Filter>UI</Filter>
-    </ClCompile>
-    <ClCompile Include="UISprite.cpp">
-      <Filter>UI</Filter>
-    </ClCompile>
-    <ClCompile Include="UIElement.cpp">
-      <Filter>UI</Filter>
-    </ClCompile>
-    <ClCompile Include="TextElement.cpp">
-      <Filter>UI</Filter>
-    </ClCompile>
-    <ClCompile Include="Menu.cpp">
-      <Filter>UI</Filter>
-    </ClCompile>
     <ClCompile Include="TileMap.cpp">
       <Filter>Level</Filter>
     </ClCompile>
     <ClCompile Include="Level.cpp">
       <Filter>Level</Filter>
-    </ClCompile>
-    <ClCompile Include="Background.cpp">
-      <Filter>UI</Filter>
     </ClCompile>
     <ClCompile Include="Animation.cpp">
       <Filter>Animation</Filter>
@@ -90,9 +90,6 @@
     <ClCompile Include="Player.cpp">
       <Filter>Characters</Filter>
     </ClCompile>
-    <ClCompile Include="Countdown.cpp">
-      <Filter>UI</Filter>
-    </ClCompile>
     <ClCompile Include="Camera.cpp">
       <Filter>Camera</Filter>
     </ClCompile>
@@ -105,31 +102,34 @@
     <ClCompile Include="main.cpp">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="Countdown.cpp">
+      <Filter>UI\InGame</Filter>
+    </ClCompile>
+    <ClCompile Include="InGameUI.cpp">
+      <Filter>UI\InGame</Filter>
+    </ClCompile>
+    <ClCompile Include="UIElement.cpp">
+      <Filter>UI\Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="Menu.cpp">
+      <Filter>UI\Menus</Filter>
+    </ClCompile>
+    <ClCompile Include="Background.cpp">
+      <Filter>UI\Background</Filter>
+    </ClCompile>
+    <ClCompile Include="TextElement.cpp">
+      <Filter>UI\Elements\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="UISprite.cpp">
+      <Filter>UI\Elements\Sprites</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="UISprite.h">
-      <Filter>UI</Filter>
-    </ClInclude>
-    <ClInclude Include="UIElement.h">
-      <Filter>UI</Filter>
-    </ClInclude>
-    <ClInclude Include="InGameUI.h">
-      <Filter>UI</Filter>
-    </ClInclude>
-    <ClInclude Include="TextElement.h">
-      <Filter>UI</Filter>
-    </ClInclude>
-    <ClInclude Include="Menu.h">
-      <Filter>UI</Filter>
-    </ClInclude>
     <ClInclude Include="TileMap.h">
       <Filter>Level</Filter>
     </ClInclude>
     <ClInclude Include="Level.h">
       <Filter>Level</Filter>
-    </ClInclude>
-    <ClInclude Include="Background.h">
-      <Filter>UI</Filter>
     </ClInclude>
     <ClInclude Include="Spritesheet.h">
       <Filter>Animation</Filter>
@@ -170,9 +170,6 @@
     <ClInclude Include="Globals.hpp">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="Countdown.h">
-      <Filter>UI</Filter>
-    </ClInclude>
     <ClInclude Include="Camera.h">
       <Filter>Camera</Filter>
     </ClInclude>
@@ -181,6 +178,27 @@
     </ClInclude>
     <ClInclude Include="Game.h">
       <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Countdown.h">
+      <Filter>UI\InGame</Filter>
+    </ClInclude>
+    <ClInclude Include="InGameUI.h">
+      <Filter>UI\InGame</Filter>
+    </ClInclude>
+    <ClInclude Include="UIElement.h">
+      <Filter>UI\Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="Menu.h">
+      <Filter>UI\Menus</Filter>
+    </ClInclude>
+    <ClInclude Include="Background.h">
+      <Filter>UI\Background</Filter>
+    </ClInclude>
+    <ClInclude Include="TextElement.h">
+      <Filter>UI\Elements\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="UISprite.h">
+      <Filter>UI\Elements\Sprites</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
