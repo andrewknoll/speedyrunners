@@ -68,7 +68,7 @@
 // Declarar aqui varying necesarias para la resolucion
 varying vec4 vPosition;
 varying vec3 vNormal;
-
+varying vec4 vCamera;
 
 void main() {
     
@@ -78,7 +78,7 @@ void main() {
     // Transformar posiciones a espacio homogeneo
     gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
     vPosition = gl_Position;
-    vNormal = normalize(normalMatrix* normal);
+    vNormal = normalize(normalMatrix * normal);
 }
         </script>
 <!-----------------------------------------------------------------------------
@@ -96,6 +96,7 @@ uniform samplerCube environmentMap;
 // Declarar aqui varying necesarias para la resolucion
 varying vec4 vPosition;
 varying vec3 vNormal;
+
 
 void main() {
     
