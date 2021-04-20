@@ -202,16 +202,15 @@ mat4 getMatrixTangentToCamera() {
 
 // Devuelve la matriz de cambio de base del espacio tangente al de la camara
 mat3 getMat3TangentToCamera() {
-  // return (mat3(vNormal, vTangent,vTangent2));
-  return transpose(mat3(vTangent,vTangent2,vNormal));
+  // Inversa transpuesta. Como inv(M)=transpuesta(M) en este caso,
+  // inv(transpuesta(M)) = inv(inv(M)) = M
+  return (mat3(vTangent,vTangent2,vNormal));
 }
 
 // Devuelve la normal del mapa de normales en espacio de la camara:
 vec3 normalFromUV(vec2 uv) {
-  vec3 n = 2.0*((texture2D(normalMap, uv).rgb)-0.5); // -0.5 para que puedan ser negativas
-  // TODO: REVISAR la inversion esta:
-  n.y = -n.y; // En el guion pone que es el y, pero funciona bien con el x:
-  //n.x = -n.x; // cambiar de formato de DirectX
+  vec3 n = normalize(2.0*((texture2D(normalMap, uv).rgb)-0.5)); // -0.5 para que puedan ser negativas
+  n.y = -n.y; // cambiar de formato de DirectX
   n.xy = n.xy * bumpiness; // Mas relieve
   mat3 matTangentToCam = getMat3TangentToCamera();
   return matTangentToCam*normalize(n);
@@ -226,8 +225,8 @@ void main() {
     vec3 finalColor = phong(n);
     // Solo se sombrea si esta "de cara", si no se le da un color fijo
     if (gl_FrontFacing) {
-        //gl_FragColor = vec4(to_sRGB(finalColor * exposure), 1.0);
-        gl_FragColor = vec4(to_sRGB(0.5*n+0.5), 1.0);
+        gl_FragColor = vec4(to_sRGB(finalColor * exposure), 1.0);
+        //gl_FragColor = vec4(to_sRGB(0.5*n+0.5), 1.0);
     } else {
         gl_FragColor = vec4(170.0/255.0, 160.0/255.0, 0.0, 1.0);
     }
