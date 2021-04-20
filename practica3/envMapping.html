@@ -68,7 +68,6 @@
 // Declarar aqui varying necesarias para la resolucion
 varying vec4 vPosition;
 varying vec3 vNormal;
-varying vec4 vCamera;
 
 void main() {
 
@@ -77,7 +76,9 @@ void main() {
     // El vertex shader debe proporcionar gl_Position (en espacio homogeneo o de pantalla)
     // Transformar posiciones a espacio homogeneo
     gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-    vPosition = gl_Position;
+
+    //Posicion en espacio de la camara 
+    vPosition = modelViewMatrix * vec4(position, 1.0);
     vNormal = normalize(normalMatrix * normal);
 }
         </script>
@@ -101,11 +102,9 @@ varying vec3 vNormal;
 void main() {
 
     // Calculos necesarios para la reflexion y el acceso al mapa de entorno aqui
-    vec3 v = normalize(-vPosition.xyz); // camara a punto
+    vec3 v = normalize(vPosition.xyz); // camara a punto
     //vec3 v = vec3(0,0,-1);
     vec3 r = (reflect(v, vNormal));
-
-
 
     vec4 colorRef = textureCube(environmentMap, r);
     // vec4 colorRef = vec4(0.5*r+0.5, 1); // descomentar para visualizar r directamente
