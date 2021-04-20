@@ -226,7 +226,8 @@ void main() {
     vec3 finalColor = phong(n);
     // Solo se sombrea si esta "de cara", si no se le da un color fijo
     if (gl_FrontFacing) {
-        gl_FragColor = vec4(to_sRGB(finalColor * exposure), 1.0);
+        //gl_FragColor = vec4(to_sRGB(finalColor * exposure), 1.0);
+        gl_FragColor = vec4(to_sRGB(0.5*n+0.5), 1.0);
     } else {
         gl_FragColor = vec4(170.0/255.0, 160.0/255.0, 0.0, 1.0);
     }
