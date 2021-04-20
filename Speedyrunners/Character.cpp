@@ -4,9 +4,10 @@
 #include "utils.hpp" // physics
 #include "Globals.hpp" //animation names
 #include "Spritesheet.h"
+#include "Rocket.h"
 
-Character::Character(Spritesheet sp):
-	hitBox(glb::default_hitbox) {
+Character::Character(Spritesheet sp) :
+	hitBox(glb::default_hitbox){
 	animations = sp.get_animations();
 	setAnimation(StartAnim);
 	this->setScale(0.45, 0.45);
@@ -168,6 +169,13 @@ void Character::jump() {
 	}
 	isGrounded = false;
 }
+
+Character::ItemPtr Character::useItem(std::shared_ptr<Character> target) {
+	//TODO - Item available?
+	ItemPtr rocket = std::make_shared<Rocket>(getPosition(), target, facingRight);
+	return rocket;
+}
+
 void Character::setDToCheckpoint(float d)
 {
 	dToCheckpoint = d;

@@ -1,5 +1,6 @@
 #pragma once
 #include "Character.h"
+#include "Globals.hpp"
 class Player
 {
 	using CharPtr = std::shared_ptr<Character>;
@@ -9,6 +10,6 @@ public:
 	void setCharacter(CharPtr you);
 	CharPtr getCharacter() const;
 
-	virtual void captureEvents(const sf::Event& event);
+	virtual bool captureEvents(const sf::Event& event);
 };
 

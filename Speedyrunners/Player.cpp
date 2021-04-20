@@ -1,7 +1,4 @@
 #include "Player.h"
-#define NORMAL_RUNNING_ACC 2
-#define JUMP_VEL -3
-#define SLIDING_FRICTION -1
 
 void Player::setCharacter(CharPtr you){
 	me = you;
@@ -11,7 +8,7 @@ Player::CharPtr Player::getCharacter() const {
 	return me;
 }
 
-void Player::captureEvents(const sf::Event& event) {
+bool Player::captureEvents(const sf::Event& event) {
 	if (event.type == sf::Event::KeyPressed) {
 		if (event.key.code == sf::Keyboard::Key::Left) {
 			me->run(false);
@@ -33,10 +30,14 @@ void Player::captureEvents(const sf::Event& event) {
 			}
 
 		}*/
+		else if (event.key.code == sf::Keyboard::Key::C) {
+			return true;
+		}
 	}
 	if (event.type == sf::Event::KeyReleased) {
 		if (event.key.code == sf::Keyboard::Right || event.key.code == sf::Keyboard::Left) {
 			me->stop();
 		}
 	}
+	return false;
 }

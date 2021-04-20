@@ -2,6 +2,7 @@
 #include "Spritesheet.h"
 #include "SFML/Audio.hpp"
 #include "MusicPlayer.h"
+#include "Globals.hpp"
 class Resources
 {
 private:
@@ -9,7 +10,7 @@ private:
 
 	std::vector<std::vector<Spritesheet> > spritesheets;
 	//std::vector<sf::Sound> sounds;
-	std::vector<sf::Texture> items;
+	std::vector<sf::Texture> items = std::vector<sf::Texture>(glb::NUMBER_OF_ITEMS);
 
 	const std::string PATH_TO_ASSETS = "../assets/";
 	const std::string RESOURCES_CSV = "resources.csv";
@@ -19,8 +20,8 @@ public:
 	void operator=(const Resources&) = delete;
 	static Resources& getInstance();
 
-	Spritesheet getSpriteSheet(int character, int variant = 0);
-	sf::Texture getItemTexture(int type);
+	const Spritesheet& getSpriteSheet(int character, int variant = 0);
+	const sf::Texture& getItemTexture(glb::item type);
 
 	MusicPlayer musicPlayer;
 };

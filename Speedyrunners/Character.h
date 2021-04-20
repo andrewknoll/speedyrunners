@@ -5,12 +5,15 @@
 #include "Animation.h"
 #include "Globals.hpp"
 #include "Spritesheet.h"
+#include "Item.h"
 
 #define PERIOD sf::milliseconds(1000/30)
-typedef std::shared_ptr<Animation> AnimationPtr;
+
 
 class Character : public sf::Transformable, public sf::Drawable
 {
+	using AnimationPtr = std::shared_ptr<Animation>;
+	using ItemPtr = std::shared_ptr<Item>;
 public:
 	//enum class State {Standing, Running, Sliding, InAir, Grappling, WallJumping, Stunned, Tripped};
 	enum AnimationIndex {
@@ -89,6 +92,8 @@ public:
 	void run(bool right);
 	void stop();
 	void jump();
+
+	ItemPtr useItem(std::shared_ptr<Character> target = nullptr);
 
 
 	void setDToCheckpoint(float d);

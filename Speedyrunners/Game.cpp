@@ -49,14 +49,15 @@ void Game::updatePositions()
 		// get distance d to active checkpoint
 		// if d < r: next checkpoint
 	}
-	// order characters based on distance
-	std::sort(characters.begin(), characters.end(), 
-		[](std::shared_ptr<Character> c1, std::shared_ptr<Character> c2) {
-			return c1->getDToCheckpoint() < c2->getDToCheckpoint();
+	// order characters and players based on distance
+	std::sort(positions.begin(), positions.end(),
+		[chars = this->characters](int i, int j) {
+			//TODO- MUERTE
+			return chars[i]->getDToCheckpoint() < chars[j]->getDToCheckpoint();
 		}
 	);
 	// Check if one has reached the checkpoint
-	if (characters[0]->getDToCheckpoint() <= cp.getRadius()) {
+	if (getCharacterAt(0)->getDToCheckpoint() <= cp.getRadius()) {
 		// Checkpoint reached, cycle to next
 #ifdef VERBOSE_DEBUG
 		std::cout << "Checkpoint " << activeCheckpoint <<" reached\n";
@@ -125,8 +126,21 @@ void Game::loopMenu()
 
 void Game::addCharacter(const CharPtr character)
 {
-	characters.emplace_back(character);
-	ui.setCharacters(characters);
+	if (characters.size() < 4) {
+		characters.emplace_back(character);
+		ui.setCharacters(characters);
+		int pos = positions.size();
+		positions.push_back(pos);
+	}
+	
+}
+
+Game::CharPtr Game::getCharacterAt(int pos) {
+	return characters[positions[pos]];
+}
+
+Game::PlayerPtr Game::getPlayerAt(int pos) {
+	return players[positions[pos]];
 }
 
 MusicPlayer& Game::music() {
@@ -136,6 +150,7 @@ MusicPlayer& Game::music() {
 void Game::update()
 {
 	sf::Event event;
+	int target;
 	while (window.pollEvent(event))
 	{
 		if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
@@ -161,8 +176,14 @@ void Game::update()
 		} // End of editing state
 		else if (state == State::Playing) { // Playing
 			//characters.front().processInput(event); // Podemos cambiarlo por Player en el futuro
-			for (auto& p : players) {
-				p->captureEvents(event);
+			for (int i = 0; i < characters.size(); i++) {
+				target = i; //Set target initial value to oneself
+				if (getPlayerAt(i)->captureEvents(event)) {
+					if (i > 0) target--;
+					else if (i < characters.size() - 1) target++;
+					//if player is dumb and uses rockets when nobody else is playing, it will hit them
+					items.push_back(getCharacterAt(i)->useItem(getCharacterAt(target)));
+				};
 			}
 		}
 
@@ -182,7 +203,10 @@ void Game::update()
 		for (auto c : characters) {
 			c->update(dT, lvl.getCollidableTiles());
 		}
-		//updatePositions();
+		for (auto it : items) {
+			it->update(dT);
+		}
+		updatePositions();
 		cam.follow(characters); 
 	}
 	else if (state == State::Countdown) {
@@ -306,6 +330,9 @@ void Game::draw(sf::Time dT)
 		for (auto c : characters) {
 			c->tickAnimation(dT);
 			window.draw(*c);
+		}
+		for (auto i : items) {
+			window.draw(*i);
 		}
 		// UI:
 		window.draw(ui);

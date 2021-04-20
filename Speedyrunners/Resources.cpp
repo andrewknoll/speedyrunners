@@ -38,9 +38,10 @@ Resources::Resources() {
 		/*else if (type == "S") {
 			sounds[current[2]++].loadFromFile(token[0]);
 		}*/
-		/*else if (type == "T") {
-
-		}*/
+		else if (type == "I") {
+			for (int i = 0; i < 2; i++) std::getline(iss, token[i], ',');
+			items[stoi(token[0])].loadFromFile(PATH_TO_ASSETS + token[1]);
+		}
 		/*else if (type == "L") {
 
 		}*/
@@ -53,10 +54,10 @@ Resources& Resources::getInstance() {
 	return src_;
 }
 
-Spritesheet Resources::getSpriteSheet(int character, int variant) {
+const Spritesheet& Resources::getSpriteSheet(int character, int variant) {
 	return spritesheets[character][variant];
 }
 
-sf::Texture Resources::getItemTexture(int type) {
-	return items[type];
+const sf::Texture& Resources::getItemTexture(glb::item type) {
+	return items[type - 1];
 }
