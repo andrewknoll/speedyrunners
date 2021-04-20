@@ -58,7 +58,6 @@ protected:
 	std::string spritesheetsPath = glb::CONTENT_PATH + "Characters/Speedrunner/"; 
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
-	void getSpritesVectorFromMap(std::map<std::string, AnimationPtr> map);
 
 	void updateAcceleration();
 	void setFriction();

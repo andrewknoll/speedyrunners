@@ -3,18 +3,21 @@
 class MusicPlayer
 {
 public:
-	enum MusicType : int { MENU = 0, REGULAR = 1, SUDDENDEATH = 2 };
+	enum class MusicType : int { MENU = 0, REGULAR = 1, SUDDENDEATH = 2 };
 private:
-	const int n_tracks = 3;
-	std::vector<sf::Music> tracks = std::vector<sf::Music>(n_tracks);
+	const int n_types = 3;
+	std::vector<std::vector<std::shared_ptr<sf::Music> > > tracks = std::vector<std::vector<std::shared_ptr<sf::Music> > >(n_types);
 	
 public:
-	void loadMusicFile(std::string f, MusicType t);
+	void addTrack(std::string file, int t);
+	void addTrack(std::string file, MusicType t);
 
-	void playMusicTrack(MusicType t);
+	void playMusicTrack(int t, int variant = 0);
+	void playMusicTrack(MusicType t, int variant = 0);
 
 	void pauseAll();
 
+	bool isPlaying(int t);
 	bool isPlaying(MusicType t);
 };
 

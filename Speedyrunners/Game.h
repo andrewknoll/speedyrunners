@@ -7,6 +7,7 @@
 #include "Player.h"
 #include "Countdown.h"
 #include "Settings.h"
+#include "Resources.h"
 #include "MusicPlayer.h"
 #include "InGameUI.h"
 
@@ -25,7 +26,7 @@ protected:
 	Camera cam;
 	Level lvl;
 
-	MusicPlayer mp;
+	Resources& src;
 
 	State state;
 

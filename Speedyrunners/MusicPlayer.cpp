@@ -1,22 +1,46 @@
 #include "MusicPlayer.h"
 
-void MusicPlayer::loadMusicFile(std::string f, MusicType t) {
-	tracks[t].openFromFile(f);
+void MusicPlayer::addTrack(std::string file, int t) {
+	std::shared_ptr<sf::Music> m = std::make_shared<sf::Music>();
+	m->openFromFile(file);
+	tracks[t].push_back(m);
 }
 
-void MusicPlayer::playMusicTrack(MusicType t) {
-	for (int i = 0; i < n_tracks; i++) {
-		if(i != t) tracks[i].stop();
-		else tracks[i].play();
+void MusicPlayer::addTrack(std::string file, MusicType t) {
+	addTrack(file, (int)t);
+}
+
+
+void MusicPlayer::playMusicTrack(int t, int variant) {
+	for (int i = 0; i < n_types; i++) {
+		for (int j = 0; j < tracks[i].size(); j++) {
+			if (i != t || j != variant) tracks[i][j]->stop();
+			else tracks[i][j]->play();
+		}
 	}
+}
+
+void MusicPlayer::playMusicTrack(MusicType t, int variant) {
+	playMusicTrack((int)t, variant);
 }
 
 void MusicPlayer::pauseAll() {
-	for (int i = 0; i < n_tracks; i++) {
-		tracks[i].pause();
+	for (int i = 0; i < n_types; i++) {
+		for (int j = 0; j < tracks[i].size(); j++) {
+			tracks[i][j]->pause();
+		}
 	}
 }
 
+bool MusicPlayer::isPlaying(int t) {
+	bool any = false;
+	int i = 0;
+	while (!any && i < tracks[t].size()) {
+		any |= tracks[t][i++]->getStatus() == sf::Music::Playing;
+	}
+	return any;
+}
+
 bool MusicPlayer::isPlaying(MusicType t) {
-	return tracks[t].getStatus() == sf::Music::Playing;
+	return isPlaying((int)t);
 }
