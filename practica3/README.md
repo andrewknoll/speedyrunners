@@ -2,4 +2,4 @@
 
 ### Autores
 Néstor Monzón (735418): 4h
-Andrés Otero (757755): ?h
+Andrés Otero (757755): 4h
