@@ -278,6 +278,7 @@
     <ClCompile Include="Background.cpp" />
     <ClCompile Include="Checkpoint.cpp" />
     <ClCompile Include="Countdown.cpp" />
+    <ClCompile Include="Hook.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="InGameUI.cpp" />
     <ClCompile Include="Menu.cpp" />
@@ -306,6 +307,7 @@
     <ClInclude Include="Checkpoint.h" />
     <ClInclude Include="Countdown.h" />
     <ClInclude Include="Globals.hpp" />
+    <ClInclude Include="Hook.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="InGameUI.h" />
     <ClInclude Include="Menu.h" />

@@ -5,6 +5,9 @@
 #include "Animation.h"
 #include "Globals.hpp"
 #include "Spritesheet.h"
+#include "Hook.h"
+
+
 
 #define PERIOD sf::milliseconds(1000/30)
 typedef std::shared_ptr<Animation> AnimationPtr;
@@ -47,6 +50,9 @@ protected:
 	float flyingAcceleration = glb::flyingAcceleration; // or in the air
 	float jumpingSpeed = glb::jumpingSpeed; // or in the air
 
+	// Hook
+	bool usingHook = false;
+	Hook hook;
 
 	// For checkpoints, distance to active checkpoint:
 	float dToCheckpoint;
@@ -90,6 +96,7 @@ public:
 	void stop();
 	void jump();
 
+	void useHook(bool use=true);
 
 	void setDToCheckpoint(float d);
 	float getDToCheckpoint() const;

@@ -123,6 +123,9 @@
     <ClCompile Include="UISprite.cpp">
       <Filter>UI\Elements\Sprites</Filter>
     </ClCompile>
+    <ClCompile Include="Hook.cpp">
+      <Filter>Items</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TileMap.h">
@@ -199,6 +202,9 @@
     </ClInclude>
     <ClInclude Include="UISprite.h">
       <Filter>UI\Elements\Sprites</Filter>
+    </ClInclude>
+    <ClInclude Include="Hook.h">
+      <Filter>Items</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

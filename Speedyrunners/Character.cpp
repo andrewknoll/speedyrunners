@@ -168,6 +168,22 @@ void Character::jump() {
 	}
 	isGrounded = false;
 }
+void Character::useHook(bool use)
+{
+	if (use) {
+		if (!usingHook) { // just used it
+			usingHook = true;
+			
+		}
+		setAnimation(HookshotAnim);
+		std::cout << "Used hook\n";
+		
+	}
+	else {
+		std::cout << "Stopped using hook\n";
+		usingHook = false;
+	}
+}
 void Character::setDToCheckpoint(float d)
 {
 	dToCheckpoint = d;
@@ -273,7 +289,7 @@ void Character::tickAnimation(sf::Time dT) {
 }
 
 void Character::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-
+	if (usingHook) target.draw(hook);
 	// apply the transform
 	states.transform *= getTransform();
 
