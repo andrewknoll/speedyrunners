@@ -4,6 +4,6 @@
 class NPC : public Player
 {
 public:
-	virtual void captureEvents(const sf::Event& event);
+	virtual bool captureEvents(const sf::Event& event);
 };
 

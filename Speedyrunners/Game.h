@@ -10,11 +10,13 @@
 #include "Resources.h"
 #include "MusicPlayer.h"
 #include "InGameUI.h"
+#include <list>
 
 class Game
 {
 	using CharPtr = std::shared_ptr<Character>;
 	using PlayerPtr = std::shared_ptr<Player>;
+	using ItemPtr = std::shared_ptr<Item>;
 public:
 	enum class State { Countdown, Playing, Paused, Editing, MainMenu };
 protected:
@@ -33,6 +35,9 @@ protected:
 	float aspectRatio = 16.0 / 9.0;
 
 	std::vector<PlayerPtr> players;
+	std::vector<int> positions;
+
+	std::list<ItemPtr> items;
 
 	sf::Time dT; // Time since last update
 	// Editor:
@@ -84,5 +89,8 @@ public:
 	MusicPlayer& music();
 
 	void playerJoin(PlayerPtr newPlayer);
+
+	CharPtr getCharacterAt(int pos);
+	PlayerPtr getPlayerAt(int pos);
 };
 

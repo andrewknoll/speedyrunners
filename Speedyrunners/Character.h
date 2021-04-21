@@ -8,12 +8,15 @@
 #include "Hook.h"
 
 
+#include "Item.h"
 
 #define PERIOD sf::milliseconds(1000/30)
-typedef std::shared_ptr<Animation> AnimationPtr;
+
 
 class Character : public sf::Transformable, public sf::Drawable
 {
+	using AnimationPtr = std::shared_ptr<Animation>;
+	using ItemPtr = std::shared_ptr<Item>;
 public:
 	//enum class State {Standing, Running, Sliding, InAir, Grappling, WallJumping, Stunned, Tripped};
 	enum AnimationIndex {
@@ -43,7 +46,7 @@ protected:
 	sf::Time countdown = PERIOD;
 
 	std::vector<AnimationPtr> animations = std::vector<AnimationPtr>(glb::NUMBER_OF_ANIMATIONS);
-	
+
 	// parameters, here so they can be different e.g for bots:
 	// Horizontal accelerations:
 	float runningAcceleration = glb::runningAcceleration; // acceleration in the floor
@@ -61,7 +64,7 @@ protected:
 	std::string name;
 
 	// All spritesheets path:
-	std::string spritesheetsPath = glb::CONTENT_PATH + "Characters/Speedrunner/"; 
+	std::string spritesheetsPath = glb::CONTENT_PATH + "Characters/Speedrunner/";
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
@@ -75,7 +78,7 @@ protected:
 
 public:
 	Character(Spritesheet);
-	
+
 	void setPosition(const sf::Vector2f pos);
 	void setPosition(float x, float y);
 
@@ -97,6 +100,8 @@ public:
 	void jump();
 
 	void useHook(bool use=true);
+	ItemPtr useItem(std::shared_ptr<Character> target = nullptr);
+
 
 	void setDToCheckpoint(float d);
 	float getDToCheckpoint() const;
@@ -111,4 +116,3 @@ public:
 	std::string getUIIconPath() const;
 
 };
-

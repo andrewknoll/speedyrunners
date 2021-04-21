@@ -1,6 +1,6 @@
 #include "NPC.h"
 
 
-void NPC::captureEvents(const sf::Event& event) {
-
+bool NPC::captureEvents(const sf::Event& event) {
+	return false;
 }

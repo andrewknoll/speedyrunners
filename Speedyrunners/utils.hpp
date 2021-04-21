@@ -49,6 +49,8 @@ namespace utils {
 
 	float clampf(float val, float min, float max);
 
+	float degrees(float radians);
+
 	// Clamp + valor absoluto
 	float clampAbs(const float& val, const float& limit);
 

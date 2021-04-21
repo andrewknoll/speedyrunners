@@ -3,6 +3,7 @@
 #include <string>
 namespace glb
 {
+	const double pi = 3.14159265358979323846;
 	const int NUMBER_OF_ANIMATIONS = 22;
 	namespace anim {
 		const std::string STAND_ANIM = "Stand";
@@ -27,6 +28,11 @@ namespace glb
 		const std::string SPIKED_ANIM = "Spiked";
 		const std::string TAUNT_ANIM = "Taunt";
 		const std::string START_ANIM = "321GO";
+	};
+	const int NUMBER_OF_ITEMS = 1;
+	enum item : int {
+		NONE = 0,
+		ROCKET = 1
 	};
 
 	const sf::Rect<float> default_hitbox = sf::Rect<float>(20,20,14, 30);

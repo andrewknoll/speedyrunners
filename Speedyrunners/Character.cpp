@@ -4,9 +4,10 @@
 #include "utils.hpp" // physics
 #include "Globals.hpp" //animation names
 #include "Spritesheet.h"
+#include "Rocket.h"
 
-Character::Character(Spritesheet sp):
-	hitBox(glb::default_hitbox) {
+Character::Character(Spritesheet sp) :
+	hitBox(glb::default_hitbox){
 	animations = sp.get_animations();
 	setAnimation(StartAnim);
 	this->setScale(0.45, 0.45);
@@ -52,7 +53,7 @@ void Character::update(const sf::Time& dT, const TileMap& tiles)
 
 	fixPosition(hitBox);
 	auto collisions = tiles.collision(hitBox);
-	
+
 	if (!collisions.empty()) {
 		auto c = collisions.front();
 		//for (const auto& c : collisions) {
@@ -173,17 +174,24 @@ void Character::useHook(bool use)
 	if (use) {
 		if (!usingHook) { // just used it
 			usingHook = true;
-			
+
 		}
 		setAnimation(HookshotAnim);
 		std::cout << "Used hook\n";
-		
+
 	}
 	else {
 		std::cout << "Stopped using hook\n";
 		usingHook = false;
 	}
 }
+
+Character::ItemPtr Character::useItem(std::shared_ptr<Character> target) {
+	//TODO - Item available?
+	ItemPtr rocket = std::make_shared<Rocket>(getPosition(), target, facingRight);
+	return rocket;
+}
+
 void Character::setDToCheckpoint(float d)
 {
 	dToCheckpoint = d;
@@ -200,7 +208,7 @@ std::string Character::getName() const
 {
 	return name;
 }
-void Character::setSpritesheetsPath(std::string path) 
+void Character::setSpritesheetsPath(std::string path)
 {
 	spritesheetsPath = path;
 }

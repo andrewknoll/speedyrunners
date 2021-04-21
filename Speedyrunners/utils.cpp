@@ -2,6 +2,7 @@
 #pragma warning( disable : 4244 ) 
 #include <cmath>
 #include "utils.hpp"
+#include <cmath>
 #include "SFML/Graphics.hpp"
 
 
@@ -48,6 +49,10 @@ namespace utils {
 
 	float clampf(float val, float min, float max) {
 		return (val < min) ? min : (val >= max) ? max : val;
+	}
+
+	float degrees(float radians) {
+		return radians * 180.0 / glb::pi;
 	}
 
 	sf::Vector2f mousePosition2f(const sf::RenderWindow& window) {
