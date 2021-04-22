@@ -126,6 +126,9 @@
     <ClCompile Include="Hook.cpp">
       <Filter>Items</Filter>
     </ClCompile>
+    <ClCompile Include="Line.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TileMap.h">
@@ -205,6 +208,9 @@
     </ClInclude>
     <ClInclude Include="Hook.h">
       <Filter>Items</Filter>
+    </ClInclude>
+    <ClInclude Include="Line.hpp">
+      <Filter>utils</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

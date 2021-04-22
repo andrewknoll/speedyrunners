@@ -60,7 +60,7 @@ protected:
 
 	// Hook
 	bool usingHook = false;
-	Hook hook;
+	Hook hook = Hook();
 
 	// For checkpoints, distance to active checkpoint:
 	float dToCheckpoint;

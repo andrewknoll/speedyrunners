@@ -28,10 +28,6 @@ bool Player::captureEvents(const sf::Event& event) {
 			//TODO: Considerar long presses
 			me->jump();
 		}
-		if (event.key.code == sf::Keyboard::Key::C) {
-			// Item
-			std::cout << "C pressed, TODO: items\n";
-		}
 		/*else if (event.key.code == sf::Keyboard::Key::Down) {
 			if (me->getState() == CharState::Standing ||
 				me->getState() == CharState::InAir ||

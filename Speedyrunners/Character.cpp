@@ -65,7 +65,7 @@ void Character::update(const sf::Time& dT, const TileMap& tiles)
 			vel.x = 0;
 			acc.x = 0;
 			isRunning = false;
-			if (isGrounded) {
+			if (isGrounded && !usingHook) {
 				setAnimation(StandAnim);
 			}
 			if (c.tileType == Tiles::JUMP_WALL_L) {
@@ -101,7 +101,10 @@ void Character::update(const sf::Time& dT, const TileMap& tiles)
 		//setFillColor(sf::Color::Red);
 	}
 	setPosition(hitBox.left, hitBox.top); // Del rectangulo
-	if (vel.y > 0) {
+	if (usingHook) {
+		hook.update(dT, getPosition());
+	}
+	else if (vel.y > 0) {
 		if (isAtWallJump) {
 			setAnimation(WallHangAnim);
 		}
@@ -117,7 +120,7 @@ void Character::update(const sf::Time& dT, const TileMap& tiles)
 void Character::updateGrounded(const sf::Vector2f& normal) {
 	isGrounded = (normal == sf::Vector2f(0, -1));
 	if (isGrounded) hasDoubleJumped = false;
-	if (isRunning) setAnimation(RunAnim, true);
+	if (isRunning && !usingHook) setAnimation(RunAnim, true);
 	//std::cout << "grounded? " << isGrounded << "\n";
 }
 
@@ -138,7 +141,7 @@ void Character::updateRunning() {
 void Character::run(bool right){
 	//std::cout << "Running " << right << " \n";
 	facingRight = right;
-	if (!isRunning && isGrounded) {
+	if (!isRunning && isGrounded && !usingHook) {
 		setAnimation(RunAnim, true);
 	}
 	isRunning = true;
@@ -174,11 +177,9 @@ void Character::useHook(bool use)
 	if (use) {
 		if (!usingHook) { // just used it
 			usingHook = true;
-
+			hook.fire(getPosition(), facingRight);
+			setAnimation(HookshotAnim);
 		}
-		setAnimation(HookshotAnim);
-		std::cout << "Used hook\n";
-
 	}
 	else {
 		std::cout << "Stopped using hook\n";
@@ -280,7 +281,7 @@ void Character::setFriction() {
 			//std::cout << "Cerca de 0: " << vel.x << "\n";
 			acc.x = 0;
 			vel.x = 0;
-			if (isGrounded){
+			if (isGrounded && !usingHook){
 				setAnimation(StandAnim);
 			}
 		}

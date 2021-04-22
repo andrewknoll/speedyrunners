@@ -38,6 +38,10 @@ Resources::Resources() {
 		/*else if (type == "S") {
 			sounds[current[2]++].loadFromFile(token[0]);
 		}*/
+		else if (type == "T") {
+			for (int i = 0; i < 2; i++) std::getline(iss, token[i], ',');
+			otherTextures[stoi(token[0])].loadFromFile(PATH_TO_ASSETS + token[1]);
+		}
 		else if (type == "I") {
 			for (int i = 0; i < 2; i++) std::getline(iss, token[i], ',');
 			items[stoi(token[0])].loadFromFile(PATH_TO_ASSETS + token[1]);
@@ -60,4 +64,8 @@ const Spritesheet& Resources::getSpriteSheet(int character, int variant) {
 
 const sf::Texture& Resources::getItemTexture(glb::item type) {
 	return items[type - 1];
+}
+
+const sf::Texture& Resources::getMiscTexture(int type) {
+	return otherTextures[type];
 }
