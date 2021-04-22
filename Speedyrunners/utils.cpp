@@ -187,6 +187,13 @@ sf::Vector2f geometry::Mat2::operator*(const sf::Vector2f& v) const
 	return sf::Vector2f(front.x*v.x + up.x*v.y, front.y*v.x + up.y*v.y);
 }
 
+sf::Vector2f geometry::normalize(const sf::Vector2f& in)
+{
+	float len = utils::length(in);
+	if (len != 0)  return in / len;
+	else return in;
+}
+
 sf::Vector2f geometry::toWorld(const Mat2& m, const sf::Vector2f& local)
 {
 	return m*local;

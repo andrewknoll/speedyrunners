@@ -1,5 +1,6 @@
 
 #include <SFML/Graphics.hpp>
+#include "TileMap.h"
 #include "Character.h"
 #include "utils.hpp" // physics
 #include "Globals.hpp" //animation names
@@ -37,6 +38,47 @@ void fixPosition(sf::FloatRect& hitbox) {
 	}
 }
 
+/**
+enum NORMAL_DIR {
+	UP,
+	UP_R,
+	R,
+	DOWN_R,
+	DOWN,
+	DOWN_L,
+	L,
+	UP_L
+};
+
+NORMAL_DIR direction(const sf::Vector2f& n) {
+
+}*/
+
+
+void Character::setBaseFromRamp(Tiles::Ramp ramp) {
+	using namespace Tiles;
+	if (ramp == Ramp::DOWN || ramp == Ramp::CEIL_DOWN) {
+		base = geometry::Mat2(
+			geometry::normalize(sf::Vector2f(1.0f, 1.0f)),
+			geometry::normalize(sf::Vector2f(1.0f, 1.0f))
+		);
+	} 
+	else if (ramp == Ramp::UP || ramp == Ramp::CEIL_UP) {
+		base = geometry::Mat2(
+			geometry::normalize(sf::Vector2f(1.0f, -1.0f)),
+			geometry::normalize(sf::Vector2f(1.0f, -1.0f))
+		);
+	}
+	else { // Floor or ceil
+		base = geometry::Mat2(
+			geometry::normalize(sf::Vector2f(1.0f, 0)),
+			geometry::normalize(sf::Vector2f(0, -1.0f))
+		);
+	}
+
+
+}
+
 void Character::update(const sf::Time& dT, const TileMap& tiles)
 {
 	updateRunning();
@@ -52,16 +94,17 @@ void Character::update(const sf::Time& dT, const TileMap& tiles)
 	hitBox.top += vel.y * dtSec;
 
 	fixPosition(hitBox);
-	auto collisions = tiles.collision(hitBox);
+	std::vector<Tiles::Collision> collisions = tiles.collision(hitBox);
 
 	if (!collisions.empty()) {
-		auto c = collisions.front();
+		Tiles::Collision c = collisions.front();
 		//for (const auto& c : collisions) {
 		// std::cout << "n: " << c.collision->normal.x << "," << c.collision->normal.y << "\tpoint: " << c.collision->point.x << "," << c.collision->point.y << " " << c.collision->distance << "\n";
 		// New position:
 		sf::Vector2f pos(hitBox.left, hitBox.top);
-		pos = pos + (c.collision.normal * (c.collision.distance));
-		if (c.collision.normal.x != 0) { // Make 0 the component of the collision
+		pos = pos + (c.normal * (c.distance));
+		if (c.normal.x == 1) { // wall
+			// Make 0 the component of the collision
 			vel.x = 0;
 			acc.x = 0;
 			isRunning = false;
@@ -79,11 +122,15 @@ void Character::update(const sf::Time& dT, const TileMap& tiles)
 				setAnimation(WallHangAnim);
 			}
 		}
-		else {
+		else if (c.normal.y == 1) { // floor/ceiling
 			vel.y = 0;
 			acc.y = physics::GRAVITY;
 		}
-		updateGrounded(c.collision.normal);
+		// may be ramp
+		using namespace Tiles;
+		auto ramp = Tiles::toRamp(c.tileType);
+		setBaseFromRamp(ramp);
+		updateGrounded(c.normal);
 
 		hitBox.left = pos.x; hitBox.top = pos.y;
 		//setFillColor(sf::Color::Blue);
