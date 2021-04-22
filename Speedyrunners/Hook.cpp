@@ -6,6 +6,7 @@
 Hook::Hook()
 {
 	sprite.setTexture(Resources::getInstance().getMiscTexture(0));
+	hitBox = sprite.getGlobalBounds();
 }
 
 void Hook::draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -17,12 +18,34 @@ void Hook::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	target.draw(sprite, states);
 }
 
-void Hook::update(const sf::Time& dT, const sf::Vector2f& pos) {
+//Return 1 if hit a grappable surface
+//Return -1 if hit a non-grappable surface
+//Return 0 if all went ok
+int Hook::update(const sf::Time& dT, const TileMap& tiles, const sf::Vector2f& pos) {
+	hitBox = sprite.getGlobalBounds();
+
 	hookerPosition = pos + offset;
-	relPosition = relPosition + vel * dT.asSeconds();
-	setPosition(hookerPosition + relPosition);
-	sprite.setPosition(hookerPosition + relPosition);
-	sprite.setRotation(utils::degrees(atan2f(vel.y, vel.x)) + 90.0f);
+	if (!hooked) {
+		relPosition = relPosition + vel * dT.asSeconds();
+		setPosition(hookerPosition + relPosition);
+		sprite.setPosition(hookerPosition + relPosition);
+		sprite.setRotation(utils::degrees(atan2f(vel.y, vel.x)) + 90.0f);
+
+		auto collisions = tiles.collision(hitBox);
+		if (!collisions.empty()) {
+			auto c = collisions.front();
+			if (c.tileType == Tiles::GRAPPLABLE) {
+				sprite.setRotation(0.0);
+				vel = sf::Vector2f(0.0, 0.0);
+				hooked = true;
+				return 1;
+			}
+			else {
+				return -1;
+			}
+		}
+	}
+	return 0;
 }
 
 void Hook::fire(const sf::Vector2f& pos, bool facingRight)
@@ -35,4 +58,5 @@ void Hook::fire(const sf::Vector2f& pos, bool facingRight)
 		vel.x = -vel.x;
 		offset.x = -offset.x;
 	}
+	hooked = false;
 }

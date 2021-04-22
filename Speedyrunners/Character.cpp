@@ -102,7 +102,10 @@ void Character::update(const sf::Time& dT, const TileMap& tiles)
 	}
 	setPosition(hitBox.left, hitBox.top); // Del rectangulo
 	if (usingHook) {
-		hook.update(dT, getPosition());
+		int res = hook.update(dT, tiles, getPosition());
+		if (res == -1) {
+			usingHook = false;
+		}
 	}
 	else if (vel.y > 0) {
 		if (isAtWallJump) {
