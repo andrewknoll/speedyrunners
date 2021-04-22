@@ -7,8 +7,12 @@
 #include "Resources.h"
 
 int main() {
+	std::cout << "hm0\n";
+
 	Game game;
+	std::cout << "hm\n";
 	Resources& src = Resources::getInstance();
+	std::cout << "hm2\n";
 
 	std::shared_ptr<Character> speedyrunner = std::make_shared<Character>(src.getSpriteSheet(0)); //"../assets/Content/Characters/Falcon/");
 	speedyrunner->setPosition(200, 200);

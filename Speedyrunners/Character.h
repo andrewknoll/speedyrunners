@@ -1,4 +1,5 @@
 #pragma once
+
 #include "SFML/Graphics.hpp"
 #include "TileMap.h"
 //#include <Rect.hpp>
@@ -29,6 +30,10 @@ protected:
 	//State state = State::InAir;
 
 	sf::Rect<float> hitBox;
+
+	// Base:
+	geometry::Mat2 base = geometry::Mat2(sf::Vector2f(1,0), sf::Vector2f(0,1));
+		
 
 	sf::Vector2f vel; // Velocity
 	sf::Vector2f acc; // Acceleration

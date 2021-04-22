@@ -8,7 +8,7 @@
 // Adapted from: https://www.sfml-dev.org/tutorials/2.5/graphics-vertex-array.php#what-is-a-vertex-and-why-are-they-always-in-arrays
 
 
-const int MAX_TILEMAP_SIZE = 8192*8;//128*64
+const long MAX_TILEMAP_SIZE = 8192*8;//128*64
 
 namespace Tiles {
 	//const int FLOOR = 0;

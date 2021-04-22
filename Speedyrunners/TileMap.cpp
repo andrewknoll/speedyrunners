@@ -117,7 +117,11 @@ void TileMap::drawTile(sf::RenderTarget& target, sf::RenderStates states, const 
 }
 
 std::string TileMap::to_string(bool duplicarHorizontal) const {
-    std::string str = std::to_string(2*width) + " " + std::to_string(height) + "\n";
+    std::string str = "";
+    if (duplicarHorizontal)
+        str += std::to_string(2 * width) + " " + std::to_string(height) + "\n";
+    else
+        str += std::to_string(width) + " " + std::to_string(height) + "\n";
     //std::string str = std::to_string(width) + " " + std::to_string(height) + "\n";
     str += tileSetPath + "\n" + std::to_string(tileSize.x) + " " + std::to_string(tileSize.y) 
         + " " + std::to_string(tileSizeWorld.x) + " " + std::to_string(tileSizeWorld.y) + "\n";
@@ -126,9 +130,10 @@ std::string TileMap::to_string(bool duplicarHorizontal) const {
             str += std::to_string(tiles[j + i * width]) + " ";
         }
         /* duplicar mapa */
-        if (duplicarHorizontal)
+        if (duplicarHorizontal) {
             for (size_t j = 0; j < width; ++j)
-                str += std::to_string(tiles[width - j - 1 + i * width]) + " ";   
+                str += std::to_string(tiles[width - j - 1 + i * width]) + " ";
+        }
         /**************************/
         str += "\n";
     }

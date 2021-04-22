@@ -8,7 +8,7 @@ Player::CharPtr Player::getCharacter() const {
 	return me;
 }
 
-void Player::captureEvents(const sf::Event& event) {
+bool Player::captureEvents(const sf::Event& event) {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Left)) {
 		me->run(false);
 	}

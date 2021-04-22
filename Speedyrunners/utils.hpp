@@ -87,6 +87,21 @@ namespace utils {
 }
 
 
+namespace geometry {
+	struct Mat2 {
+		sf::Vector2f front;
+		sf::Vector2f up;
+
+		Mat2(const sf::Vector2f& _front = sf::Vector2f(1,0), const sf::Vector2f& _up = sf::Vector2f(0,1));
+
+
+		sf::Vector2f operator*(const sf::Vector2f& v) const;
+	};
+
+	sf::Vector2f toWorld(const Mat2& m, const sf::Vector2f& local);
+}
+
+
 
 namespace physics {
 	const float GRAVITY = 20*9.821;
