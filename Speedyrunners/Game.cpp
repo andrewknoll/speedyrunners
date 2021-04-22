@@ -12,7 +12,7 @@
 Game::Game()
 	: window(sf::VideoMode(1600, 900), "SpeedyRunners"),
 	lvl(window),
-	state(State::Countdown),
+	state(State::Playing),
 	selectedTile(Tiles::Collidable::FLOOR),
 	cam(sf::FloatRect(0, 0, 1600, 900)),
 	countdown(window),
