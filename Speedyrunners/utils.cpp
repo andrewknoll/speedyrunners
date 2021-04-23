@@ -59,6 +59,10 @@ namespace utils {
 		return window.mapPixelToCoords(sf::Mouse::getPosition(window));
 	}
 
+	float dot(const sf::Vector2f a, const sf::Vector2f b) {
+		return a.x * b.x + a.y * b.y;
+	}
+
 
 	/*sf::Vector2i mousePosition2i(const sf::RenderWindow& window) {
 		return window.mapPixelToCoords(sf::Mouse::getPosition(window));

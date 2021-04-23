@@ -36,12 +36,13 @@ public:
 // para evitar el to_string en cout
 std::ostream& operator<<(std::ostream& os, const RNG& c);
 
-
 namespace utils {
 	sf::Vector2f mousePosition2f(const sf::RenderWindow& window);
 	sf::Vector2i clampMouseCoord(const sf::Vector2f& pos, const sf::RenderTarget& window);
 
 	sf::Vector2i clampMouseCoord(const sf::RenderWindow& window);
+
+	float dot(const sf::Vector2f a, const sf::Vector2f b);
 
 	int positiveMod(int i, int n);
 

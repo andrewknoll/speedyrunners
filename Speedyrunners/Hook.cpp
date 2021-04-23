@@ -45,6 +45,7 @@ int Hook::update(const sf::Time& dT, const TileMap& tiles, const sf::Vector2f& p
 			}
 		}
 	}
+	else return 1;
 	return 0;
 }
 
@@ -52,11 +53,23 @@ void Hook::fire(const sf::Vector2f& pos, bool facingRight)
 {
 	relPosition = sf::Vector2f(0.0, 0.0);
 	setPosition(relPosition);
-	vel = sf::Vector2f(500, -500);
+	vel = sf::Vector2f(1000, -1000);
 	offset = glb::FEET_TO_HAND;
 	if (!facingRight) {
 		vel.x = -vel.x;
 		offset.x = -offset.x;
 	}
 	hooked = false;
+}
+
+sf::Vector2f Hook::radius() const {
+	return hookerPosition - getPosition();
+}
+
+float Hook::angle() const {
+	return atan2(-radius().y, radius().x);
+}
+
+sf::Vector2f Hook::tangent() const {
+	return sf::Vector2f(-sin(angle()), -cos(angle()));
 }

@@ -45,7 +45,13 @@ void Character::update(const sf::Time& dT, const TileMap& tiles)
 
 	// New vel:
 	//vel = physics::updateVelocity(vel, acc);
-	vel = utils::clampAbs(vel + acc * dtSec, physics::MAX_FALL_SPEED);
+	
+	if (!swinging) {
+		vel = utils::clampAbs(vel + acc * dtSec, physics::MAX_FALL_SPEED);
+	}
+	else {
+		vel = utils::length(hook.radius()) * hook.tangent() * omega;
+	}
 
 	// Move:
 	hitBox.left += vel.x * dtSec;
@@ -67,6 +73,7 @@ void Character::update(const sf::Time& dT, const TileMap& tiles)
 			isRunning = false;
 			if (isGrounded && !usingHook) {
 				setAnimation(StandAnim);
+				usingHook = false;
 			}
 			if (c.tileType == Tiles::JUMP_WALL_L) {
 				facingRight = false;
@@ -79,36 +86,32 @@ void Character::update(const sf::Time& dT, const TileMap& tiles)
 				setAnimation(WallHangAnim);
 			}
 		}
-		else {
+		else if (!swinging) {
 			vel.y = 0;
 			acc.y = physics::GRAVITY;
 		}
 		updateGrounded(c.collision.normal);
 
 		hitBox.left = pos.x; hitBox.top = pos.y;
-		//setFillColor(sf::Color::Blue);
-		//vel = sf::Vector2f(0, 0);
-		//acc = sf::Vector2f(0, 0);
-		//sf::sleep(sf::seconds(2));
 	}
-	else {
-		// Update vel:
-		//vel = utils::clampAbs(vel + acc * dtSec, physics::MAX_FALL_SPEED);
 
-		// Update acc:
-		updateAcceleration();
-		// JUST DEBUG:
-		//setFillColor(sf::Color::Red);
-	}
+	updateAcceleration();
 	setPosition(hitBox.left, hitBox.top); // Del rectangulo
 	if (usingHook) {
 		int res = hook.update(dT, tiles, getPosition());
 		if (res == -1) {
 			usingHook = false;
 		}
+		else if (res == 1 && !swinging) {
+			swinging = true;
+			float mod = utils::length(vel);
+			if (mod < 300.0f) vel = vel * 300.0f / mod;
+			omega = utils::length(vel) / utils::length(hook.radius());
+			if (!facingRight) omega = -omega;
+		}
 	}
 	else if (vel.y > 0) {
-		if (isAtWallJump) {
+		if (isAtWallJump && vel.x == 0) {
 			setAnimation(WallHangAnim);
 		}
 		else if (hasDoubleJumped) {
@@ -129,7 +132,7 @@ void Character::updateGrounded(const sf::Vector2f& normal) {
 
 
 void Character::updateRunning() {
-	if (isRunning) {
+	if (isRunning && !swinging) {
 		if (isGrounded) {
 			acc.x = runningAcceleration;
 		}
@@ -186,6 +189,7 @@ void Character::useHook(bool use)
 	}
 	else {
 		std::cout << "Stopped using hook\n";
+		swinging = false;
 		usingHook = false;
 	}
 }
@@ -264,12 +268,19 @@ void Character::processInput(sf::Event& e)
 }
 */
 void Character::updateAcceleration() {
-	if (!isGrounded)
+	/*if (swinging) {
+		sf::Vector2f r = hook.radius();
+		float modr2 = utils::length(r) * utils::length(r) + 1.0;
+		float v2 = utils::dot(vel, vel);
+		acc.x = -v2 * r.x / modr2;
+		acc.y = v2 * r.y / modr2;
+	}*/
+	if (!isGrounded && !swinging)
 		acc.y = physics::GRAVITY;
 }
 
 void Character::setFriction() {
-	if (!isRunning) {
+	if (!isRunning && !swinging) {
 		float eps = 10;
 		float friction = (isGrounded) ? physics::FLOOR_FRICTION : physics::AIR_FRICTION;
 		if (vel.x > eps) {// pos vel, negative friction

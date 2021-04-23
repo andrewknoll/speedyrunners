@@ -37,6 +37,7 @@ protected:
 
 	sf::Vector2f vel; // Velocity
 	sf::Vector2f acc; // Acceleration
+	float omega; //angular speed
 
 	bool isGrounded = false;
 	bool hasDoubleJumped = false;
@@ -60,6 +61,7 @@ protected:
 
 	// Hook
 	bool usingHook = false;
+	bool swinging = false;
 	Hook hook = Hook();
 
 	// For checkpoints, distance to active checkpoint:
