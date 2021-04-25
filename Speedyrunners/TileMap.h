@@ -45,6 +45,7 @@ namespace Tiles {
 
 	Ramp toRamp(Collidable tile);
 
+
 	struct Collision {
 		sf::Vector2f point; // point
 		sf::Vector2f normal; // Normal
@@ -53,6 +54,10 @@ namespace Tiles {
 	};
 	// Returns the collision, if any, between the hitbox of a character and a tile
 	std::optional<Tiles::Collision> collision(const Collidable tile, const sf::Vector2f& tilePos, const sf::Vector2f& tileSize, const sf::FloatRect& hitbox);
+
+
+	std::optional<Tiles::Collision> rampCollision(const Tiles::Ramp ramp, const sf::Vector2f& tilePos, const sf::Vector2f& tileSize, const sf::FloatRect& hitbox);
+
 }
 
 

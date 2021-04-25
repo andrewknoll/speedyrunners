@@ -103,7 +103,7 @@ void Character::update(const sf::Time& dT, const TileMap& tiles)
 		// New position:
 		sf::Vector2f pos(hitBox.left, hitBox.top);
 		pos = pos + (c.normal * (c.distance));
-		if (c.normal.x == 1) { // wall
+		if (c.normal == sf::Vector2f(1,0) || c.normal == sf::Vector2f(-1,0)) { // wall
 			// Make 0 the component of the collision
 			vel.x = 0;
 			acc.x = 0;
@@ -122,7 +122,7 @@ void Character::update(const sf::Time& dT, const TileMap& tiles)
 				setAnimation(WallHangAnim);
 			}
 		}
-		else if (c.normal.y == 1) { // floor/ceiling
+		else if (c.normal == sf::Vector2f(0, 1) || c.normal == sf::Vector2f(0, -1)) { // floor/ceiling
 			vel.y = 0;
 			acc.y = physics::GRAVITY;
 		}
@@ -138,7 +138,7 @@ void Character::update(const sf::Time& dT, const TileMap& tiles)
 		//acc = sf::Vector2f(0, 0);
 		//sf::sleep(sf::seconds(2));
 	}
-	else {
+	//else {
 		// Update vel:
 		//vel = utils::clampAbs(vel + acc * dtSec, physics::MAX_FALL_SPEED);
 
@@ -146,7 +146,7 @@ void Character::update(const sf::Time& dT, const TileMap& tiles)
 		updateAcceleration();
 		// JUST DEBUG:
 		//setFillColor(sf::Color::Red);
-	}
+	//}
 	setPosition(hitBox.left, hitBox.top); // Del rectangulo
 	if (vel.y > 0) {
 		if (isAtWallJump) {
@@ -162,7 +162,7 @@ void Character::update(const sf::Time& dT, const TileMap& tiles)
 }
 
 void Character::updateGrounded(const sf::Vector2f& normal) {
-	isGrounded = (normal == sf::Vector2f(0, -1));
+	isGrounded = (normal.y <= 0);
 	if (isGrounded) hasDoubleJumped = false;
 	if (isRunning) setAnimation(RunAnim, true);
 	//std::cout << "grounded? " << isGrounded << "\n";
@@ -172,12 +172,13 @@ void Character::updateGrounded(const sf::Vector2f& normal) {
 void Character::updateRunning() {
 	if (isRunning) {
 		if (isGrounded) {
-			acc.x = runningAcceleration;
+			//acc.x = runningAcceleration;
+			acc = base * sf::Vector2f(runningAcceleration,0);
 		}
 		else
 			acc.x = flyingAcceleration;
 		if (!facingRight) {
-			acc.x = -acc.x;
+			acc = -acc;
 		}
 	}
 }
@@ -228,7 +229,7 @@ void Character::useHook(bool use)
 
 	}
 	else {
-		std::cout << "Stopped using hook\n";
+		//std::cout << "Stopped using hook\n";
 		usingHook = false;
 	}
 }
@@ -307,7 +308,7 @@ void Character::processInput(sf::Event& e)
 }
 */
 void Character::updateAcceleration() {
-	if (!isGrounded)
+	//if (!isGrounded)
 		acc.y = physics::GRAVITY;
 }
 
