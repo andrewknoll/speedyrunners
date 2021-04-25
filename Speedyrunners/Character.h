@@ -116,6 +116,8 @@ public:
 	void stopSliding();
 	void jump();
 
+	bool isSwinging() const;
+
 	void useHook(bool use=true);
 	ItemPtr useItem(std::shared_ptr<Character> target = nullptr);
 

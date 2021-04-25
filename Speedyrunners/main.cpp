@@ -25,9 +25,9 @@ int main() {
 	game.addCharacter(speedyrunner);
 
 
-	std::shared_ptr<Player> other = std::make_shared<NPC>();
+	std::shared_ptr<NPC> other = std::make_shared<NPC>();
 	other->setCharacter(cosmonaut);
-	game.playerJoin(other);
+	game.npcJoin(other);
 	cosmonaut->setName("NPC");
 	game.addCharacter(cosmonaut);
 	/* no estoy seguro de si esto tiene que estar,por si acaso lo dejo comentado

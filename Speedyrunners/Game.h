@@ -10,13 +10,23 @@
 #include "Resources.h"
 #include "MusicPlayer.h"
 #include "InGameUI.h"
+#include "NPC.h"
+#include "PlayerSlot.h"
 #include <list>
 
 class Game
 {
 	using CharPtr = std::shared_ptr<Character>;
 	using PlayerPtr = std::shared_ptr<Player>;
+	using NPCPtr = std::shared_ptr<NPC>;
+	using PSPtr = std::shared_ptr<PlayerSlot>;
 	using ItemPtr = std::shared_ptr<Item>;
+
+	struct Slot {
+		short int type;
+		short int index;
+		short int controlIndex;
+	};
 public:
 	enum class State { Countdown, Playing, Paused, Editing, MainMenu };
 protected:
@@ -35,7 +45,8 @@ protected:
 	float aspectRatio = 16.0 / 9.0;
 
 	std::vector<PlayerPtr> players;
-	std::vector<int> positions;
+	std::vector<NPCPtr> npcs;
+	std::vector<Slot> positions;
 
 	std::list<ItemPtr> items;
 
@@ -89,8 +100,10 @@ public:
 	MusicPlayer& music();
 
 	void playerJoin(PlayerPtr newPlayer);
+	void npcJoin(NPCPtr newNPC);
 
 	CharPtr getCharacterAt(int pos);
 	PlayerPtr getPlayerAt(int pos);
+	NPCPtr getNPCAt(int pos);
 };
 

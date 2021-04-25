@@ -1,11 +1,7 @@
 #include "Player.h"
 
-void Player::setCharacter(CharPtr you){
-	me = you;
-}
-
-Player::CharPtr Player::getCharacter() const {
-	return me;
+Player::Player() {
+	type = 0;
 }
 
 bool Player::captureEvents(const sf::Event& event) {

@@ -129,6 +129,12 @@
     <ClCompile Include="Line.cpp">
       <Filter>utils</Filter>
     </ClCompile>
+    <ClCompile Include="PriorityQueue.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerSlot.cpp">
+      <Filter>Characters</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TileMap.h">
@@ -211,6 +217,12 @@
     </ClInclude>
     <ClInclude Include="Line.hpp">
       <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="PriorityQueue.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerSlot.h">
+      <Filter>Characters</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

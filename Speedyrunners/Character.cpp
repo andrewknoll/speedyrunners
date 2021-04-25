@@ -277,6 +277,10 @@ void Character::jump() {
 	}
 	isGrounded = false;
 }
+bool Character::isSwinging() const
+{
+	return swinging;
+}
 void Character::useHook(bool use)
 {
 	if (use) {

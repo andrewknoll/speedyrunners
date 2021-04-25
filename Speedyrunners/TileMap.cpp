@@ -88,6 +88,18 @@ void TileMap::setTile(const sf::Vector2i& pos, const int tileNumber) {
     }
 }
 
+Tiles::Collidable TileMap::getTile(int i, int j) const {
+	return (Tiles::Collidable)tiles.at(i * width + j);
+}
+
+int TileMap::getWidth() const {
+	return width;
+}
+
+int TileMap::getHeight() const {
+	return height;
+}
+
 
 void TileMap::drawTile(sf::RenderTarget& target, sf::RenderStates states, const sf::Vector2i& pos, const int tileNumber) const
 {
@@ -329,4 +341,8 @@ std::optional<Tiles::Collision> Tiles::collision(const Tiles::Collidable tile, c
     //std::cout << x_overlap << " " << y_overlap << "\n";
 
     return Tiles::Collision{ point, n, dist };// TODO: This is wrong!
+}
+
+sf::Vector2u TileMap::getTileSizeWorld() const{
+	return tileSizeWorld;
 }

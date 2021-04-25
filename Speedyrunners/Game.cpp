@@ -51,9 +51,9 @@ void Game::updatePositions()
 	}
 	// order characters and players based on distance
 	std::sort(positions.begin(), positions.end(),
-		[chars = this->characters](int i, int j) {
+		[chars = this->characters](Slot i, Slot j) {
 			//TODO- MUERTE
-			return chars[i]->getDToCheckpoint() < chars[j]->getDToCheckpoint();
+			return chars[i.index]->getDToCheckpoint() < chars[j.index]->getDToCheckpoint();
 		}
 	);
 	// Check if one has reached the checkpoint
@@ -70,8 +70,26 @@ void Game::updatePositions()
 }
 
 void Game::playerJoin(PlayerPtr newPlayer) {
-	if (players.size() < 4) {
+	if (positions.size() < 4) {
+		Slot s;
+		s.controlIndex = players.size();
+		s.index = positions.size();
+		s.type = 0;
+
 		players.emplace_back(newPlayer);
+		positions.emplace_back(s);
+	}
+}
+
+void Game::npcJoin(NPCPtr newNPC){
+	if (positions.size() < 4) {
+		Slot s;
+		s.controlIndex = npcs.size();
+		s.index = positions.size();
+		s.type = 1;
+
+		npcs.emplace_back(newNPC);
+		positions.emplace_back(s);
 	}
 }
 
@@ -84,6 +102,10 @@ void Game::loadLevel(const std::string& lvlPath)
 {
 	lvl.load(lvlPath, window);
 	lvl.getCheckpoints(checkpoints);
+	for (NPCPtr npc : npcs) {
+		npc->setTileMap(std::make_shared<TileMap>(lvl.getCollidableTiles()));
+	}
+	
 }
 
 void Game::loop()
@@ -129,18 +151,26 @@ void Game::addCharacter(const CharPtr character)
 	if (characters.size() < 4) {
 		characters.emplace_back(character);
 		ui.setCharacters(characters);
-		int pos = positions.size();
-		positions.push_back(pos);
 	}
 	
 }
 
 Game::CharPtr Game::getCharacterAt(int pos) {
-	return characters[positions[pos]];
+	return characters[positions[pos].index];
 }
 
 Game::PlayerPtr Game::getPlayerAt(int pos) {
-	return players[positions[pos]];
+	if (positions[pos].type == 0) {
+		return players[positions[pos].controlIndex];
+	}
+	return nullptr;
+}
+
+Game::NPCPtr Game::getNPCAt(int pos) {
+	if (positions[pos].type == 1) {
+		return npcs[positions[pos].controlIndex];
+	}
+	return nullptr;
 }
 
 MusicPlayer& Game::music() {
@@ -178,12 +208,18 @@ void Game::update()
 			//characters.front().processInput(event); // Podemos cambiarlo por Player en el futuro
 			for (int i = 0; i < characters.size(); i++) {
 				target = i; //Set target initial value to oneself
-				if (getPlayerAt(i)->captureEvents(event)) {
+				
+				if (positions[i].type == 0 && getPlayerAt(i)->captureEvents(event)) {
 					if (i > 0) target--;
 					else if (i < characters.size() - 1) target++;
 					//if player is dumb and uses rockets when nobody else is playing, it will hit them
 					items.push_back(getCharacterAt(i)->useItem(getCharacterAt(target)));
 				};
+				if (positions[i].type == 1) {
+					Checkpoint cp = checkpoints[activeCheckpoint];
+					getNPCAt(i)->play(cp.getPos(), cp.getRadius());
+				}
+				//TODO: PLAY NPC
 			}
 		}
 
@@ -314,6 +350,12 @@ void Game::draw(sf::Time dT)
 		// characters (sin hacer tick a las animaciones):
 		for (auto c : characters) {
 			window.draw(*c);
+		}
+		for (auto npc : npcs) {
+			for (auto l : npc->debugLines()) {
+				window.draw(l);
+			}
+			
 		}
 		// Selected tile 
 		lvl.drawTile(window, sf::RenderStates(), utils::clampMouseCoord(window), selectedTile);

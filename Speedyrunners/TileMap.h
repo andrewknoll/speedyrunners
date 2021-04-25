@@ -89,12 +89,19 @@ public:
 
 	void setTile(const sf::Vector2i& pos, const int tileNumber);
 
+	Tiles::Collidable getTile(int i, int j) const;
+
+	int getWidth() const;
+	int getHeight() const;
+
 	void drawTile(sf::RenderTarget& target, sf::RenderStates states, const sf::Vector2i& pos, const int tileNumber) const;
 
 	std::string to_string(bool duplicarHorizontal = false) const;
 
 
 	std::vector<struct Tiles::Collision> collision(const sf::FloatRect& characterHitbox) const;
+
+	sf::Vector2u getTileSizeWorld() const;
 
 
 
