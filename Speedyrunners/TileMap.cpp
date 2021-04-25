@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include "TileMap.h"
+#include "utils.hpp"
 
 
 void TileMap::draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -190,12 +191,12 @@ std::ostream& operator<<(std::ostream& os, const TileMap& t) {
     return os;
 }
 
-std::vector<struct TileCollision> TileMap::collision(const sf::FloatRect& characterHitbox) const
+std::vector<struct Tiles::Collision> TileMap::collision(const sf::FloatRect& characterHitbox) const
 {
     // Tile coordinates of upper left tile:
     int i = int(characterHitbox.left) / tileSizeWorld.x;
     int j = int(characterHitbox.top) / tileSizeWorld.y;
-    std::vector<struct TileCollision> collisions;
+    std::vector<struct Tiles::Collision> collisions;
 	for (int dj = 0; dj < 3; dj++) { // And 3 vertical
         //bool bothHorizontal = false; // Both horizontal tiles are collidable
 		for (int di = 0; di < 2; di++) { // Check the 2 horizontal tiles
@@ -207,12 +208,10 @@ std::vector<struct TileCollision> TileMap::collision(const sf::FloatRect& charac
             }
 			auto tile = tiles[(i + di) + (j + dj) * width];
             if (tile != 0) { // Tile isnt air 
-                auto c = Tiles::collision(Tiles::FLOOR, posRectTile, sizeRectTile, characterHitbox);
+                auto c = Tiles::collision((Tiles::Collidable)tile, posRectTile, sizeRectTile, characterHitbox);
                 if (c) {
-					struct TileCollision tc;
-					tc.tileType = (Tiles::Collidable)tile;
-					tc.collision = *c;
-                    collisions.emplace_back(tc);
+                    c->tileType = (Tiles::Collidable)tile;
+                    collisions.emplace_back(*c);
                     //std::cout << "Collided with tile " << di << " " << dj << "... " << i + di << " " << j+dj << "\n";
                     //return c; // collided, we return it, otherwise check the rest
                 }
@@ -220,8 +219,8 @@ std::vector<struct TileCollision> TileMap::collision(const sf::FloatRect& charac
         }
     }
     std::sort(collisions.begin(), collisions.end(),
-        [](struct TileCollision a, struct TileCollision b) {
-            return (a.collision.distance > b.collision.distance);
+        [](struct Tiles::Collision& a, struct Tiles::Collision& b) {
+            return (a.distance > b.distance);
         }
     );
     return collisions;
@@ -238,8 +237,56 @@ std::vector<struct TileCollision> TileMap::collision(const sf::FloatRect& charac
 }*/
 
 
+Tiles::Ramp Tiles::toRamp(Collidable tile)
+{
+    using namespace Tiles;
+    if (tile == Collidable::RAMP_DOWN || tile == Collidable::STAIRS_DOWN) {
+        return DOWN;
+    }
+    else if (tile == Collidable::RAMP_UP || tile == Collidable::STAIRS_UP) {
+        return UP;
+    }
+    else if (tile == Collidable::RAMP_CEIL_DOWN) {
+        return CEIL_DOWN;
+    }
+    else if (tile == Collidable::RAMP_CEIL_UP) {
+        return CEIL_UP;
+    }
+    else {
+        return NONE;
+    }
+}
+
+std::optional<Tiles::Collision> Tiles::rampCollision(const Tiles::Ramp ramp, const sf::Vector2f& tilePos,
+    const sf::Vector2f& tileSize, const sf::FloatRect& hitbox) 
+{   
+    std::cout << "colliding ramp: " << ramp << "\n";
+    if (ramp == Tiles::Ramp::UP) {
+        // Ramp up
+        sf::Vector2f downR(hitbox.left+hitbox.width, hitbox.top+hitbox.height); // down right point of the hitbox
+        float hDif = (downR.y - (tilePos.y - (downR.x - tilePos.x))); // diff in height
+        std::cout << "hdif: " << hDif << "\n";
+        if (hDif > 0) {
+            // Collision
+            sf::Vector2f point = downR; // not exact
+            sf::Vector2f n = geometry::normalize(sf::Vector2f(-1, -1));
+            std::cout << "collided with ramp\n";
+            return Tiles::Collision{ point, n, hDif/sqrt(2.0f)/2.0f }; // hDif is actually vertical distance, not normal one
+        }
+        else { // No collision
+            return {};
+        }
+    }
+    else {
+        // TODO: los otros 4 tipos de rampas
+        return {};
+    }
+}
+
+
 // Adapted from the SAT method in https://laptrinhx.com/custom-physics-engine-part-2-manifold-generation-716517698/
-std::optional<physics::Collision> Tiles::collision(const Tiles::Collidable tile, const sf::Vector2f& tilePos, const sf::Vector2f& tileSize, const sf::FloatRect& hitbox)
+std::optional<Tiles::Collision> Tiles::collision(const Tiles::Collidable tile, const sf::Vector2f& tilePos,
+    const sf::Vector2f& tileSize, const sf::FloatRect& hitbox)
 {
     sf::FloatRect tileRect(tilePos.x, tilePos.y, tileSize.x, tileSize.y);
     // x overlap:
@@ -253,6 +300,9 @@ std::optional<physics::Collision> Tiles::collision(const Tiles::Collidable tile,
     if (x_overlap <= 0 || y_overlap <= 0) { // No overlap, no collision
         return {};
     } // Here we have a collision:
+    // if its a ramp:
+    if (Tiles::toRamp(tile) != NONE) return rampCollision(Tiles::toRamp(tile), tilePos, tileSize, hitbox);
+    // Otherwise, its a square tile:
     // collision points:
     sf::Vector2f collision1(std::max(tileRect.left, hitbox.left), std::max(tileRect.top, hitbox.top));
     sf::Vector2f collision2(std::min(tileRect.left + tileRect.width, hitbox.left + hitbox.width),
@@ -278,5 +328,5 @@ std::optional<physics::Collision> Tiles::collision(const Tiles::Collidable tile,
     }
     //std::cout << x_overlap << " " << y_overlap << "\n";
 
-    return physics::Collision{ point, n, dist };// TODO: This is wrong!
+    return Tiles::Collision{ point, n, dist };// TODO: This is wrong!
 }

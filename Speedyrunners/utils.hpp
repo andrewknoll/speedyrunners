@@ -6,6 +6,7 @@
 
 #include "SFML/Graphics.hpp"
 #include "Settings.h"
+//#include "TileMap.h"
 
 class RNG {
 	// Para generacion de nums aleatorios, //(de https://en.cppreference.com/w/cpp/numeric/random/uniform_real_distribution)
@@ -99,8 +100,12 @@ namespace geometry {
 		sf::Vector2f operator*(const sf::Vector2f& v) const;
 	};
 
+
+	sf::Vector2f normalize(const sf::Vector2f& in);
+
 	sf::Vector2f toWorld(const Mat2& m, const sf::Vector2f& local);
 }
+
 
 
 
@@ -110,9 +115,4 @@ namespace physics {
 	const float FLOOR_FRICTION = GRAVITY*1.5;
 	const float AIR_FRICTION = GRAVITY * 0.5;
 
-	struct Collision {
-		sf::Vector2f point; // point
-		sf::Vector2f normal; // Normal
-		float distance; // Distancia de entrada en el segundo obj
-	};
 }

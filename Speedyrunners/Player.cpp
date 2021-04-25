@@ -25,6 +25,7 @@ bool Player::captureEvents(const sf::Event& event) {
 			//TODO: Considerar long presses
 			me->jump();
 		}
+		
 		/*else if (event.key.code == sf::Keyboard::Key::Down) {
 			if (me->getState() == CharState::Standing ||
 				me->getState() == CharState::InAir ||

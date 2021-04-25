@@ -1,5 +1,6 @@
 
 #include <SFML/Graphics.hpp>
+#include "TileMap.h"
 #include "Character.h"
 #include "utils.hpp" // physics
 #include "Globals.hpp" //animation names
@@ -35,6 +36,47 @@ void fixPosition(sf::FloatRect& hitbox) {
 	if (hitbox.left < 0) {
 		hitbox.left = 0;
 	}
+}
+
+/**
+enum NORMAL_DIR {
+	UP,
+	UP_R,
+	R,
+	DOWN_R,
+	DOWN,
+	DOWN_L,
+	L,
+	UP_L
+};
+
+NORMAL_DIR direction(const sf::Vector2f& n) {
+
+}*/
+
+
+void Character::setBaseFromRamp(Tiles::Ramp ramp) {
+	using namespace Tiles;
+	if (ramp == Ramp::DOWN || ramp == Ramp::CEIL_DOWN) {
+		base = geometry::Mat2(
+			geometry::normalize(sf::Vector2f(1.0f, 1.0f)),
+			geometry::normalize(sf::Vector2f(1.0f, 1.0f))
+		);
+	} 
+	else if (ramp == Ramp::UP || ramp == Ramp::CEIL_UP) {
+		base = geometry::Mat2(
+			geometry::normalize(sf::Vector2f(1.0f, -1.0f)),
+			geometry::normalize(sf::Vector2f(1.0f, -1.0f))
+		);
+	}
+	else { // Floor or ceil
+		base = geometry::Mat2(
+			geometry::normalize(sf::Vector2f(1.0f, 0)),
+			geometry::normalize(sf::Vector2f(0, -1.0f))
+		);
+	}
+
+
 }
 
 void Character::update(const sf::Time& dT, const TileMap& tiles)
@@ -86,19 +128,19 @@ void Character::update(const sf::Time& dT, const TileMap& tiles)
 	hitBox.top += vel.y * dtSec;
 
 	fixPosition(hitBox);
-	auto collisions = tiles.collision(hitBox);
+	std::vector<Tiles::Collision> collisions = tiles.collision(hitBox);
 
 	if (!collisions.empty()) {
-		auto c = collisions.front();
+		Tiles::Collision c = collisions.front();
 		//for (const auto& c : collisions) {
-		// std::cout << "n: " << c.collision->normal.x << "," << c.collision->normal.y << "\tpoint: " << c.collision->point.x << "," << c.collision->point.y << " " << c.collision->distance << "\n";
+		// std::cout << "n: " << c.->normal.x << "," << c.->normal.y << "\tpoint: " << c.->point.x << "," << c.->point.y << " " << c.->distance << "\n";
 		// New position:
 		sf::Vector2f pos(hitBox.left, hitBox.top);
-		pos = pos + (c.collision.normal * (c.collision.distance));
+		pos = pos + (c.normal * (c.distance));
 
-		if (c.collision.normal.y >= 0) useHook(false);
+		if (c.normal.y >= 0) useHook(false);
 
-		if (c.collision.normal.x != 0) { // Make 0 the component of the collision
+		if (c.normal.x != 0) { // Make 0 the component of the collision
 			vel.x = 0;
 			acc.x = 0;
 			isRunning = false;
@@ -130,7 +172,13 @@ void Character::update(const sf::Time& dT, const TileMap& tiles)
 			acc.y = physics::GRAVITY;
 		}
 		if (sliding) setAnimation(SlidingAnim);
-		updateGrounded(c.collision.normal);
+		updateGrounded(c.normal);
+
+		// may be ramp
+		using namespace Tiles;
+		auto ramp = Tiles::toRamp(c.tileType);
+		setBaseFromRamp(ramp);
+		updateGrounded(c.normal);
 
 		hitBox.left = pos.x; hitBox.top = pos.y;
 	}
@@ -166,7 +214,7 @@ void Character::update(const sf::Time& dT, const TileMap& tiles)
 }
 
 void Character::updateGrounded(const sf::Vector2f& normal) {
-	isGrounded = (normal == sf::Vector2f(0, -1));
+	isGrounded = (normal.y <= 0);
 	if (isGrounded) hasDoubleJumped = false;
 }
 
@@ -175,12 +223,13 @@ void Character::updateRunning() {
 	//If it's running, not swinging
 	if (isRunning && !swinging) {
 		if (isGrounded) {
-			acc.x = runningAcceleration;
+			//acc.x = runningAcceleration;
+			acc = base * sf::Vector2f(runningAcceleration,0);
 		}
 		else
 			acc.x = flyingAcceleration;
 		if (!facingRight) {
-			acc.x = -acc.x;
+			acc = -acc;
 		}
 	}
 }

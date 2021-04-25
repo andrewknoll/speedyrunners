@@ -7,12 +7,16 @@
 #include "Globals.hpp"
 #include "Spritesheet.h"
 #include "Hook.h"
+#include "utils.hpp"
 
 
 #include "Item.h"
 
 #define PERIOD sf::milliseconds(1000/30)
 
+class TileMap;
+
+//class Tiles::Ramp;
 
 class Character : public sf::Transformable, public sf::Drawable
 {
@@ -94,6 +98,8 @@ public:
 	void tickAnimation(sf::Time dT);
 	void setAnimation(AnimationIndex i, bool loop = false, bool reverse = false);
 	void setAnimationAngle(float angle);
+
+	void setBaseFromRamp(Tiles::Ramp ramp);
 
 	void update(const sf::Time& dT, const TileMap& tiles);
 

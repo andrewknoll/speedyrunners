@@ -33,14 +33,33 @@ namespace Tiles {
 
 	const int NB_COLLIDABLE = 16;
 
+
+
+	enum Ramp {
+		UP,
+		DOWN,
+		CEIL_UP,
+		CEIL_DOWN,
+		NONE
+	};
+
+	Ramp toRamp(Collidable tile);
+
+
+	struct Collision {
+		sf::Vector2f point; // point
+		sf::Vector2f normal; // Normal
+		float distance; // Distancia de entrada en el segundo obj
+		Collidable tileType; // type
+	};
 	// Returns the collision, if any, between the hitbox of a character and a tile
-	std::optional<physics::Collision> collision(const Collidable tile, const sf::Vector2f& tilePos, const sf::Vector2f& tileSize, const sf::FloatRect& hitbox);
+	std::optional<Tiles::Collision> collision(const Collidable tile, const sf::Vector2f& tilePos, const sf::Vector2f& tileSize, const sf::FloatRect& hitbox);
+
+
+	std::optional<Tiles::Collision> rampCollision(const Tiles::Ramp ramp, const sf::Vector2f& tilePos, const sf::Vector2f& tileSize, const sf::FloatRect& hitbox);
+
 }
 
-struct TileCollision {
-	Tiles::Collidable tileType;
-	physics::Collision collision;
-};
 
 class TileMap : public sf::Transformable, public sf::Drawable
 {
@@ -75,7 +94,7 @@ public:
 	std::string to_string(bool duplicarHorizontal = false) const;
 
 
-	std::vector<struct TileCollision> collision(const sf::FloatRect& characterHitbox) const;
+	std::vector<struct Tiles::Collision> collision(const sf::FloatRect& characterHitbox) const;
 
 
 
