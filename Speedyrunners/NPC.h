@@ -1,7 +1,7 @@
 #pragma once
 #include "Character.h"
 #include "Player.h"
-#include "PriorityQueueImpl.h"
+#include "PriorityQueue.h"
 #include "TileMap.h"
 #include "Line.hpp"
 #include <list>
@@ -35,20 +35,22 @@ private:
 
 	TilePriorityQueue frontier;
 	std::vector<TileNode> expanded;
-	std::vector<TileNode> path;
+	std::list<std::shared_ptr<TileNode> > path;
 
 	TileNode frontierPop();
 	int findExpanded(const TileNode& n) const;
 	float heuristic(const TileNode& n, sf::Vector2f goalPos, float goalRadius) const;
 	bool inBounds(const int i, const int j) const;
-	int updateExpanded(TileNode n);
+	int updateExpanded(const TileNode& current, TileNode n, float heuristic);
 	float cost(const TileNode & current, const TileNode & next) const;
 	void calculateHookNeighbours(const TileNode& current);
+	void buildPath(TileNode foundGoal);
+	bool isGoal(const TileNode & current, const sf::Vector2f& goalPos, const float radius) const;
 public:
 	NPC();
 	TileNode getCharacterCell() const;
 	void setTileMap(TileMapPtr tm);
-	void play(sf::Vector2f goalPos, float goalRadius);
+	void play(const sf::Vector2f& goalPos, const float goalRadius);
 	std::list<selbaward::Line> debugLines();
 };
 

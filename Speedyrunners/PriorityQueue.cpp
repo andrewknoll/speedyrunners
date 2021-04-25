@@ -9,6 +9,7 @@ bool PriorityQueue<T>::contains(const Node<T>& val) const {
 		if (sameCell(*first, val)) {
 			return true;
 		}
+		first++;
 	}
 	return false;
 }
@@ -22,6 +23,7 @@ bool PriorityQueue<T>::insert(Node<T> val) {
 			if (*first < val) first->cost = val.cost;
 			return (*first < val);
 		}
+		first++;
 	}
 	this->push(val);
 	return true;

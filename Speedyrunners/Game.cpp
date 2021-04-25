@@ -87,7 +87,7 @@ void Game::npcJoin(NPCPtr newNPC){
 		s.controlIndex = npcs.size();
 		s.index = positions.size();
 		s.type = 1;
-
+		newNPC->setTileMap(std::make_shared<TileMap>(lvl.getCollidableTiles()));
 		npcs.emplace_back(newNPC);
 		positions.emplace_back(s);
 	}

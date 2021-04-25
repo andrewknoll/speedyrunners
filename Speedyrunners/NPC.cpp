@@ -1,5 +1,5 @@
 #include "NPC.h"
-#include "PriorityQueueImpl.h"
+#include "PriorityQueue.h"
 
 NPC::NPC() {
 	frontier = TilePriorityQueue();
@@ -13,6 +13,7 @@ NPC::TileNode NPC::getCharacterCell() const {
 	n.cell[1] = int(me->getPosition().y) / tm->getTileSizeWorld().y;
 	n.data = Tiles::AIR;
 	n.heuristic = 0;
+	n.cost = 0;
 	return n;
 }
 
@@ -44,43 +45,26 @@ float NPC::heuristic(const TileNode& n, sf::Vector2f goalPos, float goalRadius) 
 }
 
 bool NPC::inBounds(const int x, const int j) const {
-	return x < 0 || j < 0 || x > tm->getWidth() || j > tm->getHeight();
+	return x >= 0 && j >= 0 && x < tm->getWidth() && j < tm->getHeight();
 }
 
-int NPC::updateExpanded(TileNode n) {
+int NPC::updateExpanded(const TileNode& current, TileNode n, float heuristic) {
 	int i = findExpanded(n);
 	if (i < expanded.size() && n.cost < expanded[i].cost) {
 		expanded[i].cost = n.cost;
+		expanded[i].heuristic = heuristic;
+		expanded[i].prev = std::make_shared<TileNode>(current);
 	}
 	return i;
 }
 
 float NPC::cost(const TileNode & current, const TileNode & next) const {
-	if (inBounds(next.cell[0], next.cell[1])
-		|| tm->getTile(next.cell[0], next.cell[1]) != Tiles::AIR) {
+	if (!inBounds(next.cell[0], next.cell[1])
+		|| next.data != Tiles::AIR) {
 		return INFINITY;
 	}
-	else if (tm->getTile(next.cell[0], next.cell[1] - 1) != Tiles::Collidable::AIR) {
+	else if (inBounds(next.cell[0], next.cell[1]) && tm->getTile(next.cell[0], next.cell[1] - 1) != Tiles::Collidable::AIR) {
 		return SLIDE_COST;
-	}
-	else {
-		TileNode aux;
-		int exp;
-		Tiles::Collidable type;
-		do {
-			aux.cell[0] = current.cell[0] + 1;
-			aux.cell[1] = current.cell[1] + 1;
-			if (inBounds(aux.cell[0], aux.cell[1])) {
-				type = tm->getTile(aux.cell[0], aux.cell[1]);
-			}
-			else {
-				break;
-			}
-		} while (type == Tiles::AIR);
-
-		if (tm->getTile(aux.cell[0], aux.cell[1]) == Tiles::GRAPPLABLE) {
-			return HOOK_COST;
-		}
 	}
 	return RUN_COST;
 }
@@ -88,7 +72,7 @@ float NPC::cost(const TileNode & current, const TileNode & next) const {
 void NPC::calculateHookNeighbours(const TileNode& current) {
 	TileNode auxR, auxL;
 	int i, radius = 0;
-	Tiles::Collidable typeR, typeL;
+	Tiles::Collidable typeR = Tiles::AIR, typeL = Tiles::AIR;
 	bool stopR = false, stopL = false;
 	do {
 		radius++;
@@ -105,7 +89,7 @@ void NPC::calculateHookNeighbours(const TileNode& current) {
 		}
 		if (!stopL) {
 			auxL.cell[0] = current.cell[0] - radius;
-			auxL.cell[0] = current.cell[1] - radius;
+			auxL.cell[1] = current.cell[1] - radius;
 			if (inBounds(auxL.cell[0], auxL.cell[1] - 1)) {
 				typeL = tm->getTile(auxL.cell[0], auxL.cell[1] - 1);
 				stopL = (typeL == Tiles::AIR);
@@ -149,13 +133,33 @@ void NPC::calculateHookNeighbours(const TileNode& current) {
 	}
 }
 
-void NPC::play(sf::Vector2f goalPos, float goalRadius) {
+void NPC::buildPath(TileNode foundGoal) {
+	path.push_front(std::make_shared<TileNode>(foundGoal));
+	std::shared_ptr<TileNode> next = foundGoal.prev;
+	std::cout << foundGoal.cell[0] << " " << foundGoal.cell[1] << next->cost << std::endl;
+	while (next != nullptr) {
+		std::cout << next->cell[0] << " " << next->cell[1] << " " << next->cost << std::endl;
+		path.push_front(next);
+		next = next->prev;
+	}
+}
+
+bool NPC::isGoal(const TileNode & current, const sf::Vector2f& goalPos, const float radius) const {
+	float a = current.cell[0] * tm->getTileSizeWorld().x - goalPos.x;
+	float b = current.cell[1] * tm->getTileSizeWorld().y - goalPos.y;
+	return abs(sqrt(a*a + b * b)) < radius;
+}
+
+void NPC::play(const sf::Vector2f& goalPos, const float goalRadius) {
 	TileNode current;
 	int new_cost;
 	int exp;
+	float h;
 
 	frontier.push(getCharacterCell());
 	expanded.clear();
+	//Have to do "replan path"
+	if (!path.empty()) return;
 
 	TileNode goal;
 	goal.cell[0] = int(goalPos.x) / tm->getTileSizeWorld().x;
@@ -164,13 +168,15 @@ void NPC::play(sf::Vector2f goalPos, float goalRadius) {
 
 	while (!frontier.empty()) {
 		current = frontierPop();
+		expanded.push_back(current);
 
-		if (sameCell(current, goal)) {
+		if (isGoal(current, goalPos, goalRadius)) {
 			frontier.clear();
+			buildPath(current);
 			break;
 		}
 
-		calculateHookNeighbours(current);
+		//calculateHookNeighbours(current);
 
 		for (int x = -1; x <= 1; x++) {
 			for (int y = -1; y <= 1; y++) {
@@ -179,10 +185,15 @@ void NPC::play(sf::Vector2f goalPos, float goalRadius) {
 				next.cell[0] = x + current.cell[0];
 				next.cell[1] = y + current.cell[1];
 				
+				if (inBounds(next.cell[0], next.cell[1])) {
+					next.data = tm->getTile(next.cell[0], next.cell[1]);
+				}
+					
 				next.cost = current.cost + cost(current, next);
-				if (updateExpanded(next) >= expanded.size()) {
-					next.prev = &current;
-					next.heuristic = heuristic(next, goalPos, goalRadius);
+				h = heuristic(next, goalPos, goalRadius);
+				if (updateExpanded(current, next, h) >= expanded.size() && next.cost != INFINITY) {
+					next.prev = std::make_shared<TileNode>(current);
+					next.heuristic = h;
 					frontier.insert(next);
 				}
 			}
@@ -192,14 +203,15 @@ void NPC::play(sf::Vector2f goalPos, float goalRadius) {
 
 std::list<selbaward::Line> NPC::debugLines() {
 	std::list<selbaward::Line> lines = std::list<selbaward::Line>();
-	for (auto n : expanded) {
-		if (n.prev == NULL) continue;
+	for (auto n : path) {
+		if (n->prev == NULL) continue;
 		selbaward::Line l;
 		sf::Vector2u size = tm->getTileSizeWorld();
-		sf::Vector2f start = {(float)n.prev->cell[0] * size.x, (float)n.prev->cell[1] * size.y };
-		sf::Vector2f end = { (float)n.cell[0] * size.x, (float)n.cell[1] * size.y };
+		sf::Vector2f start = {(float)n->prev->cell[0] * size.x, (float)n->prev->cell[1] * size.y };
+		sf::Vector2f end = { (float)n->cell[0] * size.x, (float)n->cell[1] * size.y };
 		l.setPoints(start, end);
 		l.setColor(sf::Color::Green);
+		l.setThickness(2.0f);
 		lines.push_back(l);
 	}
 	return lines;

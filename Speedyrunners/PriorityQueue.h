@@ -1,5 +1,6 @@
 #pragma once
 #include <queue>
+#include <memory>
 
 template<class T>
 struct Node {
@@ -7,7 +8,7 @@ struct Node {
 	int cell[2];
 	float heuristic;
 	float cost;
-	Node<T>* prev = NULL;
+	std::shared_ptr<Node<T> > prev = nullptr;
 
 
 	friend bool operator< (const Node<T>& n1, const Node<T>& n2) {
@@ -25,7 +26,7 @@ struct Node {
 };
 
 template<class T>
-class PriorityQueue : public std::priority_queue<Node<T> >
+class PriorityQueue : public std::priority_queue<Node<T>, std::vector<Node<T> >, std::greater<Node<T> > >
 {
 public:
 	bool contains(const Node<T>& val) const;

@@ -89,7 +89,7 @@ void TileMap::setTile(const sf::Vector2i& pos, const int tileNumber) {
 }
 
 Tiles::Collidable TileMap::getTile(int i, int j) const {
-	return (Tiles::Collidable)tiles.at(i * width + j);
+	return (Tiles::Collidable)tiles.at(j * width + i);
 }
 
 int TileMap::getWidth() const {
