@@ -14,6 +14,8 @@
 
 #define PERIOD sf::milliseconds(1000/30)
 
+#define DEBUG_HITBOX
+
 class TileMap;
 
 //class Tiles::Ramp;
@@ -34,6 +36,9 @@ protected:
 	//State state = State::InAir;
 
 	sf::Rect<float> hitBox;
+#ifdef DEBUG_HITBOX
+	sf::RectangleShape hitBoxShape;
+#endif
 
 	// Base:
 	geometry::Mat2 base = geometry::Mat2(sf::Vector2f(1,0), sf::Vector2f(0,1));
@@ -87,6 +92,8 @@ protected:
 
 	void updateRunning();
 
+	void updateHitBoxRectangle();
+	void fixPosition(sf::FloatRect& hitbox);
 
 public:
 	Character(Spritesheet);

@@ -31,19 +31,21 @@ namespace glb
 	};
 	const int NUMBER_OF_ITEMS = 1;
 	const int NUMBER_OF_MISC_TEXTURES = 1;
-	const sf::Vector2f FEET_TO_HAND = sf::Vector2f(20.0, -50.0);
+	const sf::Vector2f FEET_TO_HAND = sf::Vector2f(20.0, 0);// -50.0);
 	enum item : int {
 		NONE = 0,
 		ROCKET = 1
 	};
 
-	const sf::Rect<float> default_hitbox = sf::Rect<float>(20,20,14, 30);
 
 	const float runningAcceleration = 800;
 	const float flyingAcceleration = 400;
 	const float jumpingSpeed = 200;
 
 	const sf::Vector2f tileSize = sf::Vector2f(18.0, 18.0);
+
+	const sf::Rect<float> default_hitbox = sf::Rect<float>(20, 20, tileSize.x, tileSize.y * 2.0f);
+
 
 	const float viewMarginFactor = 0.94;
 

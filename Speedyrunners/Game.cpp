@@ -35,6 +35,9 @@ void Game::setUpWindow() {
 
 	window.setFramerateLimit(60); //60 FPS?
 	window.setVerticalSyncEnabled(true);
+	//auto settings = window.getSettings();
+	//settings.antialiasingLevel = 2;
+	//window.set
 }
 
 
