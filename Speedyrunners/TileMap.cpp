@@ -257,6 +257,16 @@ Tiles::Ramp Tiles::toRamp(Collidable tile)
     }
 }
 
+
+
+/*if (true || hDif > 0) {
+                // Collision
+                sf::Vector2f point = downR; // not exact
+                sf::Vector2f n = geometry::normalize(sf::Vector2f(-1, -1));
+                std::cout << "collided with ramp\n";
+                return Tiles::Collision{ point, n, hDif/sqrt(2.0f)/2.0f }; // hDif is actually vertical distance, not normal one
+            }*/
+#ifdef OLD_RAMP_COLLISION
 std::optional<Tiles::Collision> Tiles::rampCollision(const Tiles::Ramp ramp, const sf::Vector2f& tilePos,
     const sf::Vector2f& tileSize, const sf::FloatRect& hitbox) 
 {   
@@ -264,26 +274,53 @@ std::optional<Tiles::Collision> Tiles::rampCollision(const Tiles::Ramp ramp, con
     if (ramp == Tiles::Ramp::UP) {
         // Ramp up
         sf::Vector2f downR(hitbox.left+hitbox.width, hitbox.top+hitbox.height); // down right point of the hitbox
-        float hDif = (downR.y - (tilePos.y - (downR.x - tilePos.x))); // diff in height
-        std::cout << "hdif: " << hDif << "\n";
-        if (hDif > 0) {
-            // Collision
-            sf::Vector2f point = downR; // not exact
-            sf::Vector2f n = geometry::normalize(sf::Vector2f(-1, -1));
-            std::cout << "collided with ramp\n";
-            return Tiles::Collision{ point, n, hDif/sqrt(2.0f)/2.0f }; // hDif is actually vertical distance, not normal one
+        float dist;
+        // Collision
+        sf::Vector2f point = downR; // not exact
+        sf::Vector2f n = geometry::normalize(sf::Vector2f(0, -1));
+        if (downR.x < tilePos.x + tileSize.x) {
+            float hDif = (downR.y - (tilePos.y - (downR.x - tilePos.x))); // diff in height
+            std::cout << "hdif: " << hDif << "\n";
+            
+            //std::cout << "collided with ramp\n";
+             // hDif is actually vertical distance, not normal one
+            dist = hDif;
         }
         else { // No collision
-            return {};
+            dist = downR.y - tilePos.y;
         }
+        return Tiles::Collision{ point, n, dist };
     }
     else {
         // TODO: los otros 4 tipos de rampas
         return {};
     }
 }
-
-
+#else
+std::optional<Tiles::Collision> Tiles::rampCollision(const Tiles::Ramp ramp, const sf::Vector2f& tilePos,
+    const sf::Vector2f& tileSize, const sf::FloatRect& hitbox)
+{
+    std::cout << "colliding ramp: " << ramp << "\n";
+    if (ramp == Tiles::Ramp::UP) {
+        // Ramp up
+        sf::Vector2f downCenter(hitbox.left + hitbox.width/2.0f, hitbox.top + hitbox.height); // down center point of the hitbox
+        float dist;
+        sf::Vector2f n = geometry::normalize(sf::Vector2f(0, -1));
+        if (downCenter.x >= tilePos.x && downCenter.x <= tilePos.x + tileSize.x) {
+            dist = (downCenter.y - (tilePos.y - (downCenter.x - tilePos.x))); // diff in height
+        }
+        else { // No collision
+            //dist = downCenter.y - tilePos.y;
+            dist = 0;
+        }
+        return Tiles::Collision{ downCenter, n, dist };
+    }
+    else {
+        // TODO: los otros 4 tipos de rampas
+        return {};
+    }
+}
+#endif
 // Adapted from the SAT method in https://laptrinhx.com/custom-physics-engine-part-2-manifold-generation-716517698/
 std::optional<Tiles::Collision> Tiles::collision(const Tiles::Collidable tile, const sf::Vector2f& tilePos,
     const sf::Vector2f& tileSize, const sf::FloatRect& hitbox)

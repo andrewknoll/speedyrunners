@@ -12,6 +12,9 @@ Character::Character(Spritesheet sp) :
 	animations = sp.get_animations();
 	setAnimation(StartAnim);
 	this->setScale(0.45, 0.45);
+	auto o = getOrigin();
+	setOrigin(o.x-hitBox.width, o.y-hitBox.height*2.25);
+	updateHitBoxRectangle();
 }
 
 sf::Sprite Character::getSprite() {
@@ -22,7 +25,7 @@ void Character::setPosition(float x, float y) {
 	//mySprite.setPosition(x, y);
 	hitBox.top = y;
 	hitBox.left = x;
-	sf::Transformable::setPosition(x, y + 1.75 * glb::tileSize.y);
+	sf::Transformable::setPosition(x, y);
 }
 
 void Character::setPosition(const sf::Vector2f pos) {
@@ -140,44 +143,45 @@ void Character::update(const sf::Time& dT, const TileMap& tiles)
 
 		if (c.normal.y >= 0) useHook(false);
 
-		if (c.normal.x != 0) { // Make 0 the component of the collision
-			vel.x = 0;
-			acc.x = 0;
-			isRunning = false;
-			sliding = false;
-			if (isGrounded && !usingHook && !sliding) {
-				setAnimation(StandAnim);
-			}
-			if (c.tileType == Tiles::JUMP_WALL_L) {
-				if (!isAtWallJump) {
-					acc.y = 0;
-					vel.y = 0;
-				}
-				facingRight = false;
-				isAtWallJump = true;
-				setAnimation(WallHangAnim);
-			}
-			else if (c.tileType == Tiles::JUMP_WALL_R) {
-				if (!isAtWallJump) {
-					acc.y = 0;
-					vel.y = 0;
-				}
-				facingRight = true;
-				isAtWallJump = true;
-				setAnimation(WallHangAnim);
-			}
-		}
-		else if (!swinging) {
-			vel.y = 0;
-			acc.y = physics::GRAVITY;
-		}
-		if (sliding) setAnimation(SlidingAnim);
-		updateGrounded(c.normal);
-
 		// may be ramp
 		using namespace Tiles;
 		auto ramp = Tiles::toRamp(c.tileType);
 		setBaseFromRamp(ramp);
+		if (ramp == Ramp::NONE) {
+			if (c.normal.x != 0) { // Make 0 the component of the collision
+				vel.x = 0;
+				acc.x = 0;
+				isRunning = false;
+				sliding = false;
+				if (isGrounded && !usingHook && !sliding) {
+					setAnimation(StandAnim);
+				}
+				if (c.tileType == Tiles::JUMP_WALL_L) {
+					if (!isAtWallJump) {
+						acc.y = 0;
+						vel.y = 0;
+					}
+					facingRight = false;
+					isAtWallJump = true;
+					setAnimation(WallHangAnim);
+				}
+				else if (c.tileType == Tiles::JUMP_WALL_R) {
+					if (!isAtWallJump) {
+						acc.y = 0;
+						vel.y = 0;
+					}
+					facingRight = true;
+					isAtWallJump = true;
+					setAnimation(WallHangAnim);
+				}
+			}
+			else if (!swinging) {
+				vel.y = 0;
+				acc.y = physics::GRAVITY;
+			}
+		}
+		
+		if (sliding) setAnimation(SlidingAnim);
 		updateGrounded(c.normal);
 
 		hitBox.left = pos.x; hitBox.top = pos.y;
@@ -211,10 +215,11 @@ void Character::update(const sf::Time& dT, const TileMap& tiles)
 			setAnimation(FallAnim);
 		}
 	}
+	updateHitBoxRectangle(); // Debug
 }
 
 void Character::updateGrounded(const sf::Vector2f& normal) {
-	isGrounded = (normal.y <= 0);
+	isGrounded = (normal.y < 0);
 	if (isGrounded) hasDoubleJumped = false;
 }
 
@@ -223,13 +228,13 @@ void Character::updateRunning() {
 	//If it's running, not swinging
 	if (isRunning && !swinging) {
 		if (isGrounded) {
-			//acc.x = runningAcceleration;
-			acc = base * sf::Vector2f(runningAcceleration,0);
+			acc.x = runningAcceleration;
+			//acc = base * sf::Vector2f(runningAcceleration,0);
 		}
 		else
 			acc.x = flyingAcceleration;
 		if (!facingRight) {
-			acc = -acc;
+			acc.x = -acc.x;
 		}
 	}
 }
@@ -334,7 +339,7 @@ std::string Character::getUIIconPath() const
 }
 
 void Character::updateAcceleration() {
-	if (!isGrounded && !swinging)
+	if (!swinging)
 		acc.y = physics::GRAVITY;
 }
 
@@ -371,6 +376,14 @@ void Character::tickAnimation(sf::Time dT) {
 	}
 }
 
+void Character::updateHitBoxRectangle() {
+#ifdef DEBUG_HITBOX
+	hitBoxShape.setPosition(hitBox.left, hitBox.top);
+	hitBoxShape.setSize(sf::Vector2f(hitBox.width, hitBox.height));
+	hitBoxShape.setFillColor(sf::Color::Red);
+#endif
+}
+
 void Character::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	if (usingHook) target.draw(hook);
 	// apply the transform
@@ -380,6 +393,12 @@ void Character::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	states.texture = mySprite.getTexture();
 
 	target.draw(mySprite, states);
+
+
+
+#ifdef DEBUG_HITBOX
+	target.draw(hitBoxShape);
+#endif
 }
 
 void Character::setHorizontalAcc(float acc) {
@@ -402,5 +421,5 @@ void Character::setAnimation(AnimationIndex i, bool loop, bool reverse) {
 }
 
 void Character::setAnimationAngle(float angle) {
-	currentAnimation->update_angle(mySprite, angle);
+	//currentAnimation->update_angle(mySprite, angle);
 }
