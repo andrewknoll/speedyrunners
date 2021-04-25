@@ -33,6 +33,7 @@ sf::Sprite Animation::get_first_frame() {
 	sprite.setOrigin(this->get_origin_point());
 	//sprite.setOrigin(sprite.getOrigin());
 	flip(sprite);
+	sprite.setRotation(angle);
 	return sprite;
 }
 
@@ -77,6 +78,7 @@ int Animation::advance_frame(sf::Sprite& sprite) {
 		sprite = new_sprite;
 	}
 	flip(sprite);
+	sprite.setRotation(angle);
 	return return_code;
 }
 
@@ -119,7 +121,12 @@ bool Animation::get_reverse() const {
 	return reverse;
 }
 
-void Animation::update_orientation(bool right){
+void Animation::update_orientation(bool right) {
 	facing_right = right;
+}
+
+void Animation::update_angle(sf::Sprite& sp, float angle) {
+	this->angle = angle;
+	sp.setRotation(angle);
 }
 

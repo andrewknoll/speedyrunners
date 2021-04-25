@@ -10,6 +10,7 @@ private:
 	std::vector<int> frame_numbers;
 	std::vector<sf::IntRect> frames;
 	int current_frame = 0;
+	float angle = 0;
 	sf::Vector2f position;
 	bool loop = false;
 	bool reverse = false;
@@ -30,5 +31,6 @@ public:
 	void set_reverse(bool reverse);
 	bool get_reverse() const;
 	void update_orientation(bool right);
+	void update_angle(sf::Sprite& sp, float angle);
 };
 

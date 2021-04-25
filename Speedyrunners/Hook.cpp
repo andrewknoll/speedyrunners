@@ -11,21 +11,30 @@ Hook::Hook()
 
 void Hook::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	selbaward::Line line(hookerPosition, getPosition());
-	line.setThickness(4);
-	line.setColor(sf::Color::Black);
-	target.draw(line, states);
-	target.draw(sprite, states);
+	if (use) {
+		selbaward::Line line(hookerPosition, getPosition());
+		line.setThickness(4);
+		line.setColor(sf::Color::Black);
+		target.draw(line, states);
+		target.draw(sprite, states);
+	}
 }
 
 //Return 1 if hit a grappable surface
 //Return -1 if hit a non-grappable surface
 //Return 0 if all went ok
 int Hook::update(const sf::Time& dT, const TileMap& tiles, const sf::Vector2f& pos) {
-	hitBox = sprite.getGlobalBounds();
+	hitBox.left = getPosition().x;
+	hitBox.top = getPosition().y;
+
+	if (hooked) {
+		offset.y = -sin(angle()) * glb::FEET_TO_HAND.y;
+		offset.x = -cos(angle()) * glb::FEET_TO_HAND.x;
+	}
+	
 
 	hookerPosition = pos + offset;
-	if (!hooked) {
+	if (!hooked && use) {
 		relPosition = relPosition + vel * dT.asSeconds();
 		setPosition(hookerPosition + relPosition);
 		sprite.setPosition(hookerPosition + relPosition);
@@ -51,15 +60,16 @@ int Hook::update(const sf::Time& dT, const TileMap& tiles, const sf::Vector2f& p
 
 void Hook::fire(const sf::Vector2f& pos, bool facingRight)
 {
+	hooked = false;
+	use = true;
 	relPosition = sf::Vector2f(0.0, 0.0);
-	setPosition(relPosition);
+	setPosition(hookerPosition);
 	vel = sf::Vector2f(1000, -1000);
 	offset = glb::FEET_TO_HAND;
 	if (!facingRight) {
 		vel.x = -vel.x;
 		offset.x = -offset.x;
 	}
-	hooked = false;
 }
 
 sf::Vector2f Hook::radius() const {
@@ -72,4 +82,11 @@ float Hook::angle() const {
 
 sf::Vector2f Hook::tangent() const {
 	return sf::Vector2f(-sin(angle()), -cos(angle()));
+}
+
+void Hook::destroy() {
+	hooked = false;
+	use = false;
+	relPosition = sf::Vector2f(0.0, 0.0);
+	setPosition(hookerPosition + relPosition);
 }

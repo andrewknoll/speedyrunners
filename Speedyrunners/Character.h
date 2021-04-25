@@ -46,6 +46,7 @@ protected:
 	bool facingRight = true;
 	bool isRunning = false;
 	bool isAtWallJump = false;
+	bool sliding = false;
 
 	std::shared_ptr<Animation> currentAnimation;
 	mutable sf::Sprite mySprite;
@@ -92,6 +93,7 @@ public:
 	sf::Sprite getSprite();
 	void tickAnimation(sf::Time dT);
 	void setAnimation(AnimationIndex i, bool loop = false, bool reverse = false);
+	void setAnimationAngle(float angle);
 
 	void update(const sf::Time& dT, const TileMap& tiles);
 
@@ -104,6 +106,8 @@ public:
 
 	void run(bool right);
 	void stop();
+	void slide();
+	void stopSliding();
 	void jump();
 
 	void useHook(bool use=true);

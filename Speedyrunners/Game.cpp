@@ -151,7 +151,7 @@ void Game::update()
 {
 	sf::Event event;
 	int target;
-	while (window.pollEvent(event))
+	if (window.pollEvent(event))
 	{
 		if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
 			window.close();
@@ -199,7 +199,7 @@ void Game::update()
 		}
 		
 	}
-	if (state == State::Playing && dT.asSeconds() < 0.1) { //
+	if (state == State::Playing && dT.asSeconds() < 0.1) {
 		for (auto c : characters) {
 			c->update(dT, lvl.getCollidableTiles());
 		}

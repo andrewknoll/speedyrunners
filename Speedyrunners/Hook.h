@@ -13,6 +13,7 @@ protected:
 	sf::FloatRect hitBox;
 
 	bool hooked = false; // hit the wall
+	bool use = false;
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 public:
@@ -22,5 +23,6 @@ public:
 	sf::Vector2f radius() const;
 	float angle() const;
 	sf::Vector2f tangent() const;
+	void destroy();
 };
 

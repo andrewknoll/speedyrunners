@@ -15,11 +15,8 @@ bool Player::captureEvents(const sf::Event& event) {
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Right)) {
 		me->run(true);
 	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::X)) {
-		me->useHook();
-	}
-	else {
-		me->useHook(false);
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Down)) {
+		me->slide();
 	}
 	if (event.type == sf::Event::KeyPressed) {
 
@@ -37,6 +34,10 @@ bool Player::captureEvents(const sf::Event& event) {
 			}
 
 		}*/
+		else if (event.key.code == sf::Keyboard::Key::X && !holdingX) {
+			me->useHook();
+			holdingX = true;
+		}
 		else if (event.key.code == sf::Keyboard::Key::C) {
 			return true;
 		}
@@ -44,6 +45,13 @@ bool Player::captureEvents(const sf::Event& event) {
 	if (event.type == sf::Event::KeyReleased) {
 		if (event.key.code == sf::Keyboard::Right || event.key.code == sf::Keyboard::Left) {
 			me->stop();
+		}
+		else if (event.key.code == sf::Keyboard::Key::X) {
+			holdingX = false;
+			me->useHook(false);
+		}
+		else if (event.key.code == sf::Keyboard::Down) {
+			me->stopSliding();
 		}
 	}
 	return false;
