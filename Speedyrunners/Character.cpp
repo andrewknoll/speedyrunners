@@ -32,12 +32,16 @@ void Character::setPosition(const sf::Vector2f pos) {
 	setPosition(pos.x, pos.y);
 }
 
-void fixPosition(sf::FloatRect& hitbox) {
+void Character::fixPosition(sf::FloatRect& hitbox) {
 	if (hitbox.top < 0) {
 		hitbox.top = 0;
+		acc.y = physics::GRAVITY;
+		vel.y = 0;
 	}
 	if (hitbox.left < 0) {
 		hitbox.left = 0;
+		acc.x = 0;
+		vel.x = 0;
 	}
 }
 

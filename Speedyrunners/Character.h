@@ -93,7 +93,7 @@ protected:
 	void updateRunning();
 
 	void updateHitBoxRectangle();
-
+	void fixPosition(sf::FloatRect& hitbox);
 
 public:
 	Character(Spritesheet);

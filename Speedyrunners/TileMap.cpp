@@ -220,7 +220,7 @@ std::vector<struct Tiles::Collision> TileMap::collision(const sf::FloatRect& cha
     }
     std::sort(collisions.begin(), collisions.end(),
         [](struct Tiles::Collision& a, struct Tiles::Collision& b) {
-            return (a.distance > b.distance);
+            return (std::abs(a.distance) > std::abs(b.distance));
         }
     );
     return collisions;
@@ -307,13 +307,15 @@ std::optional<Tiles::Collision> Tiles::rampCollision(const Tiles::Ramp ramp, con
         float dist;
         sf::Vector2f n = geometry::normalize(sf::Vector2f(0, -1));
         if (downCenter.x >= tilePos.x && downCenter.x <= tilePos.x + tileSize.x) {
-            dist = (downCenter.y - (tilePos.y - (downCenter.x - tilePos.x))); // diff in height
+            dist = (downCenter.y + (-tilePos.y + (downCenter.x - tilePos.x))); // diff in height
+            std::cout << downCenter.x - tilePos.x << "\n-tilepos.y = " << -tilePos.y + (downCenter.x - tilePos.x)
+                << "\n+downCenter.y = " << dist;
         }
         else { // No collision
             //dist = downCenter.y - tilePos.y;
             dist = 0;
         }
-        return Tiles::Collision{ downCenter, n, dist };
+        return Tiles::Collision{ downCenter, n, -dist };
     }
     else {
         // TODO: los otros 4 tipos de rampas
