@@ -55,16 +55,25 @@ void Character::update(const sf::Time& dT, const TileMap& tiles)
 		//or the running speed of the character is greater than their current velocity, set it to that
 		if (vel.x >= 0 ^ acc.x >= 0 || abs(vel.x) <= abs(runningSpeed.x)) vel.x = runningSpeed.x;
 		//Otherwise slow down
-		else if (isGrounded){
+		else if (isGrounded) {
 			if (facingRight) vel.x = vel.x - physics::FLOOR_FRICTION * 0.5 * dtSec;
 			else vel.x = vel.x + physics::FLOOR_FRICTION * 0.5 * dtSec;
 		}
-		std::cout << vel.x << std::endl;
 
 		//Likewise with y axis
 		if (vel.y >= 0 ^ acc.y >= 0) vel.y = vel.y + acc.y * dtSec;
 		else if (vel.y >= 0 ^ acc.y >= 0 || abs(vel.y) < abs(runningSpeed.y)) vel.y = runningSpeed.y;
 		//Except we do nothing otherwise
+
+		//if running on the ground, velocity and acceleration are oposed
+		if (isGrounded && isRunning && !usingHook) {
+			if ((vel.x >= 0) ^ (acc.x >= 0) && abs(vel.x) > 50.0f) {
+				setAnimation(SkidAnim, true);
+			}
+			else {
+				setAnimation(RunAnim, true);
+			}
+		}
 	}
 	else {
 		vel = utils::length(hook.radius()) * hook.tangent() * omega;
@@ -159,8 +168,6 @@ void Character::update(const sf::Time& dT, const TileMap& tiles)
 void Character::updateGrounded(const sf::Vector2f& normal) {
 	isGrounded = (normal == sf::Vector2f(0, -1));
 	if (isGrounded) hasDoubleJumped = false;
-	if (isRunning && !usingHook) setAnimation(RunAnim, true);
-	//std::cout << "grounded? " << isGrounded << "\n";
 }
 
 
@@ -181,9 +188,6 @@ void Character::updateRunning() {
 void Character::run(bool right){
 	//std::cout << "Running " << right << " \n";
 	facingRight = right;
-	if (!isRunning && isGrounded && !usingHook && !sliding) {
-		setAnimation(RunAnim, true);
-	}
 	isRunning = true;
 }
 
@@ -308,7 +312,6 @@ void Character::setFriction() {
 			}
 		}
 	}
-
 }
 
 void Character::tickAnimation(sf::Time dT) {
