@@ -272,11 +272,12 @@ void Character::jump() {
 		setAnimation(JumpAnim);
 	}
 	else if (isAtWallJump) {
-		vel.y = -jumpingSpeed;
+		vel.y = -jumpingSpeed * 0.75; 
 		if (facingRight) vel.x = jumpingSpeed;
 		else vel.x = -jumpingSpeed;
 		setAnimation(JumpAnim);
 		isAtWallJump = false;
+		hasDoubleJumped = false;
 	}
 	else if (!hasDoubleJumped) { // in air and hasnt double jumped yet
 		vel.y = -jumpingSpeed;

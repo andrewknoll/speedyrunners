@@ -1,6 +1,13 @@
 #pragma once
 #include <queue>
 #include <memory>
+#include "TileMap.h"
+
+struct NodeData {
+	Tiles::Collidable tile;
+	bool canJump = true;
+	bool isHooking = false;
+};
 
 template<class T>
 struct Node {

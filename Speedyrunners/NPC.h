@@ -21,12 +21,16 @@ class NPC : public PlayerSlot
 	};*/
 
 	const float RUN_COST = 2.0f;
-	const float HOOK_COST = 1.0f;
+	const float FREE_FALL_COST = 1.0f;
+	const float HOOK_COST = 0.5f;
 	const float SLIDE_COST = 3.0f;
+	const float JUMP_COST_BASE_1 = 2.5f;
+	const float JUMP_COST_BASE_2 = 3.0f;
+	const float JUMP_COST_PER_DISTANCE_UNIT = 10.0f;
 
 	using CharPtr = std::shared_ptr<Character>;
-	using TilePriorityQueue = PriorityQueue<Tiles::Collidable>;
-	using TileNode = Node<Tiles::Collidable>;
+	using TilePriorityQueue = PriorityQueue<NodeData>;
+	using TileNode = Node<NodeData>;
 	using TileMapPtr = std::shared_ptr<TileMap>;
 
 private:
@@ -43,9 +47,11 @@ private:
 	bool inBounds(const int i, const int j) const;
 	int updateExpanded(const TileNode& current, TileNode n, float heuristic);
 	float cost(const TileNode & current, const TileNode & next) const;
-	void calculateHookNeighbours(const TileNode& current);
+	void calculateJumpNeighbours(const TileNode& current, const sf::Vector2f& goalPos, const float goalRadius);
+	void calculateHookNeighbours(const TileNode& current, const sf::Vector2f& goalPos, const float goalRadius);
 	void buildPath(TileNode foundGoal);
 	bool isGoal(const TileNode & current, const sf::Vector2f& goalPos, const float radius) const;
+	float expandToNeighbour(const TileNode & current, const int dx, const int dy, const sf::Vector2f & goalPos, const float goalRadius);
 public:
 	NPC();
 	TileNode getCharacterCell() const;

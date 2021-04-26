@@ -105,6 +105,10 @@ namespace utils {
 		}
 	}
 
+	bool inRange(float value, float min, float max) {
+		return min <= value && max <= value;
+	}
+
 	sf::Vector2f clampAbs(const sf::Vector2f& val, const float& limit)
 	{
 		return sf::Vector2f(clampAbs(val.x, limit), clampAbs(val.y, limit));

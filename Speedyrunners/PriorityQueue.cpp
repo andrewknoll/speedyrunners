@@ -37,3 +37,6 @@ void PriorityQueue<T>::clear() {
 //Instanciation
 template Node<Tiles::Collidable>;
 template class PriorityQueue<Tiles::Collidable>;
+
+template Node<NodeData>;
+template class PriorityQueue<NodeData>;

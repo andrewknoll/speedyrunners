@@ -39,8 +39,8 @@ namespace glb
 
 
 	const float runningAcceleration = 800;
-	const float flyingAcceleration = 400;
-	const float jumpingSpeed = 200;
+	const float flyingAcceleration = 350;
+	const float jumpingSpeed = 150;
 
 	const sf::Vector2f tileSize = sf::Vector2f(18.0, 18.0);
 
@@ -52,6 +52,8 @@ namespace glb
 	const float cameraZoomFunctionSteepness = 1e-4;
 
 
+	const sf::Vector2i jump1Tiles = { 21,3 };
+	const sf::Vector2i jump2Tiles = { 22,3 };
 
 	// Paths:
 	const std::string CONTENT_PATH = "../assets/Content/";
