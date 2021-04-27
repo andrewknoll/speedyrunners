@@ -316,21 +316,27 @@ std::optional<Tiles::Collision> Tiles::rampCollision(const Tiles::Ramp ramp, con
     if (ramp == Tiles::Ramp::UP) {
         // Ramp up
         sf::Vector2f downCenter(hitbox.left + hitbox.width/2.0f, hitbox.top + hitbox.height); // down center point of the hitbox
-        float dist;
+        float dist = 0;
         sf::Vector2f n = geometry::normalize(sf::Vector2f(0, -1));
         if (downCenter.x >= tilePos.x && downCenter.x <= tilePos.x + tileSize.x) {
-            dist = (downCenter.y + (-tilePos.y + (downCenter.x - tilePos.x))); // diff in height
-            std::cout << downCenter.x - tilePos.x << "\n-tilepos.y = " << -tilePos.y + (downCenter.x - tilePos.x)
-                << "\n+downCenter.y = " << dist;
+            sf::Vector2f target = downCenter;
+            target.y = tilePos.y + tileSize.y - (downCenter.x - tilePos.x);
+            dist = target.y - downCenter.y;//(downCenter.y - (tilePos.y  + (downCenter.x - tilePos.x - tileSize.y))); // diff in height
+            /*std::cout << downCenter.x - tilePos.x << "\n-tilepos.y = " << -tilePos.y + (downCenter.x - tilePos.x)
+               << "\n+downCenter.y = " << dist;*/
         }
-        else { // No collision
-            //dist = downCenter.y - tilePos.y;
-            dist = 0;
-        }
+        /*else if (downCenter.x > tilePos.x + tileSize.x) { // No collision
+            dist = downCenter.y - tilePos.y;
+            //dist = 0;
+        }*/
+
+        //sf::sleep(sf::seconds(2));
+        if (dist > 0) return {};
         return Tiles::Collision{ downCenter, n, -dist };
     }
     else {
         // TODO: los otros 4 tipos de rampas
+
         return {};
     }
 }
