@@ -186,6 +186,9 @@ void Character::update(const sf::Time& dT, const TileMap& tiles)
 				acc.y = physics::GRAVITY;
 			}
 		}
+		else { // Ramp
+
+		}
 		
 		if (sliding) setAnimation(SlidingAnim);
 		updateGrounded(c.normal);
@@ -220,7 +223,7 @@ void Character::update(const sf::Time& dT, const TileMap& tiles)
 		else if (hasDoubleJumped) {
 			setAnimation(DoubleJumpFallAnim);
 		}
-		else {
+		else if (!isGrounded) {
 			setAnimation(FallAnim);
 		}
 	}
