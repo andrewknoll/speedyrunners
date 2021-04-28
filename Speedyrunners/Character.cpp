@@ -83,7 +83,7 @@ void Character::setBaseFromRamp(Tiles::Ramp ramp) {
 		);
 	}
 	if (!facingRight) base.front = -base.front; // if going left, swap front vector
-
+	// Rotate the sprite based on the ramp (normal):
 	setRotation(180-utils::degrees(atan2(base.up.x, base.up.y)));
 	// Mala idea, se repite cada ciclo:
 	
@@ -101,6 +101,7 @@ void Character::updateVel(const float& dtSec) {
 			if (facingRight) vel.x = vel.x - physics::FLOOR_FRICTION * 0.5 * dtSec;
 			else vel.x = vel.x + physics::FLOOR_FRICTION * 0.5 * dtSec;
 		}
+		//// TODO: donde poner esto????????????? vel = base * vel;
 
 		//Likewise with y axis
 		if (vel.y >= 0 ^ acc.y >= 0) vel.y = vel.y + acc.y * dtSec;
