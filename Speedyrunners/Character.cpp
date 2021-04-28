@@ -73,7 +73,7 @@ void Character::setBaseFromRamp(Tiles::Ramp ramp) {
 	else if (ramp == Ramp::UP || ramp == Ramp::CEIL_UP) {
 		base = geometry::Mat2(
 			geometry::normalize(sf::Vector2f(1.0f, -1.0f)),
-			geometry::normalize(sf::Vector2f(1.0f, -1.0f))
+			geometry::normalize(sf::Vector2f(-1.0f, -1.0f))
 		);
 	}
 	else { // Floor or ceil
@@ -82,7 +82,9 @@ void Character::setBaseFromRamp(Tiles::Ramp ramp) {
 			geometry::normalize(sf::Vector2f(0, -1.0f))
 		);
 	}
-
+	// Mala idea, se repite cada ciclo:
+	//vel = base * vel;
+	//acc = base * acc;
 
 }
 
@@ -135,7 +137,7 @@ void Character::update(const sf::Time& dT, const TileMap& tiles)
 	hitBox.top += vel.y * dtSec;
 
 	fixPosition(hitBox);
-	std::vector<Tiles::Collision> collisions = tiles.collision(hitBox);
+	std::vector<Tiles::Collision> collisions = tiles.collision(hitBox, isGrounded);
 
 	if (!collisions.empty()) {
 		Tiles::Collision c = collisions.front();
@@ -189,6 +191,9 @@ void Character::update(const sf::Time& dT, const TileMap& tiles)
 		updateGrounded(c.normal);
 
 		hitBox.left = pos.x; hitBox.top = pos.y;
+	}
+	else { // No collision
+		isGrounded = false;
 	}
 
 	updateAcceleration();
@@ -389,7 +394,7 @@ void Character::updateHitBoxRectangle() {
 #ifdef DEBUG_HITBOX
 	hitBoxShape.setPosition(hitBox.left, hitBox.top);
 	hitBoxShape.setSize(sf::Vector2f(hitBox.width, hitBox.height));
-	hitBoxShape.setFillColor(sf::Color::Red);
+	hitBoxShape.setFillColor((isGrounded) ? sf::Color::Red : sf::Color::Green);
 #endif
 }
 
