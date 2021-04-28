@@ -94,6 +94,7 @@ protected:
 
 	void updateHitBoxRectangle();
 	void fixPosition(sf::FloatRect& hitbox);
+	void updateVel(const float& dtSec);
 
 public:
 	Character(Spritesheet);

@@ -82,26 +82,17 @@ void Character::setBaseFromRamp(Tiles::Ramp ramp) {
 			geometry::normalize(sf::Vector2f(0, -1.0f))
 		);
 	}
+	if (!facingRight) base.front = -base.front; // if going left, swap front vector
+
+	setRotation(180-utils::degrees(atan2(base.up.x, base.up.y)));
 	// Mala idea, se repite cada ciclo:
-	//vel = base * vel;
-	//acc = base * acc;
+	
 
 }
 
-void Character::update(const sf::Time& dT, const TileMap& tiles)
-{
-	updateRunning();
-	setFriction();
-	float dtSec = dT.asSeconds();
-	sf::Vector2f runningSpeed = vel;
-
-
-	// New vel:
-	//vel = physics::updateVelocity(vel, acc);
-	
+void Character::updateVel(const float& dtSec) {
 	if (!swinging) {
-		runningSpeed = utils::clampAbs(vel + acc * dtSec, physics::MAX_FALL_SPEED);
-
+		sf::Vector2f runningSpeed = utils::clampAbs(vel + acc * dtSec, physics::MAX_FALL_SPEED);
 		//if signs of velocity and acceleration are opposed,
 		//or the running speed of the character is greater than their current velocity, set it to that
 		if (vel.x >= 0 ^ acc.x >= 0 || abs(vel.x) <= abs(runningSpeed.x)) vel.x = runningSpeed.x;
@@ -128,9 +119,22 @@ void Character::update(const sf::Time& dT, const TileMap& tiles)
 	}
 	else {
 		vel = utils::length(hook.radius()) * hook.tangent() * omega;
-		if (facingRight) setAnimationAngle(-135.0f - utils::degrees(hook.angle()) );
+		if (facingRight) setAnimationAngle(-135.0f - utils::degrees(hook.angle()));
 		else setAnimationAngle(-45.0f - utils::degrees(hook.angle()));
 	}
+}
+
+void Character::update(const sf::Time& dT, const TileMap& tiles)
+{
+	updateRunning();
+	setFriction();
+	float dtSec = dT.asSeconds();
+	sf::Vector2f runningSpeed = vel;
+
+
+	// New vel:
+	updateVel(dtSec);
+	
 
 	// Move:
 	hitBox.left += vel.x * dtSec;
