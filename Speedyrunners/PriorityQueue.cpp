@@ -20,7 +20,9 @@ bool PriorityQueue<T>::insert(Node<T> val) {
 	auto last = this->c.end();
 	while (first != last) {
 		if (sameCell(*first, val)) {
-			if (*first < val) first->cost = val.cost;
+			if (*first < val) {
+				first->cost = val.cost;
+			}
 			return (*first < val);
 		}
 		first++;
@@ -32,6 +34,13 @@ bool PriorityQueue<T>::insert(Node<T> val) {
 template <class T>
 void PriorityQueue<T>::clear() {
 	this->c.clear();
+}
+
+template <class T>
+Node<T> PriorityQueue<T>::popReturn() {
+	Node<T> aux = this->top();
+	this->pop();
+	return aux;
 }
 
 //Instanciation

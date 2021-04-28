@@ -53,6 +53,8 @@ namespace utils {
 
 	float degrees(float radians);
 
+	sf::Vector2f polarToCarthesian(float radius, float angle);
+
 	// Clamp + valor absoluto
 	float clampAbs(const float& val, const float& limit);
 

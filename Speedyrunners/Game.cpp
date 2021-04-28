@@ -355,6 +355,9 @@ void Game::draw(sf::Time dT)
 			window.draw(*c);
 		}
 		for (auto npc : npcs) {
+			for (auto l : npc->debugExpanded()) {
+				window.draw(l);
+			}
 			for (auto l : npc->debugLines()) {
 				window.draw(l);
 			}

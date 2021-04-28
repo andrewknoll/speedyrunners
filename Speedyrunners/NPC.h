@@ -26,7 +26,10 @@ class NPC : public PlayerSlot
 	const float SLIDE_COST = 3.0f;
 	const float JUMP_COST_BASE_1 = 2.5f;
 	const float JUMP_COST_BASE_2 = 3.0f;
-	const float JUMP_COST_PER_DISTANCE_UNIT = 10.0f;
+	const float JUMP_COST_PER_DISTANCE_UNIT = 500.0f;
+
+	const float THRESHOLD_PER_RADIUS_UNIT = 1.0f;
+	const float HOOK_RECAST_COST = 10.0f;
 
 	using CharPtr = std::shared_ptr<Character>;
 	using TilePriorityQueue = PriorityQueue<NodeData>;
@@ -41,14 +44,13 @@ private:
 	std::vector<TileNode> expanded;
 	std::list<std::shared_ptr<TileNode> > path;
 
-	TileNode frontierPop();
 	int findExpanded(const TileNode& n) const;
 	float heuristic(const TileNode& n, sf::Vector2f goalPos, float goalRadius) const;
 	bool inBounds(const int i, const int j) const;
-	int updateExpanded(const TileNode& current, TileNode n, float heuristic);
+	int updateExpanded(const TileNode& current, TileNode n);
 	float cost(const TileNode & current, const TileNode & next) const;
 	void calculateJumpNeighbours(const TileNode& current, const sf::Vector2f& goalPos, const float goalRadius);
-	void calculateHookNeighbours(const TileNode& current, const sf::Vector2f& goalPos, const float goalRadius);
+	void calculateHookNeighbours(const bool right, const TileNode& current, const sf::Vector2f& goalPos, const float goalRadius);
 	void buildPath(TileNode foundGoal);
 	bool isGoal(const TileNode & current, const sf::Vector2f& goalPos, const float radius) const;
 	float expandToNeighbour(const TileNode & current, const int dx, const int dy, const sf::Vector2f & goalPos, const float goalRadius);
@@ -58,5 +60,7 @@ public:
 	void setTileMap(TileMapPtr tm);
 	void play(const sf::Vector2f& goalPos, const float goalRadius);
 	std::list<selbaward::Line> debugLines();
+	std::list<sf::RectangleShape> debugExpanded();
+	std::list<sf::RectangleShape> debugHook();
 };
 

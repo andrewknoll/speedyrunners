@@ -55,6 +55,10 @@ namespace utils {
 		return radians * 180.0 / glb::pi;
 	}
 
+	sf::Vector2f polarToCarthesian(float radius, float angle) {
+		return sf::Vector2f(radius * cos(angle), radius * sin(angle));
+	}
+
 	sf::Vector2f mousePosition2f(const sf::RenderWindow& window) {
 		return window.mapPixelToCoords(sf::Mouse::getPosition(window));
 	}

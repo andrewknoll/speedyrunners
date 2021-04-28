@@ -39,4 +39,5 @@ public:
 	bool contains(const Node<T>& val) const;
 	bool insert(Node<T> val);
 	void clear();
+	Node<T> popReturn();
 };
