@@ -203,15 +203,20 @@ std::ostream& operator<<(std::ostream& os, const TileMap& t) {
     return os;
 }
 
-std::vector<struct Tiles::Collision> TileMap::collision(const sf::FloatRect& characterHitbox) const
+std::vector<struct Tiles::Collision> TileMap::collision(const sf::FloatRect& characterHitbox, bool isGrounded) const
 {
     // Tile coordinates of upper left tile:
     int i = int(characterHitbox.left) / tileSizeWorld.x;
     int j = int(characterHitbox.top) / tileSizeWorld.y;
     std::vector<struct Tiles::Collision> collisions;
-	for (int dj = 0; dj < 3; dj++) { // And 3 vertical
+
+    int nVertical = 1 + characterHitbox.height / tileSizeWorld.y;
+    int nHorizontal = 1 + characterHitbox.width / tileSizeWorld.x;
+    if (nVertical < 3) std::cout << "checking " << nHorizontal << " horizontal and " << nVertical << " vertical tiles\n";
+    
+	for (int dj = 0; dj < nVertical; dj++) { // And 3 vertical
         //bool bothHorizontal = false; // Both horizontal tiles are collidable
-		for (int di = 0; di < 2; di++) { // Check the 2 horizontal tiles
+		for (int di = 0; di < nHorizontal; di++) { // Check the 2 horizontal tiles
             sf::Vector2f posRectTile = sf::Vector2f((i+di) * tileSizeWorld.x, (j+dj) * tileSizeWorld.y);
 
             sf::Vector2f sizeRectTile(tileSizeWorld.x, tileSizeWorld.y);
@@ -220,7 +225,7 @@ std::vector<struct Tiles::Collision> TileMap::collision(const sf::FloatRect& cha
             }
 			auto tile = tiles[(i + di) + (j + dj) * width];
             if (tile != 0) { // Tile isnt air 
-                auto c = Tiles::collision((Tiles::Collidable)tile, posRectTile, sizeRectTile, characterHitbox);
+                auto c = Tiles::collision((Tiles::Collidable)tile, posRectTile, sizeRectTile, characterHitbox, isGrounded);
                 if (c) {
                     c->tileType = (Tiles::Collidable)tile;
                     collisions.emplace_back(*c);
@@ -230,11 +235,11 @@ std::vector<struct Tiles::Collision> TileMap::collision(const sf::FloatRect& cha
             }
         }
     }
-    std::sort(collisions.begin(), collisions.end(),
-        [](struct Tiles::Collision& a, struct Tiles::Collision& b) {
-            return (std::abs(a.distance) > std::abs(b.distance));
-        }
-    );
+    std::sort(collisions.begin(), collisions.end(), Tiles::hasPriority);
+        /*[](struct Tiles::Collision& a, struct Tiles::Collision& b) {
+            return ((isRamp(a.tileType) && !isRamp(b.tileType)) 
+                 || (std::abs(a.distance) > std::abs(b.distance)));
+        }*/
     return collisions;
 }
 
@@ -265,8 +270,13 @@ Tiles::Ramp Tiles::toRamp(Collidable tile)
         return CEIL_UP;
     }
     else {
-        return NONE;
+        return Ramp::NONE;
     }
+}
+
+bool Tiles::isRamp(Collidable tile)
+{
+    return toRamp(tile) != Tiles::Ramp::NONE;
 }
 
 
@@ -310,34 +320,48 @@ std::optional<Tiles::Collision> Tiles::rampCollision(const Tiles::Ramp ramp, con
 }
 #else
 std::optional<Tiles::Collision> Tiles::rampCollision(const Tiles::Ramp ramp, const sf::Vector2f& tilePos,
-    const sf::Vector2f& tileSize, const sf::FloatRect& hitbox)
+    const sf::Vector2f& tileSize, const sf::FloatRect& hitbox, bool isGrounded)
 {
     std::cout << "colliding ramp: " << ramp << "\n";
     if (ramp == Tiles::Ramp::UP) {
         // Ramp up
         sf::Vector2f downCenter(hitbox.left + hitbox.width/2.0f, hitbox.top + hitbox.height); // down center point of the hitbox
-        float dist;
+        float dist = 0;
         sf::Vector2f n = geometry::normalize(sf::Vector2f(0, -1));
-        if (downCenter.x >= tilePos.x && downCenter.x <= tilePos.x + tileSize.x) {
-            dist = (downCenter.y + (-tilePos.y + (downCenter.x - tilePos.x))); // diff in height
-            std::cout << downCenter.x - tilePos.x << "\n-tilepos.y = " << -tilePos.y + (downCenter.x - tilePos.x)
-                << "\n+downCenter.y = " << dist;
+        if (downCenter.x > tilePos.x && downCenter.x < tilePos.x + tileSize.x) {
+            sf::Vector2f target = downCenter;
+            target.y = tilePos.y + tileSize.y - (downCenter.x - tilePos.x);
+            dist = target.y - downCenter.y;//(downCenter.y - (tilePos.y  + (downCenter.x - tilePos.x - tileSize.y))); // diff in height
+            /*std::cout << downCenter.x - tilePos.x << "\n-tilepos.y = " << -tilePos.y + (downCenter.x - tilePos.x)
+               << "\n+downCenter.y = " << dist;*/
         }
-        else { // No collision
-            //dist = downCenter.y - tilePos.y;
-            dist = 0;
-        }
+        else return {};
+        /*else if (downCenter.x > tilePos.x + tileSize.x) { // No collision
+            dist = downCenter.y - tilePos.y;
+            //dist = 0;
+        }*/
+
+        //sf::sleep(sf::seconds(2));
+        if (!isGrounded && dist > 0) return {};
         return Tiles::Collision{ downCenter, n, -dist };
     }
     else {
         // TODO: los otros 4 tipos de rampas
+
         return {};
     }
 }
 #endif
+
+bool Tiles::hasPriority(const Collision& a, const Collision& b)
+{
+    if (isRamp(a.tileType) && !isRamp(b.tileType)) return true;
+    else if (!isRamp(a.tileType) && isRamp(b.tileType)) return false;
+    return a.distance > b.distance;
+}
 // Adapted from the SAT method in https://laptrinhx.com/custom-physics-engine-part-2-manifold-generation-716517698/
 std::optional<Tiles::Collision> Tiles::collision(const Tiles::Collidable tile, const sf::Vector2f& tilePos,
-    const sf::Vector2f& tileSize, const sf::FloatRect& hitbox)
+    const sf::Vector2f& tileSize, const sf::FloatRect& hitbox, bool isGrounded)
 {
     sf::FloatRect tileRect(tilePos.x, tilePos.y, tileSize.x, tileSize.y);
     // x overlap:

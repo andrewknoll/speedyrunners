@@ -173,6 +173,12 @@ namespace utils {
 		return sf::IntRect(relative.left * size.x, relative.top * size.y, relative.width*size.x, relative.height*size.y);
 	}
 
+	void centerOrigin(sf::Sprite& s)
+	{
+		auto bounds = s.getLocalBounds();
+		s.setOrigin(bounds.width/2.0f, bounds.height/2.0f);
+	}
+
 }
 
 

@@ -13,6 +13,8 @@ private:
 	std::vector<sf::Texture> items = std::vector<sf::Texture>(glb::NUMBER_OF_ITEMS);
 	std::vector<sf::Texture> otherTextures = std::vector<sf::Texture>(glb::NUMBER_OF_MISC_TEXTURES);
 
+	//std::vector<sf::FloatRect> otherTexturesRect = std::vector<sf::FloatRect>(glb::NUMBER_OF_MISC_TEXTURES);
+
 	const std::string PATH_TO_ASSETS = "../assets/";
 	const std::string RESOURCES_CSV = "resources.csv";
 
@@ -24,6 +26,8 @@ public:
 	const Spritesheet& getSpriteSheet(int character, int variant = 0);
 	const sf::Texture& getItemTexture(glb::item type);
 	const sf::Texture & getMiscTexture(int type);
+
+	const sf::FloatRect& getMiscTextureRect(int type);
 
 	MusicPlayer musicPlayer;
 };

@@ -90,6 +90,9 @@ namespace utils {
 
 
 	sf::IntRect relativeToGlobalTextureRect(const sf::FloatRect& relative, const sf::Texture& tex);
+
+	// Sets the origin to the center of the sprite
+	void centerOrigin(sf::Sprite& s);
 }
 
 
@@ -110,6 +113,10 @@ namespace geometry {
 	sf::Vector2f toWorld(const Mat2& m, const sf::Vector2f& local);
 }
 
+template <typename T>
+std::string to_string(const sf::Vector2<T>& v);
+template <typename T>
+std::ostream& operator<<(std::ostream& os, const sf::Vector2<T>& v);
 
 
 
@@ -119,4 +126,16 @@ namespace physics {
 	const float FLOOR_FRICTION = GRAVITY*1.5;
 	const float AIR_FRICTION = GRAVITY * 0.5;
 
+}
+
+template<typename T>
+inline std::string to_string(const sf::Vector2<T>& v)
+{
+	return std::to_string(v.x) + " " + std::to_string(v.y);
+}
+
+template<typename T>
+std::ostream& operator<<(std::ostream& os, const sf::Vector2<T>& v)
+{
+	return os << to_string(v);
 }

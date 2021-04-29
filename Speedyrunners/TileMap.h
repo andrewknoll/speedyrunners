@@ -44,6 +44,7 @@ namespace Tiles {
 	};
 
 	Ramp toRamp(Collidable tile);
+	bool isRamp(Collidable tile);
 
 
 	struct Collision {
@@ -52,11 +53,15 @@ namespace Tiles {
 		float distance; // Distancia de entrada en el segundo obj
 		Collidable tileType; // type
 	};
+
+	// Returns true if collision a has priority over b
+	bool hasPriority(const Collision& a, const Collision& b);
+
 	// Returns the collision, if any, between the hitbox of a character and a tile
-	std::optional<Tiles::Collision> collision(const Collidable tile, const sf::Vector2f& tilePos, const sf::Vector2f& tileSize, const sf::FloatRect& hitbox);
+	std::optional<Tiles::Collision> collision(const Collidable tile, const sf::Vector2f& tilePos, const sf::Vector2f& tileSize, const sf::FloatRect& hitbox, bool isGrounded=false);
 
 
-	std::optional<Tiles::Collision> rampCollision(const Tiles::Ramp ramp, const sf::Vector2f& tilePos, const sf::Vector2f& tileSize, const sf::FloatRect& hitbox);
+	std::optional<Tiles::Collision> rampCollision(const Tiles::Ramp ramp, const sf::Vector2f& tilePos, const sf::Vector2f& tileSize, const sf::FloatRect& hitbox, bool isGrounded=false);
 
 }
 
@@ -99,7 +104,7 @@ public:
 	std::string to_string(bool duplicarHorizontal = false) const;
 
 
-	std::vector<struct Tiles::Collision> collision(const sf::FloatRect& characterHitbox) const;
+	std::vector<struct Tiles::Collision> collision(const sf::FloatRect& characterHitbox, bool isGrounded=false) const;
 
 	sf::Vector2u getTileSizeWorld() const;
 

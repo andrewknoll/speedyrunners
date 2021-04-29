@@ -69,3 +69,8 @@ const sf::Texture& Resources::getItemTexture(glb::item type) {
 const sf::Texture& Resources::getMiscTexture(int type) {
 	return otherTextures[type];
 }
+
+/* No renta
+const sf::FloatRect& Resources::getMiscTextureRect(int type) {
+	return otherTexturesRect[type];
+}*/
