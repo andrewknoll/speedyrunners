@@ -82,7 +82,7 @@ void Character::setBaseFromRamp(Tiles::Ramp ramp) {
 			geometry::normalize(sf::Vector2f(0, -1.0f))
 		);
 	}
-	if (!facingRight) base.front = -base.front; // if going left, swap front vector
+	//if (!facingRight) base.front = -base.front; // if going left, swap front vector
 	// Rotate the sprite based on the ramp (normal):
 	setRotation(180-utils::degrees(atan2(base.up.x, base.up.y)));
 	// Mala idea, se repite cada ciclo:
@@ -95,22 +95,25 @@ void Character::updateVel(const float& dtSec) {
 		sf::Vector2f runningSpeed = utils::clampAbs(vel + acc * dtSec, physics::MAX_FALL_SPEED);
 		//if signs of velocity and acceleration are opposed,
 		//or the running speed of the character is greater than their current velocity, set it to that
-		if (vel.x >= 0 ^ acc.x >= 0 || abs(vel.x) <= abs(runningSpeed.x)) vel.x = runningSpeed.x;
+		if ((vel.x >= 0 ^ (acc.x >= 0)) || abs(vel.x) <= abs(runningSpeed.x)) vel.x = runningSpeed.x;
 		//Otherwise slow down
 		else if (isGrounded) {
 			if (facingRight) vel.x = vel.x - physics::FLOOR_FRICTION * 0.5 * dtSec;
 			else vel.x = vel.x + physics::FLOOR_FRICTION * 0.5 * dtSec;
 		}
-		//// TODO: donde poner esto????????????? vel = base * vel;
-
-		//Likewise with y axis
-		if (vel.y >= 0 ^ acc.y >= 0) vel.y = vel.y + acc.y * dtSec;
-		else if (vel.y >= 0 ^ acc.y >= 0 || abs(vel.y) < abs(runningSpeed.y)) vel.y = runningSpeed.y;
-		//Except we do nothing otherwise
-
+		//// TODO: donde poner esto????????????? 
+		if (isGrounded) {
+			//vel = base * vel;
+		}
+		else { // if not grounded,
+			//Likewise with y axis
+			if ((vel.y >= 0) ^ (acc.y >= 0)) vel.y = vel.y + acc.y * dtSec;
+			else if (((vel.y >= 0) ^ (acc.y >= 0)) || abs(vel.y) < abs(runningSpeed.y)) vel.y = runningSpeed.y;
+			//Except we do nothing otherwise
+		}
 		//if running on the ground, velocity and acceleration are oposed
 		if (isGrounded && isRunning && !usingHook) {
-			if ((vel.x >= 0) ^ (acc.x >= 0) && abs(vel.x) > 50.0f) {
+			if (((vel.x >= 0) ^ (acc.x >= 0)) && abs(vel.x) > 50.0f) {
 				setAnimation(SkidAnim, true);
 			}
 			else {
