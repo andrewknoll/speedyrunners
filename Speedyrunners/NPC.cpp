@@ -402,7 +402,7 @@ float NPC::expandToNeighbour(const TileNode& current, const int dx, const int dy
 	
 }
 
-void NPC::play() {
+void NPC::plan() {
 	TileNode current, nextToMe;
 	std::unique_ptr<TileNode> prev = nullptr;
 	Tiles::Collidable underMe;

@@ -68,7 +68,7 @@ public:
 	TileNode getCharacterCell() const;
 	void setTileMap(TileMapPtr tm);
 	void setGoal(const sf::Vector2f& goalPos, const float goalRadius);
-	void play();
+	void plan();
 	bool pathWasFound() const;
 	std::list<selbaward::Line> debugLines();
 	std::list<sf::RectangleShape> debugExpanded();

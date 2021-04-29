@@ -220,7 +220,8 @@ void Game::update()
 				};
 				if (positions[i].type == 1) {
 					Checkpoint cp = checkpoints[1];
-					getNPCAt(i)->play(cp.getPos(), cp.getRadius());
+					getNPCAt(i)->setGoal(cp.getPos(), cp.getRadius());
+					getNPCAt(i)->plan();
 				}
 				//TODO: PLAY NPC
 			}
