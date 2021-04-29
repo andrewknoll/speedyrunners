@@ -42,6 +42,9 @@ private:
 	const int N_MOVES = 7;
 	TileMapPtr tm;
 
+	sf::Vector2f goalPos;
+	float goalRadius;
+
 	std::atomic<bool> pathFound;
 
 	TilePriorityQueue frontier;
@@ -49,22 +52,23 @@ private:
 	std::list<std::shared_ptr<TileNode> > path;
 
 	int findExpanded(const TileNode& n) const;
-	float heuristic(const TileNode& n, sf::Vector2f goalPos, float goalRadius) const;
+	float heuristic(const TileNode& n) const;
 	bool inBounds(const int i, const int j) const;
 	int updateExpanded(const TileNode& current, TileNode n);
 	float cost(const TileNode & current, const TileNode & next) const;
-	void calculateJumpNeighbours(const TileNode& current, const sf::Vector2f& goalPos, const float goalRadius);
-	void calculateHookNeighbours(const bool right, const TileNode& current, const sf::Vector2f& goalPos, const float goalRadius);
-	void calculateWallJumpNeighbours(const bool right, TileNode& current, const sf::Vector2f& goalPos, const float goalRadius);
+	void calculateJumpNeighbours(const TileNode& current);
+	void calculateHookNeighbours(const bool right, const TileNode& current);
+	void calculateWallJumpNeighbours(const bool right, TileNode& current);
 	void buildPath(TileNode foundGoal);
-	bool isGoal(const TileNode & current, const sf::Vector2f& goalPos, const float radius) const;
+	bool isGoal(const TileNode & current) const;
 	bool detectDirectionChange(const TileNode& n, const TileNode& current);
-	float expandToNeighbour(const TileNode & current, const int dx, const int dy, const sf::Vector2f & goalPos, const float goalRadius);
+	float expandToNeighbour(const TileNode & current, const int dx, const int dy);
 public:
 	NPC();
 	TileNode getCharacterCell() const;
 	void setTileMap(TileMapPtr tm);
-	void play(const sf::Vector2f& goalPos, const float goalRadius);
+	void setGoal(const sf::Vector2f& goalPos, const float goalRadius);
+	void play();
 	bool pathWasFound() const;
 	std::list<selbaward::Line> debugLines();
 	std::list<sf::RectangleShape> debugExpanded();

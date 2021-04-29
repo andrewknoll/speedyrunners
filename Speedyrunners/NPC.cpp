@@ -21,6 +21,11 @@ void NPC::setTileMap(TileMapPtr tm) {
 	this->tm = tm;
 }
 
+void NPC::setGoal(const sf::Vector2f & goalPos, const float goalRadius) {
+	this->goalPos = goalPos;
+	this->goalRadius = goalRadius;
+}
+
 int NPC::findExpanded(const TileNode & n) const {
 	int i = 0;
 	for (auto node : expanded) {
@@ -30,7 +35,7 @@ int NPC::findExpanded(const TileNode & n) const {
 	return i;
 }
 
-float NPC::heuristic(const TileNode& n, sf::Vector2f goalPos, float goalRadius) const
+float NPC::heuristic(const TileNode& n) const
 {
 	//Shortest distance to circle
 	float a = n.cell[0] * tm->getTileSizeWorld().x - goalPos.x;
@@ -67,7 +72,7 @@ float NPC::cost(const TileNode & current, const TileNode & next) const {
 	return RUN_COST;
 }
 
-void NPC::calculateJumpNeighbours(const TileNode & current, const sf::Vector2f& goalPos, const float goalRadius) {
+void NPC::calculateJumpNeighbours(const TileNode & current) {
 	TileNode n;
 	float dist, baseCost;
 	bool doubleJump;
@@ -126,7 +131,7 @@ void NPC::calculateJumpNeighbours(const TileNode & current, const sf::Vector2f& 
 				//This tile and the tile over this one must be empty (otherwise we can't go there)
 				if (n.data.tile == Tiles::AIR && (inBounds(n.cell[0], n.cell[1] - 1) && tm->getTile(n.cell[0], n.cell[1] - 1) == Tiles::AIR)) {
 					n.cost = current.cost + dist * JUMP_COST_PER_DISTANCE_UNIT + baseCost;
-					n.heuristic = heuristic(n, goalPos, goalRadius);
+					n.heuristic = heuristic(n);
 					n.prev = std::make_shared<TileNode>(current);
 					n.data.canJump = doubleJump;
 					if (detectDirectionChange(n, current)) {
@@ -180,7 +185,7 @@ void NPC::calculateJumpNeighbours(const TileNode & current, const sf::Vector2f& 
 	}
 }
 
-void NPC::calculateHookNeighbours(const bool right, const TileNode& current, const sf::Vector2f& goalPos, const float goalRadius) {
+void NPC::calculateHookNeighbours(const bool right, const TileNode& current) {
 	TileNode aux, hook;
 	int i, radius = 1;
 	Tiles::Collidable type = Tiles::AIR;
@@ -243,7 +248,7 @@ void NPC::calculateHookNeighbours(const bool right, const TileNode& current, con
 				if (aux.data.tile == Tiles::AIR
 					&& inBounds(aux.cell[0], aux.cell[1] -1) && tm->getTile(aux.cell[0], aux.cell[1] -1 == Tiles::AIR)) {
 					aux.cost = current.cost + cost;
-					aux.heuristic = heuristic(aux, goalPos, goalRadius);
+					aux.heuristic = heuristic(aux);
 					aux.data.isHooking = true;
 					aux.prev = std::make_shared<TileNode>(current);
 					if (detectDirectionChange(aux, current)) {
@@ -263,7 +268,7 @@ void NPC::calculateHookNeighbours(const bool right, const TileNode& current, con
 	}
 }
 
-void NPC::calculateWallJumpNeighbours(const bool right, TileNode& current, const sf::Vector2f& goalPos, const float goalRadius) {
+void NPC::calculateWallJumpNeighbours(const bool right, TileNode& current) {
 	TileNode n, aux;
 	bool canWallJump = false, stop = false;
 	//Check the opposite side for wall jump walls
@@ -310,7 +315,7 @@ void NPC::calculateWallJumpNeighbours(const bool right, TileNode& current, const
 						n.data.canJump = true;
 						n.data.isHooking = false;
 						n.cost = current.cost + WALL_JUMP_COST + abs(x) * JUMP_COST_PER_DISTANCE_UNIT;
-						n.heuristic = heuristic(n, goalPos, goalRadius);
+						n.heuristic = heuristic(n);
 						n.prev = std::make_shared<TileNode>(current);
 						if (updateExpanded(current, n) >= expanded.size()) {
 							frontier.insert(n);
@@ -345,10 +350,10 @@ void NPC::buildPath(TileNode foundGoal) {
 	}
 }
 
-bool NPC::isGoal(const TileNode & current, const sf::Vector2f& goalPos, const float radius) const {
+bool NPC::isGoal(const TileNode & current) const {
 	float a = current.cell[0] * tm->getTileSizeWorld().x - goalPos.x;
 	float b = current.cell[1] * tm->getTileSizeWorld().y - goalPos.y;
-	return abs(sqrt(a*a + b * b)) < radius;
+	return abs(sqrt(a*a + b * b)) < goalRadius;
 }
 
 bool NPC::detectDirectionChange(const TileNode & n, const TileNode & current)
@@ -369,7 +374,7 @@ bool NPC::detectDirectionChange(const TileNode & n, const TileNode & current)
 	return (diff1 >= 0 ^ diff0 >= 0) && (current.data.canWallJumpRight != 1 || current.data.canWallJumpLeft != 1);
 }
 
-float NPC::expandToNeighbour(const TileNode& current, const int dx, const int dy, const sf::Vector2f& goalPos, const float goalRadius) {
+float NPC::expandToNeighbour(const TileNode& current, const int dx, const int dy) {
 	TileNode next;
 
 	next.cell[0] = dx + current.cell[0];
@@ -385,7 +390,7 @@ float NPC::expandToNeighbour(const TileNode& current, const int dx, const int dy
 		if (detectDirectionChange(next, current)) {
 			next.cost += DIRECTION_CHANGE_COST;
 		}
-		next.heuristic = heuristic(next, goalPos, goalRadius);
+		next.heuristic = heuristic(next);
 		if (updateExpanded(current, next) >= expanded.size() && next.cost != INFINITY) {
 			frontier.insert(next);
 		}
@@ -397,7 +402,7 @@ float NPC::expandToNeighbour(const TileNode& current, const int dx, const int dy
 	
 }
 
-void NPC::play(const sf::Vector2f& goalPos, const float goalRadius) {
+void NPC::play() {
 	TileNode current, nextToMe;
 	std::unique_ptr<TileNode> prev = nullptr;
 	Tiles::Collidable underMe;
@@ -422,23 +427,23 @@ void NPC::play(const sf::Vector2f& goalPos, const float goalRadius) {
 		//Don't let expand to hook nodes between different hooks
 		if (prev != nullptr && prev->prev != current.prev && prev->data.isHooking && current.data.isHooking) continue;
 
-		if (isGoal(current, goalPos, goalRadius)) {
+		if (isGoal(current)) {
 			buildPath(current);
 			break;
 		}
 
 		//Expand to the wall jump neighbours if we can do it
-		calculateWallJumpNeighbours(true, current, goalPos, goalRadius);
-		calculateWallJumpNeighbours(false, current, goalPos, goalRadius);
+		calculateWallJumpNeighbours(true, current);
+		calculateWallJumpNeighbours(false, current);
 
 		//Expand to the jumping neighbours only if we can jump
 		if (current.data.canJump && current.data.canWallJumpLeft != 1 && current.data.canWallJumpRight != 1) {
-			calculateJumpNeighbours(current, goalPos, goalRadius);
+			calculateJumpNeighbours(current);
 		}
 		//Expand to the hook neighbours only if we aren't using the hook
 		if (!current.data.isHooking) {
-			calculateHookNeighbours(true, current, goalPos, goalRadius);
-			calculateHookNeighbours(false, current, goalPos, goalRadius);
+			calculateHookNeighbours(true, current);
+			calculateHookNeighbours(false, current);
 		}
 
 		if (inBounds(current.cell[0], current.cell[1] + 1)) {
@@ -452,23 +457,23 @@ void NPC::play(const sf::Vector2f& goalPos, const float goalRadius) {
 
 		for (int x = -1; x <= 1; x++) {
 			if (underMe == Tiles::RAMP_UP || underMe == Tiles::STAIRS_UP) {
-				expandToNeighbour(current, x, -x, goalPos, goalRadius);
+				expandToNeighbour(current, x, -x);
 			}
 			else if (underMe == Tiles::RAMP_DOWN || underMe == Tiles::STAIRS_DOWN) {
-				expandToNeighbour(current, x, x, goalPos, goalRadius);
+				expandToNeighbour(current, x, x);
 			}
 			else if (underMe == Tiles::AIR) {
 				nextToMe.cell[0] = current.cell[0] + x;
 				nextToMe.cell[1] = current.cell[1];
 				if (inBounds(nextToMe.cell[0], nextToMe.cell[1]) && tm->getTile(nextToMe.cell[0], nextToMe.cell[1]) == Tiles::AIR) {
-					auxCost = expandToNeighbour(current, x, 1, goalPos, goalRadius);
+					auxCost = expandToNeighbour(current, x, 1);
 					if (auxCost != INFINITY) {
-						expandToNeighbour(current, 2 * x, 1, goalPos, goalRadius);
+						expandToNeighbour(current, 2 * x, 1);
 					}
 				}
 			}
 			else if (x != 0) {
-				expandToNeighbour(current, x, 0, goalPos, goalRadius);
+				expandToNeighbour(current, x, 0);
 			}
 			
 		}
@@ -540,7 +545,7 @@ std::list<sf::RectangleShape> NPC::debugHook() {
 	std::list<sf::RectangleShape> squares;
 	sf::Vector2u size = tm->getTileSizeWorld();
 	TileNode current = getCharacterCell();
-	calculateHookNeighbours(true, current, me->getPosition(), 100);
+	calculateHookNeighbours(true, current);
 	TileNode f;
 
 	while(!frontier.empty()) {
