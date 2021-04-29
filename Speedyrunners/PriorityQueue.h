@@ -7,6 +7,16 @@ struct NodeData {
 	Tiles::Collidable tile;
 	bool canJump = true;
 	bool isHooking = false;
+	/* -1 -> Not checked
+	 *  0 -> Can't wall jump
+	 *  1 -> Can wall jump
+	*/
+	short int canWallJumpLeft = -1;
+	short int canWallJumpRight = -1;
+
+	bool operator==(const NodeData& n2) const{
+		return tile == n2.tile && canJump == n2.canJump && isHooking == n2.isHooking;
+	}
 };
 
 template<class T>
@@ -26,8 +36,8 @@ struct Node {
 		return (n1.cost + n1.heuristic) > (n2.cost + n2.heuristic);
 	}
 
-	friend bool sameCell(const Node<T>& n1, const Node<T>& n2) {
-		return n1.cell[0] == n2.cell[0] && n1.cell[1] == n2.cell[1];
+	friend bool equal(const Node<T>& n1, const Node<T>& n2) {
+		return n1.cell[0] == n2.cell[0] && n1.cell[1] == n2.cell[1] && n1.data == n2.data;
 	}
 	
 };

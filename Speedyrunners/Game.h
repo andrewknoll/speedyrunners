@@ -13,6 +13,7 @@
 #include "NPC.h"
 #include "PlayerSlot.h"
 #include <list>
+#include <thread>
 
 class Game
 {
@@ -30,6 +31,8 @@ class Game
 public:
 	enum class State { Countdown, Playing, Paused, Editing, MainMenu };
 protected:
+	//Thread Pool
+	std::vector<std::unique_ptr<std::thread> > threadPool = std::vector<std::unique_ptr<std::thread> >(4);
 	// Settings:
 	Settings settings;
 	// Main components:
@@ -98,6 +101,8 @@ public:
 	void addCharacter(const CharPtr character);
 
 	MusicPlayer& music();
+
+	void npcLoop();
 
 	void playerJoin(PlayerPtr newPlayer);
 	void npcJoin(NPCPtr newNPC);

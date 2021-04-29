@@ -12,10 +12,10 @@ int main() {
 	Resources& src = Resources::getInstance();
 
 	std::shared_ptr<Character> speedyrunner = std::make_shared<Character>(src.getSpriteSheet(0)); //"../assets/Content/Characters/Falcon/");
-	speedyrunner->setPosition(2837, 306);
+	speedyrunner->setPosition(200, 190);
 
 	std::shared_ptr<Character> cosmonaut = std::make_shared<Character>(src.getSpriteSheet(1)); //"../assets/Content/Characters/Falcon/");
-	cosmonaut->setPosition(2837, 306);
+	cosmonaut->setPosition(200, 190);
 
 
 	std::shared_ptr<Player> me = std::make_shared<Player>();

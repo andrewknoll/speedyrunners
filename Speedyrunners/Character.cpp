@@ -273,8 +273,8 @@ void Character::jump() {
 	}
 	else if (isAtWallJump) {
 		vel.y = -jumpingSpeed * 0.75; 
-		if (facingRight) vel.x = jumpingSpeed;
-		else vel.x = -jumpingSpeed;
+		if (facingRight) vel.x = jumpingSpeed * 1.5;
+		else vel.x = -jumpingSpeed * 1.5;
 		setAnimation(JumpAnim);
 		isAtWallJump = false;
 		hasDoubleJumped = false;

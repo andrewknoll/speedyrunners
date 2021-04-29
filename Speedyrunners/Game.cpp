@@ -219,7 +219,7 @@ void Game::update()
 					items.push_back(getCharacterAt(i)->useItem(getCharacterAt(target)));
 				};
 				if (positions[i].type == 1) {
-					Checkpoint cp = checkpoints[activeCheckpoint];
+					Checkpoint cp = checkpoints[1];
 					getNPCAt(i)->play(cp.getPos(), cp.getRadius());
 				}
 				//TODO: PLAY NPC
