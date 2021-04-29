@@ -6,7 +6,18 @@
 Hook::Hook()
 {
 	sprite.setTexture(Resources::getInstance().getMiscTexture(0));
+	setTextureRect(false);
 	hitBox = sprite.getGlobalBounds();
+}
+
+void Hook::setTextureRect(bool hooked) {
+	auto size = Resources::getInstance().getMiscTexture(0).getSize(); // whole texture size
+	sf::IntRect rect(sf::Vector2i(0, 0), sf::Vector2i(size.x / 2, size.y)); // first horizontal half
+	if (hooked) { // if its hooked, second half
+		rect.left += rect.width;
+	}
+	sprite.setTextureRect(rect);
+	utils::centerOrigin(sprite);
 }
 
 void Hook::draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -47,6 +58,7 @@ int Hook::update(const sf::Time& dT, const TileMap& tiles, const sf::Vector2f& p
 				sprite.setRotation(0.0);
 				vel = sf::Vector2f(0.0, 0.0);
 				hooked = true;
+				setTextureRect(hooked);
 				return 1;
 			}
 			else {

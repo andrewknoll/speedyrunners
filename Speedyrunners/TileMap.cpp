@@ -209,10 +209,14 @@ std::vector<struct Tiles::Collision> TileMap::collision(const sf::FloatRect& cha
     int i = int(characterHitbox.left) / tileSizeWorld.x;
     int j = int(characterHitbox.top) / tileSizeWorld.y;
     std::vector<struct Tiles::Collision> collisions;
+
+    int nVertical = 1 + characterHitbox.height / tileSizeWorld.y;
+    int nHorizontal = 1 + characterHitbox.width / tileSizeWorld.x;
+    if (nVertical < 3) std::cout << "checking " << nHorizontal << " horizontal and " << nVertical << " vertical tiles\n";
     
-	for (int dj = 0; dj < 3; dj++) { // And 3 vertical
+	for (int dj = 0; dj < nVertical; dj++) { // And 3 vertical
         //bool bothHorizontal = false; // Both horizontal tiles are collidable
-		for (int di = 0; di < 2; di++) { // Check the 2 horizontal tiles
+		for (int di = 0; di < nHorizontal; di++) { // Check the 2 horizontal tiles
             sf::Vector2f posRectTile = sf::Vector2f((i+di) * tileSizeWorld.x, (j+dj) * tileSizeWorld.y);
 
             sf::Vector2f sizeRectTile(tileSizeWorld.x, tileSizeWorld.y);

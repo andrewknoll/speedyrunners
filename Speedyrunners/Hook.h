@@ -18,6 +18,7 @@ protected:
 
 public:
 	Hook();
+	void setTextureRect(bool hooked);
 	void fire(const sf::Vector2f& pos, bool facingRight);
 	int update(const sf::Time& dT, const TileMap& tiles, const sf::Vector2f& hookerPosition);
 	sf::Vector2f radius() const;

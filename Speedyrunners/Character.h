@@ -42,7 +42,7 @@ protected:
 
 	// Base:
 	geometry::Mat2 base = geometry::Mat2(sf::Vector2f(1,0), sf::Vector2f(0,1));
-		
+	bool inRamp = false;
 
 	sf::Vector2f vel; // Velocity
 	sf::Vector2f acc; // Acceleration
@@ -95,6 +95,7 @@ protected:
 	void updateHitBoxRectangle();
 	void fixPosition(sf::FloatRect& hitbox);
 	void updateVel(const float& dtSec);
+	void updateInRamp(Tiles::Ramp ramp);
 
 public:
 	Character(Spritesheet);

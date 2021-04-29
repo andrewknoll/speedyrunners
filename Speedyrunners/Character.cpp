@@ -60,7 +60,25 @@ enum NORMAL_DIR {
 NORMAL_DIR direction(const sf::Vector2f& n) {
 
 }*/
-
+void Character::updateInRamp(Tiles::Ramp ramp) {
+	if (ramp != Tiles::Ramp::NONE) {
+		if (!inRamp && isGrounded) {
+			std::cout << "Just hit a ramp, old vel = \t\t" << vel;
+			vel = base * vel;
+			inRamp = true;
+			std::cout << "\nnew vel = \t\t" << vel << "\n";
+		}
+	}
+	else {
+		if (inRamp && isGrounded) {
+			std::cout << "Just left a ramp, old vel = \t\t" << vel;
+			vel = base * vel;
+			inRamp = false;
+			std::cout << "\nnew vel = \t\t" << vel << "\n";
+		}
+	}
+	
+}
 
 void Character::setBaseFromRamp(Tiles::Ramp ramp) {
 	using namespace Tiles;
@@ -69,20 +87,24 @@ void Character::setBaseFromRamp(Tiles::Ramp ramp) {
 			geometry::normalize(sf::Vector2f(1.0f, 1.0f)),
 			geometry::normalize(sf::Vector2f(1.0f, 1.0f))
 		);
+		
 	} 
 	else if (ramp == Ramp::UP || ramp == Ramp::CEIL_UP) {
 		base = geometry::Mat2(
 			geometry::normalize(sf::Vector2f(1.0f, -1.0f)),
 			geometry::normalize(sf::Vector2f(-1.0f, -1.0f))
 		);
+		
 	}
 	else { // Floor or ceil
 		base = geometry::Mat2(
 			geometry::normalize(sf::Vector2f(1.0f, 0)),
 			geometry::normalize(sf::Vector2f(0, -1.0f))
 		);
+		
 	}
-	//if (!facingRight) base.front = -base.front; // if going left, swap front vector
+	if (!facingRight) base.front = -base.front; // if going left, swap front vector
+	// TODO: Fix this!!!!  updateInRamp(ramp);
 	// Rotate the sprite based on the ramp (normal):
 	setRotation(180-utils::degrees(atan2(base.up.x, base.up.y)));
 	// Mala idea, se repite cada ciclo:
@@ -95,7 +117,7 @@ void Character::updateVel(const float& dtSec) {
 		sf::Vector2f runningSpeed = utils::clampAbs(vel + acc * dtSec, physics::MAX_FALL_SPEED);
 		//if signs of velocity and acceleration are opposed,
 		//or the running speed of the character is greater than their current velocity, set it to that
-		if ((vel.x >= 0 ^ (acc.x >= 0)) || abs(vel.x) <= abs(runningSpeed.x)) vel.x = runningSpeed.x;
+		if (((vel.x >= 0) ^ (acc.x >= 0)) || abs(vel.x) <= abs(runningSpeed.x)) vel.x = runningSpeed.x;
 		//Otherwise slow down
 		else if (isGrounded) {
 			if (facingRight) vel.x = vel.x - physics::FLOOR_FRICTION * 0.5 * dtSec;
@@ -105,10 +127,11 @@ void Character::updateVel(const float& dtSec) {
 		if (isGrounded) {
 			//vel = base * vel;
 		}
+		if (false);
 		else { // if not grounded,
 			//Likewise with y axis
 			if ((vel.y >= 0) ^ (acc.y >= 0)) vel.y = vel.y + acc.y * dtSec;
-			else if (((vel.y >= 0) ^ (acc.y >= 0)) || abs(vel.y) < abs(runningSpeed.y)) vel.y = runningSpeed.y;
+			else if (abs(vel.y) < abs(runningSpeed.y)) vel.y = runningSpeed.y;// vel.y = (vel.y > 0) ? runningSpeed.y : -runningSpeed.y;
 			//Except we do nothing otherwise
 		}
 		//if running on the ground, velocity and acceleration are oposed
@@ -249,7 +272,9 @@ void Character::updateRunning() {
 	if (isRunning && !swinging) {
 		if (isGrounded) {
 			acc.x = runningAcceleration;
-			//acc = base * sf::Vector2f(runningAcceleration,0);
+			/*float accy = acc.y;
+			acc = base * sf::Vector2f(runningAcceleration,0);
+			acc.y += accy * 5.0f;*/
 		}
 		else
 			acc.x = flyingAcceleration;
