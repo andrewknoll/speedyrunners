@@ -55,6 +55,8 @@ namespace glb
 	const sf::Vector2i jump1Tiles = { 21,3 };
 	const sf::Vector2i jump2Tiles = { 22,3 };
 
+	const float cosine45 = 0.70710678118654752440f;
+
 	// Paths:
 	const std::string CONTENT_PATH = "../assets/Content/";
 

@@ -224,8 +224,9 @@ void Game::update()
 					items.push_back(getCharacterAt(i)->useItem(getCharacterAt(target)));
 				};
 				if (positions[i].type == 1) {
-					Checkpoint cp = checkpoints[activeCheckpoint];
-					getNPCAt(i)->play(cp.getPos(), cp.getRadius());
+					Checkpoint cp = checkpoints[1];
+					getNPCAt(i)->setGoal(cp.getPos(), cp.getRadius());
+					getNPCAt(i)->plan();
 				}
 				//TODO: PLAY NPC
 			}
@@ -364,6 +365,9 @@ void Game::draw(sf::Time dT)
 			window.draw(*c);
 		}
 		for (auto npc : npcs) {
+			for (auto l : npc->debugExpanded()) {
+				window.draw(l);
+			}
 			for (auto l : npc->debugLines()) {
 				window.draw(l);
 			}

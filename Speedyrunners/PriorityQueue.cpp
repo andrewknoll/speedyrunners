@@ -6,7 +6,7 @@ bool PriorityQueue<T>::contains(const Node<T>& val) const {
 	auto first = this->c.cbegin();
 	auto last = this->c.cend();
 	while (first != last) {
-		if (sameCell(*first, val)) {
+		if (equal(*first, val)) {
 			return true;
 		}
 		first++;
@@ -19,8 +19,12 @@ bool PriorityQueue<T>::insert(Node<T> val) {
 	auto first = this->c.begin();
 	auto last = this->c.end();
 	while (first != last) {
-		if (sameCell(*first, val)) {
-			if (*first < val) first->cost = val.cost;
+		if (equal(*first, val)) {
+			if (*first < val) {
+				first->cost = val.cost;
+				first->prev = val.prev;
+				first->data = val.data;
+			}
 			return (*first < val);
 		}
 		first++;
@@ -32,6 +36,13 @@ bool PriorityQueue<T>::insert(Node<T> val) {
 template <class T>
 void PriorityQueue<T>::clear() {
 	this->c.clear();
+}
+
+template <class T>
+Node<T> PriorityQueue<T>::popReturn() {
+	Node<T> aux = this->top();
+	this->pop();
+	return aux;
 }
 
 //Instanciation
