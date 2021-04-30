@@ -8,8 +8,12 @@ class Player : public PlayerSlot
 private:
 	bool holdingX = false;
 	bool holdingDown = false;
+
+
+	sf::Keyboard::Key k_left, k_right, k_down, k_jump, k_hook, k_item;
 public:
-	Player();
+	//Player(int id = 0);
+	Player(const Settings& settings, int id = 0);
 	bool captureEvents(const sf::Event& event);
 };
 
