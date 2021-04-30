@@ -33,6 +33,7 @@ public:
 protected:
 	//Thread Pool
 	std::vector<std::unique_ptr<std::thread> > threadPool = std::vector<std::unique_ptr<std::thread> >(4);
+	std::atomic<bool> running = true;
 	// Settings:
 	Settings settings;
 	// Main components:

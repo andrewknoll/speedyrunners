@@ -313,6 +313,7 @@ void Character::jump() {
 		setAnimation(JumpAnim);
 	}
 	else if (isAtWallJump) {
+		std::cout << "Coño" << std::endl;
 		vel.y = -jumpingSpeed * 0.75; 
 		if (facingRight) vel.x = jumpingSpeed * 1.5;
 		else vel.x = -jumpingSpeed * 1.5;
@@ -331,6 +332,15 @@ void Character::jump() {
 bool Character::isSwinging() const
 {
 	return swinging;
+}
+bool Character::canWallJump() const {
+	return isAtWallJump;
+}
+sf::Vector2f Character::getVelocity() const {
+	return vel;
+}
+sf::Vector2f Character::getAccel() const {
+	return acc;
 }
 void Character::useHook(bool use)
 {

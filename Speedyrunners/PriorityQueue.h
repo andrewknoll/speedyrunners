@@ -1,12 +1,14 @@
 #pragma once
 #include <queue>
 #include <memory>
+#include <mutex>
 #include "TileMap.h"
 
 struct NodeData {
 	Tiles::Collidable tile;
-	bool canJump = true;
+	short int jumps = 2;
 	bool isHooking = false;
+	bool isSliding = false;
 	/* -1 -> Not checked
 	 *  0 -> Can't wall jump
 	 *  1 -> Can wall jump
@@ -15,7 +17,10 @@ struct NodeData {
 	short int canWallJumpRight = -1;
 
 	bool operator==(const NodeData& n2) const{
-		return tile == n2.tile && canJump == n2.canJump && isHooking == n2.isHooking;
+		return tile == n2.tile && jumps == n2.jumps && isHooking == n2.isHooking;
+	}
+	bool canJump() const {
+		return jumps > 0;
 	}
 };
 
@@ -39,13 +44,23 @@ struct Node {
 	friend bool equal(const Node<T>& n1, const Node<T>& n2) {
 		return n1.cell[0] == n2.cell[0] && n1.cell[1] == n2.cell[1] && n1.data == n2.data;
 	}
+
+	friend float distance(const Node<T>& n1, const Node<T>& n2) {
+		int h = n2.cell[0] - n1.cell[0];
+		int v = n2.cell[0] - n1.cell[0];
+		return sqrtf(h * h + v * v);
+	}
 	
 };
 
 template<class T>
 class PriorityQueue : public std::priority_queue<Node<T>, std::vector<Node<T> >, std::greater<Node<T> > >
 {
+private:
+	mutable std::mutex mtx;
 public:
+	bool safeEmpty();
+	void safePush(Node<T>&& _Val);
 	bool contains(const Node<T>& val) const;
 	bool insert(Node<T> val);
 	void clear();

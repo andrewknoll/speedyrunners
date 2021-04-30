@@ -126,7 +126,11 @@ public:
 	void jump();
 
 	bool isSwinging() const;
-
+	bool canWallJump() const;
+	
+	sf::Vector2f getVelocity() const;
+	sf::Vector2f getAccel() const;
+	
 	void useHook(bool use=true);
 	ItemPtr useItem(std::shared_ptr<Character> target = nullptr);
 

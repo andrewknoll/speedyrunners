@@ -33,6 +33,8 @@ class NPC : public PlayerSlot
 
 	const float THRESHOLD_PER_RADIUS_UNIT = 3.0f;
 
+	const float CLOSENESS_THRESHOLD = 0.01f;
+
 	using CharPtr = std::shared_ptr<Character>;
 	using TilePriorityQueue = PriorityQueue<NodeData>;
 	using TileNode = Node<NodeData>;
@@ -69,6 +71,7 @@ public:
 	void setTileMap(TileMapPtr tm);
 	void setGoal(const sf::Vector2f& goalPos, const float goalRadius);
 	void plan();
+	void followPath();
 	bool pathWasFound() const;
 	std::list<selbaward::Line> debugLines();
 	std::list<sf::RectangleShape> debugExpanded();

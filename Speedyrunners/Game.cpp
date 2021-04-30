@@ -137,6 +137,7 @@ void Game::loop()
 		}
 		previousTime = currentTime;
 	}
+	running = false;
 }
 
 void Game::loopMenu()
@@ -218,12 +219,21 @@ void Game::update()
 					//if player is dumb and uses rockets when nobody else is playing, it will hit them
 					items.push_back(getCharacterAt(i)->useItem(getCharacterAt(target)));
 				};
-				if (positions[i].type == 1) {
+			}
+			for (int i = 0; i < npcs.size(); i++) {
+				if (npcs[i] != nullptr) {
 					Checkpoint cp = checkpoints[1];
-					getNPCAt(i)->setGoal(cp.getPos(), cp.getRadius());
-					getNPCAt(i)->plan();
+					npcs[i]->setGoal(cp.getPos(), cp.getRadius());
+					if (threadPool[i] == nullptr) {
+						threadPool[i] = std::make_unique<std::thread>([&, i]() {
+							while (running) {
+								npcs[i]->plan();
+								npcs[i]->followPath();
+							}
+						});
+						threadPool[i]->detach();
+					}
 				}
-				//TODO: PLAY NPC
 			}
 		}
 

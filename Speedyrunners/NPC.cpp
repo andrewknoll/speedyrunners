@@ -2,7 +2,6 @@
 #include "PriorityQueue.h"
 
 NPC::NPC() {
-	frontier = TilePriorityQueue();
 	expanded = std::vector<TileNode>();
 	type = 1;
 }
@@ -66,16 +65,13 @@ float NPC::cost(const TileNode & current, const TileNode & next) const {
 	else if (current.cell[1] > next.cell[1]) {
 		return FREE_FALL_COST;
 	}
-	else if (inBounds(next.cell[0], next.cell[1]) && tm->getTile(next.cell[0], next.cell[1] - 1) != Tiles::Collidable::AIR) {
-		return SLIDE_COST;
-	}
 	return RUN_COST;
 }
 
 void NPC::calculateJumpNeighbours(const TileNode & current) {
 	TileNode n;
 	float dist, baseCost;
-	bool doubleJump;
+	bool jumps;
 	bool onRightSide = false, expandVertical = true;
 	sf::Vector2i lowLimits = { 0,0 }, highLimits = { 0,0 };
 	int leftObstacle, rightObstacle;
@@ -90,7 +86,7 @@ void NPC::calculateJumpNeighbours(const TileNode & current) {
 		lowLimits.y = 1;
 		highLimits.y = glb::jump1Tiles.y;
 		baseCost = JUMP_COST_BASE_1;
-		doubleJump = true;
+		jumps = 1;
 	}
 	else if (underMe == Tiles::AIR) {
 		lowLimits.x = -glb::jump2Tiles.x;
@@ -98,7 +94,7 @@ void NPC::calculateJumpNeighbours(const TileNode & current) {
 		lowLimits.y = 1;
 		highLimits.y = glb::jump2Tiles.y;
 		baseCost = JUMP_COST_BASE_2;
-		doubleJump = false;
+		jumps = 0;
 	}
 	
 	int x = 0;
@@ -133,7 +129,7 @@ void NPC::calculateJumpNeighbours(const TileNode & current) {
 					n.cost = current.cost + dist * JUMP_COST_PER_DISTANCE_UNIT + baseCost;
 					n.heuristic = heuristic(n);
 					n.prev = std::make_shared<TileNode>(current);
-					n.data.canJump = doubleJump;
+					n.data.jumps = jumps;
 					if (detectDirectionChange(n, current)) {
 						n.cost += DIRECTION_CHANGE_COST;
 					}
@@ -312,7 +308,7 @@ void NPC::calculateWallJumpNeighbours(const bool right, TileNode& current) {
 				if (inBounds(n.cell[0], n.cell[1])) {
 					n.data.tile = tm->getTile(n.cell[0], n.cell[1]);
 					if (n.data.tile == Tiles::AIR) {
-						n.data.canJump = true;
+						n.data.jumps = 1;
 						n.data.isHooking = false;
 						n.cost = current.cost + WALL_JUMP_COST + abs(x) * JUMP_COST_PER_DISTANCE_UNIT;
 						n.heuristic = heuristic(n);
@@ -379,12 +375,15 @@ float NPC::expandToNeighbour(const TileNode& current, const int dx, const int dy
 
 	next.cell[0] = dx + current.cell[0];
 	next.cell[1] = dy + current.cell[1];
-	next.data.canJump = current.data.canJump;
+	next.data.jumps = current.data.jumps;
 
 	if (inBounds(next.cell[0], next.cell[1])) {
 		next.data.tile = tm->getTile(next.cell[0], next.cell[1]);
 	
-
+		if (inBounds(next.cell[0], next.cell[1]) && tm->getTile(next.cell[0], next.cell[1] - 1) != Tiles::AIR) {
+			next.cost = current.cost + SLIDE_COST;
+			next.data.isSliding = true;
+		}
 		next.cost = current.cost + cost(current, next);
 		next.prev = std::make_shared<TileNode>(current);
 		if (detectDirectionChange(next, current)) {
@@ -411,7 +410,7 @@ void NPC::plan() {
 
 	//Have to do "replan path"
 	if (!path.empty()) return;
-	frontier.push(getCharacterCell());
+	frontier.safePush(getCharacterCell());
 	expanded.clear();
 
 	TileNode goal;
@@ -419,7 +418,7 @@ void NPC::plan() {
 	goal.cell[1] = int(goalPos.y) / tm->getTileSizeWorld().y;
 	goal.data.tile = Tiles::AIR;
 
-	while (!frontier.empty()) {
+	while (!frontier.safeEmpty()) {
 		current = frontier.popReturn();
 		expanded.push_back(current);
 		auxCost = INFINITY;
@@ -437,7 +436,7 @@ void NPC::plan() {
 		calculateWallJumpNeighbours(false, current);
 
 		//Expand to the jumping neighbours only if we can jump
-		if (current.data.canJump && current.data.canWallJumpLeft != 1 && current.data.canWallJumpRight != 1) {
+		if (current.data.canJump() && current.data.canWallJumpLeft != 1 && current.data.canWallJumpRight != 1) {
 			calculateJumpNeighbours(current);
 		}
 		//Expand to the hook neighbours only if we aren't using the hook
@@ -452,7 +451,7 @@ void NPC::plan() {
 		else underMe = Tiles::FLOOR;
 
 		if (underMe == Tiles::FLOOR) {
-			current.data.canJump = true;
+			current.data.jumps = 2;
 		}
 
 		for (int x = -1; x <= 1; x++) {
@@ -484,6 +483,55 @@ void NPC::plan() {
 	}
 }
 
+void NPC::followPath() {
+	TileNode current = getCharacterCell();
+	Tiles::Collidable underMe;
+	int step = 0;
+	bool jumped = false;
+	if (!path.empty()) {
+		//Falta el slide
+		for (auto next : path) {
+			jumped = false;
+			std::cout << step << std::endl;
+			if (current.data.canWallJumpLeft == 1 || current.data.canWallJumpRight == 1) {
+				while (!me->canWallJump());
+				//Wall jump
+				me->jump();
+				while (distance(getCharacterCell(), *next) > CLOSENESS_THRESHOLD * 5);
+			}
+			else if (!current.data.isHooking && next->data.isHooking) {
+				//Use hook
+				me->useHook(true);
+				while (distance(getCharacterCell(), *next) > CLOSENESS_THRESHOLD);
+			}
+			else if (current.data.isHooking && !next->data.isHooking) {
+				//Stop using hook
+				me->useHook(false);
+				while (distance(getCharacterCell(), *next) > CLOSENESS_THRESHOLD);
+			}
+			else{
+				while (distance(getCharacterCell(), *next) > CLOSENESS_THRESHOLD) {
+					if (current.data.isSliding || next->data.isSliding) {
+						me->slide();
+					}
+					else {
+						if (current.data.jumps > next->data.jumps && !jumped) {
+							//Jump (or double jump)
+							me->jump();
+							jumped = true;
+						}
+						if (current.cell[0] != next->cell[0]) {
+							me->run(getCharacterCell().cell[0] < next->cell[0]);
+						}
+					}
+				}
+			}
+			step++;
+			current = *next;
+		}
+	}
+}
+
 bool NPC::pathWasFound() const {
 	return pathFound;
 }
@@ -500,7 +548,7 @@ std::list<selbaward::Line> NPC::debugLines() {
 		if (n->data.isHooking) {
 			l.setColor(sf::Color::Blue);
 		}
-		else if(!n->data.canJump){
+		else if(!n->data.canJump()){
 			l.setColor(sf::Color::Red);
 		}
 		else {
@@ -529,7 +577,7 @@ std::list<sf::RectangleShape> NPC::debugExpanded() {
 		if (n.data.isHooking) {
 			r.setFillColor(sf::Color(0, 0, 255, 255 / 2));
 		}
-		else if (!n.data.canJump) {
+		else if (!n.data.canJump()) {
 			r.setFillColor(sf::Color(255, 0, 0, 255 / 2));
 		}
 		else {
@@ -548,7 +596,7 @@ std::list<sf::RectangleShape> NPC::debugHook() {
 	calculateHookNeighbours(true, current);
 	TileNode f;
 
-	while(!frontier.empty()) {
+	while(!frontier.safeEmpty()) {
 		f = frontier.popReturn();
 		sf::RectangleShape r;
 		r.setSize(sf::Vector2f(size.x, size.y));
