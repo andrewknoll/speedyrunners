@@ -17,12 +17,26 @@ int main() {
 	std::shared_ptr<Character> cosmonaut = std::make_shared<Character>(src.getSpriteSheet(1)); //"../assets/Content/Characters/Falcon/");
 	cosmonaut->setPosition(200, 190);
 
+	std::shared_ptr<Character> otro = std::make_shared<Character>(src.getSpriteSheet(2)); //"../assets/Content/Characters/Falcon/");
+	otro->setPosition(200, 190);
 
-	std::shared_ptr<Player> me = std::make_shared<Player>();
+	int N_PLAYERS = 2; // Cambiar para poner solo 1 jugador!!
+	int id = 0;
+	if (N_PLAYERS == 2) id = 1;
+	std::shared_ptr<Player> me = std::make_shared<Player>(game.getSettings(), id);
 	me->setCharacter(speedyrunner);
 	game.playerJoin(me);
-	speedyrunner->setName("Player");
+	speedyrunner->setName("Player 1");
 	game.addCharacter(speedyrunner);
+
+	if (N_PLAYERS > 1) {
+		std::shared_ptr<Player> secondPlayer = std::make_shared<Player>(game.getSettings(), ++id);
+		secondPlayer->setCharacter(otro);
+		game.playerJoin(secondPlayer);
+		otro->setName("Player 2");
+		game.addCharacter(otro);
+	}
+
 
 
 	std::shared_ptr<NPC> other = std::make_shared<NPC>();

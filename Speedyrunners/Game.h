@@ -86,6 +86,9 @@ public:
 
 	Game();
 
+
+
+	const Settings& getSettings() const;
 	// devuelve el indice del character en 1a pos
 	int getFirstCharacterIdx() const;
 

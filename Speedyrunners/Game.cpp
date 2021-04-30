@@ -96,6 +96,11 @@ void Game::npcJoin(NPCPtr newNPC){
 	}
 }
 
+const Settings& Game::getSettings() const
+{
+	return settings;
+}
+
 int Game::getFirstCharacterIdx() const
 {
 	return 0;
@@ -288,6 +293,10 @@ void Game::processEditingInputs(const sf::Event& event) {
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::L)) {
 			loadLevel("first.csv");
+		}
+		else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::J) {
+			// Join as player
+			//playerJoin();
 		}
 	}
 	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::C) {
