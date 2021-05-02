@@ -352,6 +352,10 @@ bool NPC::isGoal(const TileNode & current) const {
 	return abs(sqrt(a*a + b * b)) < goalRadius;
 }
 
+bool NPC::nodeWasReached(const TileNode & n) const {
+	return ((me->canWallJump() || (n.data.canWallJumpLeft != 1 && n.data.canWallJumpRight != 1)) && distance(getCharacterCell(), n) <= CLOSENESS_THRESHOLD);
+}
+
 bool NPC::detectDirectionChange(const TileNode & n, const TileNode & current)
 {
 	int diff1, diff0;
@@ -435,7 +439,7 @@ void NPC::plan() {
 		calculateWallJumpNeighbours(true, current);
 		calculateWallJumpNeighbours(false, current);
 
-		//Expand to the jumping neighbours only if we can jump
+		//Expand to the jumping neighbours only if we can jump and we can't wall jump
 		if (current.data.canJump() && current.data.canWallJumpLeft != 1 && current.data.canWallJumpRight != 1) {
 			calculateJumpNeighbours(current);
 		}
@@ -483,6 +487,28 @@ void NPC::plan() {
 	}
 }
 
+void NPC::doBasicMovement(const TileNode& current, const TileNode& n, bool& jumped) {
+	bool right = getCharacterCell().cell[0] < n.cell[0];
+	while (!nodeWasReached(n)) {
+		if (current.data.isSliding || n.data.isSliding) {
+			me->slide();
+		}
+		else {
+			if (current.data.jumps > n.data.jumps && !jumped || getCharacterCell().cell[1] - n.cell[1] > 2) {
+				//Jump (or double jump)
+				me->jump();
+				jumped = true;
+			}
+			if ((right && getCharacterCell().cell[0] < n.cell[0]) || (!right && getCharacterCell().cell[0] > n.cell[0])) {
+				me->run(right);
+			}
+			else {
+				me->stop();
+			}
+		}
+	}
+}
+
 void NPC::followPath() {
 	TileNode current = getCharacterCell();
 	Tiles::Collidable underMe;
@@ -494,37 +520,22 @@ void NPC::followPath() {
 			jumped = false;
 			std::cout << step << std::endl;
 			if (current.data.canWallJumpLeft == 1 || current.data.canWallJumpRight == 1) {
-				while (!me->canWallJump());
 				//Wall jump
 				me->jump();
-				while (distance(getCharacterCell(), *next) > CLOSENESS_THRESHOLD * 5);
+				doBasicMovement(current, *next, jumped);
 			}
 			else if (!current.data.isHooking && next->data.isHooking) {
 				//Use hook
 				me->useHook(true);
-				while (distance(getCharacterCell(), *next) > CLOSENESS_THRESHOLD);
+				while (!nodeWasReached(*next));
 			}
 			else if (current.data.isHooking && !next->data.isHooking) {
 				//Stop using hook
 				me->useHook(false);
-				while (distance(getCharacterCell(), *next) > CLOSENESS_THRESHOLD);
+				while (!nodeWasReached(*next));
 			}
-			else{
-				while (distance(getCharacterCell(), *next) > CLOSENESS_THRESHOLD) {
-					if (current.data.isSliding || next->data.isSliding) {
-						me->slide();
-					}
-					else {
-						if (current.data.jumps > next->data.jumps && !jumped) {
-							//Jump (or double jump)
-							me->jump();
-							jumped = true;
-						}
-						if (current.cell[0] != next->cell[0]) {
-							me->run(getCharacterCell().cell[0] < next->cell[0]);
-						}
-					}
-				}
+			else {
+				doBasicMovement(current, *next, jumped);
 			}
 			step++;
 			current = *next;

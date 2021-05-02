@@ -63,6 +63,7 @@ private:
 	void calculateWallJumpNeighbours(const bool right, TileNode& current);
 	void buildPath(TileNode foundGoal);
 	bool isGoal(const TileNode & current) const;
+	bool nodeWasReached(const TileNode& n) const;
 	bool detectDirectionChange(const TileNode& n, const TileNode& current);
 	float expandToNeighbour(const TileNode & current, const int dx, const int dy);
 public:
@@ -71,6 +72,7 @@ public:
 	void setTileMap(TileMapPtr tm);
 	void setGoal(const sf::Vector2f& goalPos, const float goalRadius);
 	void plan();
+	void doBasicMovement(const TileNode & current, const TileNode & n, bool & jumped);
 	void followPath();
 	bool pathWasFound() const;
 	std::list<selbaward::Line> debugLines();
