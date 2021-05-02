@@ -23,11 +23,7 @@ class Game
 	using PSPtr = std::shared_ptr<PlayerSlot>;
 	using ItemPtr = std::shared_ptr<Item>;
 
-	struct Slot {
-		short int type;
-		short int index;
-		short int controlIndex;
-	};
+
 public:
 	enum class State { Countdown, Playing, Paused, Editing, MainMenu };
 protected:
@@ -50,8 +46,6 @@ protected:
 
 	std::vector<PlayerPtr> players;
 	std::vector<NPCPtr> npcs;
-	std::vector<Slot> positions;
-
 	std::list<ItemPtr> items;
 
 	sf::Time dT; // Time since last update

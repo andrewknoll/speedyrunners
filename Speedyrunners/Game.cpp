@@ -53,14 +53,14 @@ void Game::updatePositions()
 		// if d < r: next checkpoint
 	}
 	// order characters and players based on distance
-	std::sort(positions.begin(), positions.end(),
-		[chars = this->characters](Slot i, Slot j) {
+	std::sort(characters.begin(), characters.end(),
+		[](auto & c1, auto & c2) {
 			//TODO- MUERTE
-			return chars[i.index]->getDToCheckpoint() < chars[j.index]->getDToCheckpoint();
+			return c1->getDToCheckpoint() < c2->getDToCheckpoint();
 		}
 	);
 	// Check if one has reached the checkpoint
-	if (getCharacterAt(0)->getDToCheckpoint() <= cp.getRadius()) {
+	if (characters[0]->getDToCheckpoint() <= cp.getRadius()) {
 		// Checkpoint reached, cycle to next
 #ifdef VERBOSE_DEBUG
 		std::cout << "Checkpoint " << activeCheckpoint <<" reached\n";
@@ -73,26 +73,26 @@ void Game::updatePositions()
 }
 
 void Game::playerJoin(PlayerPtr newPlayer) {
-	if (positions.size() < 4) {
-		Slot s;
+	if (characters.size() < 4) {
+		/*Slot s;
 		s.controlIndex = players.size();
 		s.index = positions.size();
 		s.type = 0;
-
+		*/
 		players.emplace_back(newPlayer);
-		positions.emplace_back(s);
+		//positions.emplace_back(s);
 	}
 }
 
 void Game::npcJoin(NPCPtr newNPC){
-	if (positions.size() < 4) {
-		Slot s;
+	if (characters.size() < 4) {
+		/*Slot s;
 		s.controlIndex = npcs.size();
 		s.index = positions.size();
-		s.type = 1;
+		s.type = 1;*/
 		newNPC->setTileMap(std::make_shared<TileMap>(lvl.getCollidableTiles()));
 		npcs.emplace_back(newNPC);
-		positions.emplace_back(s);
+		//positions.emplace_back(s);
 	}
 }
 
@@ -163,24 +163,24 @@ void Game::addCharacter(const CharPtr character)
 	}
 	
 }
-
+/*
 Game::CharPtr Game::getCharacterAt(int pos) const {
 	return characters[positions[pos].index];
-}
+}*/
 
 Game::PlayerPtr Game::getPlayerAt(int pos) const {
-	if (positions[pos].type == 0) {
-		return players[positions[pos].controlIndex];
+	for (const auto& p : players) {
+		if (p->getCharacter() == characters[pos]) return p;
 	}
 	return nullptr;
 }
-
+/*
 Game::NPCPtr Game::getNPCAt(int pos) const {
 	if (positions[pos].type == 1) {
 		return npcs[positions[pos].controlIndex];
 	}
 	return nullptr;
-}
+}*/
 
 MusicPlayer& Game::music() {
 	return src.musicPlayer;
@@ -220,17 +220,17 @@ void Game::update()
 			//characters.front().processInput(event); // Podemos cambiarlo por Player en el futuro
 			for (int i = 0; i < characters.size(); i++) {
 				target = i; //Set target initial value to oneself
-				
-				if (positions[i].type == 0 && getPlayerAt(i)->captureEvents(event)) {
+				auto p = getPlayerAt(i);
+				if (p != nullptr && p->captureEvents(event)) {
 					if (i > 0) target--;
 					else if (i < characters.size() - 1) target++;
 					//if player is dumb and uses rockets when nobody else is playing, it will hit them
-					items.push_back(getCharacterAt(i)->useItem(getCharacterAt(target)));
+					items.push_back(characters[i]->useItem(characters[target]));
 				};
 			}
 			for (int i = 0; i < npcs.size(); i++) {
 				if (npcs[i] != nullptr) {
-					Checkpoint cp = checkpoints[1];
+					Checkpoint cp = checkpoints[activeCheckpoint];// checkpoints[1];
 					npcs[i]->setGoal(cp.getPos(), cp.getRadius());
 					if (threadPool[i] == nullptr) {
 						threadPool[i] = std::make_unique<std::thread>([&, i]() {
@@ -239,7 +239,7 @@ void Game::update()
 								npcs[i]->followPath();
 							}
 						});
-						threadPool[i]->detach();
+						//threadPool[i]->detach();
 					}
 				}
 			}
@@ -348,13 +348,9 @@ void Game::printCharacterPositions(const sf::Event& e) const {
 	
 	if (e.type == sf::Event::KeyPressed && e.key.code == (sf::Keyboard::P)) {
 		std::cout << "Character positions:\n";
-		for (const auto &p : positions) {
-			std::cout << getCharacterAt(p.index)->getName() << " | ";
-		}
+		for (auto c : characters)  std::cout << c->getName() << " | ";
 		std::cout << "\nCharacter distances:\n";
-		for (const auto& p : positions) {
-			std::cout << getCharacterAt(p.index)->getDToCheckpoint() << " | ";
-		}
+		for (auto c : characters) std::cout << c->getDToCheckpoint() << " | ";
 		std::cout << "\n";
 	}
 }
