@@ -174,13 +174,13 @@ Game::PlayerPtr Game::getPlayerAt(int pos) const {
 	}
 	return nullptr;
 }
-/*
+
 Game::NPCPtr Game::getNPCAt(int pos) const {
-	if (positions[pos].type == 1) {
-		return npcs[positions[pos].controlIndex];
+	for (const auto& npc : npcs) {
+		if (npc->getCharacter() == characters[pos]) return npc;
 	}
 	return nullptr;
-}*/
+}
 
 MusicPlayer& Game::music() {
 	return src.musicPlayer;
