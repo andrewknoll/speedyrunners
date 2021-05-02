@@ -192,8 +192,11 @@ void Game::update()
 	int target;
 	if (window.pollEvent(event))
 	{
-		if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape))
+		if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
+			running = false;
+			threadPool.clear();
 			window.close();
+		}
 		if (event.type == sf::Event::Resized)
 		{
 			// sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
