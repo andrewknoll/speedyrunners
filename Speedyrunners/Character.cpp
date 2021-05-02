@@ -12,11 +12,14 @@ Character::Character(Spritesheet sp) :
 	animations = sp.get_animations();
 	setAnimation(StartAnim);
 	this->setScale(0.45, 0.45);
-	auto o = getOrigin();
-	setOrigin(o.x-hitBox.width, o.y-hitBox.height*2.25);
+	setDefaultOrigin();
 	updateHitBoxRectangle();
 }
 
+void Character::setDefaultOrigin() {
+	//auto o = getOrigin();
+	setOrigin(-hitBox.width,-hitBox.height * 2.25);
+}
 sf::Sprite Character::getSprite() {
 	return mySprite;
 }
@@ -104,12 +107,22 @@ void Character::setBaseFromRamp(Tiles::Ramp ramp) {
 		
 	}
 	if (!facingRight) base.front = -base.front; // if going left, swap front vector
-	// TODO: Fix this!!!!  updateInRamp(ramp);
-	// Rotate the sprite based on the ramp (normal):
-	setRotation(180-utils::degrees(atan2(base.up.x, base.up.y)));
-	// Mala idea, se repite cada ciclo:
-	
 
+	// Rotate the sprite based on the ramp (normal):
+	if (ramp == Tiles::Ramp::UP) {
+		setDefaultOrigin();
+		setRotation(-45);//setRotation(180-utils::degrees(atan2(base.up.x, base.up.y)));
+	}
+	else if (ramp == Tiles::Ramp::DOWN) {
+		setOrigin(0, -hitBox.height * 1.1f);
+		setRotation(45);
+		//setDefaultOrigin();
+		
+	}
+	else {
+		setDefaultOrigin();
+		setRotation(0);
+	}
 }
 
 void Character::updateVel(const float& dtSec) {
@@ -217,9 +230,6 @@ void Character::update(const sf::Time& dT, const TileMap& tiles)
 				acc.y = physics::GRAVITY;
 			}
 		}
-		else { // Ramp
-
-		}
 		
 		if (sliding) setAnimation(SlidingAnim);
 		updateGrounded(c.normal);
@@ -227,6 +237,7 @@ void Character::update(const sf::Time& dT, const TileMap& tiles)
 		hitBox.left = pos.x; hitBox.top = pos.y;
 	}
 	else { // No collision
+		setBaseFromRamp(Tiles::Ramp::NONE);
 		isGrounded = false;
 	}
 

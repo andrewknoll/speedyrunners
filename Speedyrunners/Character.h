@@ -96,6 +96,7 @@ protected:
 	void fixPosition(sf::FloatRect& hitbox);
 	void updateVel(const float& dtSec);
 	void updateInRamp(Tiles::Ramp ramp);
+	void setDefaultOrigin();
 
 public:
 	Character(Spritesheet);

@@ -322,13 +322,15 @@ std::optional<Tiles::Collision> Tiles::rampCollision(const Tiles::Ramp ramp, con
 std::optional<Tiles::Collision> Tiles::rampCollision(const Tiles::Ramp ramp, const sf::Vector2f& tilePos,
     const sf::Vector2f& tileSize, const sf::FloatRect& hitbox, bool isGrounded)
 {
-    std::cout << "colliding ramp: " << ramp << "\n";
-    if (ramp == Tiles::Ramp::UP) {
+    //std::cout << "colliding ramp: " << ramp << "\n";
+    if (ramp == Tiles::Ramp::UP || ramp == Tiles::Ramp::DOWN) {
+
         // Ramp up
-        sf::Vector2f downCenter(hitbox.left + hitbox.width/2.0f, hitbox.top + hitbox.height); // down center point of the hitbox
+        sf::Vector2f downCenter(hitbox.left + hitbox.width / 2.0f, hitbox.top + hitbox.height); // down center point of the hitbox
         float dist = 0;
         sf::Vector2f n = geometry::normalize(sf::Vector2f(0, -1));
         if (downCenter.x > tilePos.x && downCenter.x < tilePos.x + tileSize.x) {
+            if (ramp == Tiles::Ramp::DOWN) downCenter.x = tilePos.x + tileSize.x - (downCenter.x - tilePos.x); // flip horizontally, the rest is the same
             sf::Vector2f target = downCenter;
             target.y = tilePos.y + tileSize.y - (downCenter.x - tilePos.x);
             dist = target.y - downCenter.y;//(downCenter.y - (tilePos.y  + (downCenter.x - tilePos.x - tileSize.y))); // diff in height

@@ -164,18 +164,18 @@ void Game::addCharacter(const CharPtr character)
 	
 }
 
-Game::CharPtr Game::getCharacterAt(int pos) {
+Game::CharPtr Game::getCharacterAt(int pos) const {
 	return characters[positions[pos].index];
 }
 
-Game::PlayerPtr Game::getPlayerAt(int pos) {
+Game::PlayerPtr Game::getPlayerAt(int pos) const {
 	if (positions[pos].type == 0) {
 		return players[positions[pos].controlIndex];
 	}
 	return nullptr;
 }
 
-Game::NPCPtr Game::getNPCAt(int pos) {
+Game::NPCPtr Game::getNPCAt(int pos) const {
 	if (positions[pos].type == 1) {
 		return npcs[positions[pos].controlIndex];
 	}
@@ -345,12 +345,12 @@ void Game::printCharacterPositions(const sf::Event& e) const {
 	
 	if (e.type == sf::Event::KeyPressed && e.key.code == (sf::Keyboard::P)) {
 		std::cout << "Character positions:\n";
-		for (auto c : characters) {
-			std::cout << c->getName() << " | ";
+		for (const auto &p : positions) {
+			std::cout << getCharacterAt(p.index)->getName() << " | ";
 		}
 		std::cout << "\nCharacter distances:\n";
-		for (auto c : characters) {
-			std::cout << c->getDToCheckpoint() << " | ";
+		for (const auto& p : positions) {
+			std::cout << getCharacterAt(p.index)->getDToCheckpoint() << " | ";
 		}
 		std::cout << "\n";
 	}

@@ -111,8 +111,8 @@ public:
 	void playerJoin(PlayerPtr newPlayer);
 	void npcJoin(NPCPtr newNPC);
 
-	CharPtr getCharacterAt(int pos);
-	PlayerPtr getPlayerAt(int pos);
-	NPCPtr getNPCAt(int pos);
+	CharPtr getCharacterAt(int pos) const;
+	PlayerPtr getPlayerAt(int pos) const;
+	NPCPtr getNPCAt(int pos) const;
 };
 
