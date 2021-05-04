@@ -371,7 +371,7 @@ bool NPC::detectDirectionChange(const TileNode & n, const TileNode & current)
 	//There has been horizontal movement in both steps
 	//The difference in the horizontal coordinates between n and current, and current and its previous, have opposite signs
 	//The direction change wasn't produced because of a wall jump
-	return (diff1 >= 0 ^ diff0 >= 0) && (current.data.canWallJumpRight != 1 || current.data.canWallJumpLeft != 1);
+	return ((diff1 >= 0) ^ (diff0 >= 0)) && (current.data.canWallJumpRight != 1 || current.data.canWallJumpLeft != 1);
 }
 
 float NPC::expandToNeighbour(const TileNode& current, const int dx, const int dy) {

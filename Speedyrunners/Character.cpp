@@ -6,9 +6,11 @@
 #include "Globals.hpp" //animation names
 #include "Spritesheet.h"
 #include "Rocket.h"
-
+#include "Resources.h"
 Character::Character(Spritesheet sp) :
-	hitBox(glb::default_hitbox){
+	hitBox(glb::default_hitbox)
+	//audioPlayer(Resources::getInstance().getAudioPlayer())
+{
 	animations = sp.get_animations();
 	setAnimation(StartAnim);
 	this->setScale(0.45, 0.45);
@@ -322,9 +324,9 @@ void Character::jump() {
 		vel.y = -jumpingSpeed;
 		isGrounded = false;
 		setAnimation(JumpAnim);
+		audioPlayer.play(AudioPlayer::Effect::JUMP);
 	}
 	else if (isAtWallJump) {
-		std::cout << "Coño" << std::endl;
 		vel.y = -jumpingSpeed * 0.75; 
 		if (facingRight) vel.x = jumpingSpeed * 1.5;
 		else vel.x = -jumpingSpeed * 1.5;

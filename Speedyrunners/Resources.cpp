@@ -35,6 +35,12 @@ Resources::Resources() {
 			for (int i = 0; i < 2; i++) std::getline(iss, token[i], ',');
 			musicPlayer.addTrack(PATH_TO_ASSETS + token[1], stoi(token[0]));
 		}
+		else if (type == "A") { // Audio (soundbuffers)
+			for (int i = 0; i < 2; i++) std::getline(iss, token[i], ',');
+			soundBuffers.emplace_back(); // add one
+			if (!soundBuffers.back().loadFromFile(PATH_TO_PLAYER_SFX + token[1]))
+				std::cerr << "could not load sound buffer at " << PATH_TO_PLAYER_SFX + token[1] << "\n";
+		}
 		/*else if (type == "S") {
 			sounds[current[2]++].loadFromFile(token[0]);
 		}*/
@@ -69,6 +75,24 @@ const sf::Texture& Resources::getItemTexture(glb::item type) {
 const sf::Texture& Resources::getMiscTexture(int type) {
 	return otherTextures[type];
 }
+
+const sf::SoundBuffer& Resources::getSoundBuffer(int type)
+{
+	return soundBuffers[type];
+}
+
+const std::vector<sf::SoundBuffer>& Resources::getSoundBuffers()
+{
+	return soundBuffers;
+}
+
+
+
+/**
+AudioPlayer& Resources::getAudioPlayer()
+{
+	return audioPlayer;
+}*/
 
 /* No renta
 const sf::FloatRect& Resources::getMiscTextureRect(int type) {
