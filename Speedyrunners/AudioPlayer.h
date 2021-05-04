@@ -10,12 +10,13 @@ public:
 		SLIDE
 	};
 protected:
-	const std::vector<sf::SoundBuffer>& buffers; // like sf::Textures for small (not music) sounds
-	std::vector<sf::Sound> sounds; // like sf::Sprite
-
+	std::vector<sf::Sound> sounds; // like sf::Sprite for sounds
 
 public:
 	AudioPlayer();
+	AudioPlayer(const std::vector<sf::SoundBuffer>& buffers);
+
+	void loadSoundsFromBuffers(const std::vector<sf::SoundBuffer>& buffers);
 
 	void play(const int effect);
 

@@ -3,10 +3,19 @@
 #include "Resources.h"
 #include <cassert>
 
-AudioPlayer::AudioPlayer() : buffers(Resources::getInstance().getSoundBuffers())
+AudioPlayer::AudioPlayer()
 {
-	auto& bufs = Resources::getInstance().getSoundBuffers(); 
-	for (const auto& buffer : bufs) {
+}
+
+AudioPlayer::AudioPlayer(const std::vector<sf::SoundBuffer>& buffers)
+{
+	loadSoundsFromBuffers(buffers);
+}
+
+void AudioPlayer::loadSoundsFromBuffers(const std::vector<sf::SoundBuffer>& buffers)
+{
+	//auto& bufs = Resources::getInstance().getSoundBuffers();
+	for (const auto& buffer : buffers) {
 		sounds.emplace_back(buffer);
 	}
 }

@@ -8,8 +8,8 @@
 #include "Rocket.h"
 #include "Resources.h"
 Character::Character(Spritesheet sp) :
-	hitBox(glb::default_hitbox)
-	//audioPlayer(Resources::getInstance().getAudioPlayer())
+	hitBox(glb::default_hitbox),
+	audioPlayer(Resources::getInstance().getAudioPlayer())
 {
 	animations = sp.get_animations();
 	setAnimation(StartAnim);

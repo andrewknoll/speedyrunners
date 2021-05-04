@@ -57,6 +57,8 @@ Resources::Resources() {
 		}*/
 	std::getline(file, buffer, '\n');
 	}
+
+	audioPlayer.loadSoundsFromBuffers(soundBuffers);
 }
 
 Resources& Resources::getInstance() {
@@ -88,11 +90,11 @@ const std::vector<sf::SoundBuffer>& Resources::getSoundBuffers()
 
 
 
-/**
+
 AudioPlayer& Resources::getAudioPlayer()
 {
 	return audioPlayer;
-}*/
+}
 
 /* No renta
 const sf::FloatRect& Resources::getMiscTextureRect(int type) {

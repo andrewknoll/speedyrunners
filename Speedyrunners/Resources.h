@@ -9,7 +9,7 @@ class Resources
 private:
 	Resources();
 
-	//AudioPlayer audioPlayer;
+	AudioPlayer audioPlayer;
 
 	std::vector<std::vector<Spritesheet> > spritesheets;
 	std::vector<sf::SoundBuffer> soundBuffers;
@@ -34,7 +34,7 @@ public:
 	const sf::SoundBuffer& getSoundBuffer(int type);
 	const std::vector<sf::SoundBuffer>& getSoundBuffers();
 
-	//AudioPlayer& getAudioPlayer();
+	AudioPlayer& getAudioPlayer();
 
 
 	MusicPlayer musicPlayer;

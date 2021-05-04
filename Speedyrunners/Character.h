@@ -86,7 +86,7 @@ protected:
 	std::string spritesheetsPath = glb::CONTENT_PATH + "Characters/Speedrunner/";
 
 	// Audio:
-	AudioPlayer audioPlayer;
+	AudioPlayer &audioPlayer;
 	
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
