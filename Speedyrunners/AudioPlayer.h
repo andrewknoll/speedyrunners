@@ -4,6 +4,7 @@
 class AudioPlayer
 {
 public:
+	// TODO: Varios sounds por efecto (Jump tiene 4) (vector de vectores mismo). Colocar cada efecto en su sitio 
 	enum class Effect {
 		JUMP,
 		LAND,
