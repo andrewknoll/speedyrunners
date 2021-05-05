@@ -233,7 +233,10 @@ void Character::update(const sf::Time& dT, const TileMap& tiles)
 			}
 		}
 		
-		if (sliding) setAnimation(SlidingAnim);
+		if (sliding) {
+			setAnimation(SlidingAnim);
+			audioPlayer.play(AudioPlayer::Effect::SLIDE);
+		}
 		updateGrounded(c.normal);
 
 		hitBox.left = pos.x; hitBox.top = pos.y;
@@ -275,8 +278,14 @@ void Character::update(const sf::Time& dT, const TileMap& tiles)
 }
 
 void Character::updateGrounded(const sf::Vector2f& normal) {
+	bool wasGrounded = isGrounded;
 	isGrounded = (normal.y < 0);
-	if (isGrounded) hasDoubleJumped = false;
+	if (isGrounded) {
+		hasDoubleJumped = false;
+		if (!wasGrounded) 
+			audioPlayer.play(AudioPlayer::Effect::FOLEY_LAND);
+	}
+
 }
 
 
@@ -285,6 +294,7 @@ void Character::updateRunning() {
 	if (isRunning && !swinging) {
 		if (isGrounded) {
 			acc.x = runningAcceleration;
+			audioPlayer.loop(AudioPlayer::Effect::FOOTSTEP);
 			/*float accy = acc.y;
 			acc = base * sf::Vector2f(runningAcceleration,0);
 			acc.y += accy * 5.0f;*/
@@ -294,6 +304,9 @@ void Character::updateRunning() {
 		if (!facingRight) {
 			acc.x = -acc.x;
 		}
+	}
+	else { // stopped running
+		audioPlayer.stop(AudioPlayer::Effect::FOOTSTEP);
 	}
 }
 
@@ -333,12 +346,14 @@ void Character::jump() {
 		setAnimation(JumpAnim);
 		isAtWallJump = false;
 		hasDoubleJumped = false;
+		audioPlayer.play(AudioPlayer::Effect::JUMP);
 	}
 	else if (!hasDoubleJumped) { // in air and hasnt double jumped yet
 		vel.y = -jumpingSpeed;
 		hasDoubleJumped = true;
 		setAnimation(DoubleJumpAnim);
 		isAtWallJump = false;
+		audioPlayer.play(AudioPlayer::Effect::DOUBLE_JUMP);
 	}
 	isGrounded = false;
 }

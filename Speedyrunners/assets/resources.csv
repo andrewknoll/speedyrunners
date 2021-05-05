@@ -11,7 +11,8 @@ M,2,Content/Audio/Music/Track02 - SD.ogg
 A,ch_jump_1.wav,ch_jump_2.wav,ch_jump_3.wav,ch_jump_4.wav
 A,Foley_footstep_01.wav,Foley_footstep_02.wav,Foley_footstep_03.wav,Foley_footstep_04.wav
 A,Foley_land_01.wav,Foley_land_02.wav
-A,Foley_roll.wav,Foley_slide.wav
+A,Foley_roll.wav
+A,Foley_slide.wav
 A,Gameplay_pickup.wav
 A,Gameplay_speedboost.wav,Gameplay_speedboost_2.wav
 A,Voice_death_01.wav,Voice_death_02.wav,Voice_death_03.wav

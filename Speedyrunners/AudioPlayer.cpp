@@ -38,4 +38,28 @@ void AudioPlayer::play(const Effect effect)
 	play((int)effect);
 }
 
+void AudioPlayer::loop(const int effect, bool loopIt)
+{
+	assert(effect < sounds.size());
+	// Pick random sample from the appropiate type:
+	std::uniform_int_distribution<> distr(0, sounds[effect].size() - 1); // define the range (-1 because its inclusive)
+	int sample = distr(sampler);
+	sounds[effect][sample].setLoop(loopIt);
+}
+
+void AudioPlayer::loop(const Effect effect, bool loopIt)
+{
+	loop((int)effect, loopIt);
+}
+
+void AudioPlayer::stop(const int effect)
+{
+	assert(effect < sounds.size());
+	for (auto& sound : sounds[effect]) sound.stop();
+}
+
+void AudioPlayer::stop(const Effect effect)
+{
+	stop((int)effect);
+}
 
