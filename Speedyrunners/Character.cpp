@@ -305,9 +305,6 @@ void Character::updateRunning() {
 		if (isGrounded) {
 			acc.x = runningAcceleration;
 			audioPlayer.loop(AudioPlayer::Effect::FOOTSTEP);
-			/*float accy = acc.y;
-			acc = base * sf::Vector2f(runningAcceleration,0);
-			acc.y += accy * 5.0f;*/
 		}
 		else
 			acc.x = flyingAcceleration;
@@ -346,8 +343,9 @@ void Character::stopSliding() {
 	sliding = false;
 }
 
-void Character::jump() {
+void Character::startJumping() {
 	if (isGrounded && currJumpCD == sf::Time::Zero) {
+		holdingJump = true;
 		vel.y = -jumpingSpeed;
 		isGrounded = false;
 		setAnimation(JumpAnim);
@@ -355,8 +353,8 @@ void Character::jump() {
 		audioPlayer.play(AudioPlayer::Effect::JUMP);
 	}
 	else if (isAtWallJump) {
-		vel.y = -jumpingSpeed * 0.75; 
-		if (facingRight) vel.x = jumpingSpeed * 1.5;
+		vel.y = -jumpingSpeed * 0.9; 
+		if (facingRight) vel.x = jumpingSpeed * 1.3;
 		else vel.x = -jumpingSpeed * 1.5;
 		setAnimation(JumpAnim);
 		isAtWallJump = false;
@@ -364,6 +362,7 @@ void Character::jump() {
 		audioPlayer.play(AudioPlayer::Effect::JUMP);
 	}
 	else if (!hasDoubleJumped) { // in air and hasnt double jumped yet
+		holdingJump = true;
 		vel.y = -jumpingSpeed;
 		hasDoubleJumped = true;
 		setAnimation(DoubleJumpAnim);
@@ -372,6 +371,11 @@ void Character::jump() {
 	}
 	isGrounded = false;
 }
+
+void Character::stopJumping() {
+	holdingJump = false;
+}
+
 bool Character::isDead() const {
 	return dead;
 }
@@ -445,8 +449,13 @@ std::string Character::getUIIconPath() const
 }
 
 void Character::updateAcceleration() {
-	if (!swinging)
+	if (!swinging) {
 		acc.y = physics::GRAVITY;
+	}
+	if (holdingJump) {
+		acc.y = physics::GRAVITY * 0.7;
+	}
+		
 }
 
 void Character::setFriction() {

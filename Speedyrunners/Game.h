@@ -28,7 +28,7 @@ public:
 	enum class State { Countdown, Playing, Paused, Editing, MainMenu };
 protected:
 	//Thread Pool
-	std::vector<std::unique_ptr<std::thread> > threadPool = std::vector<std::unique_ptr<std::thread> >(4);
+	std::vector<std::unique_ptr<std::thread> > threadPool = std::vector<std::unique_ptr<std::thread> >(8);
 	std::atomic<bool> running = true;
 	// Settings:
 	Settings settings;
