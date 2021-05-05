@@ -47,8 +47,6 @@ void Camera::operator=(const sf::View& v)
 	setCenter(v.getCenter());
 	setRotation(v.getRotation());
 	setSize(v.getSize());
-	
-
 }
 
 void Camera::follow(std::vector<CharPtr>& characters, int first) {
@@ -59,12 +57,16 @@ void Camera::follow(std::vector<CharPtr>& characters, int first) {
 	sf::FloatRect viewport = getViewport();
 	viewport.width = getSize().x;
 	viewport.height = getSize().y;
+	int count = 0;
 
 	//Calculate average position of all players
 	for (int i = 0; i < characters.size(); i++) {
-		avg += characters[i]->getPosition();
+		if (!characters[i]->isDead()) {
+			avg += characters[i]->getPosition();
+			count++;
+		}
 	}
-	avg /= (float)characters.size();
+	avg /= (float)count;
 	
 	//Ensure first player is inside bounds
 	avg.x -= std::min(0.0f, firstPos.x - (avg.x - viewport.width /2.0f * glb::viewMarginFactor));
@@ -74,10 +76,12 @@ void Camera::follow(std::vector<CharPtr>& characters, int first) {
 
 	//Calculate scale, depending on the average of the distance of each character to the center
 	for (int i = 0; i < characters.size(); i++) {
-		distance = avg - characters[i]->getPosition();
-		avgDistance += utils::length(distance);
+		if (!characters[i]->isDead()) {
+			distance = avg - characters[i]->getPosition();
+			avgDistance += utils::length(distance);
+		}
 	}
-	avgDistance /= characters.size();
+	avgDistance /= count;
 	sf::Vector2f size = size0 * (avgDistance * glb::cameraZoomFunctionSteepness + 1.0f);
 	setSize(size);
 	//std::cout << "Size: " << size.x << " " << size.y << " avg: " << "\n";
@@ -88,4 +92,18 @@ void Camera::follow(std::vector<CharPtr>& characters, int first) {
 	//TO-DO: Check max value
 
 	setCenter(avg);
+}
+
+sf::FloatRect Camera::viewRectangle() const {
+	sf::FloatRect viewport = getViewport();
+	viewport.width = getSize().x;
+	viewport.height = getSize().y;
+	viewport.left = getCenter().x - viewport.width / 2;
+	viewport.top = getCenter().y - viewport.height / 2;
+	return viewport;
+}
+
+bool Camera::isInAllowedBounds(CharPtr character) const {
+	auto pos = character->getPosition();
+	return viewRectangle().contains(pos);
 }

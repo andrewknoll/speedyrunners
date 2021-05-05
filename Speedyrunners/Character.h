@@ -50,6 +50,7 @@ protected:
 
 	bool isGrounded = false;
 	bool hasDoubleJumped = false;
+	bool dead = false;
 
 	AnimationIndex animIdx;
 	bool facingRight = true;
@@ -122,10 +123,12 @@ public:
 
 	void run(bool right);
 	void stop();
+	void die();
 	void slide();
 	void stopSliding();
 	void jump();
 
+	bool isDead() const;
 	bool isSwinging() const;
 	bool canWallJump() const;
 	

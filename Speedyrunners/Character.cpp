@@ -305,6 +305,10 @@ void Character::stop(){
 	isRunning = false;
 }
 
+void Character::die() {
+	dead = true;
+}
+
 void Character::slide() {
 	if (isGrounded && isRunning) {
 		setAnimation(SlideAnim);
@@ -324,7 +328,6 @@ void Character::jump() {
 		setAnimation(JumpAnim);
 	}
 	else if (isAtWallJump) {
-		std::cout << "Coño" << std::endl;
 		vel.y = -jumpingSpeed * 0.75; 
 		if (facingRight) vel.x = jumpingSpeed * 1.5;
 		else vel.x = -jumpingSpeed * 1.5;
@@ -339,6 +342,9 @@ void Character::jump() {
 		isAtWallJump = false;
 	}
 	isGrounded = false;
+}
+bool Character::isDead() const {
+	return dead;
 }
 bool Character::isSwinging() const
 {

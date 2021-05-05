@@ -46,8 +46,15 @@ void Game::updatePositions()
 {
 	Checkpoint cp = checkpoints[activeCheckpoint];
 	auto cpPos = cp.getPos();
+	float d;
 	for (auto c : characters) {
-		float d = utils::distance(c->getPosition(), cpPos);
+		if (c->isDead()) {
+			d = INFINITY;
+		}
+		else {
+			d = utils::distance(c->getPosition(), cpPos);
+		}
+		
 		c->setDToCheckpoint(d);
 		// get distance d to active checkpoint
 		// if d < r: next checkpoint
@@ -219,6 +226,10 @@ void Game::update()
 		else if (state == State::Playing) { // Playing
 			//characters.front().processInput(event); // Podemos cambiarlo por Player en el futuro
 			for (int i = 0; i < characters.size(); i++) {
+				if (characters[i]->isDead()) continue;
+				if (!cam.isInAllowedBounds(characters[i])) {
+					characters[i]->die();
+				}
 				target = i; //Set target initial value to oneself
 				auto p = getPlayerAt(i);
 				if (p != nullptr && p->captureEvents(event)) {
@@ -234,7 +245,7 @@ void Game::update()
 					npcs[i]->setGoal(cp.getPos(), cp.getRadius());
 					if (threadPool[i] == nullptr) {
 						threadPool[i] = std::make_unique<std::thread>([&, i]() {
-							while (running) {
+							while (running && !npcs[i]->getCharacter()->isDead()) {
 								npcs[i]->plan();
 								npcs[i]->followPath();
 							}
@@ -259,6 +270,7 @@ void Game::update()
 	}
 	if (state == State::Playing && dT.asSeconds() < 0.1) {
 		for (auto c : characters) {
+			if (c->isDead()) continue;
 			c->update(dT, lvl.getCollidableTiles());
 		}
 		for (auto it : items) {
@@ -329,9 +341,8 @@ void Game::processEditingInputs(const sf::Event& event) {
 	}
 	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::J) { // For debug, add Falcon to mouse position
 		// Add player
-		Spritesheet sprsht;
-		sprsht.parse_spritesheet("../assets/Content/Characters/Falcon/animation_variant01.png", "../assets/indexes/Characters/Falcon/animation_atlas_variant00.json");
-		std::shared_ptr<Character> falcon = std::make_shared<Character>(sprsht); //"../assets/Content/Characters/Falcon/");
+		Spritesheet sprsht = src.getSpriteSheet(3); //Falcon
+		std::shared_ptr<Character> falcon = std::make_shared<Character>(sprsht);
 		falcon->setPosition(utils::mousePosition2f(window));
 		falcon->setName(std::string("falcon ") + std::to_string(characters.size()));
 		//falcon.setScale(0.5, 0.5);
@@ -371,7 +382,9 @@ void Game::draw(sf::Time dT)
 		}
 		// characters (sin hacer tick a las animaciones):
 		for (auto c : characters) {
-			window.draw(*c);
+			if (!c->isDead()) {
+				window.draw(*c);
+			}
 		}
 		for (auto npc : npcs) {
 			for (auto l : npc->debugExpanded()) {
@@ -395,8 +408,10 @@ void Game::draw(sf::Time dT)
 	case State::Playing:
 	{ // Animaciones de personajes:
 		for (auto c : characters) {
-			c->tickAnimation(dT);
-			window.draw(*c);
+			if (!c->isDead()) {
+				c->tickAnimation(dT);
+				window.draw(*c);
+			}
 		}
 		for (auto i : items) {
 			window.draw(*i);

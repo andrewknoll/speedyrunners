@@ -14,50 +14,52 @@ Player::Player(const Settings& settings, int id) {
 }
 
 bool Player::captureEvents(const sf::Event& event) {
-	if (sf::Keyboard::isKeyPressed(k_left)) {
-		me->run(false);
-	}
-	else if (sf::Keyboard::isKeyPressed(k_right)) {
-		me->run(true);
-	}
-	if (sf::Keyboard::isKeyPressed(k_down)) {
-		me->slide();
-	}
-	if (event.type == sf::Event::KeyPressed) {
-
-		if (event.key.code == k_jump) {
-			//TODO: Comprobar WallJumping
-			//TODO: Considerar long presses
-			me->jump();
+	if (!me->isDead()) {
+		if (sf::Keyboard::isKeyPressed(k_left)) {
+			me->run(false);
 		}
-		
-		/*else if (event.key.code == sf::Keyboard::Key::Down) {
-			if (me->getState() == CharState::Standing ||
-				me->getState() == CharState::InAir ||
-				me->getState() == CharState::Running) {
-				//Comprobar si se puede mientras est�s en la pared
-				//me->setHorizontalAcc(SLIDING_FRICTION);
+		else if (sf::Keyboard::isKeyPressed(k_right)) {
+			me->run(true);
+		}
+		if (sf::Keyboard::isKeyPressed(k_down)) {
+			me->slide();
+		}
+		if (event.type == sf::Event::KeyPressed) {
+
+			if (event.key.code == k_jump) {
+				//TODO: Comprobar WallJumping
+				//TODO: Considerar long presses
+				me->jump();
 			}
 
-		}*/
-		else if (event.key.code == k_hook && !holdingX) {
-			me->useHook();
-			holdingX = true;
+			/*else if (event.key.code == sf::Keyboard::Key::Down) {
+				if (me->getState() == CharState::Standing ||
+					me->getState() == CharState::InAir ||
+					me->getState() == CharState::Running) {
+					//Comprobar si se puede mientras est�s en la pared
+					//me->setHorizontalAcc(SLIDING_FRICTION);
+				}
+
+			}*/
+			else if (event.key.code == k_hook && !holdingX) {
+				me->useHook();
+				holdingX = true;
+			}
+			else if (event.key.code == k_item) {
+				return true;
+			}
 		}
-		else if (event.key.code == k_item) {
-			return true;
-		}
-	}
-	if (event.type == sf::Event::KeyReleased) {
-		if (event.key.code == k_right || event.key.code == k_left) {
-			me->stop();
-		}
-		else if (event.key.code == k_hook) {
-			holdingX = false;
-			me->useHook(false);
-		}
-		else if (event.key.code == k_down) {
-			me->stopSliding();
+		if (event.type == sf::Event::KeyReleased) {
+			if (event.key.code == k_right || event.key.code == k_left) {
+				me->stop();
+			}
+			else if (event.key.code == k_hook) {
+				holdingX = false;
+				me->useHook(false);
+			}
+			else if (event.key.code == k_down) {
+				me->stopSliding();
+			}
 		}
 	}
 	return false;

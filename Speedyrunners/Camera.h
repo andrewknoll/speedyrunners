@@ -1,5 +1,6 @@
 #pragma once
 #include "Character.h"
+#include "SFML/Graphics.hpp"
 
 
 class Camera : public sf::View
@@ -20,4 +21,8 @@ public:
 	void operator= (const sf::View& v);
 
 	void follow(std::vector<CharPtr>& characters, int first = 0);
+
+	sf::FloatRect viewRectangle() const;
+
+	bool isInAllowedBounds(CharPtr character) const;
 };
