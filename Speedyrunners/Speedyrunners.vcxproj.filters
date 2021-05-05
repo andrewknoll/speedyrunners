@@ -135,6 +135,9 @@
     <ClCompile Include="PlayerSlot.cpp">
       <Filter>Characters</Filter>
     </ClCompile>
+    <ClCompile Include="AudioPlayer.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TileMap.h">
@@ -223,6 +226,9 @@
     </ClInclude>
     <ClInclude Include="PlayerSlot.h">
       <Filter>Characters</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioPlayer.h">
+      <Filter>Audio</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

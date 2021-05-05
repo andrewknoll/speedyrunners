@@ -1,10 +1,12 @@
 #include <iostream>
 
 #include "Countdown.h"
+#include "Resources.h"
 
 Countdown::Countdown(const sf::RenderWindow& _window)
 	: currentSecond(3),
-	period(sf::seconds(1))//, window(std::make_shared<sf::RenderWindow>(_window))
+	period(sf::seconds(1)),
+	audioPlayer(Resources::getInstance().getAudioPlayer())//, window(std::make_shared<sf::RenderWindow>(_window))
 {
 	// Fondo:
 	bg.loadFromFile(bgPath);
@@ -38,13 +40,28 @@ void Countdown::updateSprite()
 	//textSprite.setPosition(width * 3.0 / 4.0, _window.getSize().y / 2.0);
 }
 
-
+void Countdown::playSecondSFX(const int second) {
+	audioPlayer.play(AudioPlayer::Effect::COUNTDOWN_SLIDE_IN);
+	if (second>1)
+		audioPlayer.play(AudioPlayer::Effect::COUNTDOWN_TIMER_3_2);
+	else if (second == 1)
+		audioPlayer.play(AudioPlayer::Effect::COUNTDOWN_TIMER_1);
+	else // GO
+		audioPlayer.play(AudioPlayer::Effect::COUNTDOWN_TIMER_GO);
+}
 
 void Countdown::update(const sf::Time& dT)
 {
+	//SOUND
+	if (period == sf::seconds(1) && currentSecond == 3) {// first time
+		audioPlayer.play(AudioPlayer::Effect::COUNTDOWN_TIMER_BUILDUP); 
+		playSecondSFX(currentSecond);
+	}
+		
 	period -= dT;
 	if (period.asSeconds() < 0) {
 		currentSecond--;
+		playSecondSFX(currentSecond);
 		updateSprite();
 		period = sf::seconds(1);
 	}

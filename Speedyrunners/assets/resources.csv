@@ -7,6 +7,42 @@ M,0,Content/Audio/Music/Track 03 - Menu.ogg
 M,1,Content/Audio/Music/Track 01 - Level.ogg
 M,2,Content/Audio/Music/Track02 - SD.ogg
 
+
+A,ch_jump_1.wav,ch_jump_2.wav,ch_jump_3.wav,ch_jump_4.wav
+A,Foley_footstep_01.wav,Foley_footstep_02.wav,Foley_footstep_03.wav,Foley_footstep_04.wav
+A,Foley_land_01.wav,Foley_land_02.wav
+A,Foley_roll.wav
+A,Foley_slide.wav
+A,Gameplay_pickup.wav
+A,Gameplay_speedboost.wav,Gameplay_speedboost_2.wav
+A,Voice_death_01.wav,Voice_death_02.wav,Voice_death_03.wav
+A,boing01.wav,boing02.wav,boing03.wav
+A,ch_charge_groundboost.wav
+A,env_spikes_hit_1.wav,env_spikes_hit_2.wav
+A,game_player_jump_double_1.wav,game_player_jump_double_2.wav,game_player_jump_double_3.wav,game_player_jump_double_4.wav
+A,game_player_land_1.wav,game_player_land_2.wav,game_player_land_3.wav,game_player_land_4.wav,game_player_land_5.wav
+A,game_player_slide_down_loop.wav
+A,game_player_slide_down_start_1.wav,game_player_slide_down_start_2.wav,game_player_slide_down_start_3.wav,game_player_slide_down_start_4.wav
+A,game_player_slide_stop_skid_1.wav,game_player_slide_stop_skid_2.wav,game_player_slide_stop_skid_3.wav
+A,game_tackle_oppenent_hit_1.wav,game_tackle_oppenent_hit_2.wav,game_tackle_oppenent_hit_3.wav
+A,game_wind_airtime_3.wav
+A,game_wrong_way.wav
+A,pickup_boostacoke_base.wav,pickup_boostacoke_chime.wav
+A2,Gameplay_timerup.wav
+A2,Ui_countdown.wav
+A2,game_character_outofscreen.wav
+A2,game_countdown_slide_in.wav
+A2,game_countdown_timer_1.wav
+A2,game_countdown_timer_3_2.wav
+A2,game_countdown_timer_GO.wav
+A2,game_countdown_timer_buildup_start_at_3.wa
+A2,game_pause.wav
+A2,game_sudden_death_activate.wav
+A2,game_win_goto_scoreboard.wav
+A2,game_win_round_1.wav,game_win_round_2.wav
+A2,text_appear_1.wav,text_appear_2.wav,text_appear_3.wav,text_appear_4.wav
+A2,text_dissappear_1.wav,text_dissappear_2.wav
+
 I,0,Content/Sprites/rocket.png
 
 T,0,Content/Sprites/hook.png

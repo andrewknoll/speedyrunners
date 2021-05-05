@@ -8,6 +8,7 @@
 #include "Spritesheet.h"
 #include "Hook.h"
 #include "utils.hpp"
+#include "AudioPlayer.h"
 
 
 #include "Item.h"
@@ -44,6 +45,7 @@ protected:
 	geometry::Mat2 base = geometry::Mat2(sf::Vector2f(1,0), sf::Vector2f(0,1));
 	bool inRamp = false;
 
+	// for physics:
 	sf::Vector2f vel; // Velocity
 	sf::Vector2f acc; // Acceleration
 	float omega; //angular speed
@@ -52,6 +54,7 @@ protected:
 	bool hasDoubleJumped = false;
 	bool dead = false;
 
+	// For animation:
 	AnimationIndex animIdx;
 	bool facingRight = true;
 	bool isRunning = false;
@@ -61,6 +64,8 @@ protected:
 	std::shared_ptr<Animation> currentAnimation;
 	mutable sf::Sprite mySprite;
 	sf::Time countdown = PERIOD;
+	sf::Time jumpCoolDown = sf::seconds(0.1);
+	sf::Time currJumpCD = jumpCoolDown;
 
 	std::vector<AnimationPtr> animations = std::vector<AnimationPtr>(glb::NUMBER_OF_ANIMATIONS);
 
@@ -83,6 +88,10 @@ protected:
 
 	// All spritesheets path:
 	std::string spritesheetsPath = glb::CONTENT_PATH + "Characters/Speedrunner/";
+
+	// Audio:
+	AudioPlayer &audioPlayer;
+	
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 

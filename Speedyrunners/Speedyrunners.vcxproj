@@ -275,6 +275,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Animation.cpp" />
+    <ClCompile Include="AudioPlayer.cpp" />
     <ClCompile Include="Background.cpp" />
     <ClCompile Include="Checkpoint.cpp" />
     <ClCompile Include="Countdown.cpp" />
@@ -306,6 +307,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.h" />
+    <ClInclude Include="AudioPlayer.h" />
     <ClInclude Include="Background.h" />
     <ClInclude Include="Checkpoint.h" />
     <ClInclude Include="Countdown.h" />

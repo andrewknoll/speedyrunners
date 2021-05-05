@@ -35,6 +35,26 @@ Resources::Resources() {
 			for (int i = 0; i < 2; i++) std::getline(iss, token[i], ',');
 			musicPlayer.addTrack(PATH_TO_ASSETS + token[1], stoi(token[0]));
 		}
+		else if (type == "A" || type == "A2") { // Audio (soundbuffers)
+			std::string path = PATH_TO_PLAYER_SFX;
+			if (type == "A2") { // Ingame ui audio
+				path = PATH_TO_INGAME_UI_SFX;
+			}
+			std::string line;
+			std::getline(iss, line); // until \n
+			std::istringstream liness(line);
+			soundBuffers.emplace_back(); // new vector for a type of sound (eg jump)
+			auto& bufs = soundBuffers.back(); // ref to the vector
+			while (std::getline(liness, token[0], ',')) {// each , separated field
+				bufs.emplace_back(); // new soundBuffer of that type
+				if (!bufs.back().loadFromFile(path + token[0]))
+					std::cerr << "could not load sound buffer at " << path + token[0] << "\n";
+			}
+			/*for (int i = 0; i < 2; i++) std::getline(iss, token[i], ',');
+			soundBuffers.emplace_back(); // add a vector
+			if (!soundBuffers.back().loadFromFile(PATH_TO_PLAYER_SFX + token[1]))
+				std::cerr << "could not load sound buffer at " << PATH_TO_PLAYER_SFX + token[1] << "\n";*/
+		}
 		/*else if (type == "S") {
 			sounds[current[2]++].loadFromFile(token[0]);
 		}*/
@@ -51,6 +71,8 @@ Resources::Resources() {
 		}*/
 	std::getline(file, buffer, '\n');
 	}
+
+	audioPlayer.loadSoundsFromBuffers(soundBuffers);
 }
 
 Resources& Resources::getInstance() {
@@ -68,6 +90,25 @@ const sf::Texture& Resources::getItemTexture(glb::item type) {
 
 const sf::Texture& Resources::getMiscTexture(int type) {
 	return otherTextures[type];
+}
+
+
+const std::vector<sf::SoundBuffer>& Resources::getSoundBuffer(int type)
+{
+	return soundBuffers[type];
+}
+
+const std::vector<std::vector<sf::SoundBuffer>>& Resources::getSoundBuffers()
+{
+	return soundBuffers;
+}
+
+
+
+
+AudioPlayer& Resources::getAudioPlayer()
+{
+	return audioPlayer;
 }
 
 /* No renta
