@@ -10,6 +10,12 @@ class Camera : public sf::View
 	sf::Vector2i lastMousePos; 
 	bool dragging = false;
 	sf::Vector2f size0;
+	const float EPSILON = 0.01f;
+	sf::RectangleShape viewportShape;
+	bool suddenDeath = false;
+	float rectSizeFactor = 1.0f;
+	sf::Uint16 redValue = 0;
+	bool increasingRedness = true;
 public:
 	Camera(const sf::FloatRect& rect = sf::FloatRect(0,0,10,10));
 	//sf::Rect<float> view;
@@ -22,7 +28,11 @@ public:
 
 	void follow(std::vector<CharPtr>& characters, int first = 0);
 
+	sf::RectangleShape getSuddenDeathRectangle();
+
 	sf::FloatRect viewRectangle() const;
 
 	bool isInAllowedBounds(CharPtr character) const;
+
+	void setSuddenDeath(bool sd);
 };
