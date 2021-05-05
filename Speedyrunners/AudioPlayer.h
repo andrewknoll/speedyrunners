@@ -1,5 +1,5 @@
 #pragma once
-
+#include <random>
 #include "SFML/Audio.hpp"
 class AudioPlayer
 {
@@ -11,13 +11,15 @@ public:
 		SLIDE
 	};
 protected:
-	std::vector<sf::Sound> sounds; // like sf::Sprite for sounds
+	std::vector<std::vector<sf::Sound>> sounds; // like sf::Sprite for sounds
+
+	std::mt19937 sampler { std::random_device{}() }; 
 
 public:
 	AudioPlayer();
-	AudioPlayer(const std::vector<sf::SoundBuffer>& buffers);
+	AudioPlayer(const std::vector<std::vector<sf::SoundBuffer>>& buffers);
 
-	void loadSoundsFromBuffers(const std::vector<sf::SoundBuffer>& buffers);
+	void loadSoundsFromBuffers(const std::vector<std::vector<sf::SoundBuffer>>& buffers);
 
 	void play(const int effect);
 

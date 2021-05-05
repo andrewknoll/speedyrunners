@@ -36,10 +36,20 @@ Resources::Resources() {
 			musicPlayer.addTrack(PATH_TO_ASSETS + token[1], stoi(token[0]));
 		}
 		else if (type == "A") { // Audio (soundbuffers)
-			for (int i = 0; i < 2; i++) std::getline(iss, token[i], ',');
-			soundBuffers.emplace_back(); // add one
+			std::string line;
+			std::getline(iss, line); // until \n
+			std::istringstream liness(line);
+			soundBuffers.emplace_back(); // new vector for a type of sound (eg jump)
+			auto& bufs = soundBuffers.back(); // ref to the vector
+			while (std::getline(liness, token[0], ',')) {// each , separated field
+				bufs.emplace_back(); // new soundBuffer of that type
+				if (!bufs.back().loadFromFile(PATH_TO_PLAYER_SFX + token[0]))
+					std::cerr << "could not load sound buffer at " << PATH_TO_PLAYER_SFX + token[0] << "\n";
+			}
+			/*for (int i = 0; i < 2; i++) std::getline(iss, token[i], ',');
+			soundBuffers.emplace_back(); // add a vector
 			if (!soundBuffers.back().loadFromFile(PATH_TO_PLAYER_SFX + token[1]))
-				std::cerr << "could not load sound buffer at " << PATH_TO_PLAYER_SFX + token[1] << "\n";
+				std::cerr << "could not load sound buffer at " << PATH_TO_PLAYER_SFX + token[1] << "\n";*/
 		}
 		/*else if (type == "S") {
 			sounds[current[2]++].loadFromFile(token[0]);
@@ -78,12 +88,13 @@ const sf::Texture& Resources::getMiscTexture(int type) {
 	return otherTextures[type];
 }
 
-const sf::SoundBuffer& Resources::getSoundBuffer(int type)
+
+const std::vector<sf::SoundBuffer>& Resources::getSoundBuffer(int type)
 {
 	return soundBuffers[type];
 }
 
-const std::vector<sf::SoundBuffer>& Resources::getSoundBuffers()
+const std::vector<std::vector<sf::SoundBuffer>>& Resources::getSoundBuffers()
 {
 	return soundBuffers;
 }

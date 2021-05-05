@@ -12,7 +12,7 @@ private:
 	AudioPlayer audioPlayer;
 
 	std::vector<std::vector<Spritesheet> > spritesheets;
-	std::vector<sf::SoundBuffer> soundBuffers;
+	std::vector<std::vector<sf::SoundBuffer>> soundBuffers;
 	std::vector<sf::Texture> items = std::vector<sf::Texture>(glb::NUMBER_OF_ITEMS);
 	std::vector<sf::Texture> otherTextures = std::vector<sf::Texture>(glb::NUMBER_OF_MISC_TEXTURES);
 
@@ -31,8 +31,8 @@ public:
 	const sf::Texture& getItemTexture(glb::item type);
 	const sf::Texture & getMiscTexture(int type);
 
-	const sf::SoundBuffer& getSoundBuffer(int type);
-	const std::vector<sf::SoundBuffer>& getSoundBuffers();
+	const std::vector<sf::SoundBuffer>& getSoundBuffer(int type);
+	const std::vector<std::vector<sf::SoundBuffer>>& getSoundBuffers();
 
 	AudioPlayer& getAudioPlayer();
 
