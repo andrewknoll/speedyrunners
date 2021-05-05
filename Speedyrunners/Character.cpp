@@ -175,6 +175,14 @@ void Character::update(const sf::Time& dT, const TileMap& tiles)
 	float dtSec = dT.asSeconds();
 	sf::Vector2f runningSpeed = vel;
 
+	if (currJumpCD > sf::Time::Zero) {
+		currJumpCD = currJumpCD - dT;
+	}
+	else {
+		currJumpCD = sf::Time::Zero;
+	}
+	
+
 
 	// New vel:
 	updateVel(dtSec);
@@ -339,10 +347,11 @@ void Character::stopSliding() {
 }
 
 void Character::jump() {
-	if (isGrounded) {
+	if (isGrounded && currJumpCD == sf::Time::Zero) {
 		vel.y = -jumpingSpeed;
 		isGrounded = false;
 		setAnimation(JumpAnim);
+		currJumpCD = jumpCoolDown;
 		audioPlayer.play(AudioPlayer::Effect::JUMP);
 	}
 	else if (isAtWallJump) {
