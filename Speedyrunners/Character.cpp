@@ -168,6 +168,8 @@ void Character::updateVel(const float& dtSec) {
 
 void Character::update(const sf::Time& dT, const TileMap& tiles)
 {
+
+
 	updateRunning();
 	setFriction();
 	float dtSec = dT.asSeconds();

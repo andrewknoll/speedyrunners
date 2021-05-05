@@ -487,6 +487,7 @@ void NPC::plan() {
 	}
 }
 
+
 void NPC::doBasicMovement(const TileNode& current, const TileNode& n, bool& jumped) {
 	bool right = getCharacterCell().cell[0] < n.cell[0];
 	while (!nodeWasReached(n)) {
@@ -514,9 +515,11 @@ void NPC::followPath() {
 	Tiles::Collidable underMe;
 	int step = 0;
 	bool jumped = false;
+
+	sf::Time sleeptime = sf::seconds(0.05);
 	if (!path.empty()) {
 		//Falta el slide
-		for (auto next : path) {
+		for (auto& next : path) {
 			jumped = false;
 			std::cout << step << std::endl;
 			if (current.data.canWallJumpLeft == 1 || current.data.canWallJumpRight == 1) {
@@ -527,12 +530,12 @@ void NPC::followPath() {
 			else if (!current.data.isHooking && next->data.isHooking) {
 				//Use hook
 				me->useHook(true);
-				while (!nodeWasReached(*next));
+				while (!nodeWasReached(*next)) sf::sleep(sleeptime);
 			}
 			else if (current.data.isHooking && !next->data.isHooking) {
 				//Stop using hook
 				me->useHook(false);
-				while (!nodeWasReached(*next));
+				while (!nodeWasReached(*next)) sf::sleep(sleeptime);
 			}
 			else {
 				doBasicMovement(current, *next, jumped);

@@ -46,7 +46,7 @@ public:
 	void loop(const int effect, bool loopIt = true);
 	void loop(const Effect effect, bool loopIt = true);
 
-	// Play from beggining once
+	// Stop all efects from the given type
 	void stop(const int effect);
 	void stop(const Effect effect);
 

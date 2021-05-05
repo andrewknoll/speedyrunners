@@ -63,6 +63,9 @@ protected:
 	std::shared_ptr<Animation> currentAnimation;
 	mutable sf::Sprite mySprite;
 	sf::Time countdown = PERIOD;
+	sf::Time jumpCoolDown = sf::seconds(0.1);
+	sf::Time currJumpCD = jumpCoolDown;
+
 	std::vector<AnimationPtr> animations = std::vector<AnimationPtr>(glb::NUMBER_OF_ANIMATIONS);
 
 	// parameters, here so they can be different e.g for bots:
