@@ -25,7 +25,22 @@ public:
 		TACKLE,
 		WIND_AIRTIME, // going fast in the air?
 		WRONG_WAY,
-		PICKUP_BOOSTACOKE
+		PICKUP_BOOSTACOKE,
+		// ----------------- UI:
+		GAMEPLAY_TIMERUP,
+		UI_COUNTDOWN,
+		CHARACTER_OUTOFSCREEN,
+		COUNTDOWN_SLIDE_IN,
+		COUNTDOWN_TIMER_1,
+		COUNTDOWN_TIMER_3_2,
+		COUNTDOWN_TIMER_GO,
+		COUNTDOWN_TIMER_BUILDUP,
+		PAUSE,
+		SUDDEN_DEATH_ACTIVATE,
+		WIN_GOTO_SCOREBOARD,
+		WIN_ROUND,
+		TEXT_APPEAR,
+		TEXT_DISAPPEAR
 	};
 protected:
 	std::vector<std::vector<sf::Sound>> sounds; // like sf::Sprite for sounds

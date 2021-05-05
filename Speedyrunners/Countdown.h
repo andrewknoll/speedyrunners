@@ -3,6 +3,8 @@
 #include "SFML/Graphics.hpp"
 #include "Globals.hpp"
 
+class AudioPlayer;
+
 class Countdown 
 {
 	//sf::Time remaining;
@@ -22,9 +24,12 @@ class Countdown
 	//std::shared_ptr<sf::RenderWindow> window;
 
 	//void updateSprite(const sf::RenderWindow& window);
+	AudioPlayer& audioPlayer;
 
 
 	void updateSprite();
+
+	void playSecondSFX(const int second);
 
 public:
 

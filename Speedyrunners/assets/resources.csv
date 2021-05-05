@@ -28,6 +28,20 @@ A,game_tackle_oppenent_hit_1.wav,game_tackle_oppenent_hit_2.wav,game_tackle_oppe
 A,game_wind_airtime_3.wav
 A,game_wrong_way.wav
 A,pickup_boostacoke_base.wav,pickup_boostacoke_chime.wav
+A2,Gameplay_timerup.wav
+A2,Ui_countdown.wav
+A2,game_character_outofscreen.wav
+A2,game_countdown_slide_in.wav
+A2,game_countdown_timer_1.wav
+A2,game_countdown_timer_3_2.wav
+A2,game_countdown_timer_GO.wav
+A2,game_countdown_timer_buildup_start_at_3.wa
+A2,game_pause.wav
+A2,game_sudden_death_activate.wav
+A2,game_win_goto_scoreboard.wav
+A2,game_win_round_1.wav,game_win_round_2.wav
+A2,text_appear_1.wav,text_appear_2.wav,text_appear_3.wav,text_appear_4.wav
+A2,text_dissappear_1.wav,text_dissappear_2.wav
 
 I,0,Content/Sprites/rocket.png
 
