@@ -3,11 +3,13 @@
 
 
 
-Menu::Menu(sf::RenderWindow& _window) : window(&_window)
+Menu::Menu(sf::RenderWindow& _window, Settings& _settings) 
+	: window(&_window), settings(_settings)
 {
 }
 
-Menu::Menu(sf::RenderWindow* _window) : window(_window)
+Menu::Menu(sf::RenderWindow* _window, Settings& _settings) :
+	window(_window), settings(_settings)
 {
 }
 
@@ -16,7 +18,7 @@ Menu::Menu(sf::RenderWindow* _window) : window(_window)
 	elements.emplace_back(e);
 }*/
 
-void Menu::setMainMenu(const Settings& settings)
+void Menu::setMainMenu()
 {
 	// Color plano de fondo:
 	bgColor = sf::Color(0);//;63, 92, 123);
@@ -64,10 +66,29 @@ void Menu::setMainMenu(const Settings& settings)
 	elements.emplace_back(std::make_unique<TextElement>(settings, mainTextFontPath, "QUIT", size, pos, true));
 }
 
-void Menu::loop(Settings& settings)
+
+void Menu::setCharacterSelect() {
+	// Path:
+	std::string path = glb::CONTENT_PATH + "UI/MultiplayerMenu/Lobby/";
+	// 
+	currentMenuPage = elements.size();
+	clear();
+
+	// background:
+	backgrounds.emplace_back(menuPath + "SpeedRunners/Menu_mid_City_B.png", *window, sf::FloatRect(0, 0, 1, 1));
+	backgrounds.back().setTextureCoords(sf::FloatRect(0, 0, 1, 0.95)); // Solo se muestra la mitad superior de la textura
+
+	// character board:
+	backgrounds.emplace_back(menuPath + "SpeedRunners/Menu_characterBoard.png", *window, sf::FloatRect(0.33, 0.09, 0.66, 0.9));
+	//backgrounds.back().fixProportions();
+
+}
+
+
+void Menu::loop()
 {
 	while (true) {
-		update(settings);
+		update();
 		draw();
 	}
 }
@@ -89,7 +110,21 @@ void Menu::draw()
 
 
 void Menu::handleClick(int i) {
-	std::cout << "Clicked element " << i << "\n";
+	switch (currentMenuPage + i) {
+	case 0:
+	{
+		std::cout << "Clicked multiplayer\n";
+		setCharacterSelect();
+		break;
+	}
+	case 1:
+	{
+		std::cout << "Clicked story\n";
+		break;
+	}
+	default:
+		std::cout << "Clicked element " << i << "\n";
+	}
 }
 
 void Menu::pollEvents()
@@ -113,8 +148,14 @@ void Menu::pollEvents()
 	}
 }
 
-void Menu::update(Settings& settings)
+void Menu::update()
 {
 	pollEvents();
 	// TODO: gestion de input, cambios de estado
+}
+
+void Menu::clear()
+{
+	backgrounds.clear();
+	elements.clear();
 }

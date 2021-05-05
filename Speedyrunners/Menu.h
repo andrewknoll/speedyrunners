@@ -9,10 +9,12 @@
 class Menu
 {
 	sf::RenderWindow* window;
+	Settings& settings;
 
 	std::vector<Background> backgrounds;
 	std::vector<std::unique_ptr<UIElement>> elements;
 
+	int currentMenuPage = 0;
 
 	// Main menu:
 	sf::Color bgColor = sf::Color(63, 92, 123);
@@ -21,25 +23,29 @@ class Menu
 	void draw();
 	void handleClick(int i);
 	void pollEvents();
-	void update(Settings& settings);
+	void update();
 	//void update(Settings& settings);
+
+	void clear();
 
 public:
 	//void addElement(const UIElement& e);
 	//Menu(std::shared_ptr<sf::RenderWindow> _window);
-	Menu(sf::RenderWindow& _window);
+	Menu(sf::RenderWindow& _window, Settings& _settings);
 
-	Menu(sf::RenderWindow* _window);
+	Menu(sf::RenderWindow* _window, Settings& _settings);
 
 	void addElement(std::unique_ptr<UIElement> e);
 
 	//void addElement(std::shared_ptr<UIElement> e);
 
-	void setMainMenu(const Settings& settings);
+	void setMainMenu();
+
+	void setCharacterSelect();
 
 	//void setMainMenu();
 
-	void loop(Settings& settings);
+	void loop();
 
 
 };

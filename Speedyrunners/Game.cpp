@@ -154,12 +154,12 @@ void Game::loop()
 
 void Game::loopMenu()
 {
-	Menu menu(window);
+	Menu menu(window, settings);
 	if (!src.musicPlayer.isPlaying(MusicPlayer::MusicType::MENU)) {
 		src.musicPlayer.playMusicTrack(MusicPlayer::MusicType::MENU);
 	}
-	menu.setMainMenu(settings);
-	menu.loop(settings); // , this);
+	menu.setMainMenu();
+	menu.loop(); // , this);
 }
 
 void Game::addCharacter(const CharPtr character)

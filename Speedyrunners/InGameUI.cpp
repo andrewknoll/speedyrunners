@@ -2,6 +2,9 @@
 #include "UISprite.h"
 #include "Game.h"
 
+// TODO: USAR Content\UI\MultiplayerHUD !!!!!!!!!!!! es donde esta todo!!!!!!! no en UI/ingame........
+
+
 void InGameUI::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	for (const auto& e : sprites) {
