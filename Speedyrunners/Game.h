@@ -40,6 +40,8 @@ protected:
 
 	Resources& src;
 
+	bool suddenDeath = false;
+
 	State state;
 
 	float aspectRatio = 16.0 / 9.0;

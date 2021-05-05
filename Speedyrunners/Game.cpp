@@ -229,6 +229,8 @@ void Game::update()
 				if (characters[i]->isDead()) continue;
 				if (!cam.isInAllowedBounds(characters[i])) {
 					characters[i]->die();
+					suddenDeath = true;
+					cam.setSuddenDeath(true);
 				}
 				target = i; //Set target initial value to oneself
 				auto p = getPlayerAt(i);
@@ -379,6 +381,11 @@ void Game::draw(sf::Time dT)
 	window.clear();
 	window.setView(cam);
 	window.draw(lvl);
+
+	if (suddenDeath) {
+		window.draw(cam.getSuddenDeathRectangle());
+	}
+
 	switch (state) {
 	case State::Editing:
 	{// sf::Mouse::getPosition() - window.getPosition()

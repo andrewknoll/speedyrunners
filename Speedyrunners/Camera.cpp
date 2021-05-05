@@ -21,6 +21,8 @@ Camera::Camera(const sf::FloatRect& rect) : sf::View(rect)
 	// Render stuff not affected by the view
 	//window.draw(someText);
 	size0 = getSize();
+	viewportShape = sf::RectangleShape(size0);
+	viewportShape.setFillColor(sf::Color::Transparent);
 } 
 
 void Camera::moveByMouse(sf::Vector2i pos)
@@ -50,13 +52,14 @@ void Camera::operator=(const sf::View& v)
 }
 
 void Camera::follow(std::vector<CharPtr>& characters, int first) {
-	sf::Vector2f avg = sf::Vector2f(0.0, 0.0);
-	sf::Vector2f distance = sf::Vector2f(0.0, 0.0);
+	sf::Vector2f avg = sf::Vector2f(0.0f, 0.0f);
+	sf::Vector2f newCenter = sf::Vector2f(0.0f, 0.0f);
+	sf::Vector2f center, diff;
+	sf::Vector2f distance = sf::Vector2f(0.0f, 0.0f);
 	float avgDistance = 0.0f;
 	sf::Vector2f firstPos = characters[first]->getPosition();
-	sf::FloatRect viewport = getViewport();
-	viewport.width = getSize().x;
-	viewport.height = getSize().y;
+	sf::FloatRect viewport = viewRectangle();
+
 	int count = 0;
 
 	//Calculate average position of all players
@@ -74,30 +77,72 @@ void Camera::follow(std::vector<CharPtr>& characters, int first) {
 	avg.y += std::min(0.0f, firstPos.y - (avg.y - viewport.height /2.0f * glb::viewMarginFactor));
 	avg.y -= std::max(0.0f, firstPos.y - (avg.y + viewport.height /2.0f* glb::viewMarginFactor));
 
-	//Calculate scale, depending on the average of the distance of each character to the center
-	for (int i = 0; i < characters.size(); i++) {
-		if (!characters[i]->isDead()) {
-			distance = avg - characters[i]->getPosition();
-			avgDistance += utils::length(distance);
+	if (!suddenDeath) {
+		//Calculate scale, depending on the average of the distance of each character to the center
+		for (int i = 0; i < characters.size(); i++) {
+			if (!characters[i]->isDead()) {
+				distance = avg - characters[i]->getPosition();
+				avgDistance += utils::length(distance);
+			}
 		}
+		avgDistance /= count;
+		sf::Vector2f size = size0 * (avgDistance * glb::cameraZoomFunctionSteepness + 1.0f);
+		setSize(size);
+		viewportShape.setSize(size);
+		//std::cout << "Size: " << size.x << " " << size.y << " avg: " << "\n";
 	}
-	avgDistance /= count;
-	sf::Vector2f size = size0 * (avgDistance * glb::cameraZoomFunctionSteepness + 1.0f);
-	setSize(size);
-	//std::cout << "Size: " << size.x << " " << size.y << " avg: " << "\n";
-	
 	//Ensure camera doesn't go out of bounds
 	avg.x = std::max(avg.x, viewport.width / 2.0f);
 	avg.y = std::max(avg.y, viewport.height / 2.0f);
 	//TO-DO: Check max value
 
+
+	//Smooth translation
+	/*center = getCenter();
+	newCenter = getCenter();
+	diff = avg - center;
+
+	while (abs(diff.x) > EPSILON || abs(diff.y) > EPSILON) {
+		if (abs(diff.x) > EPSILON) {
+			newCenter.x += EPSILON * diff.x;
+		}
+		if (abs(diff.y) > EPSILON) {
+			newCenter.y += EPSILON * diff.y;
+		}
+		setCenter(newCenter);
+		diff = avg - newCenter;
+	}*/
 	setCenter(avg);
+
+	if (suddenDeath) {
+		setSize(size0);
+		if (rectSizeFactor > 0.3) {
+			rectSizeFactor -= 1e-5f;
+			viewportShape.setSize(size0 * rectSizeFactor);
+		}
+		viewportShape.setOutlineThickness(std::max(size0.x, size0.y) * (1.0f - rectSizeFactor) + 1.0f);
+		viewportShape.setPosition(getCenter() - size0 * rectSizeFactor / 2.0f);
+		if (increasingRedness) {
+			redValue += 2;
+		}
+		else {
+			redValue -= 2;
+		}
+		if (redValue < 2 || redValue > 253) {
+			increasingRedness = !increasingRedness;
+		}
+		viewportShape.setOutlineColor(sf::Color(redValue, 0, 0, 255));
+	}
+}
+
+sf::RectangleShape Camera::getSuddenDeathRectangle() {
+	return viewportShape;
 }
 
 sf::FloatRect Camera::viewRectangle() const {
-	sf::FloatRect viewport = getViewport();
-	viewport.width = getSize().x;
-	viewport.height = getSize().y;
+	sf::FloatRect viewport = sf::FloatRect();
+	viewport.width = viewportShape.getSize().x;
+	viewport.height = viewportShape.getSize().y;
 	viewport.left = getCenter().x - viewport.width / 2;
 	viewport.top = getCenter().y - viewport.height / 2;
 	return viewport;
@@ -106,4 +151,8 @@ sf::FloatRect Camera::viewRectangle() const {
 bool Camera::isInAllowedBounds(CharPtr character) const {
 	auto pos = character->getPosition();
 	return viewRectangle().contains(pos);
+}
+
+void Camera::setSuddenDeath(bool sd) {
+	this->suddenDeath = sd;
 }
