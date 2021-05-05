@@ -10,16 +10,18 @@
 class NPC : public PlayerSlot
 {
 	enum MoveType : int {NOTHING, START_RUNNING_LEFT, START_RUNNING_RIGHT, JUMP, SLIDE, USE_HOOK, USE_ITEM};
-	/*struct Move {
-		enum MoveType type;
-		int heuristic;
-		int cost_so_far;
+	struct Goal {
+		sf::Vector2f position;
+		float radius;
 
-		Move();
-		Move(MoveType t, int h);
-		bool operator< (const Move& m);
-		bool operator> (const Move& m);
-	};*/
+		friend bool operator== (const Goal& a, const Goal& b) {
+			return a.position == b.position && a.radius == b.radius;
+		}
+
+		friend bool operator!= (const Goal& a, const Goal& b) {
+			return a.position != b.position && a.radius != b.radius;
+		}
+	};
 
 	const float RUN_COST = 3.0f;
 	const float FREE_FALL_COST = 1.0f;
@@ -34,6 +36,7 @@ class NPC : public PlayerSlot
 	const float THRESHOLD_PER_RADIUS_UNIT = 3.0f;
 
 	const float CLOSENESS_THRESHOLD = 0.01f;
+	const float FARNESS_THRESHOLD = 30.0f;
 
 	using CharPtr = std::shared_ptr<Character>;
 	using TilePriorityQueue = PriorityQueue<NodeData>;
@@ -44,10 +47,14 @@ private:
 	const int N_MOVES = 7;
 	TileMapPtr tm;
 
-	sf::Vector2f goalPos;
-	float goalRadius;
+	std::list<Goal> goals;
+	Goal currentGoal;
 
-	std::atomic<bool> pathFound;
+	std::mutex pathMtx;
+	std::mutex goalMtx;
+	std::atomic<short int> pathFound = 0;
+	std::atomic<bool> stopFollowing = false;
+	
 
 	TilePriorityQueue frontier;
 	std::vector<TileNode> expanded;
@@ -61,18 +68,18 @@ private:
 	void calculateJumpNeighbours(const TileNode& current);
 	void calculateHookNeighbours(const bool right, const TileNode& current);
 	void calculateWallJumpNeighbours(const bool right, TileNode& current);
-	void buildPath(TileNode foundGoal);
+	std::list<std::shared_ptr<TileNode> > buildPath(TileNode foundGoal);
 	bool isGoal(const TileNode & current) const;
-	bool nodeWasReached(const TileNode& n) const;
+	bool nodeWasReached(const TileNode& n, const float closenessThreshold) const;
 	bool detectDirectionChange(const TileNode& n, const TileNode& current);
 	float expandToNeighbour(const TileNode & current, const int dx, const int dy);
 public:
 	NPC();
 	TileNode getCharacterCell() const;
 	void setTileMap(TileMapPtr tm);
-	void setGoal(const sf::Vector2f& goalPos, const float goalRadius);
+	void addGoal(const sf::Vector2f& goalPos, const float goalRadius);
 	void plan();
-	void doBasicMovement(const TileNode & current, const TileNode & n, bool & jumped);
+	void doBasicMovement(const TileNode & current, const TileNode & n, bool & jumped, bool block);
 	void followPath();
 	bool pathWasFound() const;
 	std::list<selbaward::Line> debugLines();

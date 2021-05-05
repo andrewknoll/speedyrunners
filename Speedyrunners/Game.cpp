@@ -241,16 +241,22 @@ void Game::update()
 			}
 			for (int i = 0; i < npcs.size(); i++) {
 				if (npcs[i] != nullptr) {
-					Checkpoint cp = checkpoints[activeCheckpoint];// checkpoints[1];
-					npcs[i]->setGoal(cp.getPos(), cp.getRadius());
-					if (threadPool[i] == nullptr) {
-						threadPool[i] = std::make_unique<std::thread>([&, i]() {
+					Checkpoint cp = checkpoints[activeCheckpoint]; // checkpoints[1];
+					npcs[i]->addGoal(cp.getPos(), cp.getRadius());
+					if (threadPool[2*i] == nullptr) {
+						threadPool[2 * i] = std::make_unique<std::thread>([&, i]() {
 							while (running && !npcs[i]->getCharacter()->isDead()) {
 								npcs[i]->plan();
-								npcs[i]->followPath();
 							}
 						});
 						//threadPool[i]->detach();
+					}
+					if (threadPool[2 * i + 1] == nullptr) {
+						threadPool[2 * i + 1] = std::make_unique<std::thread>([&, i]() {
+							while (running && !npcs[i]->getCharacter()->isDead()) {
+								npcs[i]->followPath();
+							}
+						});
 					}
 				}
 			}

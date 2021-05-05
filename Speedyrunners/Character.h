@@ -53,6 +53,7 @@ protected:
 	bool isGrounded = false;
 	bool hasDoubleJumped = false;
 	bool dead = false;
+	bool holdingJump = false;
 
 	// For animation:
 	AnimationIndex animIdx;
@@ -135,7 +136,8 @@ public:
 	void die();
 	void slide();
 	void stopSliding();
-	void jump();
+	void startJumping();
+	void stopJumping();
 
 	bool isDead() const;
 	bool isSwinging() const;

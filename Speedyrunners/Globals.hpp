@@ -52,8 +52,8 @@ namespace glb
 	const float cameraZoomFunctionSteepness = 1e-4;
 
 
-	const sf::Vector2i jump1Tiles = { 21,3 };
-	const sf::Vector2i jump2Tiles = { 22,3 };
+	const sf::Vector2i jump1Tiles = { 10,3 };
+	const sf::Vector2i jump2Tiles = { 10,3 };
 
 	const float cosine45 = 0.70710678118654752440f;
 

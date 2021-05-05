@@ -26,10 +26,9 @@ bool Player::captureEvents(const sf::Event& event) {
 		}
 		if (event.type == sf::Event::KeyPressed) {
 
-			if (event.key.code == k_jump) {
-				//TODO: Comprobar WallJumping
-				//TODO: Considerar long presses
-				me->jump();
+			if (event.key.code == k_jump && !holdingUp) {
+				holdingUp = true;
+				me->startJumping();
 			}
 
 			/*else if (event.key.code == sf::Keyboard::Key::Down) {
@@ -59,6 +58,10 @@ bool Player::captureEvents(const sf::Event& event) {
 			}
 			else if (event.key.code == k_down) {
 				me->stopSliding();
+			}
+			else if (event.key.code == k_jump) {
+				holdingUp = false;
+				me->stopJumping();
 			}
 		}
 	}
