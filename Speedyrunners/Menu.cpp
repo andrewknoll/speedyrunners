@@ -20,6 +20,8 @@ Menu::Menu(sf::RenderWindow* _window, Settings& _settings) :
 
 void Menu::setMainMenu()
 {
+	currentMenuPage = 0;
+	clear();
 	// Color plano de fondo:
 	bgColor = sf::Color(0);//;63, 92, 123);
 	// Sky:
@@ -66,7 +68,21 @@ void Menu::setMainMenu()
 	elements.emplace_back(std::make_unique<TextElement>(settings, mainTextFontPath, "QUIT", size, pos, true));
 }
 
+void Menu::addTopLeftSign(const std::string& path) {
+	backgrounds.emplace_back(path, *window, sf::FloatRect(0, 0, 0.33, 0.33));
+	//backgrounds.back().fixProportions();
+}
 
+
+void Menu::addExitSign() {
+	std::string texPath = menuPath + "SpeedRunners/Menu_Back.png";
+	float size = 0.1;
+	sf::Vector2f pos(0.9, 0.005);
+	std::vector<sf::FloatRect> rects{ sf::FloatRect(0.005,0,1,0.5), sf::FloatRect(0.005,0.5,1,0.5) };
+	elements.emplace_back(std::make_unique<UISprite>(texPath, settings, size, pos, true, rects));
+}
+
+	
 void Menu::setCharacterSelect() {
 	// Path:
 	std::string path = glb::CONTENT_PATH + "UI/MultiplayerMenu/Lobby/";
@@ -76,12 +92,19 @@ void Menu::setCharacterSelect() {
 
 	// background:
 	backgrounds.emplace_back(menuPath + "SpeedRunners/Menu_mid_City_B.png", *window, sf::FloatRect(0, 0, 1, 1));
-	backgrounds.back().setTextureCoords(sf::FloatRect(0, 0, 1, 0.95)); // Solo se muestra la mitad superior de la textura
+	backgrounds.back().setTextureCoords(sf::FloatRect(0.01, 0, 0.99, 0.95)); // Solo se muestra la mitad superior de la textura
 
+	// lobby sign:
+	addTopLeftSign(menuPath + "SpeedRunners/Menu_lobby.png");
+	
 	// character board:
 	backgrounds.emplace_back(menuPath + "SpeedRunners/Menu_characterBoard.png", *window, sf::FloatRect(0.33, 0.09, 0.66, 0.9));
 	//backgrounds.back().fixProportions();
 
+
+
+	// Exit:
+	addExitSign();
 }
 
 
@@ -121,9 +144,15 @@ void Menu::handleClick(int i) {
 	{
 		std::cout << "Clicked story\n";
 		break;
+	} 
+	case 8: // exit sigh
+	{
+		std::cout << "Clicked exit sign\n";
+		setMainMenu();
+		break;
 	}
 	default:
-		std::cout << "Clicked element " << i << "\n";
+		std::cout << "Clicked element " << currentMenuPage + i << "\n";
 	}
 }
 

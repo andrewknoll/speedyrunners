@@ -27,7 +27,8 @@ class Menu
 	//void update(Settings& settings);
 
 	void clear();
-
+	void addTopLeftSign(const std::string& path);
+	void addExitSign();
 public:
 	//void addElement(const UIElement& e);
 	//Menu(std::shared_ptr<sf::RenderWindow> _window);
@@ -40,6 +41,8 @@ public:
 	//void addElement(std::shared_ptr<UIElement> e);
 
 	void setMainMenu();
+
+	
 
 	void setCharacterSelect();
 
