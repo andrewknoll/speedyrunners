@@ -29,6 +29,7 @@ class Menu
 	void clear();
 	void addTopLeftSign(const std::string& path);
 	void addExitSign();
+	void addLobbyWidgets(const std::string& lobbyPath);
 public:
 	//void addElement(const UIElement& e);
 	//Menu(std::shared_ptr<sf::RenderWindow> _window);

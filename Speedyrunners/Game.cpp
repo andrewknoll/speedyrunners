@@ -31,7 +31,7 @@ Game::Game()
 	settings.setResolution(sf::Vector2i(1600, 900));
 
 	// DEBUG de menus:
-	//loopMenu();
+	loopMenu();
 }
 
 void Game::setUpWindow() {

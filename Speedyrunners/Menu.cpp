@@ -82,10 +82,23 @@ void Menu::addExitSign() {
 	elements.emplace_back(std::make_unique<UISprite>(texPath, settings, size, pos, true, rects));
 }
 
-	
+void Menu::addLobbyWidgets(const std::string& lobbyPath) {
+	std::vector<sf::Vector2f> positions;
+	sf::Vector2f pos(0.355, 0.13);
+	positions.push_back(pos);
+	positions.push_back(pos + sf::Vector2f(0, 0.855 / 2.0));
+	positions.push_back(pos + sf::Vector2f(0.316, 0));
+	positions.push_back(pos + sf::Vector2f(0.316, 0.855 / 2.0));
+	for (const auto& pos : positions) { // four widgets
+		backgrounds.emplace_back(lobbyPath + "PlayerWidgetBackground.png", *window, sf::FloatRect(pos.x, pos.y, 0.66 / 2.25, 0.9 / 2.25));
+		backgrounds.back().setTextureCoords(sf::FloatRect(0.01, 0.02, 0.99, 0.98)); 
+	}
+}
+
+
 void Menu::setCharacterSelect() {
 	// Path:
-	std::string path = glb::CONTENT_PATH + "UI/MultiplayerMenu/Lobby/";
+	std::string lobbyPath = glb::CONTENT_PATH + "UI/MultiplayerMenu/Lobby/";
 	// 
 	currentMenuPage = elements.size();
 	clear();
@@ -100,8 +113,9 @@ void Menu::setCharacterSelect() {
 	// character board:
 	backgrounds.emplace_back(menuPath + "SpeedRunners/Menu_characterBoard.png", *window, sf::FloatRect(0.33, 0.09, 0.66, 0.9));
 	//backgrounds.back().fixProportions();
-
-
+	// Player widgets:
+	addLobbyWidgets(lobbyPath);
+	
 
 	// Exit:
 	addExitSign();
