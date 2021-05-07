@@ -26,9 +26,12 @@ Game::Game()
 	loadLevel("first.csv");
 	//TO-DO: Utilizar "sets" de musica predeterminados
 	//o asignarlas al nivel
-	
+
 
 	settings.setResolution(sf::Vector2i(1600, 900));
+
+	// DEBUG de menus:
+	loopMenu();
 }
 
 void Game::setUpWindow() {
@@ -54,7 +57,7 @@ void Game::updatePositions()
 		else {
 			d = utils::distance(c->getPosition(), cpPos);
 		}
-		
+
 		c->setDToCheckpoint(d);
 		// get distance d to active checkpoint
 		// if d < r: next checkpoint
@@ -119,7 +122,7 @@ void Game::loadLevel(const std::string& lvlPath)
 	for (NPCPtr npc : npcs) {
 		npc->setTileMap(std::make_shared<TileMap>(lvl.getCollidableTiles()));
 	}
-	
+
 }
 
 void Game::loop()
@@ -128,7 +131,7 @@ void Game::loop()
 	float fps, showPeriod = 2;
 	sf::Clock clock = sf::Clock::Clock();
 	sf::Time currentTime, previousTime = clock.getElapsedTime();
-	
+
 	while (window.isOpen()) {
 		if (!src.musicPlayer.isPlaying(MusicPlayer::MusicType::REGULAR)) {
 			src.musicPlayer.playMusicTrack(MusicPlayer::MusicType::REGULAR);
@@ -153,12 +156,12 @@ void Game::loop()
 
 void Game::loopMenu()
 {
-	Menu menu(window);
+	Menu menu(window, settings);
 	if (!src.musicPlayer.isPlaying(MusicPlayer::MusicType::MENU)) {
 		src.musicPlayer.playMusicTrack(MusicPlayer::MusicType::MENU);
 	}
-	menu.setMainMenu(settings);
-	menu.loop(settings); // , this);
+	menu.setMainMenu();
+	menu.loop(); // , this);
 }
 
 void Game::addCharacter(const CharPtr character)
@@ -167,7 +170,7 @@ void Game::addCharacter(const CharPtr character)
 		characters.emplace_back(character);
 		ui.setCharacters(characters);
 	}
-	
+
 }
 /*
 Game::CharPtr Game::getCharacterAt(int pos) const {
@@ -285,7 +288,7 @@ void Game::update()
 			cam = window.getDefaultView();
 			lvl.loadBackground(lvl.getBackgroundPath(), window);
 		}
-		
+
 	}
 	if (state == State::Playing && dT.asSeconds() < 0.1) {
 		for (auto c : characters) {
@@ -296,7 +299,7 @@ void Game::update()
 			it->update(dT);
 		}
 		updatePositions();
-		cam.follow(characters); 
+		cam.follow(characters);
 	}
 	else if (state == State::Countdown) {
 		updateNPCs();
@@ -332,7 +335,7 @@ void Game::processEditingInputs(const sf::Event& event) {
 			//std::cout << "New tile selected: " << selectedTile << std::endl;
 		}
 	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) { // sf::Keyboard::isKeyPressed(sf::Keyboard::S) && 
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) { // sf::Keyboard::isKeyPressed(sf::Keyboard::S) &&
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
 			lvl.setCheckpoints(checkpoints);
 			lvl.save("first.csv");
@@ -368,15 +371,15 @@ void Game::processEditingInputs(const sf::Event& event) {
 		//falcon.setScale(0.5, 0.5);
 		addCharacter(falcon);
 
-	} 
-	
+	}
+
 	// Debug player positions (P to show):
 	printCharacterPositions(event);
 
 }
 
 void Game::printCharacterPositions(const sf::Event& e) const {
-	
+
 	if (e.type == sf::Event::KeyPressed && e.key.code == (sf::Keyboard::P)) {
 		std::cout << "Character positions:\n";
 		for (auto c : characters)  std::cout << c->getName() << " | ";
@@ -418,9 +421,9 @@ void Game::draw(sf::Time dT)
 			for (auto l : npc->debugLines()) {
 				window.draw(l);
 			}
-			
+
 		}
-		// Selected tile 
+		// Selected tile
 		lvl.drawTile(window, sf::RenderStates(), utils::clampMouseCoord(window), selectedTile);
 		break;
 	}
@@ -428,7 +431,7 @@ void Game::draw(sf::Time dT)
 	{
 		countdown.draw(window);
 		//window.draw(countdown);
-		
+
 	} // no break, we also animate the characters
 	case State::Playing:
 	{ // Animaciones de personajes:
@@ -451,9 +454,8 @@ void Game::draw(sf::Time dT)
 	}
 	}
 
-	
+
 	//lvl.draw(window, cam);
 	//window.draw();
 	window.display();
 }
-
