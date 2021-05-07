@@ -60,7 +60,7 @@ private:
 	mutable std::mutex mtx;
 public:
 	bool safeEmpty();
-	void safePush(Node<T>&& _Val);
+	void safePush(const Node<T>& _Val);
 	bool contains(const Node<T>& val) const;
 	bool insert(Node<T> val);
 	void clear();

@@ -354,7 +354,7 @@ void Character::startJumping() {
 	}
 	else if (isAtWallJump) {
 		vel.y = -jumpingSpeed * 0.9; 
-		if (facingRight) vel.x = jumpingSpeed * 1.3;
+		if (facingRight) vel.x = jumpingSpeed * 0.9;
 		else vel.x = -jumpingSpeed * 1.5;
 		setAnimation(JumpAnim);
 		isAtWallJump = false;

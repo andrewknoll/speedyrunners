@@ -43,6 +43,16 @@ void RNG::fillRand(int* arr, const int size, const int min, const int max) const
 
 namespace utils {
 
+	template <class T>
+	bool contains(std::list<T> l, T v) {
+		for (auto e : l) {
+			if (e == v) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	int clamp(int val, int min, int max) {
 		return (val < min) ? min : (val >= max) ? max : val;
 	}

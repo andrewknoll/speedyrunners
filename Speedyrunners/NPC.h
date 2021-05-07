@@ -48,31 +48,33 @@ private:
 	TileMapPtr tm;
 
 	std::list<Goal> goals;
-	Goal currentGoal;
+	std::shared_ptr<Goal> currentGoal[2];
 
-	std::mutex pathMtx;
+	std::mutex pathMtx[2];
 	std::mutex goalMtx;
-	std::atomic<short int> pathFound = 0;
+	std::mutex choiceMtx;
+	bool planningPath[2] = { false, false };
+	std::atomic<short int> pathFound[2] = { 0, 0 };
 	std::atomic<bool> stopFollowing = false;
-	
 
-	TilePriorityQueue frontier;
-	std::vector<TileNode> expanded;
-	std::list<std::shared_ptr<TileNode> > path;
+	TilePriorityQueue frontier[2];
+	std::vector<TileNode> expanded[2];
+	std::list<std::shared_ptr<TileNode> > path[2];
 
-	int findExpanded(const TileNode& n) const;
-	float heuristic(const TileNode& n) const;
+	int findExpanded(const TileNode& n, const int n_path) const;
+	float heuristic(const TileNode& n, const Goal& goal) const;
 	bool inBounds(const int i, const int j) const;
-	int updateExpanded(const TileNode& current, TileNode n);
+	int updateExpanded(const TileNode& current, TileNode n, const int n_path);
 	float cost(const TileNode & current, const TileNode & next) const;
-	void calculateJumpNeighbours(const TileNode& current);
-	void calculateHookNeighbours(const bool right, const TileNode& current);
-	void calculateWallJumpNeighbours(const bool right, TileNode& current);
+	void calculateJumpNeighbours(const TileNode& current, const Goal& goal, const int n_path);
+	void calculateHookNeighbours(const bool right, const TileNode& current, const Goal& goal, const int n_path);
+	void calculateWallJumpNeighbours(const bool right, TileNode& current, const Goal& goal, const int n_path);
 	std::list<std::shared_ptr<TileNode> > buildPath(TileNode foundGoal);
-	bool isGoal(const TileNode & current) const;
+	bool isGoal(const TileNode & current, const Goal& goal) const;
+	void updateGoals();
 	bool nodeWasReached(const TileNode& n, const float closenessThreshold) const;
 	bool detectDirectionChange(const TileNode& n, const TileNode& current);
-	float expandToNeighbour(const TileNode & current, const int dx, const int dy);
+	float expandToNeighbour(const TileNode & current, const Goal& goal, const int dx, const int dy, const int n_path);
 public:
 	NPC();
 	TileNode getCharacterCell() const;
@@ -81,7 +83,7 @@ public:
 	void plan();
 	void doBasicMovement(const TileNode & current, const TileNode & n, bool & jumped, bool block);
 	void followPath();
-	bool pathWasFound() const;
+	int getPathFound(int i) const;
 	std::list<selbaward::Line> debugLines();
 	std::list<sf::RectangleShape> debugExpanded();
 	std::list<sf::RectangleShape> debugHook();
