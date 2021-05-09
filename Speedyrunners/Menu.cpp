@@ -1,7 +1,7 @@
 #include "Menu.h"
 #include "utils.hpp"
 
-
+#define DEBUG_MOUSE_POS
 
 Menu::Menu(sf::RenderWindow& _window, Settings& _settings) 
 	: window(&_window), settings(_settings)
@@ -89,9 +89,11 @@ void Menu::addLobbyWidgets(const std::string& lobbyPath) {
 	positions.push_back(pos + sf::Vector2f(0, 0.855 / 2.0));
 	positions.push_back(pos + sf::Vector2f(0.316, 0));
 	positions.push_back(pos + sf::Vector2f(0.316, 0.855 / 2.0));
+	bool active = true;
 	for (const auto& pos : positions) { // four widgets
-		backgrounds.emplace_back(lobbyPath + "PlayerWidgetBackground.png", *window, sf::FloatRect(pos.x, pos.y, 0.66 / 2.25, 0.9 / 2.25));
-		backgrounds.back().setTextureCoords(sf::FloatRect(0.01, 0.02, 0.99, 0.98)); 
+		widgets.emplace_back(*window, settings, lobbyPath, pos, active);
+		active = false;
+		
 	}
 }
 
@@ -133,14 +135,9 @@ void Menu::loop()
 void Menu::draw()
 {
 	window->clear(bgColor);// sf::Color(255, 0, 0));
-	for (auto bg : backgrounds) {
-		//bg->draw(window);// 
-		window->draw(bg);
-	}
-	for (const auto& e : elements) {
-		window->draw(*e);
-		//e->draw(window);
-	}
+	for (auto bg : backgrounds)		window->draw(bg);
+	for (const auto& w : widgets)	window->draw(w);
+	for (const auto& e : elements)	window->draw(*e);
 
 	window->display();
 }
@@ -181,18 +178,27 @@ void Menu::pollEvents()
 		}
 
 		if (event.type == sf::Event::MouseMoved || event.type == sf::Event::MouseButtonPressed) { // Click
+			auto mousePos = utils::mousePosition2f(*window);
 			for (int i = 0; i < elements.size(); i++) {
+#ifdef DEBUG_MOUSE_POS
+				if (event.type == sf::Event::MouseButtonPressed) {
+					std::cout << mousePos << " rel: " << utils::globalToRelative(mousePos, *window) << "\n";
+				}
+#endif
+
 				if (elements[i]->mouseInside(*window) && event.type == sf::Event::MouseButtonPressed && event.key.code == sf::Mouse::Left) {
 					this->handleClick(i);
 					break;
 				}
 			}
+			for (auto& w : widgets) w.update(event, mousePos);
 		}
 	}
 }
 
 void Menu::update()
 {
+	//for (auto& w : widgets) w.update();
 	pollEvents();
 	// TODO: gestion de input, cambios de estado
 }
@@ -201,4 +207,5 @@ void Menu::clear()
 {
 	backgrounds.clear();
 	elements.clear();
+	widgets.clear();
 }

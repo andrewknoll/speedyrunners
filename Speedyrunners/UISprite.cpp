@@ -27,15 +27,17 @@ UISprite::UISprite(std::string texturePath, const Settings& settings,
 {
 	loadTexture(texturePath);
 	ignoreCamera = true;
-	// set the sprite size and position:
-	auto resolution = settings.windowResolution();
-	auto scale = resolution.x / sprite.getGlobalBounds().width * relativeSize;
-	sprite.setScale(scale, scale);
-	sprite.setPosition(resolution.x * relativePosition.x, resolution.y * relativePosition.y);
-
 	if (relativeTextureRects.size() > 0) {
 		setRelativeTextureRect(relativeTextureRects[0]);
 	}
+	// set the sprite size and position:
+	auto resolution = settings.windowResolution();
+	auto scale = resolution.y / sprite.getGlobalBounds().height * relativeSize;
+	//auto scale = resolution.x / sprite.getGlobalBounds().width * relativeSize;
+
+	sprite.setScale(scale, scale);
+	sprite.setPosition(resolution.x * relativePosition.x, resolution.y * relativePosition.y);
+
 	
 	if (clickable) makeClickable();
 	std::cout << "placed sprite at " << sprite.getPosition() << " " << sprite.getScale() << "\n";

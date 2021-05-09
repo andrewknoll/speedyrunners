@@ -74,6 +74,9 @@ bool Countdown::ended() const
 
 void Countdown::draw(sf::RenderWindow& window) const
 {
+	auto view = window.getView();
+	window.setView(window.getDefaultView());
 	window.draw(bgSprite);
 	window.draw(textSprite);
+	window.setView(view);
 }

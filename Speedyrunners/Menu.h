@@ -5,6 +5,7 @@
 #include "UISprite.h"
 #include "TextElement.h"
 #include "Background.h"
+#include "LobbyWidget.h"
 
 class Menu
 {
@@ -13,6 +14,7 @@ class Menu
 
 	std::vector<Background> backgrounds;
 	std::vector<std::unique_ptr<UIElement>> elements;
+	std::vector<LobbyWidget> widgets;
 
 	int currentMenuPage = 0;
 

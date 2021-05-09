@@ -85,6 +85,8 @@ namespace utils {
 
 	void scaleToFullScreenRatio(sf::Sprite& s, const sf::RenderWindow& window, const float& verticalRatio);
 
+	sf::Vector2f globalToRelative(const sf::Vector2f& global, const sf::RenderWindow& window);
+
 
 	sf::Vector2f relativeToGlobal(sf::Vector2f relative, const sf::RenderWindow& window);
 

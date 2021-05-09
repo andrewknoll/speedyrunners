@@ -154,6 +154,34 @@ std::string TileMap::to_string(bool duplicarHorizontal) const {
     return str;
 }
 
+std::string TileMap::to_string_dup_vertical() const
+{
+    std::string str = "";
+    
+    str += std::to_string(width/2) + " " + std::to_string(height*2) + "\n";
+    //std::string str = std::to_string(width) + " " + std::to_string(height) + "\n";
+    str += tileSetPath + "\n" + std::to_string(tileSize.x) + " " + std::to_string(tileSize.y)
+        + " " + std::to_string(tileSizeWorld.x) + " " + std::to_string(tileSizeWorld.y) + "\n";
+    for (size_t i = 0; i < height; ++i) {
+        for (size_t j = 0; j < width/2; ++j) {
+            str += std::to_string(tiles[j + i * width]) + " ";
+        }
+        /**************************/
+        str += "\n";
+    }
+    for (size_t di = 0; di < height; ++di) {
+        size_t i = di;
+        for (size_t dj = 0; dj < width / 2; ++dj) {
+            size_t j = dj + width / 2 + 1;
+            str += std::to_string(tiles[j + i * width]) + " ";
+        }
+        /**************************/
+        str += "\n";
+    }
+
+    return str;
+}
+
 
 bool TileMap::load(std::ifstream& file) {
     file >> width >> height;

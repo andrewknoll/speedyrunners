@@ -162,6 +162,13 @@ namespace utils {
 		scaleToFullScreen(s, window.getSize().y * verticalRatio);
 	}
 
+
+	sf::Vector2f globalToRelative(const sf::Vector2f& global, const sf::RenderWindow& window)
+	{
+		return sf::Vector2f(global.x / window.getSize().x, global.y / window.getSize().y);
+	}
+
+
 	sf::Vector2f relativeToGlobal(sf::Vector2f relative, const sf::RenderWindow& window)
 	{
 		return sf::Vector2f(relative.x * window.getSize().x, relative.y * window.getSize().y);

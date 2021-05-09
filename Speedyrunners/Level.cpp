@@ -44,6 +44,29 @@ void Level::save(const std::string& f_name) const
 
 }
 
+void Level::saveDuplicateVertical(const std::string& f_name) const
+{
+	std::cout << "Saving " << f_name << "\n";
+	std::string version = "0";
+	std::ofstream file("../assets/levels/" + f_name);
+	if (!(file << version << std::endl)) { // formato, #MAX, # nombre fichero
+		std::cerr << "File <assets/levels/" + f_name + "> inaccesible\n";
+		//exit(1);
+	}
+	// Save background:
+	file << backgroundPath << std::endl;
+	// Save checkpoints:
+	file << checkpoints.size() << "\n";
+	for (auto cp : checkpoints) {
+		file << cp.getPos().x << " " << cp.getPos().y << " " << cp.getRadius() << " ";
+	}
+	file << "\n";
+	// Save tilemap:
+	file << collidableTiles.to_string_dup_vertical() << std::endl;
+
+	std::cout << "Level saved\n";
+}
+
 void Level::load(const std::string& f_name, const sf::RenderWindow& window)
 {
 	std::cout << "Loading " << f_name << "\n";

@@ -102,7 +102,7 @@ public:
 	void drawTile(sf::RenderTarget& target, sf::RenderStates states, const sf::Vector2i& pos, const int tileNumber) const;
 
 	std::string to_string(bool duplicarHorizontal = false) const;
-
+	std::string to_string_dup_vertical() const;
 
 	std::vector<struct Tiles::Collision> collision(const sf::FloatRect& characterHitbox, bool isGrounded=false) const;
 
