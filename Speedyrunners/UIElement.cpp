@@ -17,6 +17,14 @@ void UIElement::setClickableArea(const sf::FloatRect& _clickableBox)
 	clickableBox = _clickableBox;
 }
 
+sf::FloatRect UIElement::getClickableArea() const
+{
+	if (!clickable) {
+		std::cerr << "This is not clickable\n";
+	}
+	return clickableBox;
+}
+
 /*void UIElement::draw(sf::RenderWindow& window) const
 {
 	std::cout << "draw de UIELEMENT.......\n";

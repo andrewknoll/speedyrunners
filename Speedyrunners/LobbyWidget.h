@@ -24,6 +24,14 @@ class LobbyWidget : public sf::Drawable
 
 	void addWidgetButton(const std::string& lobbyPath, const sf::Vector2f& pos, const float size, sf::RenderWindow& window, const Settings& settings, const int buttonIdx);
 
+	sf::FloatRect getTexRectForCharacter(int idx);
+
+	sf::FloatRect getNametagRectForCharacter(int idx);
+
+	void addCharacterStuff(std::string lobbyPath, sf::RenderWindow& window, const sf::Vector2f& pos);
+
+	void clear();
+
 
 public:
 	//LobbyWidget(const sf::Vector2f& pos, const Settings& settings);

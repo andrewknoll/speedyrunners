@@ -97,6 +97,8 @@ namespace utils {
 
 	sf::IntRect relativeToGlobalTextureRect(const sf::FloatRect& relative, const sf::Texture& tex);
 
+	void scaleSpriteToTextRect(sf::Sprite& sprite);
+
 	// Sets the origin to the center of the sprite
 	void centerOrigin(sf::Sprite& s);
 }

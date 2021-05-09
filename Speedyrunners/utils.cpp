@@ -190,6 +190,13 @@ namespace utils {
 		return sf::IntRect(relative.left * size.x, relative.top * size.y, relative.width*size.x, relative.height*size.y);
 	}
 
+	void scaleSpriteToTextRect(sf::Sprite& sprite)
+	{
+		auto& s = sprite.getScale();
+		auto& rect = sprite.getTextureRect();
+		sprite.setScale(s.x, s.x * (rect.height / rect.width));
+	}
+
 	void centerOrigin(sf::Sprite& s)
 	{
 		auto bounds = s.getLocalBounds();

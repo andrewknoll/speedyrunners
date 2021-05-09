@@ -26,8 +26,8 @@ void Menu::setMainMenu()
 	bgColor = sf::Color(0);//;63, 92, 123);
 	// Sky:
 	backgrounds.emplace_back(menuPath + "Speedrunners/Menu_Sky.png", *window, sf::FloatRect(0, 0, 1, 1));
-	backgrounds.back().setTextureCoords(sf::FloatRect(0.05, 0.1, 0.9, 0.6)); // Recortar algo vertical
-	backgrounds.back().fixProportions();
+	backgrounds.back().setTextureCoords(sf::FloatRect(0.1, 0.1, 0.7, 0.7)); // Recortar algo vertical
+	//backgrounds.back().fixProportions();
 	// Background 1:
 	backgrounds.emplace_back(menuPath + "Speedrunners/Menu_far_city.png", *window, sf::FloatRect(0, 0.5, 1, 0.5)); // izq, top, anchura, altura de 0 a 1
 	// Background 2 :
@@ -156,6 +156,10 @@ void Menu::handleClick(int i) {
 		std::cout << "Clicked story\n";
 		break;
 	} 
+	case 7: // quit
+		window->close();
+		exit(0);
+		break;
 	case 8: // exit sigh
 	{
 		std::cout << "Clicked exit sign\n";
