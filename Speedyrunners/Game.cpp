@@ -65,7 +65,6 @@ void Game::updatePositions()
 	// order characters and players based on distance
 	std::sort(characters.begin(), characters.end(),
 		[](auto & c1, auto & c2) {
-			//TODO- MUERTE
 			return c1->getDToCheckpoint() < c2->getDToCheckpoint();
 		}
 	);
@@ -196,6 +195,38 @@ MusicPlayer& Game::music() {
 	return src.musicPlayer;
 }
 
+void Game::updateNPCs() {
+	for (int i = 0; i < npcs.size(); i++) {
+		if (npcs[i] != nullptr) {
+			Checkpoint cp = checkpoints[activeCheckpoint]; // checkpoints[1];
+			npcs[i]->addGoal(cp.getPos(), cp.getRadius());
+			cp = checkpoints[(activeCheckpoint + 1) % checkpoints.size()];
+			npcs[i]->addGoal(cp.getPos(), cp.getRadius());
+			auto& followThread = threadPool[2 * i + 1];
+			if (threadPool[2 * i] == nullptr) {
+				threadPool[2 * i] = std::make_unique<std::thread>([&, i]() {
+					while (running && !npcs[i]->getCharacter()->isDead()) {
+						npcs[i]->plan();
+					}
+				});
+				//threadPool[i]->detach();
+			}
+			if (threadPool[2 * i + 1] == nullptr) {
+				threadPool[2 * i + 1] = std::make_unique<std::thread>([&, i]() {
+					while (running && !npcs[i]->getCharacter()->isDead()) {
+						if (npcs[i]->getPathFound(0) == 1) {
+							npcs[i]->followPath();
+						}
+						else {
+							npcs[i]->plan();
+						}
+					}
+				});
+			}
+		}
+	}
+}
+
 void Game::update()
 {
 	sf::Event event;
@@ -244,27 +275,7 @@ void Game::update()
 					items.push_back(characters[i]->useItem(characters[target]));
 				};
 			}
-			for (int i = 0; i < npcs.size(); i++) {
-				if (npcs[i] != nullptr) {
-					Checkpoint cp = checkpoints[activeCheckpoint]; // checkpoints[1];
-					npcs[i]->addGoal(cp.getPos(), cp.getRadius());
-					if (threadPool[2*i] == nullptr) {
-						threadPool[2 * i] = std::make_unique<std::thread>([&, i]() {
-							while (running && !npcs[i]->getCharacter()->isDead()) {
-								npcs[i]->plan();
-							}
-						});
-						//threadPool[i]->detach();
-					}
-					if (threadPool[2 * i + 1] == nullptr) {
-						threadPool[2 * i + 1] = std::make_unique<std::thread>([&, i]() {
-							while (running && !npcs[i]->getCharacter()->isDead()) {
-								npcs[i]->followPath();
-							}
-						});
-					}
-				}
-			}
+			updateNPCs();
 		}
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::F10)) { // Change to fullscreen (change back to window not implemented)
@@ -291,6 +302,7 @@ void Game::update()
 		cam.follow(characters);
 	}
 	else if (state == State::Countdown) {
+		updateNPCs();
 		countdown.update(dT);
 		if (countdown.ended()) {
 			state = State::Playing;

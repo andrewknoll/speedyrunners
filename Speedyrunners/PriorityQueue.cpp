@@ -12,7 +12,7 @@ bool PriorityQueue<T>::safeEmpty() {
 }
 
 template<class T>
-void PriorityQueue<T>::safePush(Node<T>&& _Val) {
+void PriorityQueue<T>::safePush(const Node<T>& _Val) {
 	mtx.lock();
 	this->push(_Val);
 	mtx.unlock();

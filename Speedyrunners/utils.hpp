@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include <random>
+#include <list>
 
 #include "SFML/Graphics.hpp"
 #include "Settings.h"
@@ -38,6 +39,9 @@ public:
 std::ostream& operator<<(std::ostream& os, const RNG& c);
 
 namespace utils {
+	template <class T>
+	bool contains(std::list<T> l, T v);
+
 	sf::Vector2f mousePosition2f(const sf::RenderWindow& window);
 	sf::Vector2i clampMouseCoord(const sf::Vector2f& pos, const sf::RenderTarget& window);
 

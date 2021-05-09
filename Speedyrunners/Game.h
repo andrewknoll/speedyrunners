@@ -102,7 +102,7 @@ public:
 
 	MusicPlayer& music();
 
-	void npcLoop();
+	void updateNPCs();
 
 	void playerJoin(PlayerPtr newPlayer);
 	void npcJoin(NPCPtr newNPC);
