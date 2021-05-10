@@ -67,25 +67,32 @@ void TileMap::setQuad(sf::Vertex* quad, const int i, const int j, const int tu, 
     quad[3].texCoords = sf::Vector2f(tu * tileSize.x, (tv + 1) * tileSize.y);
 }
 
-void TileMap::setTile(const sf::Vector2i& pos, const int tileNumber) {
 
-    // find its position in the tileset texture
-    int tu = tileNumber % (tileset.getSize().x / tileSize.x);
-    int tv = tileNumber / (tileset.getSize().x / tileSize.x);
-
-    // define its 4 corners
-    size_t i = pos.x / tileSizeWorld.x;
-    size_t j = pos.y / tileSizeWorld.y;
+void TileMap::setTileIndexed(int row, int col, const int tileNumber) {
+    int i = col, j = row;
     tiles[i + j * width] = tileNumber;
+
     //std::cout << "drawing tile at " << pos.x << " " << pos.y << " " << tileNumber << std::endl;
     if ((i + j * width) >= width * height) {
         std::cerr << "Tile outside of array!!\n";
     }
     else {
+        // find its position in the tileset texture
+        int tu = tileNumber % (tileset.getSize().x / tileSize.x);
+        int tv = tileNumber / (tileset.getSize().x / tileSize.x);
+
         // get a pointer to the current tile's quad
         sf::Vertex* quad = &vertices[(i + j * width) * 4];
         setQuad(quad, i, j, tu, tv);
     }
+}
+
+void TileMap::setTile(const sf::Vector2i& pos, const int tileNumber) {
+    // Get row and col:
+    size_t i = pos.x / tileSizeWorld.x;
+    size_t j = pos.y / tileSizeWorld.y;
+    setTileIndexed(i, j, tileNumber);
+    
 }
 
 Tiles::Collidable TileMap::getTile(int i, int j) const {
@@ -135,6 +142,7 @@ std::string TileMap::to_string(bool duplicarHorizontal) const {
         str += std::to_string(2 * width) + " " + std::to_string(height) + "\n";
     else
         str += std::to_string(width) + " " + std::to_string(height) + "\n";
+    
     //std::string str = std::to_string(width) + " " + std::to_string(height) + "\n";
     str += tileSetPath + "\n" + std::to_string(tileSize.x) + " " + std::to_string(tileSize.y) 
         + " " + std::to_string(tileSizeWorld.x) + " " + std::to_string(tileSizeWorld.y) + "\n";

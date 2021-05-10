@@ -1,16 +1,19 @@
 #include "Menu.h"
 #include "utils.hpp"
+#include "Game.h"
 
 #define DEBUG_MOUSE_POS
 
-Menu::Menu(sf::RenderWindow& _window, Settings& _settings) 
-	: window(&_window), settings(_settings)
+Menu::Menu(sf::RenderWindow& _window, Settings& _settings, Game& _game) 
+	: window(&_window), settings(_settings), game(_game)
 {
+	window->setView(window->getDefaultView());
 }
 
-Menu::Menu(sf::RenderWindow* _window, Settings& _settings) :
-	window(_window), settings(_settings)
+Menu::Menu(sf::RenderWindow* _window, Settings& _settings, Game& _game) :
+	window(_window), settings(_settings), game(_game)
 {
+	window->setView(window->getDefaultView());
 }
 
 /*void Menu::addElement(std::unique_ptr<UIElement> e)
@@ -41,7 +44,6 @@ void Menu::setMainMenu()
 	// Multiplayer:
 	sf::Vector2f pos(0.05, 0.43);
 	float size = 0.05;
-	std::string mainTextFontPath = glb::CONTENT_PATH + "UI/Font/Souses.ttf";
 	elements.emplace_back(std::make_unique<TextElement>(settings, mainTextFontPath, "MULTIPLAYER", size, pos, true));
 	// Story:
 	pos.y += size*1.25;
@@ -66,6 +68,10 @@ void Menu::setMainMenu()
 	// Quit:
 	pos.y += size * 1.25;
 	elements.emplace_back(std::make_unique<TextElement>(settings, mainTextFontPath, "QUIT", size, pos, true));
+}
+int Menu::getGameState() const
+{
+	return gameState;
 }
 
 void Menu::addTopLeftSign(const std::string& path) {
@@ -126,7 +132,7 @@ void Menu::setCharacterSelect() {
 
 void Menu::loop()
 {
-	while (true) {
+	while (!exitMenu) {
 		update();
 		draw();
 	}
@@ -135,11 +141,41 @@ void Menu::loop()
 void Menu::draw()
 {
 	window->clear(bgColor);// sf::Color(255, 0, 0));
+	
 	for (auto bg : backgrounds)		window->draw(bg);
 	for (const auto& w : widgets)	window->draw(w);
 	for (const auto& e : elements)	window->draw(*e);
-
 	window->display();
+}
+
+
+void Menu::setWorkshopMenu() {
+	currentMenuPage = 1000;
+	widgets.clear();
+	elements.clear();
+	levelNames.clear();
+
+	std::ifstream f(glb::LEVELS_PATH + "levels.csv");
+	int nLevels;
+	std::string levelName, extension = ".csv";
+	f >> nLevels;
+
+
+	sf::Vector2f pos(0.05, 0.43);
+	float size = 0.05;
+	elements.emplace_back(std::make_unique<TextElement>(settings, mainTextFontPath, "NEW", size, pos, true));
+
+	pos.y += size * 2.5;
+	size *= 0.85;
+	for (size_t i = 0; i < nLevels; i++)
+	{
+		f >> levelName; // read
+		levelNames.push_back(levelName); // Save
+		// Add to UI:
+		elements.emplace_back(std::make_unique<TextElement>(settings, mainTextFontPath, levelName, size, pos, true));
+
+		pos.y += size * 1.25;
+	}
 }
 
 
@@ -154,8 +190,19 @@ void Menu::handleClick(int i) {
 	case 1:
 	{
 		std::cout << "Clicked story\n";
+		game.defaultInit(2);
+		exitMenu = true;
 		break;
 	} 
+	case 4:
+	{ // Workshop - Level editor
+		setWorkshopMenu();
+		/**
+		game.clear();
+		game.setState(Game::State::Editing);
+		exitMenu = true;*/
+		break;
+	}
 	case 7: // quit
 		window->close();
 		exit(0);
@@ -166,7 +213,26 @@ void Menu::handleClick(int i) {
 		setMainMenu();
 		break;
 	}
+	case 1000: // Workshop
+	{
+		if (i == 0) {
+			// New level
+			game.createNewLevel(levelNames.size()); 
+			game.clear();
+			game.setState(Game::State::Editing);
+			exitMenu = true;
+		}
+		break;
+	}
 	default:
+		if (currentMenuPage == 1000) {
+			i--;
+			if (i >= levelNames.size()) std::cerr << i << " is not a level " << levelNames.size() << "\n";
+			game.loadLevel(levelNames[i] + ".csv");
+			game.clear();
+			game.setState(Game::State::Editing);
+			exitMenu = true;
+		}
 		std::cout << "Clicked element " << currentMenuPage + i << "\n";
 	}
 }

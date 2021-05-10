@@ -15,7 +15,6 @@ RoundVictory::RoundVictory(const sf::RenderWindow& _window, const int characterI
 	float height = _window.getDefaultView().getSize().y;
 	bgSprite.setPosition(0, height / 2.0f);
 	float relation = height / bgSprite.getGlobalBounds().height;
-	bgSprite.setScale(relation, relation);
 
 	sf::IntRect rect;
 	rect.left = 0;
@@ -23,6 +22,7 @@ RoundVictory::RoundVictory(const sf::RenderWindow& _window, const int characterI
 	rect.height = bg.getSize().y / 2;
 	rect.top = 0;
 	bgSprite.setTextureRect(rect);
+	bgSprite.setScale(relation, relation);
 
 	characterVictoryPose = Resources::getInstance().getVictorySpriteSheet(characterIdx, characterVariant).get_animations()[0];
 	mySprite = characterVictoryPose->get_first_frame();
@@ -51,7 +51,7 @@ void RoundVictory::update(const sf::Time& dT) {
 
 void RoundVictory::tickAnimation(sf::Time dT) {
 	animationCountdown -= dT;
-	if (animationCountdown < sf::seconds(3.0f) && animationCountdown <= sf::Time::Zero) {
+	if (currentSecond < 3 && animationCountdown <= sf::Time::Zero) {
 		characterVictoryPose->advance_frame(mySprite);
 		animationCountdown = PERIOD;
 	}

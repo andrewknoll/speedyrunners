@@ -92,6 +92,8 @@ public:
 
 	void setQuad(sf::Vertex* quad, const int i, const int j, const int tu, const int tv) const;
 
+	void setTileIndexed(int row, int col, const int tileNumber);
+
 	void setTile(const sf::Vector2i& pos, const int tileNumber);
 
 	Tiles::Collidable getTile(int i, int j) const;

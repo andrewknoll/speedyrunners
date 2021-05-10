@@ -35,6 +35,62 @@ Game::Game()
 	//loopMenu();
 }
 
+void Game::clear() {
+	characters.clear();
+	npcs.clear();
+	players.clear();
+	running = false;
+	threadPool.clear();
+	countdown.end();
+
+
+	threadPool.resize(8);
+}
+
+void Game::defaultInit(int N_PLAYERS) {
+
+	if (N_PLAYERS != 2) N_PLAYERS = 1;// only 1 or 2 players
+	clear();
+
+	std::shared_ptr<Character> speedyrunner = std::make_shared<Character>(src.getSpriteSheet(0), glb::SPEEDRUNNER);
+	speedyrunner->setPosition(200, 190);
+
+	std::shared_ptr<Character> cosmonaut = std::make_shared<Character>(src.getSpriteSheet(1), glb::COSMONAUT);
+	cosmonaut->setPosition(200, 190);
+
+	std::shared_ptr<Character> otro = std::make_shared<Character>(src.getSpriteSheet(2), glb::UNIC);
+	otro->setPosition(200, 190);
+
+	int id = 0;
+	if (N_PLAYERS == 2) id = 1;
+	std::shared_ptr<Player> me = std::make_shared<Player>(getSettings(), id);
+	me->setCharacter(speedyrunner);
+	playerJoin(me);
+	speedyrunner->setName("Player 1");
+	addCharacter(speedyrunner);
+
+	if (N_PLAYERS > 1) {
+		std::shared_ptr<Player> secondPlayer = std::make_shared<Player>(getSettings(), ++id);
+		secondPlayer->setCharacter(otro);
+		playerJoin(secondPlayer);
+		otro->setName("Player 2");
+		addCharacter(otro);
+	}
+	std::shared_ptr<NPC> other = std::make_shared<NPC>();
+	other->setCharacter(cosmonaut);
+	npcJoin(other);
+	cosmonaut->setName("NPC");
+	addCharacter(cosmonaut);
+	setState(State::Countdown);
+	running = true;
+}
+
+void Game::setState(const State _state)
+{
+	state = _state;
+	if (state == State::Countdown) countdown.reset();
+}
+
 void Game::setUpWindow() {
 
 	window.setFramerateLimit(60); //60 FPS?
@@ -70,7 +126,7 @@ void Game::updatePositions()
 		}
 	);
 	// Check if one has reached the checkpoint
-	if (characters[0]->getDToCheckpoint() <= cp.getRadius()) {
+	if (!characters.empty() && characters[0]->getDToCheckpoint() <= cp.getRadius()) {
 		// Checkpoint reached, cycle to next
 #ifdef VERBOSE_DEBUG
 		std::cout << "Checkpoint " << activeCheckpoint <<" reached\n";
@@ -160,12 +216,15 @@ void Game::loop()
 
 void Game::loopMenu()
 {
-	Menu menu(window, settings);
+	Menu menu(window, settings, *this);
 	if (!src.musicPlayer.isPlaying(MusicPlayer::MusicType::MENU)) {
 		src.musicPlayer.playMusicTrack(MusicPlayer::MusicType::MENU);
 	}
 	menu.setMainMenu();
 	menu.loop(); // , this);
+	std::cout << "State after menu: " << (int)state << "\n";
+	//state = (Game::State)menu.getGameState();
+	//characters = menu.getCharacters
 }
 
 void Game::addCharacter(const CharPtr character)
@@ -176,6 +235,11 @@ void Game::addCharacter(const CharPtr character)
 		aliveCount++;
 	}
 
+}
+void Game::createNewLevel(int nLevels)
+{
+	loadLevel(glb::LEVELS_PATH + "default_level.csv");
+	saveLevelName = "USER LEVEL " + std::to_string(nLevels);
 }
 /*
 Game::CharPtr Game::getCharacterAt(int pos) const {
@@ -250,15 +314,19 @@ void Game::update()
 
 			window.setView(sf::View(visibleArea));
 		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::F1)) {
-			state = State::Playing;
+		if (cheatsEnabled) {
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::F1)) {
+				state = State::Playing;
+			}
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::F2)) {
+				state = State::Editing;
+			}
+			else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F4) {
+				loopMenu();
+			}
 		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::F2)) {
-			state = State::Editing;
-		}
-		else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F4) {
-			loopMenu();
-		}
+
+		
 		if (state == State::Editing) { // Editing state
 			processEditingInputs(event);
 		} // End of editing state
@@ -388,7 +456,8 @@ void Game::processEditingInputs(const sf::Event& event) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
 			lvl.setCheckpoints(checkpoints);
 			//lvl.saveDuplicateVertical("first.csv");
-			lvl.save("first.csv");
+			lvl.setDefaultLevel();
+			lvl.save("default_level.csv");
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::L)) {
 			loadLevel("first.csv");

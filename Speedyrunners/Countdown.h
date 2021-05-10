@@ -39,6 +39,8 @@ public:
 
 	bool ended() const;
 
+	void end();
+
 	void draw(sf::RenderWindow& window) const;
 
 	void reset();

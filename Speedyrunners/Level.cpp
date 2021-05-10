@@ -145,6 +145,25 @@ void Level::loadBackground(const std::string& file, const sf::RenderWindow& wind
 }
 
 
+void Level::setDefaultLevel()
+{
+	int width = collidableTiles.getWidth();
+	int height = collidableTiles.getHeight();
+	std::cout << "width, height: " << width << ", " << height << "\n";
+	for (size_t i = 0; i < height; i++) {
+		for (size_t j = 0; j < width; j++) {
+			if (i < height / 10 || i > 9 * height / 10 ||
+				j < width / 10 || j > 9 * width / 10)
+			{ // Floor borders
+				collidableTiles.setTileIndexed(i, j, 1);
+			}
+			else { // Rest, Air
+				collidableTiles.setTileIndexed(i, j, 0);
+			}
+		}
+	}
+}
+
 std::string Level::getBackgroundPath() const
 {
 	return backgroundPath;
