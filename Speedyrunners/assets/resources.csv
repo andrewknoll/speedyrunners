@@ -2,6 +2,10 @@ S,0,Content/Characters/Speedrunner/animation_variant00.png,Indexes/Characters/Sp
 S,1,Content/Characters/Cosmonaut/animation_variant00.png,Indexes/Characters/Cosmonaut/animation_atlas_variant00.json
 S,2,Content/Characters/Unic/animation_variant00.png,Indexes/Characters/Unic/animation_atlas_variant00.json
 S,3,Content/Characters/Falcon/animation_variant00.png,Indexes/Characters/Falcon/animation_atlas_variant00.json
+WS,0,Content/Characters/Speedrunner/win_variant00.png,Indexes/Characters/Speedrunner/win_atlas_variant00.json
+WS,1,Content/Characters/Cosmonaut/win_variant00.png,Indexes/Characters/Cosmonaut/win_atlas_variant00.json
+WS,2,Content/Characters/Unic/win_variant00.png,Indexes/Characters/Unic/win_atlas_variant00.json
+WS,3,Content/Characters/Falcon/win_variant00.png,Indexes/Characters/Falcon/win_atlas_variant00.json
 
 M,0,Content/Audio/Music/Track 03 - Menu.ogg
 M,1,Content/Audio/Music/Track 01 - Level.ogg
@@ -39,10 +43,10 @@ A2,game_countdown_timer_buildup_start_at_3.wav
 A2,game_pause.wav
 A2,game_sudden_death_activate.wav
 A2,game_win_goto_scoreboard.wav
-A2,game_win_round_1.wav,game_win_round_2.wav
+A2,game_win_round_1.wav
+A2,game_win_round_2.wav
 A2,text_appear_1.wav,text_appear_2.wav,text_appear_3.wav,text_appear_4.wav
 A2,text_dissappear_1.wav,text_dissappear_2.wav
-
 I,0,Content/Sprites/rocket.png
 
 T,0,Content/Sprites/hook.png

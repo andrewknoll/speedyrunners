@@ -607,14 +607,15 @@ void NPC::plan() {
 }
 
 
-void NPC::doBasicMovement(const TileNode& current, const TileNode& n, bool& jumped, bool block) {
+bool NPC::doBasicMovement(const TileNode& current, const TileNode& n, bool& jumped, sf::Clock clock, bool block) {
+	auto t0 = clock.getElapsedTime();
 	bool right = getCharacterCell().cell[0] < n.cell[0];
 	do {
 		if (current.data.isSliding || n.data.isSliding) {
 			me->slide();
 		}
 		else {
-			if (current.data.jumps > n.data.jumps || getCharacterCell().cell[1] - n.cell[1] > 2) {
+			if (current.data.jumps > n.data.jumps || getCharacterCell().cell[1] - n.cell[1] > 1) {
 				//Jump (or double jump)
 				if (!jumped) {
 					me->startJumping();
@@ -631,7 +632,12 @@ void NPC::doBasicMovement(const TileNode& current, const TileNode& n, bool& jump
 				me->stop();
 			}
 		}
+		if(block && clock.getElapsedTime() - t0 > MAX_TIME_PER_STEP) {
+				//Try to recover
+			return false;
+		}
 	} while (block && !stopFollowing && distance(getCharacterCell(), n) <= FARNESS_THRESHOLD && !nodeWasReached(n, CLOSENESS_THRESHOLD));
+	return true;
 }
 
 void NPC::followPath() {
@@ -641,11 +647,19 @@ void NPC::followPath() {
 	bool jumped = false;
 	stopFollowing = false;
 	float dist = 0;
+	sf::Clock clock;
+	sf::Time t0, recoveryStart;
+	std::shared_ptr<TileNode> next;
+	bool recoveryMode = false;
 
 	sf::Time sleeptime = sf::seconds(0.05);
 	pathMtx[0].lock();
 	if (pathFound[0] == 1) {
-		for (auto& next : path[0]) {
+		
+		auto it = path[0].begin();
+		while(it != path[0].end()) {
+			next = *it;
+			t0 = clock.getElapsedTime();
 			if (stopFollowing) {
 				break;	//A better path was found
 			}
@@ -656,8 +670,21 @@ void NPC::followPath() {
 					if (me->canWallJump()) {
 						me->startJumping();
 					}
-					doBasicMovement(current, *next, jumped, false);
+					doBasicMovement(current, *next, jumped, clock, false);
 					dist = distance(getCharacterCell(), *next);
+					if (recoveryMode && clock.getElapsedTime() - t0 > GIVE_UP_TIME) {
+						pathFound[0] = -1;
+						pathMtx[0].unlock();
+						return;
+					}
+					if (clock.getElapsedTime() - t0 > MAX_TIME_PER_STEP) {
+						//Try to recover
+						if (!recoveryMode) recoveryStart = clock.getElapsedTime();
+						recoveryMode = true;
+						step--;
+						it--;
+						break;
+					}
 				}
 			}
 			else if (!current.data.isHooking && next->data.isHooking) {
@@ -666,6 +693,19 @@ void NPC::followPath() {
 				while (!stopFollowing && dist && !nodeWasReached(*next, CLOSENESS_THRESHOLD)) {
 					sf::sleep(sleeptime);
 					dist = distance(getCharacterCell(), *next);
+					if (recoveryMode && clock.getElapsedTime() - t0 > GIVE_UP_TIME) {
+						pathFound[0] = -1;
+						pathMtx[0].unlock();
+						return;
+					}
+					if (clock.getElapsedTime() - t0 > MAX_TIME_PER_STEP) {
+						//Try to recover
+						if (!recoveryMode) recoveryStart = clock.getElapsedTime();
+						recoveryMode = true;
+						step--;
+						it--;
+						break;
+					}
 				}
 			}
 			else if (current.data.isHooking && !next->data.isHooking) {
@@ -674,28 +714,55 @@ void NPC::followPath() {
 				while (!stopFollowing && dist <= FARNESS_THRESHOLD && !nodeWasReached(*next, CLOSENESS_THRESHOLD)) {
 					sf::sleep(sleeptime);
 					dist = distance(getCharacterCell(), *next);
+					if (recoveryMode && clock.getElapsedTime() - t0 > GIVE_UP_TIME) {
+						pathFound[0] = -1;
+						pathMtx[0].unlock();
+						return;
+					}
+					if (clock.getElapsedTime() - t0 > MAX_TIME_PER_STEP) {
+						//Try to recover
+						if(!recoveryMode) recoveryStart = clock.getElapsedTime();
+						recoveryMode = true;
+						step--;
+						it--;
+						break;
+					}
 				}
 			}
 			else {
-				doBasicMovement(current, *next, jumped, true);
-				dist = distance(getCharacterCell(), *next);
+				if (recoveryMode && clock.getElapsedTime() - t0 > GIVE_UP_TIME) {
+					pathFound[0] = -1;
+					pathMtx[0].unlock();
+					return;
+				}
+				if (doBasicMovement(current, *next, jumped, clock, true)) {
+					dist = distance(getCharacterCell(), *next);
+				}
+				else {
+					//Try to recover
+					if (!recoveryMode) recoveryStart = clock.getElapsedTime();
+					recoveryMode = true;
+					step--;
+					it--;
+					break;
+				}
 			}
 			step++;
 			current = *next;
 			std::cout << step << std::endl;
+			recoveryMode = false;
+			it++;
 		}
 		if (dist > FARNESS_THRESHOLD) {
 			pathFound[0] = -1; //Reset so we can replan
 		}
 		else {
-			
 			if (pathFound[1] == 1) {
 				pathFound[0] = 1;	//Next part of the path was already planned
 				//Stitch the two paths together and save path[1] to path[0]
 				auto last = path[0].back();
-				auto first = path[1].front();
-				first = last;
 				std::copy(std::begin(path[1]), std::end(path[1]), std::begin(path[0]));
+				path[0].push_front(last);
 				//Make sure we start planning the next part
 				path[1].clear();
 				pathFound[1] = 0;

@@ -11,13 +11,13 @@ int main() {
 	Game game;
 	Resources& src = Resources::getInstance();
 
-	std::shared_ptr<Character> speedyrunner = std::make_shared<Character>(src.getSpriteSheet(0)); //"../assets/Content/Characters/Falcon/");
+	std::shared_ptr<Character> speedyrunner = std::make_shared<Character>(src.getSpriteSheet(0), glb::SPEEDRUNNER);
 	speedyrunner->setPosition(200, 190);
 
-	std::shared_ptr<Character> cosmonaut = std::make_shared<Character>(src.getSpriteSheet(1)); //"../assets/Content/Characters/Falcon/");
+	std::shared_ptr<Character> cosmonaut = std::make_shared<Character>(src.getSpriteSheet(1), glb::COSMONAUT);
 	cosmonaut->setPosition(200, 190);
 
-	std::shared_ptr<Character> otro = std::make_shared<Character>(src.getSpriteSheet(2)); //"../assets/Content/Characters/Falcon/");
+	std::shared_ptr<Character> otro = std::make_shared<Character>(src.getSpriteSheet(2), glb::UNIC);
 	otro->setPosition(200, 190);
 
 	int N_PLAYERS = 2; // Cambiar para poner solo 1 jugador!!

@@ -35,6 +35,9 @@ class NPC : public PlayerSlot
 
 	const float THRESHOLD_PER_RADIUS_UNIT = 3.0f;
 
+	const sf::Time MAX_TIME_PER_STEP = sf::seconds(3.0f);
+	const sf::Time GIVE_UP_TIME = sf::seconds(10.0f);
+
 	const float CLOSENESS_THRESHOLD = 0.01f;
 	const float FARNESS_THRESHOLD = 30.0f;
 
@@ -81,7 +84,7 @@ public:
 	void setTileMap(TileMapPtr tm);
 	void addGoal(const sf::Vector2f& goalPos, const float goalRadius);
 	void plan();
-	void doBasicMovement(const TileNode & current, const TileNode & n, bool & jumped, bool block);
+	bool doBasicMovement(const TileNode & current, const TileNode & n, bool& jumped, sf::Clock clock, bool block);
 	void followPath();
 	int getPathFound(int i) const;
 	std::list<selbaward::Line> debugLines();

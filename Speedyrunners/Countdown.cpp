@@ -77,3 +77,8 @@ void Countdown::draw(sf::RenderWindow& window) const
 	window.draw(bgSprite);
 	window.draw(textSprite);
 }
+
+void Countdown::reset() {
+	currentSecond = 3;
+	period = sf::seconds(1);
+}

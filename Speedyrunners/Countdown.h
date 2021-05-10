@@ -35,13 +35,13 @@ public:
 
 	Countdown(const sf::RenderWindow& _window);
 
-
-
 	void update(const sf::Time& dT);
 
 	bool ended() const;
 
 	void draw(sf::RenderWindow& window) const;
+
+	void reset();
 
 };
 

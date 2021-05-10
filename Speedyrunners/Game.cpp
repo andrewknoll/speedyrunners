@@ -5,6 +5,7 @@
 #include "utils.hpp"
 #include "Player.h"
 #include "Menu.h"
+#include "RoundVictory.h"
 
 
 //#define VERBOSE_DEBUG // Cambiar para quitar couts
@@ -31,7 +32,7 @@ Game::Game()
 	settings.setResolution(sf::Vector2i(1600, 900));
 
 	// DEBUG de menus:
-	loopMenu();
+	//loopMenu();
 }
 
 void Game::setUpWindow() {
@@ -136,7 +137,10 @@ void Game::loop()
 		if (!src.musicPlayer.isPlaying(MusicPlayer::MusicType::REGULAR)) {
 			src.musicPlayer.playMusicTrack(MusicPlayer::MusicType::REGULAR);
 		}
-		//TO-DO: Sudden Death
+		if (state == State::FinishedRound) {
+			//slow motion
+			dT = dT * 0.5f;
+		}
 		update();
 		draw(dT);
 
@@ -169,6 +173,7 @@ void Game::addCharacter(const CharPtr character)
 	if (characters.size() < 4) {
 		characters.emplace_back(character);
 		ui.setCharacters(characters);
+		aliveCount++;
 	}
 
 }
@@ -260,12 +265,6 @@ void Game::update()
 		else if (state == State::Playing) { // Playing
 			//characters.front().processInput(event); // Podemos cambiarlo por Player en el futuro
 			for (int i = 0; i < characters.size(); i++) {
-				if (characters[i]->isDead()) continue;
-				if (!cam.isInAllowedBounds(characters[i])) {
-					characters[i]->die();
-					suddenDeath = true;
-					cam.setSuddenDeath(true);
-				}
 				target = i; //Set target initial value to oneself
 				auto p = getPlayerAt(i);
 				if (p != nullptr && p->captureEvents(event)) {
@@ -275,7 +274,6 @@ void Game::update()
 					items.push_back(characters[i]->useItem(characters[target]));
 				};
 			}
-			updateNPCs();
 		}
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::F10)) { // Change to fullscreen (change back to window not implemented)
@@ -300,12 +298,63 @@ void Game::update()
 		}
 		updatePositions();
 		cam.follow(characters);
+		cam.update(dT);
+		for (int i = 0; i < characters.size(); i++) {
+			if (characters[i]->isDead()) continue;
+			if (!cam.isInAllowedBounds(characters[i])) {
+				characters[i]->die();
+				src.getAudioPlayer().play(AudioPlayer::Effect::CHARACTER_OUTOFSCREEN);
+				src.getAudioPlayer().play(AudioPlayer::Effect::DEATH);
+				aliveCount--;
+				suddenDeath = true;
+				cam.setSuddenDeath(true);
+			}
+		}
+		updateNPCs();
+		if (aliveCount == 1) {
+			state = State::FinishedRound;
+			for (auto c : characters) {
+				if (!c->isDead()) {
+					c->increaseScore(1);
+					break;
+				}
+				//TODO : Ganar con tres puntos
+			}
+		}
+
 	}
 	else if (state == State::Countdown) {
 		updateNPCs();
 		countdown.update(dT);
 		if (countdown.ended()) {
 			state = State::Playing;
+		}
+	}
+	else if (state == State::FinishedRound) {
+		cam.follow(characters);
+		cam.update(dT);
+		if (rv == nullptr) {
+			for (int i = 0; i < characters.size(); i++) {
+				if (!characters[i]->isDead()) {
+					rv = std::make_unique<RoundVictory>(window, characters[i]->getID(), characters[i]->getVariant(), characters[i]->getScore());
+					respawnPosition = characters[i]->getLastSafePosition();
+				}
+				//TODO : Ganar con tres puntos
+			}
+		}
+		else {
+			rv->update(dT);
+			if (rv->ended()) {
+				state = State::Countdown;
+				countdown.reset();
+				rv = nullptr;
+				suddenDeath = false;
+				cam.setSuddenDeath(false);
+				aliveCount = characters.size();
+				for (int i = 0; i < characters.size(); i++) {
+					characters[i]->respawn(respawnPosition);
+				}
+			}
 		}
 	}
 	//cam.pollEvents();
@@ -365,7 +414,7 @@ void Game::processEditingInputs(const sf::Event& event) {
 	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::J) { // For debug, add Falcon to mouse position
 		// Add player
 		Spritesheet sprsht = src.getSpriteSheet(3); //Falcon
-		std::shared_ptr<Character> falcon = std::make_shared<Character>(sprsht);
+		std::shared_ptr<Character> falcon = std::make_shared<Character>(sprsht, glb::FALCON);
 		falcon->setPosition(utils::mousePosition2f(window));
 		falcon->setName(std::string("falcon ") + std::to_string(characters.size()));
 		//falcon.setScale(0.5, 0.5);
@@ -427,10 +476,17 @@ void Game::draw(sf::Time dT)
 		lvl.drawTile(window, sf::RenderStates(), utils::clampMouseCoord(window), selectedTile);
 		break;
 	}
+	case State::FinishedRound:
+	{
+		if (rv != nullptr) {
+			rv->draw(window);
+		}
+	}
 	case State::Countdown:
 	{
-		countdown.draw(window);
-		//window.draw(countdown);
+		if (state == State::Countdown) {
+			countdown.draw(window);
+		}
 
 	} // no break, we also animate the characters
 	case State::Playing:

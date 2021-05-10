@@ -173,6 +173,10 @@ int Spritesheet::process_token(std::string matched) {
 	return 0;
 }
 
+void Spritesheet::setVictoryPose(bool victoryPose) {
+	this->victoryPose = victoryPose;
+}
+
 int Spritesheet::parse_spritesheet(std::string image_filename, std::string data_filename) {
 	std::ifstream data(data_filename);
 	int return_code = 0;
@@ -201,7 +205,7 @@ int Spritesheet::parse_spritesheet(std::string image_filename, std::string data_
 				return_code = process_token(matched);
 				matched = "";
 			}
-			else if (isalnum(c) || c == ' ' || c == '"' || c == '.' || c == '-' || c == '_') {
+			else if (isalnum(c) || c == ' ' || c == '"' || c == '.' || c == '-' || c == '_' || c == '/') {
 				matched += c;
 			}
 			else if (c != '\n' && c != '\t') {
@@ -217,79 +221,84 @@ int Spritesheet::parse_spritesheet(std::string image_filename, std::string data_
 	return return_code;
 }
 
-std::vector<AnimationPtr> Spritesheet::get_animations() {
+std::vector<AnimationPtr> Spritesheet::get_animations() const {
 	return animationVector;
 }
 
 
 
 void Spritesheet::getSpritesVectorFromMap() {
-	for (auto const& pair : animationMap) {
-		if (pair.first == glb::anim::STAND_ANIM) {
-			animationVector[CharAnimIdx::StandAnim] = pair.second;
+	if (!victoryPose) {
+		for (auto const& pair : animationMap) {
+			if (pair.first == glb::anim::STAND_ANIM) {
+				animationVector[CharAnimIdx::StandAnim] = pair.second;
+			}
+			else if (pair.first == glb::anim::RUN_ANIM) {
+				animationVector[CharAnimIdx::RunAnim] = pair.second;
+			}
+			else if (pair.first == glb::anim::SLIDE_ANIM) {
+				animationVector[CharAnimIdx::SlideAnim] = pair.second;
+			}
+			else if (pair.first == glb::anim::SLIDING_ANIM) {
+				animationVector[CharAnimIdx::SlidingAnim] = pair.second;
+			}
+			else if (pair.first == glb::anim::FALL_ANIM) {
+				animationVector[CharAnimIdx::FallAnim] = pair.second;
+			}
+			else if (pair.first == glb::anim::JUMP_ANIM) {
+				animationVector[CharAnimIdx::JumpAnim] = pair.second;
+			}
+			else if (pair.first == glb::anim::LONG_FALL_ANIM) {
+				animationVector[CharAnimIdx::LongFallAnim] = pair.second;
+			}
+			else if (pair.first == glb::anim::LONG_JUMP_ANIM) {
+				animationVector[CharAnimIdx::LongJumpAnim] = pair.second;
+			}
+			else if (pair.first == glb::anim::D_JUMP_ANIM) {
+				animationVector[CharAnimIdx::DoubleJumpAnim] = pair.second;
+			}
+			else if (pair.first == glb::anim::D_JUMP_FALL_ANIM) {
+				animationVector[CharAnimIdx::DoubleJumpFallAnim] = pair.second;
+			}
+			else if (pair.first == glb::anim::HOOK_SHOT_ANIM) {
+				animationVector[CharAnimIdx::HookshotAnim] = pair.second;
+			}
+			else if (pair.first == glb::anim::SWING_ANIM) {
+				animationVector[CharAnimIdx::SwingAnim] = pair.second;
+			}
+			else if (pair.first == glb::anim::RUNNING_HOOK_ANIM) {
+				animationVector[CharAnimIdx::RunningHookAnim] = pair.second;
+			}
+			else if (pair.first == glb::anim::WALL_HANG_ANIM) {
+				animationVector[CharAnimIdx::WallHangAnim] = pair.second;
+			}
+			else if (pair.first == glb::anim::FLIP_ANIM) {
+				animationVector[CharAnimIdx::FlipAnim] = pair.second;
+			}
+			else if (pair.first == glb::anim::ROLL_ANIM) {
+				animationVector[CharAnimIdx::RollAnim] = pair.second;
+			}
+			else if (pair.first == glb::anim::TUMBLE_ANIM) {
+				animationVector[CharAnimIdx::TumbleAnim] = pair.second;
+			}
+			else if (pair.first == glb::anim::GRABBED_ANIM) {
+				animationVector[CharAnimIdx::GrabbedAnim] = pair.second;
+			}
+			else if (pair.first == glb::anim::SKID_ANIM) {
+				animationVector[CharAnimIdx::SkidAnim] = pair.second;
+			}
+			else if (pair.first == glb::anim::SPIKED_ANIM) {
+				animationVector[CharAnimIdx::SpikedAnim] = pair.second;
+			}
+			else if (pair.first == glb::anim::TAUNT_ANIM) {
+				animationVector[CharAnimIdx::TauntAnim] = pair.second;
+			}
+			else if (pair.first == glb::anim::START_ANIM) {
+				animationVector[CharAnimIdx::StartAnim] = pair.second;
+			}
 		}
-		else if (pair.first == glb::anim::RUN_ANIM) {
-			animationVector[CharAnimIdx::RunAnim] = pair.second;
-		}
-		else if (pair.first == glb::anim::SLIDE_ANIM) {
-			animationVector[CharAnimIdx::SlideAnim] = pair.second;
-		}
-		else if (pair.first == glb::anim::SLIDING_ANIM) {
-			animationVector[CharAnimIdx::SlidingAnim] = pair.second;
-		}
-		else if (pair.first == glb::anim::FALL_ANIM) {
-			animationVector[CharAnimIdx::FallAnim] = pair.second;
-		}
-		else if (pair.first == glb::anim::JUMP_ANIM) {
-			animationVector[CharAnimIdx::JumpAnim] = pair.second;
-		}
-		else if (pair.first == glb::anim::LONG_FALL_ANIM) {
-			animationVector[CharAnimIdx::LongFallAnim] = pair.second;
-		}
-		else if (pair.first == glb::anim::LONG_JUMP_ANIM) {
-			animationVector[CharAnimIdx::LongJumpAnim] = pair.second;
-		}
-		else if (pair.first == glb::anim::D_JUMP_ANIM) {
-			animationVector[CharAnimIdx::DoubleJumpAnim] = pair.second;
-		}
-		else if (pair.first == glb::anim::D_JUMP_FALL_ANIM) {
-			animationVector[CharAnimIdx::DoubleJumpFallAnim] = pair.second;
-		}
-		else if (pair.first == glb::anim::HOOK_SHOT_ANIM) {
-			animationVector[CharAnimIdx::HookshotAnim] = pair.second;
-		}
-		else if (pair.first == glb::anim::SWING_ANIM) {
-			animationVector[CharAnimIdx::SwingAnim] = pair.second;
-		}
-		else if (pair.first == glb::anim::RUNNING_HOOK_ANIM) {
-			animationVector[CharAnimIdx::RunningHookAnim] = pair.second;
-		}
-		else if (pair.first == glb::anim::WALL_HANG_ANIM) {
-			animationVector[CharAnimIdx::WallHangAnim] = pair.second;
-		}
-		else if (pair.first == glb::anim::FLIP_ANIM) {
-			animationVector[CharAnimIdx::FlipAnim] = pair.second;
-		}
-		else if (pair.first == glb::anim::ROLL_ANIM) {
-			animationVector[CharAnimIdx::RollAnim] = pair.second;
-		}
-		else if (pair.first == glb::anim::TUMBLE_ANIM) {
-			animationVector[CharAnimIdx::TumbleAnim] = pair.second;
-		}
-		else if (pair.first == glb::anim::GRABBED_ANIM) {
-			animationVector[CharAnimIdx::GrabbedAnim] = pair.second;
-		}
-		else if (pair.first == glb::anim::SKID_ANIM) {
-			animationVector[CharAnimIdx::SkidAnim] = pair.second;
-		}
-		else if (pair.first == glb::anim::SPIKED_ANIM) {
-			animationVector[CharAnimIdx::SpikedAnim] = pair.second;
-		}
-		else if (pair.first == glb::anim::TAUNT_ANIM) {
-			animationVector[CharAnimIdx::TauntAnim] = pair.second;
-		}
-		else if (pair.first == glb::anim::START_ANIM) {
-			animationVector[CharAnimIdx::StartAnim] = pair.second;
-		}
+	}
+	else {
+		animationVector[0] = animationMap.begin()->second;
 	}
 }

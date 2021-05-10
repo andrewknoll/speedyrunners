@@ -86,9 +86,7 @@ void Camera::follow(std::vector<CharPtr>& characters, int first) {
 			}
 		}
 		avgDistance /= count;
-		sf::Vector2f size = size0 * (avgDistance * glb::cameraZoomFunctionSteepness + 1.0f);
-		setSize(size);
-		viewportShape.setSize(size);
+		objectiveSize = size0 * (avgDistance * glb::cameraZoomFunctionSteepness + 1.0f);
 		//std::cout << "Size: " << size.x << " " << size.y << " avg: " << "\n";
 	}
 	//Ensure camera doesn't go out of bounds
@@ -96,28 +94,12 @@ void Camera::follow(std::vector<CharPtr>& characters, int first) {
 	avg.y = std::max(avg.y, viewport.height / 2.0f);
 	//TO-DO: Check max value
 
-
-	//Smooth translation
-	/*center = getCenter();
-	newCenter = getCenter();
-	diff = avg - center;
-
-	while (abs(diff.x) > EPSILON || abs(diff.y) > EPSILON) {
-		if (abs(diff.x) > EPSILON) {
-			newCenter.x += EPSILON * diff.x;
-		}
-		if (abs(diff.y) > EPSILON) {
-			newCenter.y += EPSILON * diff.y;
-		}
-		setCenter(newCenter);
-		diff = avg - newCenter;
-	}*/
-	setCenter(avg);
+	objectivePos = avg;
 
 	if (suddenDeath) {
 		setSize(size0);
 		if (rectSizeFactor > 0.3) {
-			rectSizeFactor -= 1e-5f;
+			rectSizeFactor -= 1e-4f;
 			viewportShape.setSize(size0 * rectSizeFactor);
 		}
 		viewportShape.setOutlineThickness(std::max(size0.x, size0.y) * (1.0f - rectSizeFactor) + 1.0f);
@@ -155,4 +137,14 @@ bool Camera::isInAllowedBounds(CharPtr character) const {
 
 void Camera::setSuddenDeath(bool sd) {
 	this->suddenDeath = sd;
+}
+
+void Camera::update(sf::Time dT) {
+	sf::Vector2f movement = objectivePos - getCenter();
+	sf::Vector2f sizeDiff = objectiveSize - getSize();
+	move(movement * dT.asSeconds());
+	if (!suddenDeath) {
+		setSize(size0 + sizeDiff * dT.asSeconds());
+		viewportShape.setSize(size0 + sizeDiff * dT.asSeconds());
+	}
 }

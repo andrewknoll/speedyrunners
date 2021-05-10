@@ -7,15 +7,25 @@
 #include "Spritesheet.h"
 #include "Rocket.h"
 #include "Resources.h"
-Character::Character(Spritesheet sp) :
+Character::Character(Spritesheet sp, int ID, int variant) :
 	hitBox(glb::default_hitbox),
-	audioPlayer(Resources::getInstance().getAudioPlayer())
+	myID(ID),
+	audioPlayer(Resources::getInstance().getAudioPlayer()),
+	skin_variant(variant)
 {
 	animations = sp.get_animations();
 	setAnimation(StartAnim);
 	this->setScale(0.45, 0.45);
 	setDefaultOrigin();
 	updateHitBoxRectangle();
+}
+
+int Character::getID() const {
+	return myID;
+}
+
+int Character::getVariant() const {
+	return skin_variant;
 }
 
 void Character::setDefaultOrigin() {
@@ -31,6 +41,10 @@ void Character::setPosition(float x, float y) {
 	hitBox.top = y;
 	hitBox.left = x;
 	sf::Transformable::setPosition(x, y);
+}
+
+sf::Vector2f Character::getLastSafePosition() const {
+	return lastSafePosition;
 }
 
 void Character::setPosition(const sf::Vector2f pos) {
@@ -181,13 +195,10 @@ void Character::update(const sf::Time& dT, const TileMap& tiles)
 	else {
 		currJumpCD = sf::Time::Zero;
 	}
-	
-
 
 	// New vel:
 	updateVel(dtSec);
 	
-
 	// Move:
 	hitBox.left += vel.x * dtSec;
 	hitBox.top += vel.y * dtSec;
@@ -285,6 +296,9 @@ void Character::update(const sf::Time& dT, const TileMap& tiles)
 		}
 	}
 	updateHitBoxRectangle(); // Debug
+	if (isGrounded && !isAtWallJump) {
+		lastSafePosition = getPosition();
+	}
 }
 
 void Character::updateGrounded(const sf::Vector2f& normal) {
@@ -327,7 +341,18 @@ void Character::stop(){
 	isRunning = false;
 }
 
+void Character::respawn(sf::Vector2f position) {
+	//TO-DO: Spawnear separados
+	vel = sf::Vector2f(0, 0);
+	dead = false;
+	setPosition(position);
+}
+
 void Character::die() {
+	stop();
+	stopJumping();
+	stopSliding();
+	vel = sf::Vector2f(0, 0);
 	dead = true;
 }
 
@@ -353,9 +378,9 @@ void Character::startJumping() {
 		audioPlayer.play(AudioPlayer::Effect::JUMP);
 	}
 	else if (isAtWallJump) {
-		vel.y = -jumpingSpeed * 0.9; 
-		if (facingRight) vel.x = jumpingSpeed * 0.9;
-		else vel.x = -jumpingSpeed * 1.5;
+		vel.y = -jumpingSpeed;
+		if (facingRight) vel.x = jumpingSpeed * 0.7;
+		else vel.x = -jumpingSpeed * 0.7;
 		setAnimation(JumpAnim);
 		isAtWallJump = false;
 		hasDoubleJumped = false;
@@ -379,18 +404,33 @@ void Character::stopJumping() {
 bool Character::isDead() const {
 	return dead;
 }
+
 bool Character::isSwinging() const
 {
 	return swinging;
 }
+
 bool Character::canWallJump() const {
 	return isAtWallJump;
 }
+
 sf::Vector2f Character::getVelocity() const {
 	return vel;
 }
+
 sf::Vector2f Character::getAccel() const {
 	return acc;
+}
+
+void Character::increaseScore(int d) {
+	score += d;
+}
+
+int Character::getScore() const {
+	return score;
+}
+void Character::setScore(int score) {
+	this->score = score;
 }
 void Character::useHook(bool use)
 {

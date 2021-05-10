@@ -36,6 +36,12 @@ namespace glb
 		NONE = 0,
 		ROCKET = 1
 	};
+	enum characterIndex : int {
+		SPEEDRUNNER = 0,
+		COSMONAUT = 1,
+		UNIC = 2,
+		FALCON = 3
+	};
 
 
 	const float runningAcceleration = 800;

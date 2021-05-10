@@ -12,6 +12,7 @@
 #include "InGameUI.h"
 #include "NPC.h"
 #include "PlayerSlot.h"
+#include "RoundVictory.h"
 #include <list>
 #include <thread>
 
@@ -25,7 +26,7 @@ class Game
 
 
 public:
-	enum class State { Countdown, Playing, Paused, Editing, MainMenu };
+	enum class State { Countdown, Playing, FinishedRound, Paused, Editing, MainMenu };
 protected:
 	//Thread Pool
 	std::vector<std::unique_ptr<std::thread> > threadPool = std::vector<std::unique_ptr<std::thread> >(8);
@@ -37,14 +38,13 @@ protected:
 	std::vector<CharPtr> characters;
 	Camera cam;
 	Level lvl;
-
 	Resources& src;
+	sf::Vector2f respawnPosition;
 
 	bool suddenDeath = false;
-
 	State state;
-
 	float aspectRatio = 16.0 / 9.0;
+	int aliveCount = 0;
 
 	std::vector<PlayerPtr> players;
 	std::vector<NPCPtr> npcs;
@@ -55,7 +55,6 @@ protected:
 	//sf::Sprite selectedTile;
 	Tiles::Collidable selectedTile; // When editing
 
-
 	// Checkpoints:
 	std::vector<Checkpoint> checkpoints;
 	int activeCheckpoint;
@@ -65,39 +64,27 @@ protected:
 	// Countdown:
 	Countdown countdown;
 
+	std::unique_ptr<RoundVictory> rv = nullptr;
+
 	// UI:
 	InGameUI ui;
 
-
-
 	void update();
-
 	void processEditingInputs(const sf::Event& event);
-
 	void printCharacterPositions(const sf::Event& e) const;
-
-
 	void draw(sf::Time dT);
 	void setUpWindow();
-
 	void updatePositions();
 
 public:
 
 	Game();
-
-
-
 	const Settings& getSettings() const;
 	// devuelve el indice del character en 1a pos
 	int getFirstCharacterIdx() const;
-
 	void loadLevel(const std::string& lvlPath);
-
 	void loop();
-
 	void loopMenu();
-
 	void addCharacter(const CharPtr character);
 
 	MusicPlayer& music();

@@ -13,8 +13,6 @@
 
 #include "Item.h"
 
-#define PERIOD sf::milliseconds(1000/30)
-
 #define DEBUG_HITBOX
 
 class TileMap;
@@ -45,6 +43,11 @@ protected:
 	geometry::Mat2 base = geometry::Mat2(sf::Vector2f(1,0), sf::Vector2f(0,1));
 	bool inRamp = false;
 
+	const sf::Time PERIOD = sf::milliseconds(1000 / 30);
+
+	int myID;
+	int skin_variant = 0;
+
 	// for physics:
 	sf::Vector2f vel; // Velocity
 	sf::Vector2f acc; // Acceleration
@@ -63,7 +66,7 @@ protected:
 	bool sliding = false;
 
 	std::shared_ptr<Animation> currentAnimation;
-	mutable sf::Sprite mySprite;
+	sf::Sprite mySprite;
 	sf::Time countdown = PERIOD;
 	sf::Time jumpCoolDown = sf::seconds(0.1);
 	sf::Time currJumpCD = jumpCoolDown;
@@ -93,6 +96,10 @@ protected:
 	// Audio:
 	AudioPlayer &audioPlayer;
 	
+	sf::Vector2f lastSafePosition = sf::Vector2f();
+
+	//Score
+	int score = 0;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
@@ -110,10 +117,14 @@ protected:
 	void setDefaultOrigin();
 
 public:
-	Character(Spritesheet);
+	Character(Spritesheet sp, int ID, int variant = 0);
+
+	int getID() const;
+	int getVariant() const;
 
 	void setPosition(const sf::Vector2f pos);
 	void setPosition(float x, float y);
+	sf::Vector2f getLastSafePosition() const;
 
 	sf::Sprite getSprite();
 	void tickAnimation(sf::Time dT);
@@ -133,6 +144,7 @@ public:
 
 	void run(bool right);
 	void stop();
+	void respawn(sf::Vector2f position);
 	void die();
 	void slide();
 	void stopSliding();
@@ -145,6 +157,10 @@ public:
 	
 	sf::Vector2f getVelocity() const;
 	sf::Vector2f getAccel() const;
+
+	void increaseScore(int d);
+	int getScore() const;
+	void setScore(int score);
 	
 	void useHook(bool use=true);
 	ItemPtr useItem(std::shared_ptr<Character> target = nullptr);

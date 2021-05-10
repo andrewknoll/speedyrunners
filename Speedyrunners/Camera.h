@@ -7,15 +7,23 @@ class Camera : public sf::View
 {
 	using CharPtr = std::shared_ptr<Character>;
 	//sf::View view;
-	sf::Vector2i lastMousePos; 
-	bool dragging = false;
-	sf::Vector2f size0;
+
+private:
 	const float EPSILON = 0.01f;
-	sf::RectangleShape viewportShape;
-	bool suddenDeath = false;
 	float rectSizeFactor = 1.0f;
-	sf::Uint16 redValue = 0;
+	
+	bool dragging = false;
+	bool suddenDeath = false;
 	bool increasingRedness = true;
+	
+	sf::RectangleShape viewportShape;
+	
+	sf::Uint16 redValue = 0;
+
+	sf::Vector2i lastMousePos;
+	sf::Vector2f size0;
+	sf::Vector2f objectivePos, objectiveSize;
+
 public:
 	Camera(const sf::FloatRect& rect = sf::FloatRect(0,0,10,10));
 	//sf::Rect<float> view;
@@ -35,4 +43,5 @@ public:
 	bool isInAllowedBounds(CharPtr character) const;
 
 	void setSuddenDeath(bool sd);
+	void update(sf::Time dT);
 };

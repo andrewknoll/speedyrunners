@@ -138,6 +138,9 @@
     <ClCompile Include="AudioPlayer.cpp">
       <Filter>Audio</Filter>
     </ClCompile>
+    <ClCompile Include="RoundVictory.cpp">
+      <Filter>UI\InGame</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TileMap.h">
@@ -229,6 +232,9 @@
     </ClInclude>
     <ClInclude Include="AudioPlayer.h">
       <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="RoundVictory.h">
+      <Filter>UI\InGame</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

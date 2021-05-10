@@ -31,11 +31,23 @@ Resources::Resources() {
 			}
 			spritesheets[i].push_back(sp);
 		}
+		else if (type == "WS") {
+			for (int i = 0; i < 3; i++) std::getline(iss, token[i], ',');
+			i = stoi(token[0]);
+
+			Spritesheet sp;
+			sp.setVictoryPose(true);
+			sp.parse_spritesheet(PATH_TO_ASSETS + token[1], PATH_TO_ASSETS + token[2]);
+			if (win_spritesheets.size() <= i) {
+				win_spritesheets.push_back(std::vector<Spritesheet>());
+			}
+			win_spritesheets[i].push_back(sp);
+		}
 		else if (type == "M") {
 			for (int i = 0; i < 2; i++) std::getline(iss, token[i], ',');
 			musicPlayer.addTrack(PATH_TO_ASSETS + token[1], stoi(token[0]));
 		}
-		else if (type == "A" || type == "A2") { // Audio (soundbuffers)
+		else if (type == "A" || type == "A2" || type == "A3") { // Audio (soundbuffers)
 			std::string path = PATH_TO_PLAYER_SFX;
 			if (type == "A2") { // Ingame ui audio
 				path = PATH_TO_INGAME_UI_SFX;
@@ -82,6 +94,10 @@ Resources& Resources::getInstance() {
 
 const Spritesheet& Resources::getSpriteSheet(int character, int variant) {
 	return spritesheets[character][variant];
+}
+
+const Spritesheet & Resources::getVictorySpriteSheet(int character, int variant) {
+	return win_spritesheets[character][variant];
 }
 
 const sf::Texture& Resources::getItemTexture(glb::item type) {
