@@ -90,7 +90,7 @@ LobbyWidget::LobbyWidget(sf::RenderWindow& _window, const Settings& settings, co
 	// widget background:
 	backgrounds.emplace_back(lobbyPath + "PlayerWidgetBackground.png", window, sf::FloatRect(pos.x, pos.y, 0.66 / 2.25, 0.9 / 2.25));
 	backgrounds.back().setTextureCoords(sf::FloatRect(0.01, 0.02, 0.99, 0.98));
-	active = true;
+	//active = true;
 	if (active) { // add surrounding rectangle
 
 		addCharacterStuff(lobbyPath, window, pos);
@@ -125,7 +125,7 @@ LobbyWidget::setCharacterSelect(sf::RenderWindow& _window, const Settings& setti
 
 void LobbyWidget::handleClick(int idx) {
 	switch (idx) {
-	case 0:
+	case 1:
 	{
 		elements.clear();
 		state = State::CharacterSelect;

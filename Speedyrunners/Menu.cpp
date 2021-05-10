@@ -320,7 +320,6 @@ void Menu::pollEvents()
 					std::cout << mousePos << " rel: " << utils::globalToRelative(mousePos, *window) << "\n";
 				}
 #endif
-
 				if (elements[i]->mouseInside(*window) && event.type == sf::Event::MouseButtonPressed && event.key.code == sf::Mouse::Left) {
 					this->handleClick(i);
 					break;
@@ -333,9 +332,7 @@ void Menu::pollEvents()
 
 void Menu::update()
 {
-	//for (auto& w : widgets) w.update();
 	pollEvents();
-	// TODO: gestion de input, cambios de estado
 }
 
 void Menu::clear()
