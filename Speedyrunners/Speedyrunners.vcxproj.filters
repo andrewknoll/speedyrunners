@@ -143,6 +143,7 @@
     </ClCompile>
     <ClCompile Include="RoundVictory.cpp">
       <Filter>UI\InGame</Filter>
+    </ClCompile>
     <ClCompile Include="LobbyWidget.cpp">
       <Filter>UI\Elements\Widgets</Filter>
     </ClCompile>
@@ -240,6 +241,7 @@
     </ClInclude>
     <ClInclude Include="RoundVictory.h">
       <Filter>UI\InGame</Filter>
+    </ClInclude>
     <ClInclude Include="LobbyWidget.h">
       <Filter>UI\Elements\Widgets</Filter>
     </ClInclude>

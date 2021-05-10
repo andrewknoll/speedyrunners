@@ -2,7 +2,7 @@
 #include "Resources.h"
 
 RoundVictory::RoundVictory(const sf::RenderWindow& _window, const int characterIdx, const int characterVariant, const int characterScore) :
-	currentSecond(5),
+	currentSecond(4),
 	t(sf::seconds(1)),
 	audioPlayer(Resources::getInstance().getAudioPlayer()),
 	characterScore(characterScore) {
@@ -11,10 +11,10 @@ RoundVictory::RoundVictory(const sf::RenderWindow& _window, const int characterI
 	// Fondo:
 	bg.loadFromFile(bgPath);
 	bgSprite.setTexture(bg);
-	float width = _window.getSize().x;
-	float height = _window.getSize().y;
+	float width = _window.getDefaultView().getSize().x;
+	float height = _window.getDefaultView().getSize().y;
 	bgSprite.setPosition(0, height / 2.0f);
-	float relation = _window.getSize().y / bgSprite.getGlobalBounds().height;
+	float relation = height / bgSprite.getGlobalBounds().height;
 	bgSprite.setScale(relation, relation);
 
 	sf::IntRect rect;
@@ -26,6 +26,8 @@ RoundVictory::RoundVictory(const sf::RenderWindow& _window, const int characterI
 
 	characterVictoryPose = Resources::getInstance().getVictorySpriteSheet(characterIdx, characterVariant).get_animations()[0];
 	mySprite = characterVictoryPose->get_first_frame();
+	relation = height / mySprite.getGlobalBounds().height;
+	mySprite.setScale(relation, relation);
 	mySprite.setPosition(width * 0.2, height * 0.75);
 }
 
@@ -63,8 +65,13 @@ void RoundVictory::draw(sf::RenderWindow& window) const {
 	//window.draw(bgSprite);
 	//TO-DO Añadir número de rondas según el score
 	if (currentSecond < 3) {
+		auto view = window.getView();
+		window.setView(window.getDefaultView());
 		window.draw(bgSprite);
 		window.draw(mySprite);
+		window.setView(view);
+		//window.draw(bgSprite);
+		//window.draw(mySprite);
 	}
 }
 
