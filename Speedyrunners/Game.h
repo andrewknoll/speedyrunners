@@ -96,6 +96,7 @@ public:
 	// devuelve el indice del character en 1a pos
 	int getFirstCharacterIdx() const;
 	void loadLevel(const std::string& lvlPath);
+	void setSaveName(std::string fileName);
 	void loop();
 	void loopMenu();
 	void addCharacter(const CharPtr character);

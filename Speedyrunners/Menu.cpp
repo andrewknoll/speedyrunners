@@ -256,6 +256,7 @@ void Menu::handleWorkshopClick(int i) {
 		game.loadLevel(levelNames[i] + ".csv");
 		game.clear();
 		game.setState(Game::State::Editing);
+		game.setSaveName(levelNames[i] + ".csv");
 		exitMenu = true;
 	}
 	switch (i) {

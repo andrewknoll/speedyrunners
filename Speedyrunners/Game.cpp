@@ -182,6 +182,11 @@ void Game::loadLevel(const std::string& lvlPath)
 
 }
 
+
+void Game::setSaveName(std::string fileName) {
+	saveLevelName = fileName;
+}
+
 void Game::loop()
 {
 	// de https://en.sfml-dev.org/forums/index.php?topic=7018.0:
