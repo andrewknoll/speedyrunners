@@ -251,7 +251,7 @@ void Menu::handleWorkshopClick(int i) {
 		exitMenu = true;
 	}
 	else {
-		i--;
+		i-=2;
 		if (i >= levelNames.size()) std::cerr << i << " is not a level " << levelNames.size() << "\n";
 		game.loadLevel(levelNames[i] + ".csv");
 		game.clear();
