@@ -23,7 +23,7 @@ Menu::Menu(sf::RenderWindow* _window, Settings& _settings, Game& _game) :
 
 void Menu::setMainMenu()
 {
-	currentMenuPage = 0;
+	currentMenuPage = Page::Main;
 	clear();
 	// Color plano de fondo:
 	bgColor = sf::Color(0);//;63, 92, 123);
@@ -108,7 +108,7 @@ void Menu::setCharacterSelect() {
 	// Path:
 	std::string lobbyPath = glb::CONTENT_PATH + "UI/MultiplayerMenu/Lobby/";
 	// 
-	currentMenuPage = elements.size();
+	currentMenuPage = Page::Lobby;
 	clear();
 
 	// background:
@@ -150,16 +150,16 @@ void Menu::draw()
 
 
 void Menu::setWorkshopMenu() {
-	currentMenuPage = 1000;
+	currentMenuPage = Page::Workshop;
 	widgets.clear();
 	elements.clear();
 	levelNames.clear();
 
-	std::ifstream f(glb::LEVELS_PATH + "levels.csv");
-	int nLevels;
-	std::string levelName, extension = ".csv";
-	f >> nLevels;
+	addExitSign();
 
+	std::ifstream f(glb::LEVELS_PATH + "levels.csv");
+	int nLevels = 0;
+	std::string levelName, extension = ".csv";
 
 	sf::Vector2f pos(0.05, 0.43);
 	float size = 0.05;
@@ -167,20 +167,37 @@ void Menu::setWorkshopMenu() {
 
 	pos.y += size * 2.5;
 	size *= 0.85;
-	for (size_t i = 0; i < nLevels; i++)
+	while (getline(f, levelName))
 	{
-		f >> levelName; // read
+		nLevels++;
 		levelNames.push_back(levelName); // Save
 		// Add to UI:
 		elements.emplace_back(std::make_unique<TextElement>(settings, mainTextFontPath, levelName, size, pos, true));
 
 		pos.y += size * 1.25;
 	}
+	std::vector<std::string> text{
+		"RMB: move camera",
+		"LMB: place selected tile",
+		"Mouse wheel: change selected tile",
+		"CTRL+S: Save"
+	};
+	pos = sf::Vector2f(0.6, 0.33);
+	size = 0.04;
+	std::string font = glb::CONTENT_PATH + "UI/Font/Symbola_hint.ttf";
+	elements.emplace_back(std::make_unique<TextElement>(settings, mainTextFontPath, "Level editor controls:", size, pos, false));
+	
+	pos.y += size * 2.5;
+	size *= 0.85;
+	for (const auto &t : text) {
+		elements.emplace_back(std::make_unique<TextElement>(settings, mainTextFontPath, t, size, pos, false));
+
+		pos.y += size * 1.25;
+	}
 }
 
-
-void Menu::handleClick(int i) {
-	switch (currentMenuPage + i) {
+void Menu::handleMainMenuClick(int i) {
+	switch (i) {
 	case 0:
 	{
 		std::cout << "Clicked multiplayer\n";
@@ -193,7 +210,7 @@ void Menu::handleClick(int i) {
 		game.defaultInit(2);
 		exitMenu = true;
 		break;
-	} 
+	}
 	case 4:
 	{ // Workshop - Level editor
 		setWorkshopMenu();
@@ -206,34 +223,73 @@ void Menu::handleClick(int i) {
 	case 7: // quit
 		window->close();
 		exit(0);
-		break;
-	case 8: // exit sigh
-	{
-		std::cout << "Clicked exit sign\n";
-		setMainMenu();
-		break;
+		break; 
+	default:
+		std::cout << "Clicked element " << i << "\n";
 	}
-	case 1000: // Workshop
-	{
+}
+
+void Menu::handleWorkshopClick(int i) {
+	if (i == 0) { // exit
+		clear();
+		setMainMenu();
+	}
+	else if (i == 1) {
+		// New level
+		game.createNewLevel(levelNames.size());
+		game.clear();
+		game.setState(Game::State::Editing);
+		exitMenu = true;
+	}
+	else {
+		i--;
+		if (i >= levelNames.size()) std::cerr << i << " is not a level " << levelNames.size() << "\n";
+		game.loadLevel(levelNames[i] + ".csv");
+		game.clear();
+		game.setState(Game::State::Editing);
+		exitMenu = true;
+	}
+	switch (i) {
 		if (i == 0) {
 			// New level
-			game.createNewLevel(levelNames.size()); 
+			game.createNewLevel(levelNames.size());
 			game.clear();
 			game.setState(Game::State::Editing);
 			exitMenu = true;
 		}
+	case 7: // quit
+		window->close();
+		exit(0);
 		break;
-	}
 	default:
-		if (currentMenuPage == 1000) {
-			i--;
-			if (i >= levelNames.size()) std::cerr << i << " is not a level " << levelNames.size() << "\n";
-			game.loadLevel(levelNames[i] + ".csv");
-			game.clear();
-			game.setState(Game::State::Editing);
-			exitMenu = true;
-		}
-		std::cout << "Clicked element " << currentMenuPage + i << "\n";
+		std::cout << "Clicked element " << i << "\n";
+	}
+}
+
+void Menu::handleLobbyClick(int i) {
+	switch (i) {
+	case 7: // exit sign
+		clear();
+		setMainMenu();
+		break;
+	default:
+		std::cout << "Clicked element " << i << "\n";
+	}
+}
+
+void Menu::handleClick(int i) {
+	switch (currentMenuPage) {
+	case Page::Main: // main menu
+		handleMainMenuClick(i);
+		break;
+	case Page::Workshop: // 
+		handleWorkshopClick(i);
+		break;
+	case Page::Lobby:
+		handleLobbyClick(i);
+		break;
+	default:
+		std::cerr << "what is this menu page\n";
 	}
 }
 

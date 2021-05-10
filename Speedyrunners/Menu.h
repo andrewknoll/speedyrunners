@@ -11,6 +11,12 @@ class Game;
 
 class Menu
 {
+	enum class Page {
+		Main,
+		Workshop,
+		Lobby
+	};
+
 	Game& game;
 	sf::RenderWindow* window;
 	Settings& settings;
@@ -24,7 +30,7 @@ class Menu
 
 	std::vector<std::string> levelNames;
 
-	int currentMenuPage = 0;
+	Page currentMenuPage = Page::Main;
 
 	// Main menu:
 	sf::Color bgColor = sf::Color(63, 92, 123);
@@ -34,11 +40,14 @@ class Menu
 	std::string mainTextFontPath = glb::CONTENT_PATH + "UI/Font/Souses.ttf";
 
 	void draw();
+	void handleLobbyClick(int i);
 	void handleClick(int i);
 	void pollEvents();
 	void update();
 	//void update(Settings& settings);
 	void setWorkshopMenu();
+	void handleMainMenuClick(int i);
+	void handleWorkshopClick(int i);
 	void setCharacterSelect();
 
 	void clear();

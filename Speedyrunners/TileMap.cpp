@@ -18,8 +18,18 @@ void TileMap::draw(sf::RenderTarget& target, sf::RenderStates states) const
     target.draw(vertices, states);
 }
 
+size_t TileMap::getSize() const {
+    return tiles.size();
+}
 
-bool TileMap::load(const std::string& _tileSetPath, sf::Vector2u _tileSize, const int* _tiles, const int _width, const int _height)
+void TileMap::resize() {
+
+    tiles.resize(width * height);
+
+    vertices.resize(width * height * 4);
+}
+
+bool TileMap::load(const std::string& _tileSetPath, sf::Vector2u _tileSize, const int* _tiles, const size_t _width, const size_t _height)
 {
     width = _width; height = _height;
     // load the tileset texture
@@ -31,7 +41,7 @@ bool TileMap::load(const std::string& _tileSetPath, sf::Vector2u _tileSize, cons
     tileSize = _tileSize;
     // resize the vertex array to fit the level size
     vertices.setPrimitiveType(sf::Quads);
-    vertices.resize(width * height * 4);
+    resize();
 
     // populate the vertex array, with one quad per tile
     for (size_t i = 0; i < width; ++i)
@@ -68,15 +78,15 @@ void TileMap::setQuad(sf::Vertex* quad, const int i, const int j, const int tu, 
 }
 
 
-void TileMap::setTileIndexed(int row, int col, const int tileNumber) {
-    int i = col, j = row;
-    tiles[i + j * width] = tileNumber;
+void TileMap::setTileIndexed(size_t row, size_t col, const int tileNumber) {
+    int i = row, j = col;
 
     //std::cout << "drawing tile at " << pos.x << " " << pos.y << " " << tileNumber << std::endl;
     if ((i + j * width) >= width * height) {
         std::cerr << "Tile outside of array!!\n";
     }
     else {
+        tiles[i + j * width] = tileNumber;
         // find its position in the tileset texture
         int tu = tileNumber % (tileset.getSize().x / tileSize.x);
         int tv = tileNumber / (tileset.getSize().x / tileSize.x);
@@ -99,14 +109,23 @@ Tiles::Collidable TileMap::getTile(int i, int j) const {
 	return (Tiles::Collidable)tiles.at(j * width + i);
 }
 
-int TileMap::getWidth() const {
+size_t TileMap::getWidth() const {
 	return width;
 }
 
-int TileMap::getHeight() const {
+size_t TileMap::getHeight() const {
 	return height;
 }
 
+void TileMap::setWidth(size_t newWidth) {
+    width = newWidth;
+    resize();
+}
+
+void TileMap::setHeight(size_t newHeight) {
+    height = newHeight;
+    resize();
+}
 
 void TileMap::drawTile(sf::RenderTarget& target, sf::RenderStates states, const sf::Vector2i& pos, const int tileNumber) const
 {
@@ -193,6 +212,8 @@ std::string TileMap::to_string_dup_vertical() const
 
 bool TileMap::load(std::ifstream& file) {
     file >> width >> height;
+    vertices.setPrimitiveType(sf::Quads);
+    resize();
     file.ignore();
     file >> tileSetPath;
     file.ignore();
@@ -211,9 +232,6 @@ bool TileMap::load(std::ifstream& file) {
     if (!tileset.loadFromFile(tileSetPath))
         return false;
 
-    // resize the vertex array to fit the level size
-    vertices.setPrimitiveType(sf::Quads);
-    vertices.resize(width * height * 4);
 
     // populate the vertex array, with one quad per tile
     for (size_t i = 0; i < width; ++i)

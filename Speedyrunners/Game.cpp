@@ -238,8 +238,8 @@ void Game::addCharacter(const CharPtr character)
 }
 void Game::createNewLevel(int nLevels)
 {
-	loadLevel(glb::LEVELS_PATH + "default_level.csv");
-	saveLevelName = "USER LEVEL " + std::to_string(nLevels);
+	loadLevel("default_level.csv");
+	saveLevelName = "USER_LEVEL_" + std::to_string(nLevels) + ".csv";
 }
 /*
 Game::CharPtr Game::getCharacterAt(int pos) const {
@@ -456,8 +456,11 @@ void Game::processEditingInputs(const sf::Event& event) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
 			lvl.setCheckpoints(checkpoints);
 			//lvl.saveDuplicateVertical("first.csv");
-			lvl.setDefaultLevel();
-			lvl.save("default_level.csv");
+			
+			//lvl.setDefaultLevel();
+			//lvl.save("default_level.csv");
+
+			lvl.save(saveLevelName);
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::L)) {
 			loadLevel("first.csv");
