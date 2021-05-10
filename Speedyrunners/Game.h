@@ -45,7 +45,7 @@ protected:
 	std::string saveLevelName = "defaultLevel.csv";
 
 	// "cheats"
-	bool cheatsEnabled = true;
+	bool cheatsEnabled = false;
 
 	bool suddenDeath = false;
 	State state;
@@ -112,5 +112,8 @@ public:
 	CharPtr getCharacterAt(int pos) const;
 	PlayerPtr getPlayerAt(int pos) const;
 	NPCPtr getNPCAt(int pos) const;
+
+	// allow F1, F2, etc.
+	void enableCheats(bool enable);
 };
 

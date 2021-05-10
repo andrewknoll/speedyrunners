@@ -47,7 +47,7 @@ void Menu::setMainMenu()
 	elements.emplace_back(std::make_unique<TextElement>(settings, mainTextFontPath, "MULTIPLAYER", size, pos, true));
 	// Story:
 	pos.y += size*1.25;
-	elements.emplace_back(std::make_unique<TextElement>(settings, mainTextFontPath, "STORY", size, pos, true));
+	elements.emplace_back(std::make_unique<TextElement>(settings, mainTextFontPath, "DEV MODE", size, pos, true));
 	// Practice:
 	pos.y += size * 1.25;
 	elements.emplace_back(std::make_unique<TextElement>(settings, mainTextFontPath, "PRACTICE", size, pos, true));
@@ -55,13 +55,13 @@ void Menu::setMainMenu()
 	// Practice:
 	pos.y += size * 2.5;
 	size *= 0.85;
-	elements.emplace_back(std::make_unique<TextElement>(settings, mainTextFontPath, "TRAILS STORE", size, pos, true));
+	//elements.emplace_back(std::make_unique<TextElement>(settings, mainTextFontPath, "TRAILS STORE", size, pos, true));
 	// WORKSHOP:
 	pos.y += size * 1.25;
 	elements.emplace_back(std::make_unique<TextElement>(settings, mainTextFontPath, "WORKSHOP", size, pos, true));
 	// REPLAYS:
-	pos.y += size * 1.25;
-	elements.emplace_back(std::make_unique<TextElement>(settings, mainTextFontPath, "REPLAYS", size, pos, true));
+	//pos.y += size * 1.25;
+	//elements.emplace_back(std::make_unique<TextElement>(settings, mainTextFontPath, "REPLAYS", size, pos, true));
 	// OPTIONS:
 	pos.y += size * 1.25;
 	elements.emplace_back(std::make_unique<TextElement>(settings, mainTextFontPath, "OPTIONS", size, pos, true));
@@ -114,7 +114,10 @@ void Menu::setCharacterSelect() {
 	// background:
 	backgrounds.emplace_back(menuPath + "SpeedRunners/Menu_mid_City_B.png", *window, sf::FloatRect(0, 0, 1, 1));
 	backgrounds.back().setTextureCoords(sf::FloatRect(0.01, 0, 0.99, 0.95)); // Solo se muestra la mitad superior de la textura
+	
 
+	// Exit:
+	addExitSign();
 	// lobby sign:
 	addTopLeftSign(menuPath + "SpeedRunners/Menu_lobby.png");
 	
@@ -124,9 +127,6 @@ void Menu::setCharacterSelect() {
 	// Player widgets:
 	addLobbyWidgets(lobbyPath);
 	
-
-	// Exit:
-	addExitSign();
 }
 
 
@@ -185,12 +185,12 @@ void Menu::setWorkshopMenu() {
 	pos = sf::Vector2f(0.6, 0.33);
 	size = 0.04;
 	std::string font = glb::CONTENT_PATH + "UI/Font/Symbola_hint.ttf";
-	elements.emplace_back(std::make_unique<TextElement>(settings, mainTextFontPath, "Level editor controls:", size, pos, false));
+	elements.emplace_back(std::make_unique<TextElement>(settings, font, "Level editor controls:", size, pos, false));
 	
 	pos.y += size * 2.5;
 	size *= 0.85;
 	for (const auto &t : text) {
-		elements.emplace_back(std::make_unique<TextElement>(settings, mainTextFontPath, t, size, pos, false));
+		elements.emplace_back(std::make_unique<TextElement>(settings, font, t, size, pos, false));
 
 		pos.y += size * 1.25;
 	}
@@ -206,12 +206,21 @@ void Menu::handleMainMenuClick(int i) {
 	}
 	case 1:
 	{
-		std::cout << "Clicked story\n";
+		std::cout << "Clicked dev mode\n";
 		game.defaultInit(2);
+		game.enableCheats(true);
 		exitMenu = true;
 		break;
 	}
-	case 4:
+	case 2:
+	{
+		std::cout << "Clicked practice\n";
+		game.defaultInit(1);
+		game.enableCheats(false);
+		exitMenu = true;
+		break;
+	}
+	case 3:
 	{ // Workshop - Level editor
 		setWorkshopMenu();
 		/**
@@ -220,7 +229,7 @@ void Menu::handleMainMenuClick(int i) {
 		exitMenu = true;*/
 		break;
 	}
-	case 7: // quit
+	case 5: // quit
 		window->close();
 		exit(0);
 		break; 
@@ -268,7 +277,7 @@ void Menu::handleWorkshopClick(int i) {
 
 void Menu::handleLobbyClick(int i) {
 	switch (i) {
-	case 7: // exit sign
+	case 0: // exit sign
 		clear();
 		setMainMenu();
 		break;

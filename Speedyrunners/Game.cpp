@@ -429,6 +429,10 @@ void Game::update()
 	// TODO
 }
 
+void Game::enableCheats(bool enable) {
+	cheatsEnabled = enable;
+}
+
 // Controls for editing state:
 void Game::processEditingInputs(const sf::Event& event) {
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
