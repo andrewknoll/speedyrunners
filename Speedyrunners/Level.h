@@ -45,6 +45,8 @@ public:
 
 	void save(const std::string& f_name) const;
 
+	void saveDuplicateVertical(const std::string& f_name) const;
+
 	void load(const std::string& f_name, const sf::RenderWindow& window);
 
 	Level(const std::string& tilesetPath, const std::string& bgPath, const sf::RenderWindow& window);

@@ -387,6 +387,7 @@ void Game::processEditingInputs(const sf::Event& event) {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) { // sf::Keyboard::isKeyPressed(sf::Keyboard::S) &&
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
 			lvl.setCheckpoints(checkpoints);
+			//lvl.saveDuplicateVertical("first.csv");
 			lvl.save("first.csv");
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::L)) {

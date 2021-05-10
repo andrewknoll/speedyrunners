@@ -172,6 +172,13 @@ namespace utils {
 		scaleToFullScreen(s, window.getSize().y * verticalRatio);
 	}
 
+
+	sf::Vector2f globalToRelative(const sf::Vector2f& global, const sf::RenderWindow& window)
+	{
+		return sf::Vector2f(global.x / window.getSize().x, global.y / window.getSize().y);
+	}
+
+
 	sf::Vector2f relativeToGlobal(sf::Vector2f relative, const sf::RenderWindow& window)
 	{
 		return sf::Vector2f(relative.x * window.getSize().x, relative.y * window.getSize().y);
@@ -181,6 +188,13 @@ namespace utils {
 	{
 		auto size = tex.getSize();
 		return sf::IntRect(relative.left * size.x, relative.top * size.y, relative.width*size.x, relative.height*size.y);
+	}
+
+	void scaleSpriteToTextRect(sf::Sprite& sprite)
+	{
+		auto& s = sprite.getScale();
+		auto& rect = sprite.getTextureRect();
+		sprite.setScale(s.x, s.x * (rect.height / rect.width));
 	}
 
 	void centerOrigin(sf::Sprite& s)

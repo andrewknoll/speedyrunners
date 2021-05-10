@@ -46,6 +46,9 @@
     <Filter Include="UI\Elements\Sprites">
       <UniqueIdentifier>{49f8899f-b598-4623-b34a-2ab38547bbb8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UI\Elements\Widgets">
+      <UniqueIdentifier>{dada622b-a7c7-481f-96c0-18428524f432}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TileMap.cpp">
@@ -140,6 +143,8 @@
     </ClCompile>
     <ClCompile Include="RoundVictory.cpp">
       <Filter>UI\InGame</Filter>
+    <ClCompile Include="LobbyWidget.cpp">
+      <Filter>UI\Elements\Widgets</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -235,6 +240,8 @@
     </ClInclude>
     <ClInclude Include="RoundVictory.h">
       <Filter>UI\InGame</Filter>
+    <ClInclude Include="LobbyWidget.h">
+      <Filter>UI\Elements\Widgets</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

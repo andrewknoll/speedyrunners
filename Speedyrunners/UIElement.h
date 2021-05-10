@@ -17,6 +17,7 @@ public:
 	UIElement(const sf::FloatRect& _clickableBox);
 
 	void setClickableArea(const sf::FloatRect& _clickableBox);
+	sf::FloatRect getClickableArea() const;
 
 
 	//virtual void draw(sf::RenderWindow& window) const = 0;
