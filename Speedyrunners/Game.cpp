@@ -8,6 +8,9 @@
 #include "RoundVictory.h"
 
 
+#define DEV_MODE
+
+
 //#define VERBOSE_DEBUG // Cambiar para quitar couts
 
 Game::Game()
@@ -21,7 +24,9 @@ Game::Game()
 	//dT(0)
 {
 	setUpWindow();
-	setFullScreen();
+	//setFullScreen();
+
+	settings.setResolution(sf::Vector2i(window.getSize().x, window.getSize().y));
 
 	ui.setWindow(window);
 
@@ -189,11 +194,12 @@ int Game::getFirstCharacterIdx() const
 void Game::loadLevel(const std::string& lvlPath)
 {
 	lvl.load(lvlPath, window);
+	checkpoints.clear();
 	lvl.getCheckpoints(checkpoints);
+	std::cout << "I have " << checkpoints.size() << " checkpoints now\n";
 	for (NPCPtr npc : npcs) {
 		npc->setTileMap(std::make_shared<TileMap>(lvl.getCollidableTiles()));
 	}
-
 }
 
 
@@ -474,7 +480,11 @@ void Game::update()
 }
 
 void Game::enableCheats(bool enable) {
+#ifdef DEV_MODE
+	cheatsEnabled = true;
+#else 
 	cheatsEnabled = enable;
+#endif
 }
 
 // Controls for editing state:

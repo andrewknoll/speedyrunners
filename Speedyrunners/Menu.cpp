@@ -279,21 +279,6 @@ void Menu::handleWorkshopClick(int i) {
 		game.setSaveName(levelNames[i] + ".csv");
 		exitMenu = true;
 	}
-	switch (i) {
-		if (i == 0) {
-			// New level
-			game.createNewLevel(levelNames.size());
-			game.clear();
-			game.setState(Game::State::Editing);
-			exitMenu = true;
-		}
-	case 7: // quit
-		window->close();
-		exit(0);
-		break;
-	default:
-		std::cout << "Clicked element " << i << "\n";
-	}
 }
 void Menu::setLevelSelect() {
 	widgets.clear();

@@ -93,6 +93,7 @@ void Level::saveDuplicateVertical(const std::string& f_name) const
 
 void Level::load(const std::string& f_name, const sf::RenderWindow& window)
 {
+	checkpoints.clear();
 	std::cout << "Loading " << f_name << "\n";
 
 	std::ifstream file("../assets/levels/" + f_name);
@@ -136,6 +137,7 @@ void Level::load(const std::string& f_name, const sf::RenderWindow& window)
 		checkpoints.emplace_back(sf::Vector2f(x, y), r);
 	}
 	file.ignore();
+	//std::cout << "loaded " << checkpoints.size() << " from file\n";
 	
 	// Load tilemap:
 	if (!collidableTiles.load(file)) {
