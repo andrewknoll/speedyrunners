@@ -52,10 +52,17 @@ void Level::save(const std::string& f_name) const
 	// Save tilemap:
 	file << collidableTiles << std::endl;
 
-	std::ofstream lvlsList("../assets/levels/levels.csv", std::ios_base::app);
-	for (int i = 0; i < f_name.size() - 4; i++) // dont print the .csv extension
-		lvlsList << f_name[i];
-	lvlsList << "\n";
+	std::ifstream lvls("../assets/levels/levels.csv");
+	std::set<std::string> lvlsSet;
+	std::string line;
+	while (std::getline(lvls, line)) lvlsSet.insert(line);
+	std::string name = f_name.substr(0, f_name.size() - 4);
+	//std::cout << name << "\n";
+	if (lvlsSet.find(name) == lvlsSet.end()) { // Doesnt contain it already
+		std::ofstream lvlsList("../assets/levels/levels.csv", std::ios_base::app);
+		lvlsList << name << "\n";
+	}
+	
 	
 	std::cout << "Level saved\n";
 

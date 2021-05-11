@@ -15,6 +15,10 @@ class Checkpoint : public sf::Drawable
 public:
 	Checkpoint(sf::Vector2f _pos, float _r);
 
+	void setPosition(const sf::Vector2f& _pos);
+
+	void setRadius(const float& _r);
+
 	sf::Vector2f getPos() const;
 	float getRadius() const;
 };

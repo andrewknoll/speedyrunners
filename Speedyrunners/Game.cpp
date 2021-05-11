@@ -307,10 +307,13 @@ void Game::update()
 	int target;
 	if (window.pollEvent(event))
 	{
-		if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
+		if (event.type == sf::Event::Closed) {
 			running = false;
 			threadPool.clear();
 			window.close();
+		}
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
+			loopMenu();
 		}
 		if (event.type == sf::Event::Resized)
 		{
@@ -441,7 +444,13 @@ void Game::enableCheats(bool enable) {
 // Controls for editing state:
 void Game::processEditingInputs(const sf::Event& event) {
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-		lvl.setTile(utils::clampMouseCoord(window), selectedTile);
+		if (!addingCheckpoint)
+			lvl.setTile(utils::clampMouseCoord(window), selectedTile);
+		else {
+			std::cout << "adding checkpoint to " << utils::mousePosition2f(window).x << " " << utils::mousePosition2f(window).y << "\n";
+			checkpoints.emplace_back(utils::mousePosition2f(window), currentRadius);
+		}
+
 	}
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
 		cam.moveByMouse(sf::Mouse::getPosition());
@@ -481,18 +490,19 @@ void Game::processEditingInputs(const sf::Event& event) {
 		}
 	}
 	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::C) {
-		std::cout << "adding circle to " << utils::mousePosition2f(window).x << " " << utils::mousePosition2f(window).y<< "\n";
-		checkpoints.emplace_back(utils::mousePosition2f(window), currentRadius);
+		addingCheckpoint = !addingCheckpoint;
 	}
 	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::BackSpace && !checkpoints.empty()) {
 		std::cout << "removing last checkpoint\n";
 		checkpoints.pop_back();
 	}else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Add)) {
-		std::cout << "Resizing circle...\n";
+		//std::cout << "Resizing circle...\n";
 		currentRadius += 10;
+		checkpointCircle.setRadius(currentRadius);
 	}else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Subtract) && currentRadius > 10) {
-		std::cout << "Resizing circle...\n";
+		//std::cout << "Resizing circle...\n";
 		currentRadius -= 10;
+		checkpointCircle.setRadius(currentRadius);
 	}
 	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::J) { // For debug, add Falcon to mouse position
 		// Add player
@@ -556,7 +566,12 @@ void Game::draw(sf::Time dT)
 
 		}
 		// Selected tile
-		lvl.drawTile(window, sf::RenderStates(), utils::clampMouseCoord(window), selectedTile);
+		if (!addingCheckpoint)
+			lvl.drawTile(window, sf::RenderStates(), utils::clampMouseCoord(window), selectedTile);
+		else {
+			checkpointCircle.setPosition(utils::mousePosition2f(window));
+			window.draw(checkpointCircle);
+		}
 		break;
 	}
 	case State::FinishedRound:

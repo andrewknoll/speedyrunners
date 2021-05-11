@@ -57,15 +57,18 @@ protected:
 	std::list<ItemPtr> items;
 
 	sf::Time dT; // Time since last update
+
+	// Checkpoints:
 	// Editor:
+	float currentRadius = 200.0;
 	//sf::Sprite selectedTile;
 	Tiles::Collidable selectedTile; // When editing
-
+	bool addingCheckpoint = false;
+	Checkpoint checkpointCircle = Checkpoint(sf::Vector2f(100,100), currentRadius);
 	// Checkpoints:
 	std::vector<Checkpoint> checkpoints;
 	int activeCheckpoint;
 	// int firstCharacter;
-	float currentRadius = 200.0;
 
 	// Countdown:
 	Countdown countdown;
