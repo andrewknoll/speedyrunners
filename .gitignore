@@ -269,6 +269,8 @@ practica0/pygame/Scripts/
 
 practica0/pygame/pyvenv.cfg
 
+*.zip
+
 Speedyrunners/assets/Content/
 Speedyrunners/assets/indexes/
 Speedyrunners/assets/Content*

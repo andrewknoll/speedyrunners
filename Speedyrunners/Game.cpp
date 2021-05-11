@@ -31,13 +31,6 @@ Game::Game()
 	ui.setWindow(window);
 
 	loadLevel("big-one.csv");
-	//TO-DO: Utilizar "sets" de musica predeterminados
-	//o asignarlas al nivel
-
-
-
-	// DEBUG de menus:
-	//loopMenu();
 }
 
 void Game::clear() {

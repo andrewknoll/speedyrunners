@@ -25,7 +25,7 @@ class NPC : public PlayerSlot
 
 	const float RUN_COST = 3.0f;
 	const float FREE_FALL_COST = 1.0f;
-	const float HOOK_COST = 0.5f;
+	const float HOOK_COST = 2.5f;
 	const float SLIDE_COST = 3.5f;
 	const float JUMP_COST_BASE_1 = 4.0f;
 	const float JUMP_COST_BASE_2 = 5.0f;
