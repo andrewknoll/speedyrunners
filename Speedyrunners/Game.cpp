@@ -24,13 +24,13 @@ Game::Game()
 	//dT(0)
 {
 	setUpWindow();
-	//setFullScreen();
+	setFullScreen();
 
-	settings.setResolution(sf::Vector2i(window.getSize().x, window.getSize().y));
+	//settings.setResolution(sf::Vector2i(window.getSize().x, window.getSize().y));
 
 	ui.setWindow(window);
 
-	loadLevel("first.csv");
+	loadLevel("big-one.csv");
 	//TO-DO: Utilizar "sets" de musica predeterminados
 	//o asignarlas al nivel
 
@@ -69,14 +69,15 @@ void Game::clear() {
 	threadPool.resize(8);
 }
 
-void Game::defaultInit(const std::vector<glb::characterIndex>& players, const std::vector<glb::characterIndex>& npcs) {
+void Game::defaultInit(const std::vector<glb::characterIndex>& _players, const std::vector<glb::characterIndex>& _npcs) {
 	clear();
 	int N_PLAYERS = players.size();
 
+	std::cout << "players: " << _players.size() << "\n";
 	std::shared_ptr<Character> character;
 	int i = 0;
-	if (players.size() == 2) i = 1; // controls
-	for (auto c : players) {
+	if (_players.size() == 2) i = 1; // controls
+	for (auto c : _players) {
 		std::cout << "adding player " << c << "\n";
 		// character:
 		character = std::make_shared<Character>(src.getSpriteSheet(c), c);
@@ -90,7 +91,7 @@ void Game::defaultInit(const std::vector<glb::characterIndex>& players, const st
 		i++;
 	}
 	i = 0;
-	for (auto c : npcs) {
+	for (auto c : _npcs) {
 		std::cout << "adding npc " << c << "\n";
 		// char:
 		character = std::make_shared<Character>(src.getSpriteSheet(c), c);
@@ -102,6 +103,7 @@ void Game::defaultInit(const std::vector<glb::characterIndex>& players, const st
 		character->setName("NPC " + std::to_string(i++));
 		addCharacter(character);
 	}
+	std::cout << characters.size() << " characters now!\n";
 	setState(State::Countdown);
 	running = true;
 }
@@ -474,7 +476,7 @@ void Game::update()
 			}
 		}
 		updateNPCs(true);
-		if (aliveCount == 1) {
+		if (characters.size() > 1 && aliveCount == 1) {
 			state = State::FinishedRound;
 			for (auto c : characters) {
 				if (!c->isDead()) {
@@ -581,7 +583,7 @@ void Game::processEditingInputs(const sf::Event& event) {
 			lvl.save(saveLevelName);
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::L)) {
-			loadLevel("first.csv");
+			loadLevel("big-one.csv");
 		}
 		else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::J) {
 
@@ -703,7 +705,8 @@ void Game::draw(sf::Time dT)
 		}
 		// UI:
 		ui.update();
-		window.draw(ui);
+		if (characters.size()>1)
+			window.draw(ui);
 		break;
 	}
 	default:
