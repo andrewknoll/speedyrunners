@@ -15,6 +15,7 @@
 #include "RoundVictory.h"
 #include <list>
 #include <thread>
+#include <condition_variable>
 
 class Game
 {
@@ -24,13 +25,19 @@ class Game
 	using PSPtr = std::shared_ptr<PlayerSlot>;
 	using ItemPtr = std::shared_ptr<Item>;
 
+	struct workerThread {
+		std::unique_ptr<std::thread> threadPtr;
+		bool finished = false;
+	};
 
 public:
 	enum class State { Countdown, Playing, FinishedRound, Paused, Editing, MainMenu };
 protected:
 	//Thread Pool
-	std::vector<std::unique_ptr<std::thread> > threadPool = std::vector<std::unique_ptr<std::thread> >(8);
+	std::vector<workerThread> threadPool = std::vector<workerThread>(8);
 	std::atomic<bool> running = true;
+	std::mutex finishMtx;
+	std::condition_variable finishCV;
 	// Settings:
 	Settings settings;
 	// Main components:
@@ -55,6 +62,9 @@ protected:
 	std::vector<PlayerPtr> players;
 	std::vector<NPCPtr> npcs;
 	std::list<ItemPtr> items;
+
+	std::mutex restartMtx;
+	std::condition_variable restartCv;
 
 	sf::Time dT; // Time since last update
 

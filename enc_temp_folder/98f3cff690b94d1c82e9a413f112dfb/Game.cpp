@@ -21,86 +21,18 @@ Game::Game()
 	//dT(0)
 {
 	setUpWindow();
-	setFullScreen();
 
 	ui.setWindow(window);
 
-	loadLevel("first.csv");
+	loadLevel("airport.csv");
 	//TO-DO: Utilizar "sets" de musica predeterminados
 	//o asignarlas al nivel
 
 
+	settings.setResolution(sf::Vector2i(1600, 900));
 
 	// DEBUG de menus:
 	//loopMenu();
-}
-
-void Game::clear() {
-	characters.clear();
-	players.clear();
-	running = false;
-
-	std::unique_lock<std::mutex> lck(finishMtx);
-	for (int i = 0; i < threadPool.size(); i++) {
-		if (threadPool[i].threadPtr == nullptr) continue;
-		restartCv.notify_all();	//Make sure the thread is not sleeping
-		while (!threadPool[i].finished) {
-			finishCV.wait(lck);
-		}
-		threadPool[i].threadPtr->join();
-		threadPool[i].threadPtr = nullptr;
-	}
-	threadPool.clear();
-	npcs.clear();
-
-	countdown.end();
-
-
-	threadPool.resize(8);
-}
-
-void Game::defaultInit(int N_PLAYERS) {
-
-	if (N_PLAYERS != 2) N_PLAYERS = 1;// only 1 or 2 players
-	clear();
-
-	std::shared_ptr<Character> speedyrunner = std::make_shared<Character>(src.getSpriteSheet(0), glb::SPEEDRUNNER);
-	speedyrunner->setPosition(lvl.getInitialPosition());
-
-	std::shared_ptr<Character> cosmonaut = std::make_shared<Character>(src.getSpriteSheet(1), glb::COSMONAUT);
-	cosmonaut->setPosition(lvl.getInitialPosition());
-
-	std::shared_ptr<Character> otro = std::make_shared<Character>(src.getSpriteSheet(2), glb::UNIC);
-	otro->setPosition(lvl.getInitialPosition());
-
-	int id = 0;
-	if (N_PLAYERS == 2) id = 1;
-	std::shared_ptr<Player> me = std::make_shared<Player>(getSettings(), id);
-	me->setCharacter(speedyrunner);
-	playerJoin(me);
-	speedyrunner->setName("Player 1");
-	addCharacter(speedyrunner);
-
-	if (N_PLAYERS > 1) {
-		std::shared_ptr<Player> secondPlayer = std::make_shared<Player>(getSettings(), ++id);
-		secondPlayer->setCharacter(otro);
-		playerJoin(secondPlayer);
-		otro->setName("Player 2");
-		addCharacter(otro);
-	}
-	std::shared_ptr<NPC> other = std::make_shared<NPC>();
-	other->setCharacter(cosmonaut);
-	npcJoin(other);
-	cosmonaut->setName("NPC");
-	addCharacter(cosmonaut);
-	setState(State::Countdown);
-	running = true;
-}
-
-void Game::setState(const State _state)
-{
-	state = _state;
-	if (state == State::Countdown) countdown.reset();
 }
 
 void Game::setUpWindow() {
@@ -116,39 +48,37 @@ void Game::setUpWindow() {
 // update the positions based on distance to the active checkpoint
 void Game::updatePositions()
 {
-	if (!checkpoints.empty()) {
-		Checkpoint cp = checkpoints[activeCheckpoint];
-		auto cpPos = cp.getPos();
-		float d;
-		for (auto c : characters) {
-			if (c->isDead()) {
-				d = INFINITY;
-			}
-			else {
-				d = utils::distance(c->getPosition(), cpPos);
-			}
-
-			c->setDToCheckpoint(d);
-			// get distance d to active checkpoint
-			// if d < r: next checkpoint
+	Checkpoint cp = checkpoints[activeCheckpoint];
+	auto cpPos = cp.getPos();
+	float d;
+	for (auto c : characters) {
+		if (c->isDead()) {
+			d = INFINITY;
 		}
-		// order characters and players based on distance
-		std::sort(characters.begin(), characters.end(),
-			[](auto & c1, auto & c2) {
+		else {
+			d = utils::distance(c->getPosition(), cpPos);
+		}
+
+		c->setDToCheckpoint(d);
+		// get distance d to active checkpoint
+		// if d < r: next checkpoint
+	}
+	// order characters and players based on distance
+	std::sort(characters.begin(), characters.end(),
+		[](auto & c1, auto & c2) {
 			return c1->getDToCheckpoint() < c2->getDToCheckpoint();
 		}
-		);
-		// Check if one has reached the checkpoint
-		if (!characters.empty() && characters[0]->getDToCheckpoint() <= cp.getRadius()) {
-			// Checkpoint reached, cycle to next
+	);
+	// Check if one has reached the checkpoint
+	if (characters[0]->getDToCheckpoint() <= cp.getRadius()) {
+		// Checkpoint reached, cycle to next
 #ifdef VERBOSE_DEBUG
-			std::cout << "Checkpoint " << activeCheckpoint << " reached\n";
+		std::cout << "Checkpoint " << activeCheckpoint <<" reached\n";
 #endif
-			activeCheckpoint = (activeCheckpoint + 1) % checkpoints.size();
+		activeCheckpoint = (activeCheckpoint + 1) % checkpoints.size();
 #ifdef VERBOSE_DEBUG
-			std::cout << "(new = " << activeCheckpoint << ")\n";
+		std::cout << "(new = " << activeCheckpoint << ")\n";
 #endif
-		}
 	}
 }
 
@@ -166,7 +96,7 @@ void Game::playerJoin(PlayerPtr newPlayer) {
 
 void Game::npcJoin(NPCPtr newNPC){
 	if (characters.size() < 4) {
-		/*Slot s;R
+		/*Slot s;
 		s.controlIndex = npcs.size();
 		s.index = positions.size();
 		s.type = 1;*/
@@ -194,11 +124,6 @@ void Game::loadLevel(const std::string& lvlPath)
 		npc->setTileMap(std::make_shared<TileMap>(lvl.getCollidableTiles()));
 	}
 
-}
-
-
-void Game::setSaveName(std::string fileName) {
-	saveLevelName = fileName;
 }
 
 void Game::loop()
@@ -231,20 +156,16 @@ void Game::loop()
 		previousTime = currentTime;
 	}
 	running = false;
-	clear();
 }
 
 void Game::loopMenu()
 {
-	Menu menu(window, settings, *this);
+	Menu menu(window, settings);
 	if (!src.musicPlayer.isPlaying(MusicPlayer::MusicType::MENU)) {
 		src.musicPlayer.playMusicTrack(MusicPlayer::MusicType::MENU);
 	}
 	menu.setMainMenu();
 	menu.loop(); // , this);
-	std::cout << "State after menu: " << (int)state << "\n";
-	//state = (Game::State)menu.getGameState();
-	//characters = menu.getCharacters
 }
 
 void Game::addCharacter(const CharPtr character)
@@ -255,11 +176,6 @@ void Game::addCharacter(const CharPtr character)
 		aliveCount++;
 	}
 
-}
-void Game::createNewLevel(int nLevels)
-{
-	loadLevel("default_level.csv");
-	saveLevelName = "USER_LEVEL_" + std::to_string(nLevels) + ".csv";
 }
 /*
 Game::CharPtr Game::getCharacterAt(int pos) const {
@@ -292,56 +208,28 @@ void Game::updateNPCs() {
 			cp = checkpoints[(activeCheckpoint + 1) % checkpoints.size()];
 			npcs[i]->addGoal(cp.getPos(), cp.getRadius());
 			auto& followThread = threadPool[2 * i + 1];
-			if (threadPool[2 * i].threadPtr == nullptr) {
-				threadPool[2 * i].threadPtr = std::make_unique<std::thread>([&, i]() {
-					while (running) {
-						if (npcs[i]->getCharacter()->isDead()) { 
-							{ std::unique_lock<std::mutex> lck(restartMtx);
-							restartCv.wait(lck); }
-						}
-						if (running) {
-							npcs[i]->plan();
-						}
+			if (threadPool[2 * i] == nullptr) {
+				threadPool[2 * i] = std::make_unique<std::thread>([&, i]() {
+					while (running && !npcs[i]->getCharacter()->isDead()) {
+						npcs[i]->plan();
 					}
-					threadPool[2 * i].finished = true;
-					finishCV.notify_one();
 				});
 				//threadPool[i]->detach();
 			}
-			if (threadPool[2 * i + 1].threadPtr == nullptr) {
-				threadPool[2 * i + 1].threadPtr = std::make_unique<std::thread>([&, i]() {
-					while (running) {
-						if (npcs[i]->getCharacter()->isDead()) {
-							{ std::unique_lock<std::mutex> lck(restartMtx);
-							restartCv.wait(lck); }
+			if (threadPool[2 * i + 1] == nullptr) {
+				threadPool[2 * i + 1] = std::make_unique<std::thread>([&, i]() {
+					while (running && !npcs[i]->getCharacter()->isDead()) {
+						if (npcs[i]->getPathFound(0) == 1) {
+							npcs[i]->followPath();
 						}
-						if (running) {
-							if (npcs[i]->getPathFound(0) == 1) {
-								npcs[i]->followPath();
-							}
-							else {
-								npcs[i]->plan();
-							}
+						else {
+							npcs[i]->plan();
 						}
 					}
-					threadPool[2 * i + 1].finished = true;
-					finishCV.notify_one();
 				});
 			}
 		}
 	}
-}
-
-void Game::setFullScreen() {
-	sf::VideoMode vMode = sf::VideoMode::getFullscreenModes().front();
-	if (!vMode.isValid()) {
-		std::cerr << "NOPE\n";
-	}
-	window.create(vMode, "SpeedyRunners", sf::Style::Fullscreen);
-	setUpWindow();
-	cam = window.getDefaultView();
-	lvl.loadBackground(lvl.getBackgroundPath(), window);
-	settings.setResolution(sf::Vector2i(window.getSize().x, window.getSize().y));
 }
 
 void Game::update()
@@ -350,12 +238,10 @@ void Game::update()
 	int target;
 	if (window.pollEvent(event))
 	{
-		if (event.type == sf::Event::Closed) {
+		if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
 			running = false;
+			threadPool.clear();
 			window.close();
-		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
-			loopMenu();
 		}
 		if (event.type == sf::Event::Resized)
 		{
@@ -364,19 +250,15 @@ void Game::update()
 
 			window.setView(sf::View(visibleArea));
 		}
-		if (cheatsEnabled) {
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::F1)) {
-				state = State::Playing;
-			}
-			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::F2)) {
-				state = State::Editing;
-			}
-			else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F4) {
-				loopMenu();
-			}
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::F1)) {
+			state = State::Playing;
 		}
-
-		
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::F2)) {
+			state = State::Editing;
+		}
+		else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F4) {
+			loopMenu();
+		}
 		if (state == State::Editing) { // Editing state
 			processEditingInputs(event);
 		} // End of editing state
@@ -395,7 +277,14 @@ void Game::update()
 		}
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::F10)) { // Change to fullscreen (change back to window not implemented)
-			setFullScreen();
+			sf::VideoMode vMode = sf::VideoMode::getFullscreenModes().front();
+			if (!vMode.isValid()) {
+				std::cerr << "NOPE\n";
+			}
+			window.create(vMode, "SpeedyRunners", sf::Style::Fullscreen);
+			setUpWindow();
+			cam = window.getDefaultView();
+			lvl.loadBackground(lvl.getBackgroundPath(), window);
 		}
 
 	}
@@ -465,7 +354,6 @@ void Game::update()
 				for (int i = 0; i < characters.size(); i++) {
 					characters[i]->respawn(respawnPosition);
 				}
-				restartCv.notify_all();
 			}
 		}
 	}
@@ -473,20 +361,10 @@ void Game::update()
 	// TODO
 }
 
-void Game::enableCheats(bool enable) {
-	cheatsEnabled = enable;
-}
-
 // Controls for editing state:
 void Game::processEditingInputs(const sf::Event& event) {
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-		if (!addingCheckpoint)
-			lvl.setTile(utils::clampMouseCoord(window), selectedTile);
-		else {
-			std::cout << "adding checkpoint to " << utils::mousePosition2f(window).x << " " << utils::mousePosition2f(window).y << "\n";
-			checkpoints.emplace_back(utils::mousePosition2f(window), currentRadius);
-		}
-
+		lvl.setTile(utils::clampMouseCoord(window), selectedTile);
 	}
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
 		cam.moveByMouse(sf::Mouse::getPosition());
@@ -510,35 +388,29 @@ void Game::processEditingInputs(const sf::Event& event) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
 			lvl.setCheckpoints(checkpoints);
 			//lvl.saveDuplicateVertical("first.csv");
-			
-			//lvl.setDefaultLevel();
-			//lvl.save("default_level.csv");
-
-			lvl.save(saveLevelName);
+			lvl.save("airport.csv");
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::L)) {
-			loadLevel("first.csv");
+			loadLevel("airport.csv");
 		}
 		else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::J) {
-
 			// Join as player
 			//playerJoin();
 		}
 	}
 	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::C) {
-		addingCheckpoint = !addingCheckpoint;
+		std::cout << "adding circle to " << utils::mousePosition2f(window).x << " " << utils::mousePosition2f(window).y<< "\n";
+		checkpoints.emplace_back(utils::mousePosition2f(window), currentRadius);
 	}
 	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::BackSpace && !checkpoints.empty()) {
 		std::cout << "removing last checkpoint\n";
 		checkpoints.pop_back();
 	}else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Add)) {
-		//std::cout << "Resizing circle...\n";
+		std::cout << "Resizing circle...\n";
 		currentRadius += 10;
-		checkpointCircle.setRadius(currentRadius);
 	}else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Subtract) && currentRadius > 10) {
-		//std::cout << "Resizing circle...\n";
+		std::cout << "Resizing circle...\n";
 		currentRadius -= 10;
-		checkpointCircle.setRadius(currentRadius);
 	}
 	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::J) { // For debug, add Falcon to mouse position
 		// Add player
@@ -548,7 +420,7 @@ void Game::processEditingInputs(const sf::Event& event) {
 		falcon->setName(std::string("falcon ") + std::to_string(characters.size()));
 		//falcon.setScale(0.5, 0.5);
 		addCharacter(falcon);
-		lvl.setInitialPosition(falcon->getPosition());
+
 	}
 
 	// Debug player positions (P to show):
@@ -602,12 +474,7 @@ void Game::draw(sf::Time dT)
 
 		}
 		// Selected tile
-		if (!addingCheckpoint)
-			lvl.drawTile(window, sf::RenderStates(), utils::clampMouseCoord(window), selectedTile);
-		else {
-			checkpointCircle.setPosition(utils::mousePosition2f(window));
-			window.draw(checkpointCircle);
-		}
+		lvl.drawTile(window, sf::RenderStates(), utils::clampMouseCoord(window), selectedTile);
 		break;
 	}
 	case State::FinishedRound:

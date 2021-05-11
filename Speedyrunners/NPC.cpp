@@ -682,7 +682,7 @@ void NPC::followPath() {
 						if (!recoveryMode) recoveryStart = clock.getElapsedTime();
 						recoveryMode = true;
 						step--;
-						it--;
+						if(it != path[0].begin()) it--;
 						break;
 					}
 				}
@@ -703,7 +703,7 @@ void NPC::followPath() {
 						if (!recoveryMode) recoveryStart = clock.getElapsedTime();
 						recoveryMode = true;
 						step--;
-						it--;
+						if (it != path[0].begin()) it--;
 						break;
 					}
 				}
@@ -724,7 +724,7 @@ void NPC::followPath() {
 						if(!recoveryMode) recoveryStart = clock.getElapsedTime();
 						recoveryMode = true;
 						step--;
-						it--;
+						if (it != path[0].begin()) it--;
 						break;
 					}
 				}
@@ -743,7 +743,7 @@ void NPC::followPath() {
 					if (!recoveryMode) recoveryStart = clock.getElapsedTime();
 					recoveryMode = true;
 					step--;
-					it--;
+					if (it != path[0].begin()) it--;
 					break;
 				}
 			}
