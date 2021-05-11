@@ -3,8 +3,6 @@
 #include "Game.h"
 #include "Resources.h"
 
-// TODO: USAR Content\UI\MultiplayerHUD !!!!!!!!!!!! es donde esta todo!!!!!!! no en UI/ingame........
-
 
 void InGameUI::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
@@ -39,10 +37,10 @@ void InGameUI::addPoints(sf::Vector2f pos, float widgetWidth) {
 	for (int i = 0; i < 3; i++) { // 3 rounds
 		points.emplace_back(pointsTexture);
 		points.back().setPosition(pos);
-		auto texSize = pointsTexture.getSize();
+		texSize = pointsTexture.getSize();
 		int nPoints = 7;
 		texSize.x = texSize.x / nPoints;
-		points.back().setTextureRect(sf::IntRect((nPoints - 1) * texSize.x, 0, texSize.x, texSize.y));
+		points.back().setTextureRect(texRectFor(7));
 
 		//float scale = window->getSize().x / points.back().getGlobalBounds().width;
 		//float scale = 1000;
@@ -91,18 +89,21 @@ void InGameUI::setCharacters(std::vector<CharPtr> characters) {
 	std::cout << sprites.size() << " sprites en UI\n";
 }
 
+sf::IntRect InGameUI::texRectFor(int point) {
+	return sf::IntRect((point - 1) * texSize.x, 0, texSize.x, texSize.y);
+}
+
 void InGameUI::updatePoints() {
-	std::cout << roundPoints.size() << " vectors of points " << roundPoints.back().size() << "\n";
-#ifdef NONONO
 	auto texSize = pointsTexture.getSize();
 	int N_POINTS = 7;
 	sf::IntRect rect(0,0,texSize.x / N_POINTS, texSize.y);
 	for (int i = 0; i < chars.size(); i++) {
 		int points = chars[i]->getScore();
-		
+		for (int j = 0; j < points; j++) {
+			roundPoints[i][j].setTextureRect(texRectFor(j+1));
+		}
 		/*for (auto& point : charPoints) {
 			point.setTextureRect(rect);
 		}*/
 	}
-#endif
 }

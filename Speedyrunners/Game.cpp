@@ -433,6 +433,7 @@ void Game::update()
 			for (auto c : characters) {
 				if (!c->isDead()) {
 					c->increaseScore(1);
+					ui.updatePoints();
 					break;
 				}
 				//TODO : Ganar con tres puntos

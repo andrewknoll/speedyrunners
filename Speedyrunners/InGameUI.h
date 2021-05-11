@@ -19,6 +19,7 @@ class InGameUI : public sf::Drawable
 	const sf::Texture& pointsTexture;
 	std::vector<std::vector<sf::Sprite>> roundPoints;
 
+	sf::Vector2u texSize;
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
@@ -36,6 +37,7 @@ public:
 
 
 	void setCharacters(std::vector<CharPtr> characters);
+	sf::IntRect texRectFor(int point);
 	void updatePoints();
 };
 
