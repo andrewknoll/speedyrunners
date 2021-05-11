@@ -74,7 +74,7 @@ void Level::saveDuplicateVertical(const std::string& f_name) const
 	std::string version = "0";
 	std::ofstream file("../assets/levels/" + f_name);
 	if (!(file << version << std::endl)) { // formato, #MAX, # nombre fichero
-		std::cerr << "File <assets/levels/" + f_name + "> inaccesible\n";
+		std::cerr << "File <../assets/levels/" + f_name + "> inaccesible\n";
 		//exit(1);
 	}
 	// Save background:
@@ -98,14 +98,21 @@ void Level::load(const std::string& f_name, const sf::RenderWindow& window)
 	std::ifstream file("../assets/levels/" + f_name);
 	int format;
 	std::string s;
-	if (!(file >> format)) {
-		std::cerr << "File <assets/levels/" + f_name + "> inaccesible\n";
+	//if (!(file >> format)) {
+	if (!(file >> s)) {
+
+		std::cerr << "File <../assets/levels/" + f_name + "> inaccesible " << s << "\n";
 		exit(1);
+	}
+	else {
+		std::cout << "format: " << s << "\n";
+		format = 0;
 	}
 	if (format != 0) {
 		std::cerr << "Unknown format\n";
 		exit(1);
 	}
+	file.ignore(); // skip \n
 	std::string line;
 	file >> backgroundPath;
 	background.load(backgroundPath, window);
