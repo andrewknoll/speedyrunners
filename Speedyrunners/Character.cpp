@@ -7,6 +7,7 @@
 #include "Spritesheet.h"
 #include "Rocket.h"
 #include "Resources.h"
+#include "Level.h"
 Character::Character(Spritesheet sp, int ID, int variant) :
 	hitBox(glb::default_hitbox),
 	myID(ID),
@@ -184,7 +185,7 @@ void Character::updateVel(const float& dtSec) {
 	}
 }
 
-void Character::updateBoost(const sf::Time& dT) {
+void Character::updateBoost(const sf::Time& dT, const Level& lvl) {
 	if (usingBoost && utils::dot(vel, vel) > 0.01) {
 		remainingBoostTime -= dT;
 		if (remainingBoostTime < sf::seconds(0)) {
@@ -192,15 +193,21 @@ void Character::updateBoost(const sf::Time& dT) {
 			std::cout << "boost depleted\n";
 		}
 	}
+	else {
+		if (remainingBoostTime < maxBoostTime && lvl.insideBoostbox(getPosition())) {
+			remainingBoostTime += dT;
+		}
+	}
 }
 
-void Character::update(const sf::Time& dT, const TileMap& tiles)
-{
+void Character::update(const sf::Time& dT, const Level& lvl)
 
+{
+	auto &tiles = lvl.getCollidableTiles();
 	updateRunning();
 	setFriction();
 	float dtSec = dT.asSeconds();
-	updateBoost(dT);
+	updateBoost(dT, lvl);
 	if (usingBoost) { // updating dT is the same as updating all speeds and acc
 		dtSec *= boostPower;
 	}

@@ -278,6 +278,7 @@
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="AudioPlayer.cpp" />
     <ClCompile Include="Background.cpp" />
+    <ClCompile Include="BoostBox.cpp" />
     <ClCompile Include="Checkpoint.cpp" />
     <ClCompile Include="Countdown.cpp" />
     <ClCompile Include="Hook.cpp" />
@@ -312,6 +313,7 @@
     <ClInclude Include="Animation.h" />
     <ClInclude Include="AudioPlayer.h" />
     <ClInclude Include="Background.h" />
+    <ClInclude Include="BoostBox.h" />
     <ClInclude Include="Checkpoint.h" />
     <ClInclude Include="Countdown.h" />
     <ClInclude Include="Globals.hpp" />

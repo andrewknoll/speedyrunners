@@ -16,6 +16,7 @@
 #define DEBUG_HITBOX
 
 class TileMap;
+class Level;
 
 //class Tiles::Ramp;
 
@@ -122,7 +123,7 @@ protected:
 	void updateVel(const float& dtSec);
 	void updateInRamp(Tiles::Ramp ramp);
 	void setDefaultOrigin();
-	void updateBoost(const sf::Time& dT);
+	void updateBoost(const sf::Time& dT, const Level& lvl);
 public:
 	Character(Spritesheet sp, int ID, int variant = 0);
 
@@ -142,7 +143,7 @@ public:
 
 	void setBaseFromRamp(Tiles::Ramp ramp);
 
-	void update(const sf::Time& dT, const TileMap& tiles);
+	void update(const sf::Time& dT, const Level& lvl);
 
 	void setHorizontalAcc(float acc);
 	void setVerticalSpeed(float vel);

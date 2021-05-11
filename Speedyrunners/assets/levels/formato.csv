@@ -1,6 +1,8 @@
 <version (int)>
 <path del background (str)>
 <<x y> posicion inicial de los chars (float float)>
+<num de boosts>
+<x y> (float, para cada boost)
 <numero de checkpoints>
 <x y r> (para cada checkpoint)
 <cols (int)> <filas (int)>

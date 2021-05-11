@@ -205,6 +205,7 @@ void Game::loadLevel(const std::string& lvlPath)
 	for (NPCPtr npc : npcs) {
 		npc->setTileMap(std::make_shared<TileMap>(lvl.getCollidableTiles()));
 	}
+	
 }
 
 
@@ -415,7 +416,7 @@ void Game::update()
 	if (state == State::Playing && dT.asSeconds() < 0.1) {
 		for (auto c : characters) {
 			if (c->isDead()) continue;
-			c->update(dT, lvl.getCollidableTiles());
+			c->update(dT, lvl);
 		}
 		for (auto it : items) {
 			it->update(dT);
@@ -574,6 +575,9 @@ void Game::processEditingInputs(const sf::Event& event) {
 		//falcon.setScale(0.5, 0.5);
 		addCharacter(falcon);
 		lvl.setInitialPosition(falcon->getPosition());
+	}
+	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::B) {
+		lvl.addBoostBox(utils::mousePosition2f(window));
 	}
 
 	// Debug player positions (P to show):
