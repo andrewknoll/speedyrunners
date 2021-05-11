@@ -52,6 +52,7 @@ void NPC::addGoal(const sf::Vector2f & goalPos, const float goalRadius) {
 }
 
 int NPC::findExpanded(const TileNode & n, const int n_path) const {
+	if (!active) return -1;
 	int i = 0;
 	for (auto node : expanded[n_path]) {
 		if (equal(node, n)) break;
@@ -73,6 +74,7 @@ bool NPC::inBounds(const int x, const int j) const {
 }
 
 int NPC::updateExpanded(const TileNode& current, TileNode n, const int n_path) {
+	if (!active) return -1;
 	int i = findExpanded(n, n_path);
 	if (i < expanded[n_path].size() && n.cost < expanded[n_path][i].cost) {
 		expanded[n_path][i].cost = n.cost;
@@ -95,6 +97,7 @@ float NPC::cost(const TileNode & current, const TileNode & next) const {
 }
 
 void NPC::calculateJumpNeighbours(const TileNode & current, const Goal& goal, const int n_path) {
+	if (!active) return;
 	TileNode n;
 	float dist, baseCost;
 	bool jumps;
@@ -139,8 +142,10 @@ void NPC::calculateJumpNeighbours(const TileNode & current, const Goal& goal, co
 		if (inBounds(n.cell[0], n.cell[1])) {
 			n.data.tile = tm->getTile(n.cell[0], n.cell[1]);
 
-			//We must be inside the ellipse
-			if (dist <= 1
+			//We must be inside the ellipse, but not too close
+			if (active
+				&& dist > 0.2
+				&& dist <= 1
 				//In the case we were jumping in a vertical direction, expandVertical must be true
 				&& (x != 0 || expandVertical)
 				//If we are constrained (leftForbiddenY > 0) and we are in the left side, the position can't be in the range
@@ -208,12 +213,13 @@ void NPC::calculateJumpNeighbours(const TileNode & current, const Goal& goal, co
 }
 
 void NPC::calculateHookNeighbours(const bool right, const TileNode& current, const Goal& goal, const int n_path) {
+	if (!active) return;
 	TileNode aux, hook;
 	int i, radius = 1;
 	Tiles::Collidable type = Tiles::AIR;
 	bool stop = false;
 
-	while (!stop) {
+	while (!stop && active) {
 		if (right) {
 			//Search tiles in a 45º angle
 			hook.cell[0] = current.cell[0] + radius;
@@ -242,9 +248,9 @@ void NPC::calculateHookNeighbours(const bool right, const TileNode& current, con
 	if (type == Tiles::GRAPPLABLE) {
 		//Loop through all of the tiles on the edge of a circle of radius = radius
 		//Max horizontal position is for an angle of -45 (or -135) degrees
-		for (int x = -radius * glb::cosine45; x <= radius && !stop; ++x) {
+		for (int x = -radius * glb::cosine45; x <= radius && !stop && active; ++x) {
 			// Max height is for an angle of 30 (or 150) degrees, whose sine = 0.5
-			for (int y = -radius; y <= radius * 0.5f && !stop; ++y) {
+			for (int y = -radius; y <= radius * 0.5f && !stop && active; ++y) {
 				if (abs(x * x + y * y - radius2) > THRESHOLD_PER_RADIUS_UNIT * radius) continue;
 				//Do it ONLY for the positive solution of y 
 				angle = utils::degrees(atan2(y, x));
@@ -291,10 +297,11 @@ void NPC::calculateHookNeighbours(const bool right, const TileNode& current, con
 }
 
 void NPC::calculateWallJumpNeighbours(const bool right, TileNode& current, const Goal& goal, const int n_path) {
+	if (!active) return;
 	TileNode n, aux;
 	bool canWallJump = false, stop = false;
 	//Check the opposite side for wall jump walls
-	if ((right && current.data.canWallJumpRight < 0) || (!right && current.data.canWallJumpLeft < 0)) {
+	if (active && (right && current.data.canWallJumpRight < 0) || (!right && current.data.canWallJumpLeft < 0)) {
 		if (right) {
 			aux.cell[0] = current.cell[0] - 1;
 		}
@@ -302,7 +309,7 @@ void NPC::calculateWallJumpNeighbours(const bool right, TileNode& current, const
 			aux.cell[0] = current.cell[0] + 1;
 		}
 
-		for (int y = -1; y <= 1 && !canWallJump; y++) {
+		for (int y = -1; y <= 1 && !canWallJump && active; y++) {
 			aux.cell[1] = current.cell[1] + y;
 			if (inBounds(aux.cell[0], aux.cell[1])) {
 				aux.data.tile = tm->getTile(aux.cell[0], aux.cell[1]);
@@ -311,7 +318,7 @@ void NPC::calculateWallJumpNeighbours(const bool right, TileNode& current, const
 		}
 	}
 
-	if (canWallJump || (right && current.data.canWallJumpRight == 1) || (!right && current.data.canWallJumpLeft == 1)) {
+	if (active && (canWallJump || (right && current.data.canWallJumpRight == 1) || (!right && current.data.canWallJumpLeft == 1))) {
 		//Make sure it is equal to 1
 		if (right) {
 			current.data.canWallJumpRight = 1;
@@ -320,8 +327,8 @@ void NPC::calculateWallJumpNeighbours(const bool right, TileNode& current, const
 			current.data.canWallJumpLeft = 1;
 		}
 		
-		for (int x = 2; x <= 4 && !stop; x++) {
-			for (int y = 0; y <= 1 && !stop; y++) {
+		for (int x = 2; x <= 4 && !stop && active; x++) {
+			for (int y = 0; y <= 1 && !stop && active; y++) {
 
 				if (right) {
 					n.cell[0] = current.cell[0] + x;
@@ -421,6 +428,7 @@ bool NPC::detectDirectionChange(const TileNode & n, const TileNode & current)
 }
 
 float NPC::expandToNeighbour(const TileNode& current, const Goal& goal, const int dx, const int dy, const int n_path) {
+	if (!active) return INFINITY;
 	TileNode next;
 
 	next.cell[0] = dx + current.cell[0];
@@ -451,8 +459,31 @@ float NPC::expandToNeighbour(const TileNode& current, const Goal& goal, const in
 	
 }
 
+void NPC::halt() {
+	me->stop();
+	me->stopJumping();
+	me->stopSliding();
+	me->useHook(false);
+}
+
+
+
+void NPC::giveUp() {
+	halt();
+	pathFound[0] = -1;
+	path[0].clear();
+	pathMtx[0].unlock();
+}
+
+float NPC::nodeDistance(const TileNode & n1, const TileNode & n2) const
+{
+	auto hor = n2.cell[0] - n1.cell[0];
+	auto ver = n2.cell[1] - n1.cell[1];
+	return sqrtf(hor * hor + ver * ver);
+}
+
 void NPC::plan() {
-	
+	if (!active) return;
 	TileNode current, nextToMe, goal0;
 	std::unique_ptr<TileNode> prev = nullptr;
 	Tiles::Collidable underMe;
@@ -488,9 +519,9 @@ void NPC::plan() {
 		}
 
 
-		if (pathFound[0] == -1) {
+		/*if (pathFound[0] == -1) {
 			std::cout << "Replanning..." << std::endl;
-		}
+		}*/
 
 		frontier[n_path].clear();
 		expanded[n_path].clear();
@@ -532,7 +563,7 @@ void NPC::plan() {
 
 		goalNode.data.tile = Tiles::AIR;
 
-		while (!frontier[n_path].safeEmpty()) {
+		while (!frontier[n_path].safeEmpty() && active) {
 			current = frontier[n_path].popReturn();
 			expanded[n_path].push_back(current);
 			auxCost = INFINITY;
@@ -551,15 +582,18 @@ void NPC::plan() {
 			}
 
 			//Expand to the wall jump neighbours if we can do it
-			calculateWallJumpNeighbours(true, current, *goal, n_path);
-			calculateWallJumpNeighbours(false, current, *goal, n_path);
+			if (active) {
+				calculateWallJumpNeighbours(true, current, *goal, n_path);
+				calculateWallJumpNeighbours(false, current, *goal, n_path);
+			}
+			
 
 			//Expand to the jumping neighbours only if we can jump and we can't wall jump
-			if (current.data.canJump() && current.data.canWallJumpLeft != 1 && current.data.canWallJumpRight != 1) {
+			if (active && current.data.canJump() && current.data.canWallJumpLeft != 1 && current.data.canWallJumpRight != 1) {
 				calculateJumpNeighbours(current, *goal, n_path);
 			}
 			//Expand to the hook neighbours only if we aren't using the hook
-			if (!current.data.isHooking) {
+			if (active && !current.data.isHooking) {
 				calculateHookNeighbours(true, current, *goal, n_path);
 				calculateHookNeighbours(false, current, *goal, n_path);
 			}
@@ -601,7 +635,7 @@ void NPC::plan() {
 			pathFound[n_path] = 1;
 		}
 	}
-	catch (...) {
+	catch (SE_Exception se) {
 		std::cout << "Ending thread..." << std::endl;
 	}
 	choiceMtx.lock();
@@ -615,7 +649,7 @@ void NPC::plan() {
 }
 
 
-bool NPC::doBasicMovement(const TileNode& current, const TileNode& n, bool& jumped, sf::Clock clock, bool block) {
+bool NPC::doBasicMovement(const TileNode& current, const TileNode& n, float objDistance, bool& jumped, sf::Clock clock, bool block) {
 	auto t0 = clock.getElapsedTime();
 	bool right = getCharacterCell().cell[0] < n.cell[0];
 	do {
@@ -636,7 +670,11 @@ bool NPC::doBasicMovement(const TileNode& current, const TileNode& n, bool& jump
 			else if(getCharacterCell().cell[1] - n.cell[1] <= 2){
 				me->stopJumping();
 			}
-			if ((right && getCharacterCell().cell[0] < n.cell[0]) || (!right && getCharacterCell().cell[0] > n.cell[0])) {
+			int diff = getCharacterCell().cell[0] - n.cell[0];
+			float horSpeed = me->getVelocity().x;
+			if (horSpeed > 0.01) diff -= horSpeed / glb::runningAcceleration;
+			else if (me->getVelocity().x < -0.01) diff += horSpeed / glb::runningAcceleration;
+			if ((right && diff < 0) || (!right && diff > 0)) {
 				me->run(right);
 			}
 			else {
@@ -647,7 +685,7 @@ bool NPC::doBasicMovement(const TileNode& current, const TileNode& n, bool& jump
 				//Try to recover
 			return false;
 		}
-	} while (block && !stopFollowing && distance(getCharacterCell(), n) <= FARNESS_THRESHOLD && !nodeWasReached(n, CLOSENESS_THRESHOLD));
+	} while (block && !stopFollowing && distance(getCharacterCell(), n) <= FARNESS_THRESHOLD + objDistance && !nodeWasReached(n, CLOSENESS_THRESHOLD));
 	return true;
 }
 
@@ -661,40 +699,48 @@ void NPC::followPath() {
 	sf::Clock clock;
 	sf::Time t0, recoveryStart;
 	std::shared_ptr<TileNode> next;
-	bool recoveryMode = false;
+	int recoveryMode = 0;
+	float objDistance;
 
 	sf::Time sleeptime = sf::seconds(0.05);
 	pathMtx[0].lock();
 	_set_se_translator(SE_trans_func);
 	try {
 		if (pathFound[0] == 1) {
-
+			std::cout << step << std::endl;
 			auto it = path[0].begin();
-			while (it != path[0].end()) {
+			while (it != path[0].end() && active) {
+				if (recoveryMode == 1) recoveryMode = 2;
 				next = *it;
 				t0 = clock.getElapsedTime();
 				if (stopFollowing) {
 					break;	//A better path was found
 				}
+				dist = distance(getCharacterCell(), *next);
+				objDistance = nodeDistance(current, *next);
 				jumped = false;
+				if (current.prev != nullptr && current.prev->data.isHooking && !next->data.isHooking) {
+					//Stop using hook
+					me->useHook(false);
+				}
 				if (current.data.canWallJumpLeft == 1 || current.data.canWallJumpRight == 1) {
-					while (!stopFollowing && dist <= FARNESS_THRESHOLD && !nodeWasReached(*next, 1)) {
+					while (!stopFollowing && dist <= FARNESS_THRESHOLD + objDistance && !nodeWasReached(*next, 1)) {
 						//Wall jump
 						if (me->canWallJump()) {
 							me->startJumping();
 						}
-						doBasicMovement(current, *next, jumped, clock, false);
+						doBasicMovement(current, *next, objDistance, jumped, clock, false);
 						dist = distance(getCharacterCell(), *next);
-						if (recoveryMode && clock.getElapsedTime() - t0 > GIVE_UP_TIME) {
-							pathFound[0] = -1;
-							path[0].clear();
-							pathMtx[0].unlock();
+						if (recoveryMode == 2 && clock.getElapsedTime() - t0 > GIVE_UP_TIME) {
+							giveUp();
+							recoveryMode = 0;
 							return;
 						}
 						if (clock.getElapsedTime() - t0 > MAX_TIME_PER_STEP) {
+							halt();
 							//Try to recover
-							if (!recoveryMode) recoveryStart = clock.getElapsedTime();
-							recoveryMode = true;
+							recoveryStart = clock.getElapsedTime();
+							recoveryMode = 1;
 							step--;
 							if (it != path[0].begin()) it--;
 							break;
@@ -704,41 +750,19 @@ void NPC::followPath() {
 				else if (next->data.isHooking) {
 					//Use hook
 					me->useHook(true);
-					while (!stopFollowing && dist <= FARNESS_THRESHOLD && !nodeWasReached(*next, CLOSENESS_THRESHOLD)) {
+					while (!stopFollowing && dist <= FARNESS_THRESHOLD + objDistance && !nodeWasReached(*next, CLOSENESS_THRESHOLD)) {
 						sf::sleep(sleeptime);
 						dist = distance(getCharacterCell(), *next);
-						if (recoveryMode && clock.getElapsedTime() - t0 > GIVE_UP_TIME) {
-							pathFound[0] = -1;
-							path[0].clear();
-							pathMtx[0].unlock();
+						if (recoveryMode == 2 && clock.getElapsedTime() - t0 > GIVE_UP_TIME) {
+							giveUp();
+							recoveryMode = 0;
 							return;
 						}
 						if (clock.getElapsedTime() - t0 > MAX_TIME_PER_STEP) {
+							halt();
 							//Try to recover
-							if (!recoveryMode) recoveryStart = clock.getElapsedTime();
-							recoveryMode = true;
-							step--;
-							if (it != path[0].begin()) it--;
-							break;
-						}
-					}
-				}
-				else if (current.prev != nullptr && current.prev->data.isHooking && !next->data.isHooking) {
-					//Stop using hook
-					me->useHook(false);
-					while (!stopFollowing && dist <= FARNESS_THRESHOLD && !nodeWasReached(*next, CLOSENESS_THRESHOLD)) {
-						sf::sleep(sleeptime);
-						dist = distance(getCharacterCell(), *next);
-						if (recoveryMode && clock.getElapsedTime() - t0 > GIVE_UP_TIME) {
-							pathFound[0] = -1;
-							path[0].clear();
-							pathMtx[0].unlock();
-							return;
-						}
-						if (clock.getElapsedTime() - t0 > MAX_TIME_PER_STEP) {
-							//Try to recover
-							if (!recoveryMode) recoveryStart = clock.getElapsedTime();
-							recoveryMode = true;
+							recoveryStart = clock.getElapsedTime();
+							recoveryMode = 1;
 							step--;
 							if (it != path[0].begin()) it--;
 							break;
@@ -746,39 +770,40 @@ void NPC::followPath() {
 					}
 				}
 				else {
-					if (recoveryMode && clock.getElapsedTime() - t0 > GIVE_UP_TIME) {
-						pathFound[0] = -1;
-						path[0].clear();
-						pathMtx[0].unlock();
+					if (recoveryMode == 2 && clock.getElapsedTime() - t0 > GIVE_UP_TIME) {
+						giveUp();
+						recoveryMode = 0;
 						return;
 					}
-					if (doBasicMovement(current, *next, jumped, clock, true)) {
+					if (doBasicMovement(current, *next, objDistance, jumped, clock, true)) {
 						dist = distance(getCharacterCell(), *next);
 					}
 					else {
+						halt();
 						//Try to recover
-						if (!recoveryMode) recoveryStart = clock.getElapsedTime();
-						recoveryMode = true;
-						path[0].clear();
+						recoveryStart = clock.getElapsedTime();
+						recoveryMode = 1;
 						step--;
 						if (it != path[0].begin()) it--;
 						break;
 					}
 				}
-				if (dist > FARNESS_THRESHOLD) {
+				if (dist > FARNESS_THRESHOLD + objDistance) {
+					halt();
+					recoveryMode = 1;
 					pathFound[0] = -1; //Reset so we can replan
 					path[0].clear();
 					break;
 				}
-				else {
+				else if(recoveryMode != 1){
+					recoveryMode = 0;
 					step++;
 					current = *next;
 					std::cout << step << std::endl;
-					recoveryMode = false;
 					it++;
 				}
 			}
-			if (dist <= FARNESS_THRESHOLD) {
+			if (dist <= FARNESS_THRESHOLD + objDistance) {
 				if (pathFound[1] == 1) {
 					pathFound[0] = 1;	//Next part of the path was already planned
 					//Stitch the two paths together and save path[1] to path[0]
@@ -809,11 +834,8 @@ int NPC::getPathFound(int i) const {
 }
 
 void NPC::endMe() {
-	for (int i = 0; i < 2; i++) {
-		frontier[i].clear();
-		path[i].clear();
-		expanded[i].clear();
-	}
+	active = false;
+	stopFollowing = true;
 }
 
 std::list<selbaward::Line> NPC::debugLines() {

@@ -35,8 +35,8 @@ class NPC : public PlayerSlot
 
 	const float THRESHOLD_PER_RADIUS_UNIT = 3.0f;
 
-	const sf::Time MAX_TIME_PER_STEP = sf::seconds(3.0f);
-	const sf::Time GIVE_UP_TIME = sf::seconds(10.0f);
+	const sf::Time MAX_TIME_PER_STEP = sf::seconds(6.0f);
+	const sf::Time GIVE_UP_TIME = sf::seconds(20.0f);
 
 	const float CLOSENESS_THRESHOLD = 0.01f;
 	const float FARNESS_THRESHOLD = 6.0f;
@@ -79,13 +79,16 @@ private:
 	bool nodeWasReached(const TileNode& n, const float closenessThreshold) const;
 	bool detectDirectionChange(const TileNode& n, const TileNode& current);
 	float expandToNeighbour(const TileNode & current, const Goal& goal, const int dx, const int dy, const int n_path);
+	void halt();
+	void giveUp();
+	float nodeDistance(const TileNode& n1, const TileNode& n2) const;
 public:
 	NPC();
 	TileNode getCharacterCell() const;
 	void setTileMap(TileMapPtr tm);
 	void addGoal(const sf::Vector2f& goalPos, const float goalRadius);
 	void plan();
-	bool doBasicMovement(const TileNode & current, const TileNode & n, bool& jumped, sf::Clock clock, bool block);
+	bool doBasicMovement(const TileNode & current, const TileNode & n, float objDistance, bool& jumped, sf::Clock clock, bool block);
 	void followPath();
 	int getPathFound(int i) const;
 	void endMe();
