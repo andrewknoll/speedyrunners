@@ -87,6 +87,6 @@ void Countdown::draw(sf::RenderWindow& window) const
 }
 
 void Countdown::reset() {
-	currentSecond = 3;
+	currentSecond = 4;
 	period = sf::seconds(1);
 }
