@@ -245,6 +245,7 @@
     <ClInclude Include="LobbyWidget.h">
       <Filter>UI\Elements\Widgets</Filter>
     </ClInclude>
+    <ClInclude Include="SE_Exception.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

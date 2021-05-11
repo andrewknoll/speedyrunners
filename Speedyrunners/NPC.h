@@ -39,7 +39,7 @@ class NPC : public PlayerSlot
 	const sf::Time GIVE_UP_TIME = sf::seconds(10.0f);
 
 	const float CLOSENESS_THRESHOLD = 0.01f;
-	const float FARNESS_THRESHOLD = 30.0f;
+	const float FARNESS_THRESHOLD = 6.0f;
 
 	using CharPtr = std::shared_ptr<Character>;
 	using TilePriorityQueue = PriorityQueue<NodeData>;
@@ -59,6 +59,7 @@ private:
 	bool planningPath[2] = { false, false };
 	std::atomic<short int> pathFound[2] = { 0, 0 };
 	std::atomic<bool> stopFollowing = false;
+	std::atomic<bool> active = true;
 
 	TilePriorityQueue frontier[2];
 	std::vector<TileNode> expanded[2];
@@ -87,6 +88,7 @@ public:
 	bool doBasicMovement(const TileNode & current, const TileNode & n, bool& jumped, sf::Clock clock, bool block);
 	void followPath();
 	int getPathFound(int i) const;
+	void endMe();
 	std::list<selbaward::Line> debugLines();
 	std::list<sf::RectangleShape> debugExpanded();
 	std::list<sf::RectangleShape> debugHook();

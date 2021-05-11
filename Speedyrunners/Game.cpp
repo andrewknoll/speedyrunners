@@ -45,12 +45,16 @@ void Game::clear() {
 	players.clear();
 	running = false;
 
+	for (int i = 0; i < npcs.size(); i++) {
+		npcs[i]->endMe();
+	}
+
 	std::unique_lock<std::mutex> lck(finishMtx);
 	for (int i = 0; i < threadPool.size(); i++) {
 		if (threadPool[i].threadPtr == nullptr) continue;
 		restartCv.notify_all();	//Make sure the thread is not sleeping
 		while (!threadPool[i].finished) {
-			finishCV.wait(lck);
+			finishCV.wait_for(lck, std::chrono::seconds(2));
 		}
 		threadPool[i].threadPtr->join();
 		threadPool[i].threadPtr = nullptr;
@@ -290,7 +294,7 @@ MusicPlayer& Game::music() {
 	return src.musicPlayer;
 }
 
-void Game::updateNPCs() {
+void Game::updateNPCs(bool follow) {
 	for (int i = 0; i < npcs.size(); i++) {
 		if (npcs[i] != nullptr && checkpoints.size() > 0) {
 			Checkpoint cp = checkpoints[activeCheckpoint]; // checkpoints[1];
@@ -299,6 +303,7 @@ void Game::updateNPCs() {
 			npcs[i]->addGoal(cp.getPos(), cp.getRadius());
 			auto& followThread = threadPool[2 * i + 1];
 			if (threadPool[2 * i].threadPtr == nullptr) {
+				threadPool[2 * i].finished = false;
 				threadPool[2 * i].threadPtr = std::make_unique<std::thread>([&, i]() {
 					while (running) {
 						if (npcs[i]->getCharacter()->isDead()) { 
@@ -314,7 +319,8 @@ void Game::updateNPCs() {
 				});
 				//threadPool[i]->detach();
 			}
-			if (threadPool[2 * i + 1].threadPtr == nullptr) {
+			if (follow && threadPool[2 * i + 1].threadPtr == nullptr) {
+				threadPool[2 * i + 1].finished = false;
 				threadPool[2 * i + 1].threadPtr = std::make_unique<std::thread>([&, i]() {
 					while (running) {
 						if (npcs[i]->getCharacter()->isDead()) {
@@ -427,7 +433,7 @@ void Game::update()
 				cam.setSuddenDeath(true);
 			}
 		}
-		updateNPCs();
+		updateNPCs(true);
 		if (aliveCount == 1) {
 			state = State::FinishedRound;
 			for (auto c : characters) {
@@ -441,7 +447,9 @@ void Game::update()
 
 	}
 	else if (state == State::Countdown) {
-		updateNPCs();
+		cam.follow(characters);
+		cam.update(dT);
+		updateNPCs(false);
 		countdown.update(dT);
 		if (countdown.ended()) {
 			state = State::Playing;

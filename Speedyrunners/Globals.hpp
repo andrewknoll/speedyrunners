@@ -53,7 +53,7 @@ namespace glb
 	const sf::Rect<float> default_hitbox = sf::Rect<float>(20, 20, tileSize.x, tileSize.y * 2.0f);
 
 
-	const float viewMarginFactor = 0.94;
+	const float viewMarginFactor = 0.8;
 
 	const float cameraZoomFunctionSteepness = 1e-4;
 

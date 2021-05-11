@@ -217,10 +217,7 @@ bool TileMap::load(std::ifstream& file) {
     file.ignore();
     file >> tileSetPath;
     file.ignore();
-    std::string xstr, ystr;
-    file >> tileSize.x >> tileSize.y >> xstr >> ystr;
-    tileSizeWorld.x = stof(xstr);
-    tileSizeWorld.y = stof(ystr);
+    file >> tileSize.x >> tileSize.y >> tileSizeWorld.x >> tileSizeWorld.y;
     file.ignore();
 
     for (size_t i = 0; i < height; ++i) {
