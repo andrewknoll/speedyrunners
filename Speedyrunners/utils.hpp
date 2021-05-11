@@ -39,6 +39,8 @@ public:
 std::ostream& operator<<(std::ostream& os, const RNG& c);
 
 namespace utils {
+	float stopDistance(const float& speed, const float& deceleration);
+
 	template <class T>
 	bool contains(std::list<T> l, T v);
 

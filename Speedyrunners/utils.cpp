@@ -43,6 +43,10 @@ void RNG::fillRand(int* arr, const int size, const int min, const int max) const
 
 namespace utils {
 
+	float stopDistance(const float& speed, const float& deceleration) {
+		return (speed * speed) / (2 * deceleration) - (speed * speed) / deceleration;
+	}
+
 	template <class T>
 	bool contains(std::list<T> l, T v) {
 		for (auto e : l) {

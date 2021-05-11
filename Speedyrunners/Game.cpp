@@ -245,7 +245,7 @@ void Game::loadLevel(const std::string& lvlPath)
 	for (NPCPtr npc : npcs) {
 		npc->setTileMap(std::make_shared<TileMap>(lvl.getCollidableTiles()));
 	}
-	
+
 }
 
 
@@ -348,7 +348,7 @@ void Game::updateNPCs(bool follow) {
 				threadPool[2 * i].finished = false;
 				threadPool[2 * i].threadPtr = std::make_unique<std::thread>([&, i]() {
 					while (running) {
-						if (npcs[i]->getCharacter()->isDead()) { 
+						if (npcs[i]->getCharacter()->isDead()) {
 							{ std::unique_lock<std::mutex> lck(restartMtx);
 							restartCv.wait(lck); }
 						}
@@ -361,9 +361,26 @@ void Game::updateNPCs(bool follow) {
 				});
 				//threadPool[i]->detach();
 			}
-			if (follow && threadPool[2 * i + 1].threadPtr == nullptr) {
+			if (threadPool[2 * i + 1].threadPtr == nullptr) {
 				threadPool[2 * i + 1].finished = false;
 				threadPool[2 * i + 1].threadPtr = std::make_unique<std::thread>([&, i]() {
+					while (running) {
+						if (npcs[i]->getCharacter()->isDead()) {
+							{ std::unique_lock<std::mutex> lck(restartMtx);
+							restartCv.wait(lck); }
+						}
+						if (running) {
+							npcs[i]->plan();
+						}
+					}
+					threadPool[2 * i + 1].finished = true;
+					finishCV.notify_one();
+				});
+				//threadPool[i]->detach();
+			}
+			if (follow && threadPool[2 * i + 2].threadPtr == nullptr) {
+				threadPool[2 * i + 2].finished = false;
+				threadPool[2 * i + 2].threadPtr = std::make_unique<std::thread>([&, i]() {
 					while (running) {
 						if (npcs[i]->getCharacter()->isDead()) {
 							{ std::unique_lock<std::mutex> lck(restartMtx);
@@ -373,12 +390,12 @@ void Game::updateNPCs(bool follow) {
 							if (npcs[i]->getPathFound(0) == 1) {
 								npcs[i]->followPath();
 							}
-							else {
-								npcs[i]->plan();
-							}
+							//else {
+							//	npcs[i]->plan();
+							//}
 						}
 					}
-					threadPool[2 * i + 1].finished = true;
+					threadPool[2 * i + 2].finished = true;
 					finishCV.notify_one();
 				});
 			}
@@ -430,7 +447,7 @@ void Game::update()
 			}
 		}
 
-		
+
 		if (state == State::Editing) { // Editing state
 			processEditingInputs(event);
 		} // End of editing state
@@ -464,7 +481,7 @@ void Game::update()
 		updatePositions();
 		cam.follow(characters);
 		cam.update(dT);
-		for (int i = 0; i < characters.size(); i++) {
+		for (int i = 1; i < characters.size(); i++) {
 			if (characters[i]->isDead()) continue;
 			if (!cam.isInAllowedBounds(characters[i])) {
 				characters[i]->die();
@@ -476,7 +493,7 @@ void Game::update()
 			}
 		}
 		updateNPCs(true);
-		if (characters.size() > 1 && aliveCount == 1) {
+		if (characters.size() > 1 && aliveCount < 2) {
 			state = State::FinishedRound;
 			for (auto c : characters) {
 				if (!c->isDead()) {
@@ -538,7 +555,7 @@ void Game::update()
 void Game::enableCheats(bool enable) {
 #ifdef DEV_MODE
 	cheatsEnabled = true;
-#else 
+#else
 	cheatsEnabled = enable;
 #endif
 }
@@ -576,7 +593,7 @@ void Game::processEditingInputs(const sf::Event& event) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
 			lvl.setCheckpoints(checkpoints);
 			//lvl.saveDuplicateVertical("first.csv");
-			
+
 			//lvl.setDefaultLevel();
 			//lvl.save("default_level.csv");
 
