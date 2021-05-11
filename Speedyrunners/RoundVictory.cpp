@@ -36,7 +36,8 @@ RoundVictory::RoundVictory(const sf::RenderWindow& _window, const int characterI
 
 void RoundVictory::setRectForPoint(sf::Sprite& s, int points) {
 	auto texSize = Resources::getInstance().getMiscTexture(1).getSize();
-	s.setTextureRect(sf::IntRect((points - 1) * texSize.x, 0, texSize.x/7, texSize.y));
+	texSize.x /= 7; // 7 sprites horizontally
+	s.setTextureRect(sf::IntRect((points - 1) * texSize.x, 0, texSize.x, texSize.y));
 }
 
 void RoundVictory::addScoreStuff(const sf::RenderWindow& _window, int score) {
@@ -96,8 +97,6 @@ bool RoundVictory::ended() const {
 }
 
 void RoundVictory::draw(sf::RenderWindow& window) const {
-	//window.draw(bgSprite);
-	//TO-DO Añadir número de rondas según el score
 	if (currentSecond < 3) {
 		auto view = window.getView();
 		window.setView(window.getDefaultView());
