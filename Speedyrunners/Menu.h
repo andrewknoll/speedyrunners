@@ -15,7 +15,8 @@ class Menu
 		Main,
 		Workshop,
 		Lobby,
-		LevelSelect
+		LevelSelect,
+		Controls
 	};
 
 	Game& game;
@@ -60,6 +61,7 @@ class Menu
 	void setLevelSelect();
 	void clearBackgrounds(int n); // clears n backgrounds
 	void setCharacterSelect();
+	void setControls();
 
 	void clear();
 	void addTopLeftSign(const std::string& path);

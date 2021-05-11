@@ -67,7 +67,7 @@ void Menu::setMainMenu()
 	//elements.emplace_back(std::make_unique<TextElement>(settings, mainTextFontPath, "REPLAYS", size, pos, true));
 	// OPTIONS:
 	pos.y += size * 1.25;
-	elements.emplace_back(std::make_unique<TextElement>(settings, mainTextFontPath, "OPTIONS", size, pos, true));
+	elements.emplace_back(std::make_unique<TextElement>(settings, mainTextFontPath, "CONTROLS", size, pos, true));
 	// Quit:
 	pos.y += size * 1.25;
 	elements.emplace_back(std::make_unique<TextElement>(settings, mainTextFontPath, "QUIT", size, pos, true));
@@ -184,7 +184,7 @@ void Menu::setWorkshopMenu() {
 
 
 
-	sf::Vector2f pos(0.05, 0.43);
+	sf::Vector2f pos(0.05, 0.5);
 	float size = 0.05;
 	elements.emplace_back(std::make_unique<TextElement>(settings, mainTextFontPath, "NEW", size, pos, true));
 
@@ -245,6 +245,9 @@ void Menu::handleMainMenuClick(int i) {
 		setWorkshopMenu();
 		break;
 	}
+	case 5:
+		setControls();
+		break;
 	case 6: // quit
 		window->close();
 		exit(0);
@@ -286,6 +289,55 @@ void Menu::setLevelSelect() {
 
 void Menu::clearBackgrounds(int n) {
 	for (int i = 0; i<n; i++) backgrounds.pop_back();
+}
+
+
+void Menu::setControls() {
+	elements.clear();
+	widgets.clear();
+	addExitSign();
+	currentMenuPage = Page::Controls;
+	sf::Vector2f pos(0.05, 0.43);
+	float size = 0.05;
+
+	std::vector<std::string> actions{
+		"", "Left", "Right", "Slide","Jump","Grapple","Boost"
+	};
+
+	std::vector<std::string> singlePlayer{
+		"SINGLE PLAYER", "Left","Right","Down","Z","X","Spacebar"
+	}; 
+	std::vector<std::string> firstPlayer{
+		"MULTIPLAYER 1", "A","D","S","V","B","Spacebar"
+	};
+	std::vector<std::string> secondPlayer{
+		"MULTIPLAYER 2", "Left","Right","Down","Numpad1","Numpad2","Numpad0"
+	};
+
+	std::vector<std::vector<std::string>> texts{ singlePlayer, firstPlayer, secondPlayer };
+	pos = sf::Vector2f(0.3, 0.38);
+	size = 0.04;
+	std::string font = glb::CONTENT_PATH + "UI/Font/FreeSans.ttf";
+	elements.emplace_back(std::make_unique<TextElement>(settings, mainTextFontPath, "CONTROLS", size * 2, pos, false, sf::Color::White));
+
+	pos.y += size * 2.6;
+	float h = pos.y;
+	pos.x = 0.15;
+	size *= 0.85;
+	for (const auto& t : actions) {
+		elements.emplace_back(std::make_unique<TextElement>(settings, font, t, size * 1.15, pos, false, sf::Color::White));
+		pos.y += size * 1.35;
+	}
+	pos.x += 0.16;
+	pos.y = h;
+	for (const auto& v : texts) {
+		for (const auto& t : v) {
+			elements.emplace_back(std::make_unique<TextElement>(settings, font, t, size, pos, false, sf::Color::White));
+			pos.y += size * 1.35;
+		}
+		pos.x += 0.2;
+		pos.y = h;
+	}
 }
 
 void Menu::handleLobbyClick(int i) {
@@ -347,6 +399,10 @@ void Menu::handleClick(int i) {
 		break;
 	case Page::LevelSelect:
 		handleLvlSelectClick(i);
+		break;
+	case Page::Controls:
+		clear();
+		setMainMenu();
 		break;
 	default:
 		std::cerr << "what is this menu page\n";
