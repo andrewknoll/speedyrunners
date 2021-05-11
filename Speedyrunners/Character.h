@@ -113,7 +113,7 @@ protected:
 
 	void updateAcceleration();
 	void setFriction();
-
+	
 	void updateGrounded(const sf::Vector2f& normal);
 
 	void updateRunning();
@@ -133,6 +133,7 @@ public:
 	void useBoost(bool useIt = true);
 	float getRemainingBoost01() const; // returns the remaining boost between 0 and 1
 
+	bool getGrounded() const;
 	void setPosition(const sf::Vector2f pos);
 	void setPosition(float x, float y);
 	sf::Vector2f getLastSafePosition() const;

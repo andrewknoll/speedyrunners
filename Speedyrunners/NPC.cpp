@@ -483,86 +483,122 @@ float NPC::nodeDistance(const TileNode & n1, const TileNode & n2) const
 }
 
 void NPC::plan() {
-	if (!active) return;
-	TileNode current, nextToMe, goal0;
+	int n_path = 0;
+	TileNode goal0;
+
+	std::shared_ptr<Goal> goal, prevGoal;
+	TileNode goalNode;
+
+	if (pathFound[0] == 1) {
+		if (pathFound[1] == 1) {
+			choiceMtx.lock();
+			if (!stitched && !planningPath[2]) {
+				planningPath[2] = true;
+				choiceMtx.unlock();
+				goal = std::make_shared<Goal>();
+				goal->position = sf::Vector2f(path[1].front()->cell[0], path[1].front()->cell[1]);
+				goal->radius = 2.0f;
+				frontier[2].safePush(*path[0].back());
+				goalMtx.lock();
+				currentGoal[2] = goal;
+				goalMtx.unlock();
+				auto res = planFromTo(2, goal);
+				planningPath[2] = false;
+				if (res.has_value()) {
+					pathFound[2] = 1;
+					path[2] = res.value();
+					stitched = true;
+				}
+				frontier[2].clear();
+				expanded[2].clear();
+				return;
+			}
+			else {
+				choiceMtx.unlock();
+				return;
+			}
+		}
+		else {
+			n_path = 1;
+		}
+	}
+
+	//Check nobody else is planning this path
+	choiceMtx.lock();
+	if (!planningPath[n_path]) {
+		planningPath[n_path] = true;
+		updateGoals();
+		choiceMtx.unlock();
+	}
+	//Choose the next one in case someone is already planning it
+	else if (!planningPath[(n_path + 1) % 2] && !pathFound[(n_path + 1) % 2]) {
+		n_path = (n_path + 1) % 2;
+		planningPath[n_path] = true;
+		updateGoals();
+		choiceMtx.unlock();
+	}
+	else {
+		choiceMtx.unlock();
+		return;
+	}
+
+	
+	goalMtx.lock();
+	if (currentGoal[n_path] == nullptr) {
+		goalMtx.unlock();
+		choiceMtx.lock();
+		planningPath[n_path] = false;
+		choiceMtx.unlock();
+		return;
+	}
+	goal = currentGoal[n_path];
+
+	//Start from current position, if it's the first path.
+	//Start from previous goal, if it's the second one.
+	if (n_path == 0) {
+		goalMtx.unlock();
+		frontier[n_path].clear();
+		frontier[n_path].safePush(getCharacterCell());
+	}
+	else if (currentGoal[0] == nullptr) {
+		goalMtx.unlock();
+		choiceMtx.lock();
+		planningPath[n_path] = false;
+		choiceMtx.unlock();
+		return;
+	}
+	else {
+		goal0.cell[0] = currentGoal[0]->position.x;
+		goal0.cell[1] = currentGoal[0]->position.y;
+		goalMtx.unlock();
+		frontier[n_path].clear();
+		frontier[n_path].safePush(goal0);
+	}
+
+	goalNode.cell[0] = int(goal->position.x) / tm->getTileSizeWorld().x;
+	goalNode.cell[1] = int(goal->position.y) / tm->getTileSizeWorld().y;
+
+	goalNode.data.tile = Tiles::AIR;
+	
+	auto newPath = planFromTo(n_path, goal);
+	if (newPath.has_value()) {
+		pathMtx[n_path].lock();
+		path[n_path] = newPath.value();	//Once it's safe, replace the old path with the new one
+		pathFound[n_path] = 1;
+		pathMtx[n_path].unlock();
+	}
+}
+
+NPC::OptionalPath NPC::planFromTo(const int n_path, const std::shared_ptr<Goal> goal) {
+	TileNode current, nextToMe;
 	std::unique_ptr<TileNode> prev = nullptr;
 	Tiles::Collidable underMe;
 	float auxCost;
-	int n_path = 0;
+	std::list<std::shared_ptr<TileNode> > newPath;
+	if (!active) return {};
 	_set_se_translator(SE_trans_func);
 	try {
-		//Have to do "replan path"
-		if (pathFound[0] == 1) {
-			if (pathFound[1] == 1) return;
-			else {
-				n_path = 1;
-			}
-		}
-
-		//Check nobody else is planning this path
-		choiceMtx.lock();
-		if (!planningPath[n_path]) {
-			planningPath[n_path] = true;
-			updateGoals();
-			choiceMtx.unlock();
-		}
-		//Choose the next one in case someone is already planning it
-		else if(!planningPath[(n_path + 1) % 2] && !pathFound[(n_path + 1) % 2]){
-			n_path = (n_path + 1) % 2;
-			planningPath[n_path] = true;
-			updateGoals();
-			choiceMtx.unlock();
-		}
-		else {
-			choiceMtx.unlock();
-			return;
-		}
-
-
-		/*if (pathFound[0] == -1) {
-			std::cout << "Replanning..." << std::endl;
-		}*/
-
-		frontier[n_path].clear();
 		expanded[n_path].clear();
-
-		std::shared_ptr<Goal> goal, prevGoal;
-		TileNode goalNode;
-		goalMtx.lock();
-		if (currentGoal[n_path] == nullptr) {
-			goalMtx.unlock();
-			choiceMtx.lock();
-			planningPath[n_path] = false;
-			choiceMtx.unlock();
-			return;
-		}
-		goal = currentGoal[n_path];
-
-		//Start from current position, if it's the first path.
-		//Start from previous goal, if it's the second one.
-		if (n_path == 0) {
-			goalMtx.unlock();
-			frontier[n_path].safePush(getCharacterCell());
-		}
-		else if (currentGoal[0] == nullptr) {
-			goalMtx.unlock();
-			choiceMtx.lock();
-			planningPath[n_path] = false;
-			choiceMtx.unlock();
-			return;
-		}
-		else {
-			goal0.cell[0] = currentGoal[0]->position.x;
-			goal0.cell[1] = currentGoal[0]->position.y;
-			goalMtx.unlock();
-			frontier[n_path].safePush(goal0);
-		}
-
-		goalNode.cell[0] = int(goal->position.x) / tm->getTileSizeWorld().x;
-		goalNode.cell[1] = int(goal->position.y) / tm->getTileSizeWorld().y;
-
-		goalNode.data.tile = Tiles::AIR;
-
 		while (!frontier[n_path].safeEmpty() && active) {
 			current = frontier[n_path].popReturn();
 			expanded[n_path].push_back(current);
@@ -573,11 +609,7 @@ void NPC::plan() {
 
 			if (isGoal(current, *goal)) {
 				stopFollowing = true;	//Tell moving thread to stop following the path
-				std::list<std::shared_ptr<TileNode> > newPath;
 				newPath = buildPath(current);
-				pathMtx[n_path].lock();
-				path[n_path] = newPath;	//Once it's safe, replace the old path with the new one
-				pathMtx[n_path].unlock();
 				break;
 			}
 
@@ -631,9 +663,6 @@ void NPC::plan() {
 			}
 			prev = std::make_unique<TileNode>(current);
 		}
-		if (!path[n_path].empty()) {
-			pathFound[n_path] = 1;
-		}
 	}
 	catch (SE_Exception se) {
 		std::cout << "Ending thread..." << std::endl;
@@ -646,6 +675,10 @@ void NPC::plan() {
 	currentGoal[n_path] = nullptr;
 	goalMtx.unlock();
 	
+	if (!newPath.empty())
+		return newPath;
+	else
+		return {};
 }
 
 
@@ -670,11 +703,12 @@ bool NPC::doBasicMovement(const TileNode& current, const TileNode& n, float objD
 			else if(getCharacterCell().cell[1] - n.cell[1] <= 2){
 				me->stopJumping();
 			}
-			int diff = getCharacterCell().cell[0] - n.cell[0];
+			int diff = n.cell[0] - getCharacterCell().cell[0];
 			float horSpeed = me->getVelocity().x;
-			if (horSpeed > 0.01) diff -= horSpeed / glb::runningAcceleration;
-			else if (me->getVelocity().x < -0.01) diff += horSpeed / glb::runningAcceleration;
-			if ((right && diff < 0) || (!right && diff > 0)) {
+			float acc = me->getGrounded() ? glb::runningAcceleration : glb::flyingAcceleration;
+			if (horSpeed > 0.01f) diff += utils::stopDistance(horSpeed, -acc);
+			else if (horSpeed < 0.01f) diff += utils::stopDistance(horSpeed, acc);
+			if ((right && diff > 0) || (!right && diff < 0)) {
 				me->run(right);
 			}
 			else {
@@ -697,7 +731,7 @@ void NPC::followPath() {
 	stopFollowing = false;
 	float dist = 0;
 	sf::Clock clock;
-	sf::Time t0, recoveryStart;
+	sf::Time t0, tStep = clock.getElapsedTime();;
 	std::shared_ptr<TileNode> next;
 	int recoveryMode = 0;
 	float objDistance;
@@ -717,11 +751,14 @@ void NPC::followPath() {
 					break;	//A better path was found
 				}
 				dist = distance(getCharacterCell(), *next);
-				objDistance = nodeDistance(current, *next);
+				objDistance = dist;
 				jumped = false;
 				if (current.prev != nullptr && current.prev->data.isHooking && !next->data.isHooking) {
 					//Stop using hook
 					me->useHook(false);
+				}
+				else if(current.data.isHooking){
+					me->stop();
 				}
 				if (current.data.canWallJumpLeft == 1 || current.data.canWallJumpRight == 1) {
 					while (!stopFollowing && dist <= FARNESS_THRESHOLD + objDistance && !nodeWasReached(*next, 1)) {
@@ -731,7 +768,7 @@ void NPC::followPath() {
 						}
 						doBasicMovement(current, *next, objDistance, jumped, clock, false);
 						dist = distance(getCharacterCell(), *next);
-						if (recoveryMode == 2 && clock.getElapsedTime() - t0 > GIVE_UP_TIME) {
+						if (clock.getElapsedTime() - tStep > GIVE_UP_TIME) {
 							giveUp();
 							recoveryMode = 0;
 							return;
@@ -739,7 +776,6 @@ void NPC::followPath() {
 						if (clock.getElapsedTime() - t0 > MAX_TIME_PER_STEP) {
 							halt();
 							//Try to recover
-							recoveryStart = clock.getElapsedTime();
 							recoveryMode = 1;
 							step--;
 							if (it != path[0].begin()) it--;
@@ -748,12 +784,15 @@ void NPC::followPath() {
 					}
 				}
 				else if (next->data.isHooking) {
+					//Face corect way
+					me->run(getCharacterCell().cell[0] < next->cell[0]);
+					me->stop();
 					//Use hook
 					me->useHook(true);
 					while (!stopFollowing && dist <= FARNESS_THRESHOLD + objDistance && !nodeWasReached(*next, CLOSENESS_THRESHOLD)) {
 						sf::sleep(sleeptime);
 						dist = distance(getCharacterCell(), *next);
-						if (recoveryMode == 2 && clock.getElapsedTime() - t0 > GIVE_UP_TIME) {
+						if (clock.getElapsedTime() - tStep > GIVE_UP_TIME) {
 							giveUp();
 							recoveryMode = 0;
 							return;
@@ -761,7 +800,6 @@ void NPC::followPath() {
 						if (clock.getElapsedTime() - t0 > MAX_TIME_PER_STEP) {
 							halt();
 							//Try to recover
-							recoveryStart = clock.getElapsedTime();
 							recoveryMode = 1;
 							step--;
 							if (it != path[0].begin()) it--;
@@ -770,7 +808,7 @@ void NPC::followPath() {
 					}
 				}
 				else {
-					if (recoveryMode == 2 && clock.getElapsedTime() - t0 > GIVE_UP_TIME) {
+					if (clock.getElapsedTime() - tStep > GIVE_UP_TIME) {
 						giveUp();
 						recoveryMode = 0;
 						return;
@@ -781,7 +819,6 @@ void NPC::followPath() {
 					else {
 						halt();
 						//Try to recover
-						recoveryStart = clock.getElapsedTime();
 						recoveryMode = 1;
 						step--;
 						if (it != path[0].begin()) it--;
@@ -796,6 +833,8 @@ void NPC::followPath() {
 					break;
 				}
 				else if(recoveryMode != 1){
+					if(recoveryMode == 0)
+						tStep = clock.getElapsedTime();
 					recoveryMode = 0;
 					step++;
 					current = *next;
@@ -806,12 +845,20 @@ void NPC::followPath() {
 			if (dist <= FARNESS_THRESHOLD + objDistance) {
 				if (pathFound[1] == 1) {
 					pathFound[0] = 1;	//Next part of the path was already planned
-					//Stitch the two paths together and save path[1] to path[0]
 					auto last = path[0].back();
-					std::copy(std::begin(path[1]), std::end(path[1]), std::begin(path[0]));
-					path[0].push_front(last);
+					path[0].clear();
+					// Stitch the two paths together and save path[1] to path[0]
+					if (stitched) {
+						std::copy(std::begin(path[2]), std::end(path[2]), std::begin(path[0]));
+						stitched = false;
+					}
+					else {
+						path[0].push_front(last);
+					}
+					//Get next path
+					path[0].splice(path[0].end(), path[1]);
+
 					//Make sure we start planning the next part
-					path[1].clear();
 					pathFound[1] = 0;
 				}
 				else {

@@ -424,7 +424,7 @@ void Game::update()
 		updatePositions();
 		cam.follow(characters);
 		cam.update(dT);
-		for (int i = 0; i < characters.size(); i++) {
+		for (int i = 1; i < characters.size(); i++) {
 			if (characters[i]->isDead()) continue;
 			if (!cam.isInAllowedBounds(characters[i])) {
 				characters[i]->die();

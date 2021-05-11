@@ -45,25 +45,30 @@ class NPC : public PlayerSlot
 	using TilePriorityQueue = PriorityQueue<NodeData>;
 	using TileNode = Node<NodeData>;
 	using TileMapPtr = std::shared_ptr<TileMap>;
+	using OptionalPath = std::optional< std::list<std::shared_ptr<TileNode> > >;
 
 private:
 	const int N_MOVES = 7;
 	TileMapPtr tm;
 
 	std::list<Goal> goals;
-	std::shared_ptr<Goal> currentGoal[2];
+	std::shared_ptr<Goal> currentGoal[3];
 
 	std::mutex pathMtx[2];
 	std::mutex goalMtx;
 	std::mutex choiceMtx;
-	bool planningPath[2] = { false, false };
-	std::atomic<short int> pathFound[2] = { 0, 0 };
+	bool planningPath[3] = { false, false, false };
+	std::atomic<short int> pathFound[3] = { 0, 0, 0};
 	std::atomic<bool> stopFollowing = false;
 	std::atomic<bool> active = true;
+	std::atomic<bool> stitched = false;
 
-	TilePriorityQueue frontier[2];
-	std::vector<TileNode> expanded[2];
-	std::list<std::shared_ptr<TileNode> > path[2];
+	// 0 -> First path
+	// 1 -> Next step
+	// 2 -> Stitch
+	TilePriorityQueue frontier[3];
+	std::vector<TileNode> expanded[3];
+	std::list<std::shared_ptr<TileNode> > path[3];
 
 	int findExpanded(const TileNode& n, const int n_path) const;
 	float heuristic(const TileNode& n, const Goal& goal) const;
@@ -88,6 +93,7 @@ public:
 	void setTileMap(TileMapPtr tm);
 	void addGoal(const sf::Vector2f& goalPos, const float goalRadius);
 	void plan();
+	OptionalPath planFromTo(const int n_path, const std::shared_ptr<Goal> goal);
 	bool doBasicMovement(const TileNode & current, const TileNode & n, float objDistance, bool& jumped, sf::Clock clock, bool block);
 	void followPath();
 	int getPathFound(int i) const;

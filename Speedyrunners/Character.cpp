@@ -48,6 +48,10 @@ sf::Vector2f Character::getLastSafePosition() const {
 	return lastSafePosition;
 }
 
+bool Character::getGrounded() const {
+	return isGrounded;
+}
+
 void Character::setPosition(const sf::Vector2f pos) {
 	setPosition(pos.x, pos.y);
 }
