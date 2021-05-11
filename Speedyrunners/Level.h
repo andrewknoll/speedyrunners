@@ -54,6 +54,8 @@ public:
 	void loadBackground(const std::string& file, const sf::RenderWindow& window);
 
 
+	void setDefaultLevel();
+
 	std::string getBackgroundPath() const;
 
 	const TileMap& getCollidableTiles() const;

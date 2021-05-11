@@ -8,7 +8,7 @@
 // Adapted from: https://www.sfml-dev.org/tutorials/2.5/graphics-vertex-array.php#what-is-a-vertex-and-why-are-they-always-in-arrays
 
 
-const long MAX_TILEMAP_SIZE = 8192*8;//128*64
+//const long MAX_TILEMAP_SIZE = 8192*8;//128*64
 
 namespace Tiles {
 	//const int FLOOR = 0;
@@ -69,7 +69,8 @@ namespace Tiles {
 class TileMap : public sf::Transformable, public sf::Drawable
 {
 protected:
-	std::array<int, MAX_TILEMAP_SIZE> tiles;
+	//std::array<int, MAX_TILEMAP_SIZE> tiles;
+	std::vector<int> tiles;
 
 	sf::VertexArray vertices;
 	sf::Texture tileset;
@@ -79,25 +80,35 @@ protected:
 
 
 
-	int width, height;
+	size_t width, height;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+
     
 public:
 
+	size_t getSize() const;
 
-	bool load(const std::string& _tileSetPath, sf::Vector2u _tileSize, const int* _tiles, const int _width, const int _height);
+	void resize();
+
+	bool load(const std::string& _tileSetPath, sf::Vector2u _tileSize, const int* _tiles, const size_t _width, const size_t _height);
 	// Loads the tilemap from a saved file (csv):
 	bool load(std::ifstream& file);
 
 	void setQuad(sf::Vertex* quad, const int i, const int j, const int tu, const int tv) const;
 
+	void setTileIndexed(size_t row, size_t col, const int tileNumber);
+
 	void setTile(const sf::Vector2i& pos, const int tileNumber);
 
 	Tiles::Collidable getTile(int i, int j) const;
 
-	int getWidth() const;
-	int getHeight() const;
+	size_t getWidth() const;
+	size_t getHeight() const;
+
+	void setWidth(size_t newWidth);
+
+	void setHeight(size_t newHeight);
 
 	void drawTile(sf::RenderTarget& target, sf::RenderStates states, const sf::Vector2i& pos, const int tileNumber) const;
 

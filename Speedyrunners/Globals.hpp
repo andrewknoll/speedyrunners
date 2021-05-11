@@ -65,6 +65,7 @@ namespace glb
 
 	// Paths:
 	const std::string CONTENT_PATH = "../assets/Content/";
+	const std::string LEVELS_PATH = "../assets/levels/";
 
 	const std::string PASSPORT_PATH = CONTENT_PATH + "UI/Ingame/Passports/";
 };

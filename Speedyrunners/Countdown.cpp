@@ -72,6 +72,11 @@ bool Countdown::ended() const
 	return currentSecond<=0;
 }
 
+void Countdown::end()
+{
+	currentSecond = -1.0f;
+}
+
 void Countdown::draw(sf::RenderWindow& window) const
 {
 	auto view = window.getView();

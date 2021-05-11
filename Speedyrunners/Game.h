@@ -41,6 +41,12 @@ protected:
 	Resources& src;
 	sf::Vector2f respawnPosition;
 
+
+	std::string saveLevelName = "defaultLevel.csv";
+
+	// "cheats"
+	bool cheatsEnabled = false;
+
 	bool suddenDeath = false;
 	State state;
 	float aspectRatio = 16.0 / 9.0;
@@ -79,13 +85,23 @@ protected:
 public:
 
 	Game();
+
+	void clear();
+
+	void defaultInit(int N_PLAYERS);
+
+	void setState(const State _state);
+	
 	const Settings& getSettings() const;
 	// devuelve el indice del character en 1a pos
 	int getFirstCharacterIdx() const;
 	void loadLevel(const std::string& lvlPath);
+	void setSaveName(std::string fileName);
 	void loop();
 	void loopMenu();
 	void addCharacter(const CharPtr character);
+
+	void createNewLevel(int nLevels);
 
 	MusicPlayer& music();
 
@@ -97,5 +113,8 @@ public:
 	CharPtr getCharacterAt(int pos) const;
 	PlayerPtr getPlayerAt(int pos) const;
 	NPCPtr getNPCAt(int pos) const;
+
+	// allow F1, F2, etc.
+	void enableCheats(bool enable);
 };
 

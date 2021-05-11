@@ -39,6 +39,11 @@ void Level::save(const std::string& f_name) const
 	file << "\n";
 	// Save tilemap:
 	file << collidableTiles << std::endl;
+
+	std::ofstream lvlsList("../assets/levels/levels.csv", std::ios_base::app);
+	for (int i = 0; i < f_name.size() - 4; i++) // dont print the .csv extension
+		lvlsList << f_name[i];
+	lvlsList << "\n";
 	
 	std::cout << "Level saved\n";
 
@@ -144,6 +149,29 @@ void Level::loadBackground(const std::string& file, const sf::RenderWindow& wind
 	background.load(file, window);
 }
 
+
+void Level::setDefaultLevel()
+{
+	int width = 512;//collidableTiles.getWidth();
+	int height = 256; //collidableTiles.getHeight();
+
+	collidableTiles.setWidth(width);
+	collidableTiles.setHeight(height);
+	std::cout << "width, height: " << width << ", " << height << "\n";
+	for (size_t i = 0; i < height; i++) {
+		for (size_t j = 0; j < width; j++) {
+			//std::cout << i << " " << j << " " << collidableTiles.getSize() << "\n";
+			if (i < height / 20 || i > 19 * height / 20 ||
+				j < width / 20 || j > 19 * width / 20)
+			{ // Floor borders
+				collidableTiles.setTileIndexed(j, i, 1);
+			}
+			else { // Rest, Air
+				collidableTiles.setTileIndexed(j, i, 0);
+			}
+		}
+	}
+}
 
 std::string Level::getBackgroundPath() const
 {
