@@ -21,6 +21,7 @@ Game::Game()
 	//dT(0)
 {
 	setUpWindow();
+	setFullScreen();
 
 	ui.setWindow(window);
 
@@ -29,7 +30,6 @@ Game::Game()
 	//o asignarlas al nivel
 
 
-	settings.setResolution(sf::Vector2i(1600, 900));
 
 	// DEBUG de menus:
 	//loopMenu();
@@ -301,6 +301,18 @@ void Game::updateNPCs() {
 	}
 }
 
+void Game::setFullScreen() {
+	sf::VideoMode vMode = sf::VideoMode::getFullscreenModes().front();
+	if (!vMode.isValid()) {
+		std::cerr << "NOPE\n";
+	}
+	window.create(vMode, "SpeedyRunners", sf::Style::Fullscreen);
+	setUpWindow();
+	cam = window.getDefaultView();
+	lvl.loadBackground(lvl.getBackgroundPath(), window);
+	settings.setResolution(sf::Vector2i(window.getSize().x, window.getSize().y));
+}
+
 void Game::update()
 {
 	sf::Event event;
@@ -353,14 +365,7 @@ void Game::update()
 		}
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::F10)) { // Change to fullscreen (change back to window not implemented)
-			sf::VideoMode vMode = sf::VideoMode::getFullscreenModes().front();
-			if (!vMode.isValid()) {
-				std::cerr << "NOPE\n";
-			}
-			window.create(vMode, "SpeedyRunners", sf::Style::Fullscreen);
-			setUpWindow();
-			cam = window.getDefaultView();
-			lvl.loadBackground(lvl.getBackgroundPath(), window);
+			setFullScreen();
 		}
 
 	}

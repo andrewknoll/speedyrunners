@@ -110,6 +110,8 @@ public:
 
 	void updateNPCs();
 
+	void setFullScreen();
+
 	void playerJoin(PlayerPtr newPlayer);
 	void npcJoin(NPCPtr newNPC);
 
