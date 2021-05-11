@@ -30,7 +30,7 @@ namespace glb
 		const std::string START_ANIM = "321GO";
 	};
 	const int NUMBER_OF_ITEMS = 1;
-	const int NUMBER_OF_MISC_TEXTURES = 4;
+	const int NUMBER_OF_MISC_TEXTURES = 5;
 	const sf::Vector2f FEET_TO_HAND = sf::Vector2f(20.0, 0);// -50.0);
 	enum item : int {
 		NONE = 0,

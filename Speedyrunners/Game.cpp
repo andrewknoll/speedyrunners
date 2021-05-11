@@ -664,6 +664,7 @@ void Game::draw(sf::Time dT)
 			window.draw(*i);
 		}
 		// UI:
+		ui.update();
 		window.draw(ui);
 		break;
 	}

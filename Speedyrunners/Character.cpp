@@ -509,6 +509,10 @@ std::string Character::getSpritesheetsPath() const
 {
 	return spritesheetsPath;
 }
+float Character::getRemainingBoost01() const
+{
+	return remainingBoostTime / maxBoostTime;
+}
 std::string Character::getUIIconPath() const
 {
 	return getSpritesheetsPath() + "heads.png";

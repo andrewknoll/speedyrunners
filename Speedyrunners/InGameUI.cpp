@@ -11,9 +11,12 @@ void InGameUI::draw(sf::RenderTarget& target, sf::RenderStates states) const
 		//e->draw(target);
 	}
 	auto v = target.getView(); target.setView(target.getDefaultView());
-	for (const auto& pts : roundPoints)
+	for (const auto& pts : roundPoints) // points
 		for (const auto& p : pts)
 			target.draw(p);
+	for (const auto& bs : boostSprites) // boost bars
+		for (const auto& b : bs)
+			target.draw(b);
 	target.setView(v);
 }
 
@@ -50,9 +53,32 @@ void InGameUI::addPoints(sf::Vector2f pos, float widgetWidth) {
 	}
 }
 
+void InGameUI::addBoostBar(sf::Vector2f pos, float widgetWidth) {
+	// Back rectangle
+	auto &b = boostSprites.emplace_back();
+	pos.y += widgetWidth * 0.28f;
+	const auto& t = Resources::getInstance().getMiscTexture(4);
+	auto &back = b.emplace_back(t);
+	auto size = t.getSize();
+	size.y /= 3;
+	back.setTextureRect(sf::IntRect(0,0,size.x, size.y));
+	utils::setWidth(back, widgetWidth);
+	back.setPosition(pos);
+	// bar:
+	auto& bar = b.emplace_back(t);
+	bar.setTextureRect(sf::IntRect(0, size.y, size.x, size.y));
+	//utils::scaleToFullScreenRatio(bar, *window, 0.1);
+	utils::setWidth(bar, widgetWidth);
+	bar.setPosition(pos);
+	boostTexSize = size;
+}
+
+
 void InGameUI::setCharacters(std::vector<CharPtr> characters) {
 	chars = characters;
 	roundPoints.clear();
+	boostSprites.clear();
+
 
 	// Position:
 	sf::Vector2f pos(0.05, 0.005); // initial
@@ -81,12 +107,25 @@ void InGameUI::setCharacters(std::vector<CharPtr> characters) {
 		// rounds:
 		roundPoints.emplace_back(); // New vector for this character
 		addPoints(pos, widgetWidth);
+
+		addBoostBar(pos, widgetWidth*1.5f);
 		
 		//pos.x += scale * 3.5 * window->getSize().x;
 		pos.x += 3.4 * scale * window->getSize().x;
 	}
 	updatePoints();
 	std::cout << sprites.size() << " sprites en UI\n";
+}
+
+void InGameUI::updateBoostBar(int charidx, float proportion) {
+	boostSprites[charidx][1].setTextureRect(sf::IntRect(0, boostTexSize.y, proportion * boostTexSize.x, boostTexSize.y));
+}
+
+void InGameUI::update() {
+	for (int i = 0; i < chars.size(); i++) {
+		float boost = chars[i]->getRemainingBoost01();
+		updateBoostBar(i, boost);
+	}
 }
 
 sf::IntRect InGameUI::texRectFor(int point) {

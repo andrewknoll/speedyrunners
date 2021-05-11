@@ -131,6 +131,7 @@ public:
 	int getVariant() const;
 
 	void useBoost(bool useIt = true);
+	float getRemainingBoost01() const; // returns the remaining boost between 0 and 1
 
 	void setPosition(const sf::Vector2f pos);
 	void setPosition(float x, float y);
