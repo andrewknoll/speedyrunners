@@ -359,9 +359,26 @@ void Game::updateNPCs(bool follow) {
 				});
 				//threadPool[i]->detach();
 			}
-			if (follow && threadPool[2 * i + 1].threadPtr == nullptr) {
+			if (threadPool[2 * i + 1].threadPtr == nullptr) {
 				threadPool[2 * i + 1].finished = false;
 				threadPool[2 * i + 1].threadPtr = std::make_unique<std::thread>([&, i]() {
+					while (running) {
+						if (npcs[i]->getCharacter()->isDead()) {
+							{ std::unique_lock<std::mutex> lck(restartMtx);
+							restartCv.wait(lck); }
+						}
+						if (running) {
+							npcs[i]->plan();
+						}
+					}
+					threadPool[2 * i + 1].finished = true;
+					finishCV.notify_one();
+				});
+				//threadPool[i]->detach();
+			}
+			if (follow && threadPool[2 * i + 2].threadPtr == nullptr) {
+				threadPool[2 * i + 2].finished = false;
+				threadPool[2 * i + 2].threadPtr = std::make_unique<std::thread>([&, i]() {
 					while (running) {
 						if (npcs[i]->getCharacter()->isDead()) {
 							{ std::unique_lock<std::mutex> lck(restartMtx);
@@ -371,12 +388,12 @@ void Game::updateNPCs(bool follow) {
 							if (npcs[i]->getPathFound(0) == 1) {
 								npcs[i]->followPath();
 							}
-							else {
-								npcs[i]->plan();
-							}
+							//else {
+							//	npcs[i]->plan();
+							//}
 						}
 					}
-					threadPool[2 * i + 1].finished = true;
+					threadPool[2 * i + 2].finished = true;
 					finishCV.notify_one();
 				});
 			}
@@ -474,7 +491,7 @@ void Game::update()
 			}
 		}
 		updateNPCs(true);
-		if (aliveCount == 1) {
+		if (aliveCount < 2) {
 			state = State::FinishedRound;
 			for (auto c : characters) {
 				if (!c->isDead()) {

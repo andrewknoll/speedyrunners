@@ -301,7 +301,7 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 	setPosition(hitBox.left, hitBox.top); // Del rectangulo
 	if (usingHook) {
 		int res = hook.update(dT, tiles, getPosition());
-		if (res == -1) {
+		if (res == -1 || (facingRight && utils::degrees(hook.angle()) > 30) || (!facingRight && utils::degrees(hook.angle()) > 150)) {
 			swinging = false;
 			usingHook = false;
 			hook.destroy();
@@ -401,7 +401,7 @@ void Character::stopSliding() {
 void Character::startJumping() {
 	if (isGrounded && currJumpCD == sf::Time::Zero) {
 		holdingJump = true;
-		vel.y = -jumpingSpeed;
+		vel.y = -jumpingSpeed * 0.9;
 		isGrounded = false;
 		setAnimation(JumpAnim);
 		currJumpCD = jumpCoolDown;

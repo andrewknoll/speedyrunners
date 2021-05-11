@@ -34,7 +34,7 @@ public:
 	enum class State { Countdown, Playing, FinishedRound, Paused, Editing, MainMenu };
 protected:
 	//Thread Pool
-	std::vector<workerThread> threadPool = std::vector<workerThread>(8);
+	std::vector<workerThread> threadPool = std::vector<workerThread>(12);
 	std::atomic<bool> running = true;
 	std::mutex finishMtx;
 	std::condition_variable finishCV;
