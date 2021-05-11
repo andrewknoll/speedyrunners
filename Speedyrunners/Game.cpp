@@ -53,13 +53,13 @@ void Game::defaultInit(int N_PLAYERS) {
 	clear();
 
 	std::shared_ptr<Character> speedyrunner = std::make_shared<Character>(src.getSpriteSheet(0), glb::SPEEDRUNNER);
-	speedyrunner->setPosition(200, 190);
+	speedyrunner->setPosition(lvl.getInitialPosition());
 
 	std::shared_ptr<Character> cosmonaut = std::make_shared<Character>(src.getSpriteSheet(1), glb::COSMONAUT);
-	cosmonaut->setPosition(200, 190);
+	cosmonaut->setPosition(lvl.getInitialPosition());
 
 	std::shared_ptr<Character> otro = std::make_shared<Character>(src.getSpriteSheet(2), glb::UNIC);
-	otro->setPosition(200, 190);
+	otro->setPosition(lvl.getInitialPosition());
 
 	int id = 0;
 	if (N_PLAYERS == 2) id = 1;
@@ -475,6 +475,7 @@ void Game::processEditingInputs(const sf::Event& event) {
 			loadLevel("first.csv");
 		}
 		else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::J) {
+
 			// Join as player
 			//playerJoin();
 		}
@@ -501,7 +502,7 @@ void Game::processEditingInputs(const sf::Event& event) {
 		falcon->setName(std::string("falcon ") + std::to_string(characters.size()));
 		//falcon.setScale(0.5, 0.5);
 		addCharacter(falcon);
-
+		lvl.setInitialPosition(falcon->getPosition());
 	}
 
 	// Debug player positions (P to show):

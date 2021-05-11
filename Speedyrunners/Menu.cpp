@@ -184,13 +184,13 @@ void Menu::setWorkshopMenu() {
 	};
 	pos = sf::Vector2f(0.6, 0.33);
 	size = 0.04;
-	std::string font = glb::CONTENT_PATH + "UI/Font/Symbola_hint.ttf";
-	elements.emplace_back(std::make_unique<TextElement>(settings, font, "Level editor controls:", size, pos, false));
+	std::string font = glb::CONTENT_PATH + "UI/Font/FreeSans.ttf";
+	elements.emplace_back(std::make_unique<TextElement>(settings, font, "Level editor controls:", size, pos, false, sf::Color::White));
 	
 	pos.y += size * 2.5;
 	size *= 0.85;
 	for (const auto &t : text) {
-		elements.emplace_back(std::make_unique<TextElement>(settings, font, t, size, pos, false));
+		elements.emplace_back(std::make_unique<TextElement>(settings, font, t, size, pos, false, sf::Color::White));
 
 		pos.y += size * 1.25;
 	}

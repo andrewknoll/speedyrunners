@@ -10,6 +10,16 @@ Level::Level(const sf::RenderWindow& window) : Level("../assets/Content/tiles/ti
 {	
 }
 
+void Level::setInitialPosition(const sf::Vector2f& ini)
+{
+	initialPosition = ini;
+}
+
+sf::Vector2f Level::getInitialPosition() const
+{
+	return initialPosition;
+}
+
 void Level::drawTile(sf::RenderTarget& target, sf::RenderStates states, const sf::Vector2i& pos, const int tileNumber) const
 {
 	collidableTiles.drawTile(target, states, pos, tileNumber);
@@ -31,6 +41,8 @@ void Level::save(const std::string& f_name) const
 	}
 	// Save background:
 	file << backgroundPath << std::endl;
+	// Save initial position:
+	file << initialPosition << "\n";
 	// Save checkpoints:
 	file << checkpoints.size() << "\n";
 	for (auto cp : checkpoints) {
@@ -91,6 +103,12 @@ void Level::load(const std::string& f_name, const sf::RenderWindow& window)
 	file >> backgroundPath;
 	background.load(backgroundPath, window);
 	file.ignore(); // skip \n
+
+	// Ini pos:
+	float x, y;
+	file >> x >> y;
+	file.ignore(); // skip \n
+	initialPosition = sf::Vector2f(x, y);
 
 	// Load checkpoints:
 	
