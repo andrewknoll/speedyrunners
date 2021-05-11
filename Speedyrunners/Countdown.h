@@ -5,7 +5,7 @@
 
 class AudioPlayer;
 
-class Countdown 
+class Countdown
 {
 	//sf::Time remaining;
 	int currentSecond; 

@@ -1,11 +1,13 @@
 #include "RoundVictory.h"
 #include "Resources.h"
+#include "utils.hpp"
 
 RoundVictory::RoundVictory(const sf::RenderWindow& _window, const int characterIdx, const int characterVariant, const int characterScore) :
 	currentSecond(4),
 	t(sf::seconds(1)),
 	audioPlayer(Resources::getInstance().getAudioPlayer()),
-	characterScore(characterScore) {
+	characterScore(characterScore) 
+{
 	//TO-DO
 
 	// Fondo:
@@ -22,13 +24,15 @@ RoundVictory::RoundVictory(const sf::RenderWindow& _window, const int characterI
 	rect.height = bg.getSize().y / 2;
 	rect.top = 0;
 	bgSprite.setTextureRect(rect);
-	bgSprite.setScale(relation, relation);
+
+	utils::scaleToFullScreenRatio(bgSprite, _window, 0.4);
+	//bgSprite.setScale(relation, relation);
 
 	characterVictoryPose = Resources::getInstance().getVictorySpriteSheet(characterIdx, characterVariant).get_animations()[0];
 	mySprite = characterVictoryPose->get_first_frame();
 	relation = height / mySprite.getGlobalBounds().height;
-	mySprite.setScale(relation, relation);
-	mySprite.setPosition(width * 0.2, height * 0.75);
+	utils::scaleToFullScreenRatio(mySprite, _window, 0.3);
+	mySprite.setPosition(width * 0.2, height * 0.89);
 }
 
 void RoundVictory::update(const sf::Time& dT) {

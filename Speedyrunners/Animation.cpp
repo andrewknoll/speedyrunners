@@ -75,6 +75,7 @@ int Animation::advance_frame(sf::Sprite& sprite) {
 	if (return_code == 0) {
 		//new_sprite.setPosition(this->get_position() - this->get_center_offset());
 		new_sprite.setOrigin(this->get_origin_point());
+		new_sprite.setPosition(sprite.getPosition());
 		sprite = new_sprite;
 	}
 	flip(sprite);
