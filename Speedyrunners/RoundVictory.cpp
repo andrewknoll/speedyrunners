@@ -8,15 +8,12 @@ RoundVictory::RoundVictory(const sf::RenderWindow& _window, const int characterI
 	audioPlayer(Resources::getInstance().getAudioPlayer()),
 	characterScore(characterScore) 
 {
-	//TO-DO
-
 	// Fondo:
 	bg.loadFromFile(bgPath);
 	bgSprite.setTexture(bg);
 	float width = _window.getDefaultView().getSize().x;
 	float height = _window.getDefaultView().getSize().y;
 	bgSprite.setPosition(0, height / 2.0f);
-	float relation = height / bgSprite.getGlobalBounds().height;
 
 	sf::IntRect rect;
 	rect.left = 0;
@@ -30,10 +27,39 @@ RoundVictory::RoundVictory(const sf::RenderWindow& _window, const int characterI
 
 	characterVictoryPose = Resources::getInstance().getVictorySpriteSheet(characterIdx, characterVariant).get_animations()[0];
 	mySprite = characterVictoryPose->get_first_frame();
-	relation = height / mySprite.getGlobalBounds().height;
 	utils::scaleToFullScreenRatio(mySprite, _window, 0.3);
 	mySprite.setPosition(width * 0.2, height * 0.89);
+
+
+	addScoreStuff(_window, characterScore);
 }
+
+void RoundVictory::setRectForPoint(sf::Sprite& s, int points) {
+	auto texSize = Resources::getInstance().getMiscTexture(1).getSize();
+	s.setTextureRect(sf::IntRect((points - 1) * texSize.x, 0, texSize.x/7, texSize.y));
+}
+
+void RoundVictory::addScoreStuff(const sf::RenderWindow& _window, int score) {
+	sprites.clear();
+	auto size = _window.getDefaultView().getSize();
+	sf::Vector2f pos(size.x * 0.45, size.y* 0.6);
+	if (score == 3) { // Winner
+		sprites.emplace_back(Resources::getInstance().getMiscTexture(2));
+		sprites.back().setPosition(pos);
+		utils::scaleToFullScreenRatio(sprites.back(), _window, 0.2);
+	}
+	else { // Display points
+		for (int i = 0; i < score; i++) {
+			sprites.emplace_back(Resources::getInstance().getMiscTexture(1));
+			auto& s = sprites.back();
+			setRectForPoint(s, i + 1);
+			utils::scaleToFullScreenRatio(s, _window, 0.2);
+			s.setPosition(pos);
+			pos.x += size.x * 0.15;
+		}
+	}
+}
+
 
 void RoundVictory::update(const sf::Time& dT) {
 	t -= dT;
@@ -45,6 +71,9 @@ void RoundVictory::update(const sf::Time& dT) {
 			}
 			else if (characterScore == 2) {
 				audioPlayer.play(AudioPlayer::Effect::WIN_ROUND_2);
+			}
+			else if (characterScore == 2) {
+				audioPlayer.play(AudioPlayer::Effect::WIN_GOTO_SCOREBOARD);
 			}
 		}
 		currentSecond--;
@@ -61,6 +90,7 @@ void RoundVictory::tickAnimation(sf::Time dT) {
 	}
 }
 
+
 bool RoundVictory::ended() const {
 	return currentSecond <= 0;
 }
@@ -71,11 +101,10 @@ void RoundVictory::draw(sf::RenderWindow& window) const {
 	if (currentSecond < 3) {
 		auto view = window.getView();
 		window.setView(window.getDefaultView());
-		window.draw(bgSprite);
-		window.draw(mySprite);
+		window.draw(bgSprite);// stripes
+		window.draw(mySprite);// character animation
+		for (const auto& s : sprites) window.draw(s); // points
 		window.setView(view);
-		//window.draw(bgSprite);
-		//window.draw(mySprite);
 	}
 }
 

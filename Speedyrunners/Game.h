@@ -49,6 +49,9 @@ protected:
 	sf::Vector2f respawnPosition;
 
 
+	bool gameWon = false;
+
+
 	std::string saveLevelName = "defaultLevel.csv";
 
 	// "cheats"

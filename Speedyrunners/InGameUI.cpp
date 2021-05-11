@@ -100,10 +100,7 @@ void InGameUI::updatePoints() {
 	for (int i = 0; i < chars.size(); i++) {
 		int points = chars[i]->getScore();
 		for (int j = 0; j < points; j++) {
-			roundPoints[i][j].setTextureRect(texRectFor(j+1));
+			roundPoints[i][j].setTextureRect(texRectFor(j + 1));
 		}
-		/*for (auto& point : charPoints) {
-			point.setTextureRect(rect);
-		}*/
 	}
 }

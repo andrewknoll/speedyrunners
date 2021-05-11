@@ -41,6 +41,7 @@ Game::Game()
 }
 
 void Game::clear() {
+	gameWon = false;
 	characters.clear();
 	players.clear();
 	running = false;
@@ -433,10 +434,12 @@ void Game::update()
 			for (auto c : characters) {
 				if (!c->isDead()) {
 					c->increaseScore(1);
+					if (c->getScore() >= 3) { // Won
+						gameWon = true; // We dont finish here to let the anim play
+					}
 					ui.updatePoints();
 					break;
 				}
-				//TODO : Ganar con tres puntos
 			}
 		}
 
@@ -457,12 +460,17 @@ void Game::update()
 					rv = std::make_unique<RoundVictory>(window, characters[i]->getID(), characters[i]->getVariant(), characters[i]->getScore());
 					respawnPosition = characters[i]->getLastSafePosition();
 				}
-				//TODO : Ganar con tres puntos
+				else {
+					characters[i]->setAnimation(Character::AnimationIndex::StandAnim);
+				}
 			}
 		}
 		else {
 			rv->update(dT);
 			if (rv->ended()) {
+				if (gameWon) {
+					loopMenu();
+				}
 				state = State::Countdown;
 				countdown.reset();
 				rv = nullptr;
@@ -476,8 +484,6 @@ void Game::update()
 			}
 		}
 	}
-	//cam.pollEvents();
-	// TODO
 }
 
 void Game::enableCheats(bool enable) {
