@@ -50,3 +50,4 @@ A2,text_dissappear_1.wav,text_dissappear_2.wav
 I,0,Content/Sprites/rocket.png
 
 T,0,Content/Sprites/hook.png
+T,1,Content/UI/MultiplayerHUD/Messages.png
