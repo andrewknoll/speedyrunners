@@ -24,7 +24,7 @@ Game::Game()
 
 	ui.setWindow(window);
 
-	loadLevel("first.csv");
+	loadLevel("airport.csv");
 	//TO-DO: Utilizar "sets" de musica predeterminados
 	//o asignarlas al nivel
 
@@ -202,7 +202,7 @@ MusicPlayer& Game::music() {
 
 void Game::updateNPCs() {
 	for (int i = 0; i < npcs.size(); i++) {
-		if (npcs[i] != nullptr) {
+		if (npcs[i] != nullptr && checkpoints.size() > 0) {
 			Checkpoint cp = checkpoints[activeCheckpoint]; // checkpoints[1];
 			npcs[i]->addGoal(cp.getPos(), cp.getRadius());
 			cp = checkpoints[(activeCheckpoint + 1) % checkpoints.size()];
@@ -388,10 +388,10 @@ void Game::processEditingInputs(const sf::Event& event) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
 			lvl.setCheckpoints(checkpoints);
 			//lvl.saveDuplicateVertical("first.csv");
-			lvl.save("first.csv");
+			lvl.save("airport.csv");
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::L)) {
-			loadLevel("first.csv");
+			loadLevel("airport.csv");
 		}
 		else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::J) {
 			// Join as player
