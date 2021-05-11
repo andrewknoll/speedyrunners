@@ -20,6 +20,18 @@ sf::Vector2f Level::getInitialPosition() const
 	return initialPosition;
 }
 
+void Level::addBoostBox(const sf::Vector2f& pos)
+{
+	boostBoxes.emplace_back(pos, collidableTiles.getTileSizeWorld().x);
+}
+
+bool Level::insideBoostbox(const sf::Vector2f& pos) const
+{
+	for (const auto& b : boostBoxes)
+		if (b.isInside(pos)) return true;
+	return false;
+}
+
 void Level::drawTile(sf::RenderTarget& target, sf::RenderStates states, const sf::Vector2i& pos, const int tileNumber) const
 {
 	collidableTiles.drawTile(target, states, pos, tileNumber);
@@ -43,6 +55,12 @@ void Level::save(const std::string& f_name) const
 	file << backgroundPath << std::endl;
 	// Save initial position:
 	file << initialPosition << "\n";
+	// boost things:
+	file << boostBoxes.size() << "\n";
+	for (const auto& b : boostBoxes) {
+		file << b.getPosition() << " ";
+	}
+	file << "\n";
 	// Save checkpoints:
 	file << checkpoints.size() << "\n";
 	for (auto cp : checkpoints) {
@@ -125,6 +143,17 @@ void Level::load(const std::string& f_name, const sf::RenderWindow& window)
 	file.ignore(); // skip \n
 	initialPosition = sf::Vector2f(x, y);
 
+	// boost things:
+	int nBoosts;
+	file >> nBoosts;
+	std::vector<sf::Vector2f> boostPositions;
+	for (int i = 0; i < nBoosts; i++) {
+		file >> x >> y;
+		boostPositions.emplace_back(x, y);
+	}
+	file.ignore();
+
+
 	// Load checkpoints:
 	
 	int nCheckpoints;
@@ -144,6 +173,8 @@ void Level::load(const std::string& f_name, const sf::RenderWindow& window)
 		std::cerr << "Error loading tilemap\n";
 	}
 	else {
+		float tileW = collidableTiles.getTileSizeWorld().x;
+		for (const auto& p : boostPositions) boostBoxes.emplace_back(p, tileW);
 		std::cout << "Level loaded\n";
 	}
 }
@@ -219,30 +250,12 @@ void Level::setCheckpoints(const std::vector<Checkpoint>& cps)
 {
 	checkpoints = cps;
 }
-/*
-void Level::scaleBackground(sf::RenderTarget& target) {
-	//auto size = target.getSize();
-	auto size = target.getView().getSize();
-	
-}*/
 
 void Level::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	//background.draw(target, states);
 	target.draw(background);
 	target.draw(collidableTiles, states);
-	/*
-	auto v = target.getView();
-	auto s = states;
-	target.setView(target.getDefaultView()); // background shouldnt be moved
-	// apply the tileset texture
-	states.texture = &bgTexture;
-	states.transform = sf::Transform();
-	// draw the vertex array
-	target.draw(bgVertices, states);
-	target.setView(v);
-	target.draw(collidableTiles, s);
-	*/
+	for (const auto& b : boostBoxes) target.draw(b, states);
 }
 
 

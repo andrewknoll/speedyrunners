@@ -168,6 +168,18 @@ namespace utils {
 		scaleToFullScreen(s, settings.windowResolution().y);
 	}
 
+	void setWidth(sf::Sprite& s, const float& width)
+	{
+		float rel = width / s.getGlobalBounds().width;
+		s.setScale(rel, rel);
+	}
+
+	void setHeight(sf::Sprite& s, const float& h)
+	{
+		float rel = h / s.getGlobalBounds().height;
+		s.setScale(rel, rel);
+	}
+
 	void scaleToFullScreenRatio(sf::Sprite& s, const sf::RenderWindow& window, const float& verticalRatio) {
 		scaleToFullScreen(s, window.getSize().y * verticalRatio);
 	}

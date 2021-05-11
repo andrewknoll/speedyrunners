@@ -21,8 +21,12 @@ private:
 	sf::Texture bg;
 	sf::Sprite bgSprite;
 
+	std::vector<sf::Sprite> sprites;
+
 public:
 	RoundVictory(const sf::RenderWindow& _window, const int characterIdx, const int characterVariant, const int characterScore);
+	void setRectForPoint(sf::Sprite& s, int points);
+	void addScoreStuff(const sf::RenderWindow& _window, int score);
 	void update(const sf::Time& dT);
 	void tickAnimation(sf::Time dT);
 	bool ended() const;

@@ -49,6 +49,9 @@
     <Filter Include="UI\Elements\Widgets">
       <UniqueIdentifier>{dada622b-a7c7-481f-96c0-18428524f432}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Level\LevelElements">
+      <UniqueIdentifier>{30a99cb4-ed15-4afa-8797-16f7af4d3ea8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TileMap.cpp">
@@ -146,6 +149,9 @@
     </ClCompile>
     <ClCompile Include="LobbyWidget.cpp">
       <Filter>UI\Elements\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="BoostBox.cpp">
+      <Filter>Level\LevelElements</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -246,6 +252,9 @@
       <Filter>UI\Elements\Widgets</Filter>
     </ClInclude>
     <ClInclude Include="SE_Exception.h" />
+    <ClInclude Include="BoostBox.h">
+      <Filter>Level\LevelElements</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

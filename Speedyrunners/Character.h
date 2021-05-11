@@ -16,6 +16,7 @@
 #define DEBUG_HITBOX
 
 class TileMap;
+class Level;
 
 //class Tiles::Ramp;
 
@@ -64,6 +65,13 @@ protected:
 	bool isRunning = false;
 	bool isAtWallJump = false;
 	bool sliding = false;
+
+	// Boost
+	float boostPower = 1.5; // 10% faster
+	bool usingBoost = false;
+	sf::Time maxBoostTime = sf::seconds(2);
+	sf::Time remainingBoostTime = maxBoostTime;
+
 
 	std::shared_ptr<Animation> currentAnimation;
 	sf::Sprite mySprite;
@@ -115,12 +123,15 @@ protected:
 	void updateVel(const float& dtSec);
 	void updateInRamp(Tiles::Ramp ramp);
 	void setDefaultOrigin();
-
+	void updateBoost(const sf::Time& dT, const Level& lvl);
 public:
 	Character(Spritesheet sp, int ID, int variant = 0);
 
 	int getID() const;
 	int getVariant() const;
+
+	void useBoost(bool useIt = true);
+	float getRemainingBoost01() const; // returns the remaining boost between 0 and 1
 
 	void setPosition(const sf::Vector2f pos);
 	void setPosition(float x, float y);
@@ -133,7 +144,7 @@ public:
 
 	void setBaseFromRamp(Tiles::Ramp ramp);
 
-	void update(const sf::Time& dT, const TileMap& tiles);
+	void update(const sf::Time& dT, const Level& lvl);
 
 	void setHorizontalAcc(float acc);
 	void setVerticalSpeed(float vel);

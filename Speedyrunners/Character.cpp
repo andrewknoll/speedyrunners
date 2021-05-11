@@ -7,6 +7,7 @@
 #include "Spritesheet.h"
 #include "Rocket.h"
 #include "Resources.h"
+#include "Level.h"
 Character::Character(Spritesheet sp, int ID, int variant) :
 	hitBox(glb::default_hitbox),
 	myID(ID),
@@ -49,6 +50,10 @@ sf::Vector2f Character::getLastSafePosition() const {
 
 void Character::setPosition(const sf::Vector2f pos) {
 	setPosition(pos.x, pos.y);
+}
+
+void Character::useBoost(bool useIt) {
+	usingBoost = useIt;
 }
 
 void Character::fixPosition(sf::FloatRect& hitbox) {
@@ -180,13 +185,34 @@ void Character::updateVel(const float& dtSec) {
 	}
 }
 
-void Character::update(const sf::Time& dT, const TileMap& tiles)
+void Character::updateBoost(const sf::Time& dT, const Level& lvl) {
+	if (usingBoost && utils::dot(vel, vel) > 0.01) {
+		remainingBoostTime -= dT;
+		if (remainingBoostTime < sf::seconds(0)) {
+			usingBoost = false;
+			std::cout << "boost depleted\n";
+		}
+	}
+	else {
+		if (remainingBoostTime < maxBoostTime && lvl.insideBoostbox(getPosition())) {
+			remainingBoostTime += dT;
+		}
+	}
+}
+
+void Character::update(const sf::Time& dT, const Level& lvl)
+
 {
-
-
+	auto &tiles = lvl.getCollidableTiles();
 	updateRunning();
 	setFriction();
 	float dtSec = dT.asSeconds();
+	updateBoost(dT, lvl);
+	if (usingBoost) { // updating dT is the same as updating all speeds and acc
+		dtSec *= boostPower;
+	}
+
+
 	sf::Vector2f runningSpeed = vel;
 
 	if (currJumpCD > sf::Time::Zero) {
@@ -482,6 +508,10 @@ void Character::setSpritesheetsPath(std::string path)
 std::string Character::getSpritesheetsPath() const
 {
 	return spritesheetsPath;
+}
+float Character::getRemainingBoost01() const
+{
+	return remainingBoostTime / maxBoostTime;
 }
 std::string Character::getUIIconPath() const
 {

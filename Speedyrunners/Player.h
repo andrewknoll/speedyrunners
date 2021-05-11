@@ -11,7 +11,7 @@ private:
 	bool holdingDown = false;
 
 
-	sf::Keyboard::Key k_left, k_right, k_down, k_jump, k_hook, k_item;
+	sf::Keyboard::Key k_left, k_right, k_down, k_jump, k_hook, k_item, k_boost;
 public:
 	//Player(int id = 0);
 	Player(const Settings& settings, int id = 0);

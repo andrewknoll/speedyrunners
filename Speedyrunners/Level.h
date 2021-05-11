@@ -4,6 +4,7 @@
 #include "TileMap.h"
 #include "Checkpoint.h"
 #include "Background.h"
+#include "BoostBox.h"
 
 
 class Camera; // Pre-declaracion mejor que include en el hpp
@@ -30,7 +31,7 @@ class Level : public sf::Drawable
 
 	std::vector<Checkpoint> checkpoints;
 
-
+	std::vector<BoostBox> boostBoxes;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 public:
@@ -39,6 +40,10 @@ public:
 	void setInitialPosition(const sf::Vector2f &ini);
 
 	sf::Vector2f getInitialPosition() const;
+
+	void addBoostBox(const sf::Vector2f& pos);
+
+	bool insideBoostbox(const sf::Vector2f& pos) const;
 
 	void drawTile(sf::RenderTarget& target, sf::RenderStates states, const sf::Vector2i& pos, const int tileNumber) const;
 

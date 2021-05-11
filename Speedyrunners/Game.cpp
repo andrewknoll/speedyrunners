@@ -41,6 +41,7 @@ Game::Game()
 }
 
 void Game::clear() {
+	gameWon = false;
 	characters.clear();
 	players.clear();
 	running = false;
@@ -204,6 +205,7 @@ void Game::loadLevel(const std::string& lvlPath)
 	for (NPCPtr npc : npcs) {
 		npc->setTileMap(std::make_shared<TileMap>(lvl.getCollidableTiles()));
 	}
+	
 }
 
 
@@ -414,7 +416,7 @@ void Game::update()
 	if (state == State::Playing && dT.asSeconds() < 0.1) {
 		for (auto c : characters) {
 			if (c->isDead()) continue;
-			c->update(dT, lvl.getCollidableTiles());
+			c->update(dT, lvl);
 		}
 		for (auto it : items) {
 			it->update(dT);
@@ -439,10 +441,12 @@ void Game::update()
 			for (auto c : characters) {
 				if (!c->isDead()) {
 					c->increaseScore(1);
+					if (c->getScore() >= 3) { // Won
+						gameWon = true; // We dont finish here to let the anim play
+					}
 					ui.updatePoints();
 					break;
 				}
-				//TODO : Ganar con tres puntos
 			}
 		}
 
@@ -465,12 +469,17 @@ void Game::update()
 					rv = std::make_unique<RoundVictory>(window, characters[i]->getID(), characters[i]->getVariant(), characters[i]->getScore());
 					respawnPosition = characters[i]->getLastSafePosition();
 				}
-				//TODO : Ganar con tres puntos
+				else {
+					characters[i]->setAnimation(Character::AnimationIndex::StandAnim);
+				}
 			}
 		}
 		else {
 			rv->update(dT);
 			if (rv->ended()) {
+				if (gameWon) {
+					loopMenu();
+				}
 				state = State::Countdown;
 				countdown.reset();
 				rv = nullptr;
@@ -484,8 +493,6 @@ void Game::update()
 			}
 		}
 	}
-	//cam.pollEvents();
-	// TODO
 }
 
 void Game::enableCheats(bool enable) {
@@ -568,6 +575,9 @@ void Game::processEditingInputs(const sf::Event& event) {
 		//falcon.setScale(0.5, 0.5);
 		addCharacter(falcon);
 		lvl.setInitialPosition(falcon->getPosition());
+	}
+	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::B) {
+		lvl.addBoostBox(utils::mousePosition2f(window));
 	}
 
 	// Debug player positions (P to show):
@@ -654,6 +664,7 @@ void Game::draw(sf::Time dT)
 			window.draw(*i);
 		}
 		// UI:
+		ui.update();
 		window.draw(ui);
 		break;
 	}

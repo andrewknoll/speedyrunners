@@ -10,6 +10,7 @@ Player::Player(const Settings& settings, int id) {
 	k_jump = controls[i++];
 	k_hook = controls[i++];
 	k_item = controls[i++];
+	k_boost = controls[i++];
 	type = 0;
 }
 
@@ -23,6 +24,12 @@ bool Player::captureEvents(const sf::Event& event) {
 		}
 		if (sf::Keyboard::isKeyPressed(k_down)) {
 			me->slide();
+		}
+		if (sf::Keyboard::isKeyPressed(k_boost)) {
+			me->useBoost();
+		}
+		else {
+			me->useBoost(false);
 		}
 		if (event.type == sf::Event::KeyPressed) {
 
