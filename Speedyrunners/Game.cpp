@@ -24,7 +24,7 @@ Game::Game()
 
 	ui.setWindow(window);
 
-	loadLevel("airport.csv");
+	loadLevel("first.csv");
 	//TO-DO: Utilizar "sets" de musica predeterminados
 	//o asignarlas al nivel
 
@@ -37,10 +37,22 @@ Game::Game()
 
 void Game::clear() {
 	characters.clear();
-	npcs.clear();
 	players.clear();
 	running = false;
+
+	std::unique_lock<std::mutex> lck(finishMtx);
+	for (int i = 0; i < threadPool.size(); i++) {
+		if (threadPool[i].threadPtr == nullptr) continue;
+		restartCv.notify_all();	//Make sure the thread is not sleeping
+		while (!threadPool[i].finished) {
+			finishCV.wait(lck);
+		}
+		threadPool[i].threadPtr->join();
+		threadPool[i].threadPtr = nullptr;
+	}
 	threadPool.clear();
+	npcs.clear();
+
 	countdown.end();
 
 
@@ -104,37 +116,39 @@ void Game::setUpWindow() {
 // update the positions based on distance to the active checkpoint
 void Game::updatePositions()
 {
-	Checkpoint cp = checkpoints[activeCheckpoint];
-	auto cpPos = cp.getPos();
-	float d;
-	for (auto c : characters) {
-		if (c->isDead()) {
-			d = INFINITY;
-		}
-		else {
-			d = utils::distance(c->getPosition(), cpPos);
-		}
+	if (!checkpoints.empty()) {
+		Checkpoint cp = checkpoints[activeCheckpoint];
+		auto cpPos = cp.getPos();
+		float d;
+		for (auto c : characters) {
+			if (c->isDead()) {
+				d = INFINITY;
+			}
+			else {
+				d = utils::distance(c->getPosition(), cpPos);
+			}
 
-		c->setDToCheckpoint(d);
-		// get distance d to active checkpoint
-		// if d < r: next checkpoint
-	}
-	// order characters and players based on distance
-	std::sort(characters.begin(), characters.end(),
-		[](auto & c1, auto & c2) {
+			c->setDToCheckpoint(d);
+			// get distance d to active checkpoint
+			// if d < r: next checkpoint
+		}
+		// order characters and players based on distance
+		std::sort(characters.begin(), characters.end(),
+			[](auto & c1, auto & c2) {
 			return c1->getDToCheckpoint() < c2->getDToCheckpoint();
 		}
-	);
-	// Check if one has reached the checkpoint
-	if (!characters.empty() && characters[0]->getDToCheckpoint() <= cp.getRadius()) {
-		// Checkpoint reached, cycle to next
+		);
+		// Check if one has reached the checkpoint
+		if (!characters.empty() && characters[0]->getDToCheckpoint() <= cp.getRadius()) {
+			// Checkpoint reached, cycle to next
 #ifdef VERBOSE_DEBUG
-		std::cout << "Checkpoint " << activeCheckpoint <<" reached\n";
+			std::cout << "Checkpoint " << activeCheckpoint << " reached\n";
 #endif
-		activeCheckpoint = (activeCheckpoint + 1) % checkpoints.size();
+			activeCheckpoint = (activeCheckpoint + 1) % checkpoints.size();
 #ifdef VERBOSE_DEBUG
-		std::cout << "(new = " << activeCheckpoint << ")\n";
+			std::cout << "(new = " << activeCheckpoint << ")\n";
 #endif
+		}
 	}
 }
 
@@ -152,7 +166,7 @@ void Game::playerJoin(PlayerPtr newPlayer) {
 
 void Game::npcJoin(NPCPtr newNPC){
 	if (characters.size() < 4) {
-		/*Slot s;
+		/*Slot s;R
 		s.controlIndex = npcs.size();
 		s.index = positions.size();
 		s.type = 1;*/
@@ -217,6 +231,7 @@ void Game::loop()
 		previousTime = currentTime;
 	}
 	running = false;
+	clear();
 }
 
 void Game::loopMenu()
@@ -277,24 +292,40 @@ void Game::updateNPCs() {
 			cp = checkpoints[(activeCheckpoint + 1) % checkpoints.size()];
 			npcs[i]->addGoal(cp.getPos(), cp.getRadius());
 			auto& followThread = threadPool[2 * i + 1];
-			if (threadPool[2 * i] == nullptr) {
-				threadPool[2 * i] = std::make_unique<std::thread>([&, i]() {
-					while (running && !npcs[i]->getCharacter()->isDead()) {
-						npcs[i]->plan();
-					}
-				});
-				//threadPool[i]->detach();
-			}
-			if (threadPool[2 * i + 1] == nullptr) {
-				threadPool[2 * i + 1] = std::make_unique<std::thread>([&, i]() {
-					while (running && !npcs[i]->getCharacter()->isDead()) {
-						if (npcs[i]->getPathFound(0) == 1) {
-							npcs[i]->followPath();
+			if (threadPool[2 * i].threadPtr == nullptr) {
+				threadPool[2 * i].threadPtr = std::make_unique<std::thread>([&, i]() {
+					while (running) {
+						if (npcs[i]->getCharacter()->isDead()) { 
+							{ std::unique_lock<std::mutex> lck(restartMtx);
+							restartCv.wait(lck); }
 						}
-						else {
+						if (!running) {
 							npcs[i]->plan();
 						}
 					}
+					threadPool[2 * i].finished = true;
+					finishCV.notify_one();
+				});
+				//threadPool[i]->detach();
+			}
+			if (threadPool[2 * i + 1].threadPtr == nullptr) {
+				threadPool[2 * i + 1].threadPtr = std::make_unique<std::thread>([&, i]() {
+					while (running) {
+						if (npcs[i]->getCharacter()->isDead()) {
+							{ std::unique_lock<std::mutex> lck(restartMtx);
+							restartCv.wait(lck); }
+						}
+						if (!running) {
+							if (npcs[i]->getPathFound(0) == 1) {
+								npcs[i]->followPath();
+							}
+							else {
+								npcs[i]->plan();
+							}
+						}
+					}
+					threadPool[2 * i + 1].finished = true;
+					finishCV.notify_one();
 				});
 			}
 		}
@@ -309,7 +340,6 @@ void Game::update()
 	{
 		if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
 			running = false;
-			threadPool.clear();
 			window.close();
 		}
 		if (event.type == sf::Event::Resized)
@@ -427,6 +457,7 @@ void Game::update()
 				for (int i = 0; i < characters.size(); i++) {
 					characters[i]->respawn(respawnPosition);
 				}
+				restartCv.notify_all();
 			}
 		}
 	}
@@ -472,7 +503,7 @@ void Game::processEditingInputs(const sf::Event& event) {
 			lvl.save(saveLevelName);
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::L)) {
-			loadLevel("airport.csv");
+			loadLevel("first.csv");
 		}
 		else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::J) {
 			// Join as player
