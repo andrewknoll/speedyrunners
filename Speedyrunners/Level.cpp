@@ -10,6 +10,16 @@ Level::Level(const sf::RenderWindow& window) : Level("../assets/Content/tiles/ti
 {	
 }
 
+void Level::setInitialPosition(const sf::Vector2f& ini)
+{
+	initialPosition = ini;
+}
+
+sf::Vector2f Level::getInitialPosition() const
+{
+	return initialPosition;
+}
+
 void Level::drawTile(sf::RenderTarget& target, sf::RenderStates states, const sf::Vector2i& pos, const int tileNumber) const
 {
 	collidableTiles.drawTile(target, states, pos, tileNumber);
@@ -31,6 +41,8 @@ void Level::save(const std::string& f_name) const
 	}
 	// Save background:
 	file << backgroundPath << std::endl;
+	// Save initial position:
+	file << initialPosition << "\n";
 	// Save checkpoints:
 	file << checkpoints.size() << "\n";
 	for (auto cp : checkpoints) {
@@ -40,10 +52,17 @@ void Level::save(const std::string& f_name) const
 	// Save tilemap:
 	file << collidableTiles << std::endl;
 
-	std::ofstream lvlsList("../assets/levels/levels.csv", std::ios_base::app);
-	for (int i = 0; i < f_name.size() - 4; i++) // dont print the .csv extension
-		lvlsList << f_name[i];
-	lvlsList << "\n";
+	std::ifstream lvls("../assets/levels/levels.csv");
+	std::set<std::string> lvlsSet;
+	std::string line;
+	while (std::getline(lvls, line)) lvlsSet.insert(line);
+	std::string name = f_name.substr(0, f_name.size() - 4);
+	//std::cout << name << "\n";
+	if (lvlsSet.find(name) == lvlsSet.end()) { // Doesnt contain it already
+		std::ofstream lvlsList("../assets/levels/levels.csv", std::ios_base::app);
+		lvlsList << name << "\n";
+	}
+	
 	
 	std::cout << "Level saved\n";
 
@@ -91,6 +110,12 @@ void Level::load(const std::string& f_name, const sf::RenderWindow& window)
 	file >> backgroundPath;
 	background.load(backgroundPath, window);
 	file.ignore(); // skip \n
+
+	// Ini pos:
+	float x, y;
+	file >> x >> y;
+	file.ignore(); // skip \n
+	initialPosition = sf::Vector2f(x, y);
 
 	// Load checkpoints:
 	

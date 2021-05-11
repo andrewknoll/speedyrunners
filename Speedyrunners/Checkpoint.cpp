@@ -14,6 +14,18 @@ Checkpoint::Checkpoint(sf::Vector2f _pos, float _r) : pos(_pos), r(_r)
     circle.setPosition(_pos);
 }
 
+void Checkpoint::setPosition(const sf::Vector2f& _pos) {
+    pos = _pos;
+    circle.setPosition(_pos);
+}
+
+void Checkpoint::setRadius(const float& _r)
+{
+    r = _r;
+    circle.setRadius(_r);
+    circle.setOrigin(_r, _r);
+}
+
 sf::Vector2f Checkpoint::getPos() const
 {
     return pos;

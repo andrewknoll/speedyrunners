@@ -20,6 +20,7 @@ class Level : public sf::Drawable
 	//sf::Texture bgTexture;
 	//sf::Sprite background;
 	//sf::VertexArray bgVertices;
+	sf::Vector2f initialPosition = sf::Vector2f(200, 190);
 
 
 	std::string backgroundPath;
@@ -35,6 +36,9 @@ class Level : public sf::Drawable
 public:
 	Level(const std::string& tilesetPath, const std::string& bgPath);
 
+	void setInitialPosition(const sf::Vector2f &ini);
+
+	sf::Vector2f getInitialPosition() const;
 
 	void drawTile(sf::RenderTarget& target, sf::RenderStates states, const sf::Vector2i& pos, const int tileNumber) const;
 
