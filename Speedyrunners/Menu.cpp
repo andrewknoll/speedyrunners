@@ -98,11 +98,10 @@ void Menu::addLobbyWidgets(const std::string& lobbyPath) {
 	positions.push_back(pos + sf::Vector2f(0, 0.855 / 2.0));
 	positions.push_back(pos + sf::Vector2f(0.316, 0));
 	positions.push_back(pos + sf::Vector2f(0.316, 0.855 / 2.0));
-	bool active = true;
+	bool active = true; int i = 0;
 	for (const auto& pos : positions) { // four widgets
-		widgets.emplace_back(*window, settings, lobbyPath, pos, active);
+		widgets.emplace_back(*window, settings, lobbyPath, pos, active, i++);
 		active = false;
-		
 	}
 }
 
@@ -166,11 +165,12 @@ void Menu::addLevels(sf::Vector2f& pos, float& size) {
 	std::string levelName, extension = ".csv";
 	while (getline(f, levelName))
 	{
-		levelNames.push_back(levelName); // Save
-		// Add to UI:
-		elements.emplace_back(std::make_unique<TextElement>(settings, mainTextFontPath, levelName, size, pos, true));
-
-		pos.y += size * 1.25;
+		if (!levelName.empty()) {
+			levelNames.push_back(levelName); // Save
+			// Add to UI:
+			elements.emplace_back(std::make_unique<TextElement>(settings, mainTextFontPath, levelName, size, pos, true));
+			pos.y += size * 1.25;
+		}
 	}
 }
 
@@ -243,10 +243,6 @@ void Menu::handleMainMenuClick(int i) {
 	case 4:
 	{ // Workshop - Level editor
 		setWorkshopMenu();
-		/**
-		game.clear();
-		game.setState(Game::State::Editing);
-		exitMenu = true;*/
 		break;
 	}
 	case 6: // quit
@@ -299,11 +295,21 @@ void Menu::handleLobbyClick(int i) {
 		setMainMenu();
 		break;
 	case 1: // Ready
+	{
 		elements.pop_back(); // remove only ready sign
+		players.clear(); npcs.clear();
+		int i = 0;
+		for (const auto& w : widgets) {
+			if (w.activated()) {
+				if (i < 2) players.emplace_back(w.getSelectedCharacter());
+				else npcs.emplace_back(w.getSelectedCharacter());
+			}
+		}
 		widgets.clear();
 		clearBackgrounds(1);
 		setLevelSelect();
 		break;
+	}
 	default:
 		std::cout << "Clicked element " << i << "\n";
 	}
@@ -322,7 +328,7 @@ void Menu::handleLvlSelectClick(int i) {
 		game.setState(Game::State::Playing);
 		game.enableCheats(false);
 		game.setSaveName(levelNames[i] + ".csv");
-		game.defaultInit(nPlayers);
+		game.defaultInit(players, npcs);
 		exitMenu = true;
 	}
 }

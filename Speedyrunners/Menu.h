@@ -34,6 +34,9 @@ class Menu
 
 	std::vector<std::string> levelNames;
 
+	std::vector<glb::characterIndex> players;
+	std::vector<glb::characterIndex> npcs;
+
 	Page currentMenuPage = Page::Main;
 
 	// Main menu:

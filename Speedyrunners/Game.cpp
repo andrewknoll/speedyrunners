@@ -69,6 +69,41 @@ void Game::clear() {
 	threadPool.resize(8);
 }
 
+void Game::defaultInit(const std::vector<glb::characterIndex>& players, const std::vector<glb::characterIndex>& npcs) {
+	clear();
+	int N_PLAYERS = players.size();
+	std::shared_ptr<Character> character;
+	int i = 0;
+	if (players.size() == 2) i = 1; // controls
+	for (auto c : players) {
+		// character:
+		character = std::make_shared<Character>(src.getSpriteSheet(c), c);
+		character->setPosition(lvl.getInitialPosition());
+		//  player:
+		std::shared_ptr<Player> me = std::make_shared<Player>(getSettings(), i);
+		me->setCharacter(character);
+		playerJoin(me);
+		character->setName("Player " + std::to_string((int)i));
+		addCharacter(character);
+		i++;
+	}
+	i = 0;
+	for (auto c : npcs) {
+		// char:
+		character = std::make_shared<Character>(src.getSpriteSheet(c), c);
+		character->setPosition(lvl.getInitialPosition());
+		// NPC
+		std::shared_ptr<NPC> npc = std::make_shared<NPC>();
+		npc->setCharacter(character);
+		npcJoin(npc);
+		character->setName("NPC " + std::to_string(i++));
+		addCharacter(character);
+	}
+	setState(State::Countdown);
+	running = true;
+}
+
+
 void Game::defaultInit(int N_PLAYERS) {
 
 	if (N_PLAYERS != 2) N_PLAYERS = 1;// only 1 or 2 players

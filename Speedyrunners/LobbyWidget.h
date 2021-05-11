@@ -9,12 +9,16 @@ class LobbyWidget : public sf::Drawable
 	std::vector<Background> backgrounds;
 	std::vector<std::shared_ptr<UIElement>> elements;
 
-	int selectedCharacter = 0;
+	glb::characterIndex selectedCharacter = glb::characterIndex::SPEEDRUNNER;
 
 	enum class State {
 		Initial,
 		CharacterSelect
 	};
+	std::string m_lobbyPath;
+	sf::Vector2f m_pos;
+	const Settings& m_settings;
+
 
 	State state = State::Initial;
 
@@ -24,11 +28,11 @@ class LobbyWidget : public sf::Drawable
 
 	void addWidgetButton(const std::string& lobbyPath, const sf::Vector2f& pos, const float size, sf::RenderWindow& window, const Settings& settings, const int buttonIdx);
 
-	sf::FloatRect getTexRectForCharacter(int idx);
+	sf::FloatRect getTexRectForCharacter(int idx, int nRows);
 
 	sf::FloatRect getNametagRectForCharacter(int idx);
 
-	void addCharacterStuff(std::string lobbyPath, sf::RenderWindow& window, const sf::Vector2f& pos);
+	void addCharacterStuff(std::string lobbyPath, sf::RenderWindow& window, sf::Vector2f pos);
 
 	void clear();
 
@@ -38,12 +42,18 @@ public:
 	LobbyWidget(sf::RenderWindow& _window, const std::string lobbyPath, const sf::Vector2f& pos,
 		bool active = false);
 
-	LobbyWidget(sf::RenderWindow& _window, const Settings& settings, const std::string lobbyPath, const sf::Vector2f& pos, bool active);
+	LobbyWidget(sf::RenderWindow& _window, const Settings& settings, const std::string lobbyPath, const sf::Vector2f& pos, bool active, int idx);
+
+	void updateCharacter();
 
 	void handleClick(int idx);
 
 	void update(sf::Event& event, const sf::Vector2f& mousePos);
 
+
+	glb::characterIndex getSelectedCharacter() const;
+
+	bool activated() const; // true if the widget has selected a character
 
 };
 
