@@ -14,7 +14,8 @@ class Menu
 	enum class Page {
 		Main,
 		Workshop,
-		Lobby
+		Lobby,
+		LevelSelect
 	};
 
 	Game& game;
@@ -40,7 +41,9 @@ class Menu
 	std::string mainTextFontPath = glb::CONTENT_PATH + "UI/Font/Souses.ttf";
 
 	void draw();
+	void addLevels(sf::Vector2f& pos, float& size);
 	void handleLobbyClick(int i);
+	void handleLvlSelectClick(int i);
 	void handleClick(int i);
 	void pollEvents();
 	void update();
@@ -48,6 +51,8 @@ class Menu
 	void setWorkshopMenu();
 	void handleMainMenuClick(int i);
 	void handleWorkshopClick(int i);
+	void setLevelSelect();
+	void clearBackgrounds(int n); // clears n backgrounds
 	void setCharacterSelect();
 
 	void clear();

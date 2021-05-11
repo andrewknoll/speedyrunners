@@ -124,6 +124,13 @@ void Menu::setCharacterSelect() {
 	// character board:
 	backgrounds.emplace_back(menuPath + "SpeedRunners/Menu_characterBoard.png", *window, sf::FloatRect(0.33, 0.09, 0.66, 0.9));
 	//backgrounds.back().fixProportions();
+	
+	// Ready
+	sf::Vector2f pos(0.05, 0.43);
+	float size = 0.08;
+	elements.emplace_back(std::make_unique<TextElement>(settings, mainTextFontPath, "READY!", size, pos, true));
+
+
 	// Player widgets:
 	addLobbyWidgets(lobbyPath);
 	
@@ -148,6 +155,21 @@ void Menu::draw()
 	window->display();
 }
 
+void Menu::addLevels(sf::Vector2f& pos, float& size) {
+
+	pos.y += size * 2.5;
+	size *= 0.85;
+	std::ifstream f(glb::LEVELS_PATH + "levels.csv");
+	std::string levelName, extension = ".csv";
+	while (getline(f, levelName))
+	{
+		levelNames.push_back(levelName); // Save
+		// Add to UI:
+		elements.emplace_back(std::make_unique<TextElement>(settings, mainTextFontPath, levelName, size, pos, true));
+
+		pos.y += size * 1.25;
+	}
+}
 
 void Menu::setWorkshopMenu() {
 	currentMenuPage = Page::Workshop;
@@ -157,25 +179,13 @@ void Menu::setWorkshopMenu() {
 
 	addExitSign();
 
-	std::ifstream f(glb::LEVELS_PATH + "levels.csv");
-	int nLevels = 0;
-	std::string levelName, extension = ".csv";
+
 
 	sf::Vector2f pos(0.05, 0.43);
 	float size = 0.05;
+	addLevels(pos, size);
 	elements.emplace_back(std::make_unique<TextElement>(settings, mainTextFontPath, "NEW", size, pos, true));
 
-	pos.y += size * 2.5;
-	size *= 0.85;
-	while (getline(f, levelName))
-	{
-		nLevels++;
-		levelNames.push_back(levelName); // Save
-		// Add to UI:
-		elements.emplace_back(std::make_unique<TextElement>(settings, mainTextFontPath, levelName, size, pos, true));
-
-		pos.y += size * 1.25;
-	}
 	std::vector<std::string> text{
 		"RMB: move camera",
 		"LMB: place selected tile",
@@ -275,6 +285,17 @@ void Menu::handleWorkshopClick(int i) {
 		std::cout << "Clicked element " << i << "\n";
 	}
 }
+void Menu::setLevelSelect() {
+	widgets.clear();
+	currentMenuPage = Page::LevelSelect;
+	sf::Vector2f pos(0.05, 0.43);
+	float size = 0.05;
+	addLevels(pos, size);
+}
+
+void Menu::clearBackgrounds(int n) {
+	for (int i = 0; i<n; i++) backgrounds.pop_back();
+}
 
 void Menu::handleLobbyClick(int i) {
 	switch (i) {
@@ -282,8 +303,32 @@ void Menu::handleLobbyClick(int i) {
 		clear();
 		setMainMenu();
 		break;
+	case 1: // Ready
+		elements.pop_back(); // remove only ready sign
+		widgets.clear();
+		clearBackgrounds(1);
+		setLevelSelect();
+		break;
 	default:
 		std::cout << "Clicked element " << i << "\n";
+	}
+}
+
+
+void Menu::handleLvlSelectClick(int i) {
+	if (i == 0) { // exit
+		clear();
+		setMainMenu();
+	}
+	else {
+		i -= 1;
+		if (i >= levelNames.size()) std::cerr << i << " is not a level " << levelNames.size() << "\n";
+		game.loadLevel(levelNames[i] + ".csv");
+		game.setState(Game::State::Playing);
+		game.enableCheats(false);
+		game.setSaveName(levelNames[i] + ".csv");
+		game.defaultInit(2);
+		exitMenu = true;
 	}
 }
 
@@ -297,6 +342,9 @@ void Menu::handleClick(int i) {
 		break;
 	case Page::Lobby:
 		handleLobbyClick(i);
+		break;
+	case Page::LevelSelect:
+		handleLvlSelectClick(i);
 		break;
 	default:
 		std::cerr << "what is this menu page\n";
