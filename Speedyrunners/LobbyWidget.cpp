@@ -6,9 +6,11 @@
 
 void LobbyWidget::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
+	int i = 0;
 	for (auto bg : backgrounds) {
 		//bg->draw(window);// 
-		target.draw(bg);
+		if (isActive || i!=1) target.draw(bg); // if inactive, skip the surrounding rect
+		i++;
 	}
 	for (const auto& e : elements) {
 		target.draw(*e);
@@ -131,8 +133,8 @@ void LobbyWidget::clear() {
 	elements.clear();
 }
 
-LobbyWidget::LobbyWidget(sf::RenderWindow& _window, const Settings& settings, const std::string lobbyPath, const sf::Vector2f& pos, bool active)
-	: window(_window), isActive(active), m_lobbyPath(lobbyPath), m_pos(pos)
+LobbyWidget::LobbyWidget(sf::RenderWindow& _window, const Settings& settings, const std::string lobbyPath, const sf::Vector2f& pos, bool active, int idx)
+	: window(_window), isActive(active), m_lobbyPath(lobbyPath), m_pos(pos), m_settings(settings)
 {
 	// widget background:
 	backgrounds.emplace_back(lobbyPath + "PlayerWidgetBackground.png", window, sf::FloatRect(pos.x, pos.y, 0.66 / 2.25, 0.9 / 2.25));
@@ -147,6 +149,13 @@ LobbyWidget::LobbyWidget(sf::RenderWindow& _window, const Settings& settings, co
 		// Runner button:
 		addWidgetButton(lobbyPath, pos+sf::Vector2f(0.18,0.1), 0.05, window, settings, 1);
 	
+	}
+	else {
+		std::string text = "ADD AI";
+		if (idx == 1) text = "ADD PLAYER";
+		std::string mainTextFontPath = glb::CONTENT_PATH + "UI/Font/Souses.ttf";
+		float textSize = 0.04;
+		elements.emplace_back(std::make_unique<TextElement>(settings, mainTextFontPath, text, textSize, pos + sf::Vector2f(textSize, 0.2), true));
 	}
 }
 
@@ -176,23 +185,37 @@ LobbyWidget::setCharacterSelect(sf::RenderWindow& _window, const Settings& setti
 
 
 void LobbyWidget::handleClick(int idx) {
-	switch (idx) {
-	case 0:
-	{
-		int sel = (int)selectedCharacter;
-		selectedCharacter = glb::characterIndex((sel + 1) % 4);
-		updateCharacter();
-		break;
+	if (isActive) {
+
+		switch (idx) {
+		case 0:
+		{
+			int sel = (int)selectedCharacter;
+			selectedCharacter = glb::characterIndex((sel + 1) % 4);
+			updateCharacter();
+			break;
+		}
+		case 1:
+		{
+			elements.clear();
+			state = State::CharacterSelect;
+			//setCharacterSelect();
+			break;
+		}
+		default:
+			std::cout << "clicked element " << idx << "\n";
+		}
 	}
-	case 1:
-	{
-		elements.clear();
-		state = State::CharacterSelect;
-		//setCharacterSelect();
-		break;
-	}
-	default:
-		std::cout << "clicked element " << idx << "\n";
+	else {
+
+		isActive = true;
+		elements.pop_back();
+		//Outline:
+		backgrounds.emplace_back(m_lobbyPath + "CharacterSelectPortraitOutline.png", window, sf::FloatRect(m_pos.x - 0.01, m_pos.y - 0.02, 0.66 / 2.1, 0.9 / 2.08));
+		addCharacterStuff(m_lobbyPath, window, m_pos);
+		// Runner button:
+		addWidgetButton(m_lobbyPath, m_pos + sf::Vector2f(0.18, 0.1), 0.05, window, m_settings, 1);
+
 	}
 }
 
@@ -207,6 +230,9 @@ void LobbyWidget::update(sf::Event &event, const sf::Vector2f& mousePos)
 				handleClick(i);
 				break;
 			}
+			//else {
+				//isActive = false;
+			//}
 		}
 	}
 }
@@ -215,3 +241,8 @@ glb::characterIndex LobbyWidget::getSelectedCharacter() const
 {
 	return selectedCharacter;
 }
+
+bool LobbyWidget::activated() const {
+	return isActive;
+}
+

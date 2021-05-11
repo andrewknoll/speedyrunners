@@ -17,6 +17,8 @@ class LobbyWidget : public sf::Drawable
 	};
 	std::string m_lobbyPath;
 	sf::Vector2f m_pos;
+	const Settings& m_settings;
+
 
 	State state = State::Initial;
 
@@ -40,7 +42,7 @@ public:
 	LobbyWidget(sf::RenderWindow& _window, const std::string lobbyPath, const sf::Vector2f& pos,
 		bool active = false);
 
-	LobbyWidget(sf::RenderWindow& _window, const Settings& settings, const std::string lobbyPath, const sf::Vector2f& pos, bool active);
+	LobbyWidget(sf::RenderWindow& _window, const Settings& settings, const std::string lobbyPath, const sf::Vector2f& pos, bool active, int idx);
 
 	void updateCharacter();
 
@@ -50,6 +52,8 @@ public:
 
 
 	glb::characterIndex getSelectedCharacter() const;
+
+	bool activated() const; // true if the widget has selected a character
 
 };
 
