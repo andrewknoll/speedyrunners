@@ -186,9 +186,9 @@ void Menu::setWorkshopMenu() {
 
 	sf::Vector2f pos(0.05, 0.43);
 	float size = 0.05;
-	addLevels(pos, size);
 	elements.emplace_back(std::make_unique<TextElement>(settings, mainTextFontPath, "NEW", size, pos, true));
 
+	addLevels(pos, size);
 	std::vector<std::string> text{
 		"RMB: move camera",
 		"LMB: place selected tile",

@@ -36,7 +36,7 @@ void Level::save(const std::string& f_name) const
 	std::string version = "0";
 	std::ofstream file("../assets/levels/" + f_name);
 	if (!(file << version << std::endl)) { // formato, #MAX, # nombre fichero
-		std::cerr << "File <assets/levels/" + f_name + "> inaccesible\n";
+		std::cerr << "File <../assets/levels/" + f_name + "> inaccesible\n";
 		//exit(1);
 	}
 	// Save background:
