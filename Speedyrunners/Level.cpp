@@ -106,7 +106,7 @@ void Level::load(const std::string& f_name, const sf::RenderWindow& window)
 	}
 	else {
 		std::cout << "format: " << s << "\n";
-		format = 0;
+		format = std::stoi(s);
 	}
 	if (format != 0) {
 		std::cerr << "Unknown format\n";
