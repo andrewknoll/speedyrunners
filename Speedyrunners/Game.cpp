@@ -72,10 +72,12 @@ void Game::clear() {
 void Game::defaultInit(const std::vector<glb::characterIndex>& players, const std::vector<glb::characterIndex>& npcs) {
 	clear();
 	int N_PLAYERS = players.size();
+
 	std::shared_ptr<Character> character;
 	int i = 0;
 	if (players.size() == 2) i = 1; // controls
 	for (auto c : players) {
+		std::cout << "adding player " << c << "\n";
 		// character:
 		character = std::make_shared<Character>(src.getSpriteSheet(c), c);
 		character->setPosition(lvl.getInitialPosition());
@@ -89,6 +91,7 @@ void Game::defaultInit(const std::vector<glb::characterIndex>& players, const st
 	}
 	i = 0;
 	for (auto c : npcs) {
+		std::cout << "adding npc " << c << "\n";
 		// char:
 		character = std::make_shared<Character>(src.getSpriteSheet(c), c);
 		character->setPosition(lvl.getInitialPosition());
