@@ -166,11 +166,12 @@ void Menu::addLevels(sf::Vector2f& pos, float& size) {
 	std::string levelName, extension = ".csv";
 	while (getline(f, levelName))
 	{
-		levelNames.push_back(levelName); // Save
-		// Add to UI:
-		elements.emplace_back(std::make_unique<TextElement>(settings, mainTextFontPath, levelName, size, pos, true));
-
-		pos.y += size * 1.25;
+		if (!levelName.empty()) {
+			levelNames.push_back(levelName); // Save
+			// Add to UI:
+			elements.emplace_back(std::make_unique<TextElement>(settings, mainTextFontPath, levelName, size, pos, true));
+			pos.y += size * 1.25;
+		}
 	}
 }
 
@@ -243,10 +244,6 @@ void Menu::handleMainMenuClick(int i) {
 	case 4:
 	{ // Workshop - Level editor
 		setWorkshopMenu();
-		/**
-		game.clear();
-		game.setState(Game::State::Editing);
-		exitMenu = true;*/
 		break;
 	}
 	case 6: // quit

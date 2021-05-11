@@ -35,8 +35,8 @@ void LobbyWidget::addWidgetButton(const std::string& lobbyPath, const sf::Vector
 	elements.back()->setClickableArea(uisprite->getClickableArea());
 }
 
-sf::FloatRect LobbyWidget::getTexRectForCharacter(int idx) {
-	int nCols = 8, nRows = 5;
+sf::FloatRect LobbyWidget::getTexRectForCharacter(int idx, int nRows) {
+	int nCols = 8;
 	float height = 0.96 / float(nRows);
 	sf::Vector2f pos(0,0), size(1.0/float(nCols), height);
 	if (idx == 0) { // Speedrunner
@@ -44,6 +44,30 @@ sf::FloatRect LobbyWidget::getTexRectForCharacter(int idx) {
 		float width = 245.0/2040.0;// medido a mano (1.02 - 1.0 / 16.0) / 8.0;
 		pos.x = 2 * width;
 		width = 225 / 2040.0;
+		pos.y = 3.0 * height;
+		size.x = width;
+		size.y = height;
+	}else if (idx == 1) { // Cosmo
+		// For some reason this row is smaller....
+		float width =  1.0 / 8.0;
+		pos.x = 0; // thank you for being at 0
+		pos.y = 2.0 * height;
+		size.x = width;
+		size.y = height;
+	}
+	else if (idx == 2) { // uniq
+		// For some reason this row is smaller....
+		float width = 1.0 / 8.0;
+		pos.x = 1 * width;
+		width = 225 / 2040.0;
+		pos.y = 5.0 * height;
+		size.x = width;
+		size.y = height;
+	}
+	else if (idx == 3) { // falcon
+		// For some reason this row is smaller....
+		float width = 1.0 / 8.0;
+		pos.x = 5.75 * width;
 		pos.y = 3.0 * height;
 		size.x = width;
 		size.y = height;
@@ -56,22 +80,45 @@ sf::FloatRect LobbyWidget::getTexRectForCharacter(int idx) {
 
 
 sf::FloatRect LobbyWidget::getNametagRectForCharacter(int idx) {
+	float reduction = 0.95;
+	if (idx == 2) idx = 1; // comrade is 2nd
+	else if (idx == 1) idx = 2; // uniq 3rd
+	else if (idx == 3) {
+		idx = 7; // falcon 8th
+		reduction = 0.90;
+	}
 	int nCols = 4, nRows = 11;
-	sf::Vector2f pos(0, 0), size(1.0 / float(nCols), 0.99 / float(nRows));
+	sf::Vector2f pos(0, 0), size(1.0 / float(nCols), reduction / float(nRows));
 	pos.x = (idx % nCols) * size.x;
 	pos.y = (idx / nCols) * size.y;
 	size.y *= 0.99;
 	return sf::FloatRect(pos, size);
 }
 
-void LobbyWidget::addCharacterStuff(std::string lobbyPath, sf::RenderWindow& window, const sf::Vector2f& pos) {
+void LobbyWidget::addCharacterStuff(std::string lobbyPath, sf::RenderWindow& window, sf::Vector2f pos) {
+	float h = pos.y;
 	// portrait:
-	backgrounds.emplace_back(lobbyPath + "characterPortraits2.png", window, sf::FloatRect(pos.x, pos.y + 130.0/1080.0, 0.66 / 5.0,1.0 /6.0));
-	backgrounds.back().setTextureCoords(getTexRectForCharacter(selectedCharacter));
+	// Get texture:
+	std::string path = lobbyPath + "characterPortraits2.png";
+	int rows = 5;
+	if (selectedCharacter == glb::characterIndex::COSMONAUT)  pos.y += 40.0 / 1080.0;
+	else if (selectedCharacter == glb::characterIndex::UNIC) {
+		path = lobbyPath + "characterPortraits0.png";
+		rows = 6;
+	}
+	else if (selectedCharacter == glb::characterIndex::FALCON) {
+		path = lobbyPath + "characterPortraits1.png";
+		rows = 7;
+		pos.y -= 10.0 / 1080.0;
+		h = pos.y;
+	}
+	// Set bg and rect:
+	backgrounds.emplace_back(path, window, sf::FloatRect(pos.x, pos.y + 130.0/1080.0, 0.66 / 5.0,1.0 /6.0));
+	backgrounds.back().setTextureCoords(getTexRectForCharacter(selectedCharacter, rows));
 	backgrounds.back().fixProportions();
 	
 	// Name tag:
-	backgrounds.emplace_back(lobbyPath + "NameTags_240x80.png", window, sf::FloatRect(pos.x + 0.008, pos.y + 60.0 / 1080.0, 0.66 / 5.0, 0.1));
+	backgrounds.emplace_back(lobbyPath + "NameTags_240x80.png", window, sf::FloatRect(pos.x + 0.008, h + 60.0 / 1080.0, 0.66 / 5.0, 0.1));
 	backgrounds.back().setTextureCoords(getNametagRectForCharacter(selectedCharacter));
 	backgrounds.back().fixProportions();
 
@@ -85,7 +132,7 @@ void LobbyWidget::clear() {
 }
 
 LobbyWidget::LobbyWidget(sf::RenderWindow& _window, const Settings& settings, const std::string lobbyPath, const sf::Vector2f& pos, bool active)
-	: window(_window), isActive(active)
+	: window(_window), isActive(active), m_lobbyPath(lobbyPath), m_pos(pos)
 {
 	// widget background:
 	backgrounds.emplace_back(lobbyPath + "PlayerWidgetBackground.png", window, sf::FloatRect(pos.x, pos.y, 0.66 / 2.25, 0.9 / 2.25));
@@ -93,16 +140,21 @@ LobbyWidget::LobbyWidget(sf::RenderWindow& _window, const Settings& settings, co
 	//active = true;
 	if (active) { // add surrounding rectangle
 
+
+		//Outline:
+		backgrounds.emplace_back(lobbyPath + "CharacterSelectPortraitOutline.png", window, sf::FloatRect(pos.x - 0.01, pos.y - 0.02, 0.66 / 2.1, 0.9 / 2.08));
 		addCharacterStuff(lobbyPath, window, pos);
 		// Runner button:
 		addWidgetButton(lobbyPath, pos+sf::Vector2f(0.18,0.1), 0.05, window, settings, 1);
-
-
-		//Outline:
-		backgrounds.emplace_back(lobbyPath + "CharacterSelectPortraitOutline.png", window, sf::FloatRect(pos.x - 0.01, pos.y - 0.02, 0.66 / 2.1, 0.9 / 2.08));	
+	
 	}
 }
 
+
+void LobbyWidget::updateCharacter() {
+	backgrounds.pop_back(); backgrounds.pop_back(); 
+	addCharacterStuff(m_lobbyPath, window, m_pos);
+}
 
 /**
 LobbyWidget::setCharacterSelect(sf::RenderWindow& _window, const Settings& settings, const std::string lobbyPath, const sf::Vector2f& pos, bool active)
@@ -125,6 +177,13 @@ LobbyWidget::setCharacterSelect(sf::RenderWindow& _window, const Settings& setti
 
 void LobbyWidget::handleClick(int idx) {
 	switch (idx) {
+	case 0:
+	{
+		int sel = (int)selectedCharacter;
+		selectedCharacter = glb::characterIndex((sel + 1) % 4);
+		updateCharacter();
+		break;
+	}
 	case 1:
 	{
 		elements.clear();
@@ -150,4 +209,9 @@ void LobbyWidget::update(sf::Event &event, const sf::Vector2f& mousePos)
 			}
 		}
 	}
+}
+
+glb::characterIndex LobbyWidget::getSelectedCharacter() const
+{
+	return selectedCharacter;
 }
