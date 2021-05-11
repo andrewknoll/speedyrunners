@@ -304,6 +304,7 @@ void Menu::handleLobbyClick(int i) {
 				if (i < 2) players.emplace_back(w.getSelectedCharacter());
 				else npcs.emplace_back(w.getSelectedCharacter());
 			}
+			i++;
 		}
 		widgets.clear();
 		clearBackgrounds(1);
