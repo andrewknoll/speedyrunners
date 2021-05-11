@@ -299,7 +299,7 @@ void Game::updateNPCs() {
 							{ std::unique_lock<std::mutex> lck(restartMtx);
 							restartCv.wait(lck); }
 						}
-						if (!running) {
+						if (running) {
 							npcs[i]->plan();
 						}
 					}
@@ -315,7 +315,7 @@ void Game::updateNPCs() {
 							{ std::unique_lock<std::mutex> lck(restartMtx);
 							restartCv.wait(lck); }
 						}
-						if (!running) {
+						if (running) {
 							if (npcs[i]->getPathFound(0) == 1) {
 								npcs[i]->followPath();
 							}
