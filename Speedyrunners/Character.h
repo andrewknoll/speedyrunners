@@ -65,6 +65,13 @@ protected:
 	bool isAtWallJump = false;
 	bool sliding = false;
 
+	// Boost
+	float boostPower = 1.5; // 10% faster
+	bool usingBoost = false;
+	sf::Time maxBoostTime = sf::seconds(2);
+	sf::Time remainingBoostTime = maxBoostTime;
+
+
 	std::shared_ptr<Animation> currentAnimation;
 	sf::Sprite mySprite;
 	sf::Time countdown = PERIOD;
@@ -115,12 +122,14 @@ protected:
 	void updateVel(const float& dtSec);
 	void updateInRamp(Tiles::Ramp ramp);
 	void setDefaultOrigin();
-
+	void updateBoost(const sf::Time& dT);
 public:
 	Character(Spritesheet sp, int ID, int variant = 0);
 
 	int getID() const;
 	int getVariant() const;
+
+	void useBoost(bool useIt = true);
 
 	void setPosition(const sf::Vector2f pos);
 	void setPosition(float x, float y);

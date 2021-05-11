@@ -51,6 +51,10 @@ void Character::setPosition(const sf::Vector2f pos) {
 	setPosition(pos.x, pos.y);
 }
 
+void Character::useBoost(bool useIt) {
+	usingBoost = useIt;
+}
+
 void Character::fixPosition(sf::FloatRect& hitbox) {
 	if (hitbox.top < 0) {
 		hitbox.top = 0;
@@ -180,13 +184,28 @@ void Character::updateVel(const float& dtSec) {
 	}
 }
 
+void Character::updateBoost(const sf::Time& dT) {
+	if (usingBoost && utils::dot(vel, vel) > 0.01) {
+		remainingBoostTime -= dT;
+		if (remainingBoostTime < sf::seconds(0)) {
+			usingBoost = false;
+			std::cout << "boost depleted\n";
+		}
+	}
+}
+
 void Character::update(const sf::Time& dT, const TileMap& tiles)
 {
-
 
 	updateRunning();
 	setFriction();
 	float dtSec = dT.asSeconds();
+	updateBoost(dT);
+	if (usingBoost) { // updating dT is the same as updating all speeds and acc
+		dtSec *= boostPower;
+	}
+
+
 	sf::Vector2f runningSpeed = vel;
 
 	if (currJumpCD > sf::Time::Zero) {
