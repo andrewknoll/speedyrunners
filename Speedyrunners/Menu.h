@@ -29,6 +29,9 @@ class Menu
 	std::vector<std::unique_ptr<UIElement>> elements;
 	std::vector<LobbyWidget> widgets;
 
+	
+	int nPlayers = 1;
+
 	std::vector<std::string> levelNames;
 
 	Page currentMenuPage = Page::Main;

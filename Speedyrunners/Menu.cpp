@@ -45,6 +45,9 @@ void Menu::setMainMenu()
 	sf::Vector2f pos(0.05, 0.43);
 	float size = 0.05;
 	elements.emplace_back(std::make_unique<TextElement>(settings, mainTextFontPath, "MULTIPLAYER", size, pos, true));
+	pos.y += size * 1.25;
+	elements.emplace_back(std::make_unique<TextElement>(settings, mainTextFontPath, "VS AI", size, pos, true));
+
 	// Story:
 	pos.y += size*1.25;
 	elements.emplace_back(std::make_unique<TextElement>(settings, mainTextFontPath, "DEV MODE", size, pos, true));
@@ -211,10 +214,17 @@ void Menu::handleMainMenuClick(int i) {
 	case 0:
 	{
 		std::cout << "Clicked multiplayer\n";
+		nPlayers = 2;
 		setCharacterSelect();
 		break;
 	}
 	case 1:
+	{
+		nPlayers = 1;
+		setCharacterSelect();
+		break;
+	}
+	case 2:
 	{
 		std::cout << "Clicked dev mode\n";
 		game.defaultInit(2);
@@ -222,7 +232,7 @@ void Menu::handleMainMenuClick(int i) {
 		exitMenu = true;
 		break;
 	}
-	case 2:
+	case 3:
 	{
 		std::cout << "Clicked practice\n";
 		game.defaultInit(1);
@@ -230,7 +240,7 @@ void Menu::handleMainMenuClick(int i) {
 		exitMenu = true;
 		break;
 	}
-	case 3:
+	case 4:
 	{ // Workshop - Level editor
 		setWorkshopMenu();
 		/**
@@ -239,7 +249,7 @@ void Menu::handleMainMenuClick(int i) {
 		exitMenu = true;*/
 		break;
 	}
-	case 5: // quit
+	case 6: // quit
 		window->close();
 		exit(0);
 		break; 
@@ -327,7 +337,7 @@ void Menu::handleLvlSelectClick(int i) {
 		game.setState(Game::State::Playing);
 		game.enableCheats(false);
 		game.setSaveName(levelNames[i] + ".csv");
-		game.defaultInit(2);
+		game.defaultInit(nPlayers);
 		exitMenu = true;
 	}
 }
