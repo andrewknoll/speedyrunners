@@ -142,7 +142,7 @@ void Camera::setSuddenDeath(bool sd) {
 void Camera::update(sf::Time dT) {
 	sf::Vector2f movement = objectivePos - getCenter();
 	sf::Vector2f sizeDiff = objectiveSize - getSize();
-	move(movement * dT.asSeconds());
+	move(movement * dT.asSeconds() * 2.0f);
 	if (!suddenDeath) {
 		setSize(size0 + sizeDiff * dT.asSeconds());
 		viewportShape.setSize(size0 + sizeDiff * dT.asSeconds());

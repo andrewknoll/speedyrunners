@@ -27,7 +27,7 @@ class Game
 
 	struct workerThread {
 		std::unique_ptr<std::thread> threadPtr;
-		bool finished = false;
+		bool finished = true;
 	};
 
 public:
@@ -121,7 +121,7 @@ public:
 
 	MusicPlayer& music();
 
-	void updateNPCs();
+	void updateNPCs(bool follow);
 
 	void setFullScreen();
 
