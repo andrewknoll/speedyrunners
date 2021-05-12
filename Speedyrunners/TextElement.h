@@ -9,7 +9,6 @@ class TextElement : public UIElement
 	bool firstColorSelected = true;
 
 
-
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 	/*void draw(sf::RenderWindow& window) const override;

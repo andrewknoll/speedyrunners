@@ -415,7 +415,11 @@ void Menu::pollEvents()
 	sf::Event event;
 	while (window->pollEvent(event))
 	{
-		if (event.type == sf::Event::Closed || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
+			clear();
+			setMainMenu();
+		}
+		else if (event.type == sf::Event::Closed) {
 			window->close();
 			exit(0);
 		}
