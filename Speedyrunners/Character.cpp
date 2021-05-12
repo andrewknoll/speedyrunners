@@ -152,6 +152,9 @@ void Character::setBaseFromRamp(Tiles::Ramp ramp) {
 }
 
 void Character::updateVel(const float& dtSec) {
+	/*if (isStunned) {
+		acc.x = 0;
+	}*/
 	if (!swinging) {
 		sf::Vector2f runningSpeed = utils::clampAbs(vel + acc * dtSec, physics::MAX_FALL_SPEED);
 		//if signs of velocity and acceleration are opposed,
@@ -174,7 +177,7 @@ void Character::updateVel(const float& dtSec) {
 			//Except we do nothing otherwise
 		}
 		//if running on the ground, velocity and acceleration are oposed
-		if (isGrounded && isRunning && !usingHook) {
+		if (!isStunned && isGrounded && isRunning && !usingHook) {
 			if (((vel.x >= 0) ^ (acc.x >= 0)) && abs(vel.x) > 50.0f) {
 				setAnimation(SkidAnim, true);
 			}
@@ -185,8 +188,10 @@ void Character::updateVel(const float& dtSec) {
 	}
 	else {
 		vel = utils::length(hook.radius()) * hook.tangent() * omega;
-		if (facingRight) setAnimationAngle(-135.0f - utils::degrees(hook.angle()));
-		else setAnimationAngle(-45.0f - utils::degrees(hook.angle()));
+		if (!isStunned) {
+			if (facingRight) setAnimationAngle(-135.0f - utils::degrees(hook.angle()));
+			else setAnimationAngle(-45.0f - utils::degrees(hook.angle()));
+		}
 	}
 }
 
@@ -205,9 +210,23 @@ void Character::updateBoost(const sf::Time& dT, const Level& lvl) {
 	}
 }
 
+void Character::updateStunned(const sf::Time& dT) {
+	if (isStunned) {
+		usingHook = false;
+		isRunning = false;
+		sliding = false;
+		stunnedRemaining -= dT;
+		rotate(3000.0 * dT.asSeconds());
+		if (stunnedRemaining < sf::seconds(0)) {
+			isStunned = false;
+		}
+	}
+}
+
 void Character::update(const sf::Time& dT, const Level& lvl)
 
 {
+	updateStunned(dT);
 	auto &tiles = lvl.getCollidableTiles();
 	updateRunning();
 	setFriction();
@@ -257,7 +276,7 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 				acc.x = 0;
 				isRunning = false;
 				sliding = false;
-				if (isGrounded && !usingHook && !sliding) {
+				if (!isStunned && isGrounded && !usingHook && !sliding) {
 					setAnimation(StandAnim);
 				}
 				if (c.tileType == Tiles::JUMP_WALL_L) {
@@ -266,8 +285,10 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 						vel.y = 0;
 					}
 					facingRight = false;
-					isAtWallJump = true;
-					setAnimation(WallHangAnim);
+					if (!isStunned) {
+						isAtWallJump = true;
+						setAnimation(WallHangAnim);
+					}
 				}
 				else if (c.tileType == Tiles::JUMP_WALL_R) {
 					if (!isAtWallJump) {
@@ -275,8 +296,10 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 						vel.y = 0;
 					}
 					facingRight = true;
-					isAtWallJump = true;
-					setAnimation(WallHangAnim);
+					if (!isStunned) {
+						isAtWallJump = true;
+						setAnimation(WallHangAnim);
+					}
 				}
 			}
 			else if (!swinging) {
@@ -315,7 +338,7 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 			swinging = true;
 		}
 	}
-	else if (vel.y > 0) {
+	else if (!isStunned && vel.y > 0) {
 		if (isAtWallJump && vel.x == 0) {
 			setAnimation(WallHangAnim);
 		}
@@ -346,7 +369,7 @@ void Character::updateGrounded(const sf::Vector2f& normal) {
 
 void Character::updateRunning() {
 	//If it's running, not swinging
-	if (isRunning && !swinging) {
+	if (!isStunned && isRunning && !swinging) {
 		if (isGrounded) {
 			acc.x = runningAcceleration;
 			audioPlayer.loop(AudioPlayer::Effect::FOOTSTEP);
@@ -377,6 +400,7 @@ void Character::respawn(sf::Vector2f position) {
 	vel = sf::Vector2f(0, 0);
 	dead = false;
 	setPosition(position);
+	setAnimation(StandAnim);
 }
 
 void Character::die() {
@@ -400,32 +424,34 @@ void Character::stopSliding() {
 }
 
 void Character::startJumping() {
-	if (isGrounded && currJumpCD == sf::Time::Zero) {
-		holdingJump = true;
-		vel.y = -jumpingSpeed * 0.9;
+	if (!isStunned) {
+		if (isGrounded && currJumpCD == sf::Time::Zero) {
+			holdingJump = true;
+			vel.y = -jumpingSpeed * 0.9;
+			isGrounded = false;
+			setAnimation(JumpAnim);
+			currJumpCD = jumpCoolDown;
+			audioPlayer.play(AudioPlayer::Effect::JUMP);
+		}
+		else if (isAtWallJump) {
+			vel.y = -jumpingSpeed;
+			if (facingRight) vel.x = jumpingSpeed * 0.7;
+			else vel.x = -jumpingSpeed * 0.7;
+			setAnimation(JumpAnim);
+			isAtWallJump = false;
+			hasDoubleJumped = false;
+			audioPlayer.play(AudioPlayer::Effect::JUMP);
+		}
+		else if (!hasDoubleJumped) { // in air and hasnt double jumped yet
+			holdingJump = true;
+			vel.y = -jumpingSpeed;
+			hasDoubleJumped = true;
+			setAnimation(DoubleJumpAnim);
+			isAtWallJump = false;
+			audioPlayer.play(AudioPlayer::Effect::DOUBLE_JUMP);
+		}
 		isGrounded = false;
-		setAnimation(JumpAnim);
-		currJumpCD = jumpCoolDown;
-		audioPlayer.play(AudioPlayer::Effect::JUMP);
 	}
-	else if (isAtWallJump) {
-		vel.y = -jumpingSpeed;
-		if (facingRight) vel.x = jumpingSpeed * 0.7;
-		else vel.x = -jumpingSpeed * 0.7;
-		setAnimation(JumpAnim);
-		isAtWallJump = false;
-		hasDoubleJumped = false;
-		audioPlayer.play(AudioPlayer::Effect::JUMP);
-	}
-	else if (!hasDoubleJumped) { // in air and hasnt double jumped yet
-		holdingJump = true;
-		vel.y = -jumpingSpeed;
-		hasDoubleJumped = true;
-		setAnimation(DoubleJumpAnim);
-		isAtWallJump = false;
-		audioPlayer.play(AudioPlayer::Effect::DOUBLE_JUMP);
-	}
-	isGrounded = false;
 }
 
 void Character::stopJumping() {
@@ -457,6 +483,11 @@ void Character::increaseScore(int d) {
 	score += d;
 }
 
+bool Character::getIsStunned() const
+{
+	return isStunned;
+}
+
 int Character::getScore() const {
 	return score;
 }
@@ -465,22 +496,24 @@ void Character::setScore(int score) {
 }
 void Character::useHook(bool use)
 {
-	if (use) {
-		if (!usingHook) { // just used it
-			usingHook = true;
-			hook.fire(getPosition(), facingRight);
-			if (isGrounded && isRunning) {
-				setAnimation(RunningHookAnim);
+	if (!isStunned) {
+		if (use) {
+			if (!usingHook) { // just used it
+				usingHook = true;
+				hook.fire(getPosition(), facingRight);
+				if (isGrounded && isRunning) {
+					setAnimation(RunningHookAnim);
+				}
+				else setAnimation(HookshotAnim);
+
 			}
-			else setAnimation(HookshotAnim);
-			
 		}
-	}
-	else {
-		swinging = false;
-		usingHook = false;
-		hook.destroy();
-		setAnimation(DoubleJumpAnim);
+		else {
+			swinging = false;
+			usingHook = false;
+			hook.destroy();
+			setAnimation(DoubleJumpAnim);
+		}
 	}
 }
 
@@ -496,6 +529,9 @@ Character::ItemPtr Character::useItem(std::shared_ptr<Character> target) {
 
 void Character::getHitByRocket() {
 	std::cout << "I got hit by a rocket :(\n"; // doesnt care that much yet
+	setAnimation(SpikedAnim);
+	stunnedRemaining = glb::STUN_TIME;
+	isStunned = true;
 }
 
 
@@ -555,6 +591,7 @@ void Character::setFriction() {
 			else friction = physics::FLOOR_FRICTION;
 		}
 		else friction = physics::AIR_FRICTION;
+		if (isStunned) friction *= 2;
 		if (vel.x > eps) {// pos vel, negative friction
 			acc.x = -friction;
 		}
@@ -564,7 +601,7 @@ void Character::setFriction() {
 		else { // close to 0
 			acc.x = 0;
 			vel.x = 0;
-			if (isGrounded && !usingHook){
+			if (!isStunned && isGrounded && !usingHook){
 				setAnimation(StandAnim);
 			}
 		}

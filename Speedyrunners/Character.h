@@ -57,6 +57,8 @@ protected:
 	sf::Vector2f acc; // Acceleration
 	float omega; //angular speed
 
+	sf::Time stunnedRemaining;
+	bool isStunned = false; // spikes, rockets, etc
 	bool isGrounded = false;
 	bool hasDoubleJumped = false;
 	bool dead = false;
@@ -118,7 +120,7 @@ protected:
 	void setFriction();
 	
 	void updateGrounded(const sf::Vector2f& normal);
-
+	void updateStunned(const sf::Time& dT);
 	void updateRunning();
 
 	void updateHitBoxRectangle();
@@ -156,6 +158,7 @@ public:
 	//void setState(State s);
 	//State getState() const;
 
+	bool getIsStunned() const;
 
 	void run(bool right);
 	void stop();

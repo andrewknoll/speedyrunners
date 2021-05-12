@@ -48,6 +48,7 @@ void Animation::flip(sf::Sprite& sprite) {
 	}
 }
 //Returns 1 if last frame
+/**
 int Animation::advance_frame(sf::Sprite& sprite) {
 	int return_code = 0;
 	sf::Sprite new_sprite;
@@ -79,6 +80,35 @@ int Animation::advance_frame(sf::Sprite& sprite) {
 		new_sprite.setPosition(sprite.getPosition());
 		new_sprite.setScale(sprite.getScale());
 		sprite = new_sprite;
+	}
+	flip(sprite);
+	sprite.setRotation(angle);
+	return return_code;
+}*/
+
+int Animation::advance_frame(sf::Sprite& sprite) {
+	int return_code = 0;
+	if (!spritesheet) return 0;
+	sprite.setTexture(*spritesheet);
+	if (!reverse) {
+		if (current_frame < frames.size() - 1) {
+			sprite.setTextureRect(frames[++current_frame]);
+		}
+		else if (loop) {
+			current_frame = 0;
+			sprite.setTextureRect(frames[0]);
+		}
+		if (current_frame == frames.size() - 1) return_code = 1;
+	}
+	else {
+		if (current_frame > 0) {
+			sprite.setTextureRect(frames[--current_frame]);
+		}
+		else if (loop) {
+			current_frame = frames.size() - 1;
+			sprite.setTextureRect(frames[current_frame]);
+		}
+		if (current_frame == 0) return_code = 1;
 	}
 	flip(sprite);
 	sprite.setRotation(angle);

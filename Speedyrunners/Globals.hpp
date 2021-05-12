@@ -47,6 +47,8 @@ namespace glb
 	const std::vector<std::string> characterNames{ "Speedrunner", "Cosmonaut", "Unic", "Falcon" };
 
 
+	const sf::Time STUN_TIME = sf::seconds(2); // Rockets, spikes
+
 	const float runningAcceleration = 800;
 	const float flyingAcceleration = 350;
 	const float jumpingSpeed = 150;
