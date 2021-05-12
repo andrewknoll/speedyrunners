@@ -47,11 +47,16 @@ protected:
 
 	std::mt19937 sampler { std::random_device{}() }; 
 
+
+	sf::Sound& getSample(const int effect); // Returns a random sample from the effect type
+
 public:
 	AudioPlayer();
 	AudioPlayer(const std::vector<std::vector<sf::SoundBuffer>>& buffers);
 
 	void loadSoundsFromBuffers(const std::vector<std::vector<sf::SoundBuffer>>& buffers);
+
+	sf::Sound& getSample(const Effect effect); // Returns a random sample from the effect type
 
 	// Play from beggining once
 	void play(const int effect);
@@ -64,6 +69,7 @@ public:
 	// Stop all efects from the given type
 	void stop(const int effect);
 	void stop(const Effect effect);
+
 
 };
 
