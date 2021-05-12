@@ -25,7 +25,8 @@ RoundVictory::RoundVictory(const sf::RenderWindow& _window, const int characterI
 	utils::scaleToFullScreenRatio(bgSprite, _window, 0.4);
 	//bgSprite.setScale(relation, relation);
 
-	characterVictoryPose = Resources::getInstance().getVictorySpriteSheet(characterIdx, characterVariant).get_animations()[0];
+	auto& spritesheet = Resources::getInstance().getVictorySpriteSheet(characterIdx, characterVariant);
+	characterVictoryPose = spritesheet.get_animations()[0];
 	mySprite = characterVictoryPose->get_first_frame();
 	utils::scaleToFullScreenRatio(mySprite, _window, 0.3);
 	mySprite.setPosition(width * 0.2, height * 0.89);

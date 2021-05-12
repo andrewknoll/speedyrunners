@@ -83,6 +83,7 @@ Resources::Resources() {
 		}*/
 	std::getline(file, buffer, '\n');
 	}
+	//std::cout << 
 
 	audioPlayer.loadSoundsFromBuffers(soundBuffers);
 }
@@ -97,6 +98,7 @@ const Spritesheet& Resources::getSpriteSheet(int character, int variant) {
 }
 
 const Spritesheet & Resources::getVictorySpriteSheet(int character, int variant) {
+	std::cout << win_spritesheets.size() << " win spritesheets in resources " << win_spritesheets[character].size() << " of character " << character << "  variant: " << variant << "\n";
 	return win_spritesheets[character][variant];
 }
 
