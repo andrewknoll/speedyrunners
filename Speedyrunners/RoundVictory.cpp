@@ -24,11 +24,13 @@ RoundVictory::RoundVictory(const sf::RenderWindow& _window, const int characterI
 
 	utils::scaleToFullScreenRatio(bgSprite, _window, 0.4);
 	//bgSprite.setScale(relation, relation);
-
-	characterVictoryPose = Resources::getInstance().getVictorySpriteSheet(characterIdx, characterVariant).get_animations()[0];
-	mySprite = characterVictoryPose->get_first_frame();
-	utils::scaleToFullScreenRatio(mySprite, _window, 0.3);
-	mySprite.setPosition(width * 0.2, height * 0.89);
+	if (characterIdx != 2) { // Unic da erorr
+		auto& spritesheet = Resources::getInstance().getVictorySpriteSheet(characterIdx, characterVariant);
+		characterVictoryPose = spritesheet.get_animations()[0]; // BUG: characterVictoryPose es null para Unic y luego da error
+		mySprite = characterVictoryPose->get_first_frame();
+		utils::scaleToFullScreenRatio(mySprite, _window, 0.3);
+		mySprite.setPosition(width * 0.2, height * 0.89);
+	}
 
 
 	addScoreStuff(_window, characterScore);
@@ -86,7 +88,8 @@ void RoundVictory::update(const sf::Time& dT) {
 void RoundVictory::tickAnimation(sf::Time dT) {
 	animationCountdown -= dT;
 	if (currentSecond < 3 && animationCountdown <= sf::Time::Zero) {
-		characterVictoryPose->advance_frame(mySprite);
+		if (characterVictoryPose)
+			characterVictoryPose->advance_frame(mySprite);
 		animationCountdown = PERIOD;
 	}
 }

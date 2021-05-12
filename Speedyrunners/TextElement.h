@@ -6,7 +6,7 @@ class TextElement : public UIElement
 	sf::Font font;
 	sf::Text text;
 	sf::Color secondColor = sf::Color::White;
-	bool firstColorSelected;
+	bool firstColorSelected = true;
 
 
 

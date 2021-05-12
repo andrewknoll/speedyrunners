@@ -19,6 +19,7 @@ Character::Character(Spritesheet sp, int ID, int variant) :
 	this->setScale(0.45, 0.45);
 	setDefaultOrigin();
 	updateHitBoxRectangle();
+	setSpritesheetsPath(glb::CONTENT_PATH + "Characters/" + glb::characterNames[ID] + "/");
 }
 
 int Character::getID() const {

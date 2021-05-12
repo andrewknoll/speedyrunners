@@ -164,7 +164,7 @@ namespace utils {
 
 	void scaleToFullScreen(sf::Sprite& s, const sf::RenderWindow& window)
 	{
-		scaleToFullScreen(s, window.getSize().y);
+		scaleToFullScreen(s, window.getView().getSize().y);
 	}
 
 	void scaleToFullScreen(sf::Sprite& s, const Settings& settings)

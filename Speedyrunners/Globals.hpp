@@ -43,6 +43,9 @@ namespace glb
 		FALCON = 3
 	};
 
+	// Cuidado cambiando esto, se usan para paths (en Character::Character):
+	const std::vector<std::string> characterNames{ "Speedrunner", "Cosmonaut", "Unic", "Falcon" };
+
 
 	const float runningAcceleration = 800;
 	const float flyingAcceleration = 350;

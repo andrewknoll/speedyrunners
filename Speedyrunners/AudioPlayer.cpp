@@ -14,7 +14,6 @@ AudioPlayer::AudioPlayer(const std::vector<std::vector<sf::SoundBuffer>>& buffer
 
 void AudioPlayer::loadSoundsFromBuffers(const std::vector<std::vector<sf::SoundBuffer>>& buffers)
 {
-	//auto& bufs = Resources::getInstance().getSoundBuffers();
 	for (const auto& bufs : buffers) {
 		sounds.emplace_back(); // new inside vector (e.g. for the 4 jump sounds)
 		auto& lastVec = sounds.back();
@@ -24,13 +23,22 @@ void AudioPlayer::loadSoundsFromBuffers(const std::vector<std::vector<sf::SoundB
 	}
 }
 
-void AudioPlayer::play(const int effect)
+sf::Sound& AudioPlayer::getSample(const Effect effect)
 {
+	return getSample((int)effect);
+}
+
+sf::Sound& AudioPlayer::getSample(const int effect) {
 	assert(effect < sounds.size());
 	// Pick random sample from the appropiate type:
-	std::uniform_int_distribution<> distr(0, sounds[effect].size()-1); // define the range (-1 because its inclusive)
+	std::uniform_int_distribution<> distr(0, sounds[effect].size() - 1); // define the range (-1 because its inclusive)
 	int sample = distr(sampler);
-	sounds[effect][sample].play();
+	return sounds[effect][sample];
+}
+
+void AudioPlayer::play(const int effect)
+{
+	getSample(effect).play();
 }
 
 void AudioPlayer::play(const Effect effect)
@@ -40,11 +48,10 @@ void AudioPlayer::play(const Effect effect)
 
 void AudioPlayer::loop(const int effect, bool loopIt)
 {
-	assert(effect < sounds.size());
-	// Pick random sample from the appropiate type:
-	std::uniform_int_distribution<> distr(0, sounds[effect].size() - 1); // define the range (-1 because its inclusive)
-	int sample = distr(sampler);
-	sounds[effect][sample].setLoop(loopIt);
+	auto& sound = getSample(effect);
+	sound.setLoop(loopIt);
+	if (loopIt) sound.play();
+	else sound.stop();
 }
 
 void AudioPlayer::loop(const Effect effect, bool loopIt)

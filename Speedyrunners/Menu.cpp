@@ -235,7 +235,8 @@ void Menu::handleMainMenuClick(int i) {
 	case 3:
 	{
 		std::cout << "Clicked practice\n";
-		game.defaultInit(1);
+		std::vector<glb::characterIndex> players{ glb::characterIndex::SPEEDRUNNER };
+		game.defaultInit(players, std::vector<glb::characterIndex>());
 		game.enableCheats(false);
 		exitMenu = true;
 		break;

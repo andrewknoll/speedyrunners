@@ -5,21 +5,6 @@
 
 Camera::Camera(const sf::FloatRect& rect) : sf::View(rect)
 {
-
-	// Initialize the view to a rectangle located at (100, 100) and with a size of 400x200
-	//view.reset(sf::FloatRect(100, 100, 400, 200));
-	// Rotate it by 45 degrees
-	//view.rotate(45);
-	// Set its target viewport to be half of the window
-	//view.setViewport(sf::FloatRect(0.f, 0.f, 0.5f, 1.f));
-	// Apply it
-	//window.setView(view);
-	// Render stuff
-	//window.draw(someSprite);
-	// Set the default view back
-	//window.setView(window.getDefaultView());
-	// Render stuff not affected by the view
-	//window.draw(someText);
 	size0 = getSize();
 	viewportShape = sf::RectangleShape(size0);
 	viewportShape.setFillColor(sf::Color::Transparent);
@@ -115,6 +100,7 @@ void Camera::follow(std::vector<CharPtr>& characters, int first) {
 		}
 		viewportShape.setOutlineColor(sf::Color(redValue, 0, 0, 255));
 	}
+	
 }
 
 sf::RectangleShape Camera::getSuddenDeathRectangle() {
@@ -142,7 +128,7 @@ void Camera::setSuddenDeath(bool sd) {
 void Camera::update(sf::Time dT) {
 	sf::Vector2f movement = objectivePos - getCenter();
 	sf::Vector2f sizeDiff = objectiveSize - getSize();
-	move(movement * dT.asSeconds() * 2.0f);
+	move(movement * dT.asSeconds() * 5.0f);
 	if (!suddenDeath) {
 		setSize(size0 + sizeDiff * dT.asSeconds());
 		viewportShape.setSize(size0 + sizeDiff * dT.asSeconds());

@@ -8,7 +8,7 @@
 #include "RoundVictory.h"
 
 
-#define DEV_MODE
+//#define DEV_MODE
 
 
 //#define VERBOSE_DEBUG // Cambiar para quitar couts
@@ -19,25 +19,18 @@ Game::Game()
 	state(State::Countdown),
 	selectedTile(Tiles::Collidable::FLOOR),
 	cam(sf::FloatRect(0, 0, 1600, 900)),
-	countdown(window),
 	src(Resources::getInstance())
 	//dT(0)
 {
-	setUpWindow();
-	//setFullScreen();
 
-	settings.setResolution(sf::Vector2i(window.getSize().x, window.getSize().y));
+	setUpWindow();
+	setFullScreen();
+	countdown.setWindow(window);
+	//settings.setResolution(sf::Vector2i(window.getSize().x, window.getSize().y));
 
 	ui.setWindow(window);
 
-	loadLevel("first.csv");
-	//TO-DO: Utilizar "sets" de musica predeterminados
-	//o asignarlas al nivel
-
-
-
-	// DEBUG de menus:
-	//loopMenu();
+	loadLevel("big-one.csv");
 }
 
 void Game::clear() {
@@ -69,14 +62,15 @@ void Game::clear() {
 	threadPool.resize(8);
 }
 
-void Game::defaultInit(const std::vector<glb::characterIndex>& players, const std::vector<glb::characterIndex>& npcs) {
+void Game::defaultInit(const std::vector<glb::characterIndex>& _players, const std::vector<glb::characterIndex>& _npcs) {
 	clear();
 	int N_PLAYERS = players.size();
 
+	std::cout << "players: " << _players.size() << "\n";
 	std::shared_ptr<Character> character;
 	int i = 0;
-	if (players.size() == 2) i = 1; // controls
-	for (auto c : players) {
+	if (_players.size() == 2) i = 1; // controls
+	for (auto c : _players) {
 		std::cout << "adding player " << c << "\n";
 		// character:
 		character = std::make_shared<Character>(src.getSpriteSheet(c), c);
@@ -90,7 +84,7 @@ void Game::defaultInit(const std::vector<glb::characterIndex>& players, const st
 		i++;
 	}
 	i = 0;
-	for (auto c : npcs) {
+	for (auto c : _npcs) {
 		std::cout << "adding npc " << c << "\n";
 		// char:
 		character = std::make_shared<Character>(src.getSpriteSheet(c), c);
@@ -102,6 +96,7 @@ void Game::defaultInit(const std::vector<glb::characterIndex>& players, const st
 		character->setName("NPC " + std::to_string(i++));
 		addCharacter(character);
 	}
+	std::cout << characters.size() << " characters now!\n";
 	setState(State::Countdown);
 	running = true;
 }
@@ -243,7 +238,7 @@ void Game::loadLevel(const std::string& lvlPath)
 	for (NPCPtr npc : npcs) {
 		npc->setTileMap(std::make_shared<TileMap>(lvl.getCollidableTiles()));
 	}
-	
+
 }
 
 
@@ -346,7 +341,7 @@ void Game::updateNPCs(bool follow) {
 				threadPool[2 * i].finished = false;
 				threadPool[2 * i].threadPtr = std::make_unique<std::thread>([&, i]() {
 					while (running) {
-						if (npcs[i]->getCharacter()->isDead()) { 
+						if (npcs[i]->getCharacter()->isDead()) {
 							{ std::unique_lock<std::mutex> lck(restartMtx);
 							restartCv.wait(lck); }
 						}
@@ -445,7 +440,7 @@ void Game::update()
 			}
 		}
 
-		
+
 		if (state == State::Editing) { // Editing state
 			processEditingInputs(event);
 		} // End of editing state
@@ -491,7 +486,7 @@ void Game::update()
 			}
 		}
 		updateNPCs(true);
-		if (aliveCount < 2) {
+		if (characters.size() > 1 && aliveCount < 2) {
 			state = State::FinishedRound;
 			for (auto c : characters) {
 				if (!c->isDead()) {
@@ -553,7 +548,7 @@ void Game::update()
 void Game::enableCheats(bool enable) {
 #ifdef DEV_MODE
 	cheatsEnabled = true;
-#else 
+#else
 	cheatsEnabled = enable;
 #endif
 }
@@ -591,14 +586,14 @@ void Game::processEditingInputs(const sf::Event& event) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
 			lvl.setCheckpoints(checkpoints);
 			//lvl.saveDuplicateVertical("first.csv");
-			
+
 			//lvl.setDefaultLevel();
 			//lvl.save("default_level.csv");
 
 			lvl.save(saveLevelName);
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::L)) {
-			loadLevel("first.csv");
+			loadLevel("big-one.csv");
 		}
 		else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::J) {
 
@@ -720,7 +715,8 @@ void Game::draw(sf::Time dT)
 		}
 		// UI:
 		ui.update();
-		window.draw(ui);
+		if (characters.size()>1)
+			window.draw(ui);
 		break;
 	}
 	default:

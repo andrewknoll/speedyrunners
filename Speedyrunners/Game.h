@@ -105,7 +105,7 @@ public:
 	void clear();
 
 	void defaultInit(int N_PLAYERS);
-	void defaultInit(const std::vector<glb::characterIndex>& players, const std::vector<glb::characterIndex>& npcs);
+	void defaultInit(const std::vector<glb::characterIndex>& _players, const std::vector<glb::characterIndex>& _npcs);
 	void setState(const State _state);
 	
 	const Settings& getSettings() const;

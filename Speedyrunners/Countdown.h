@@ -27,6 +27,7 @@ class Countdown
 	AudioPlayer& audioPlayer;
 
 
+
 	void updateSprite();
 
 	void playSecondSFX(const int second);
@@ -34,6 +35,10 @@ class Countdown
 public:
 
 	Countdown(const sf::RenderWindow& _window);
+
+	Countdown();
+
+	void setWindow(const sf::RenderWindow& _window);
 
 	void update(const sf::Time& dT);
 

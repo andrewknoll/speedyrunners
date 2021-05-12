@@ -51,6 +51,7 @@ void Animation::flip(sf::Sprite& sprite) {
 int Animation::advance_frame(sf::Sprite& sprite) {
 	int return_code = 0;
 	sf::Sprite new_sprite;
+	if (!spritesheet) return 0;
 	new_sprite.setTexture(*spritesheet);
 	if (!reverse) {
 		if (current_frame < frames.size() - 1) {
@@ -76,6 +77,7 @@ int Animation::advance_frame(sf::Sprite& sprite) {
 		//new_sprite.setPosition(this->get_position() - this->get_center_offset());
 		new_sprite.setOrigin(this->get_origin_point());
 		new_sprite.setPosition(sprite.getPosition());
+		new_sprite.setScale(sprite.getScale());
 		sprite = new_sprite;
 	}
 	flip(sprite);

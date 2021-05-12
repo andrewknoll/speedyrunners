@@ -1,7 +1,6 @@
 #include "MusicPlayer.h"
 
 
-
 //#define DISABLE_MUSIC // DEBUG jeje
 
 void MusicPlayer::addTrack(std::string file, int t) {
@@ -20,7 +19,10 @@ void MusicPlayer::playMusicTrack(int t, int variant) {
 	for (int i = 0; i < n_types; i++) {
 		for (int j = 0; j < tracks[i].size(); j++) {
 			if (i != t || j != variant) tracks[i][j]->stop();
-			else tracks[i][j]->play();
+			else {
+				tracks[i][j]->setLoop(true);
+				tracks[i][j]->play();
+			}
 		}
 	}
 #endif
