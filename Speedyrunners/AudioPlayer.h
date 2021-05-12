@@ -50,6 +50,10 @@ protected:
 
 	sf::Sound& getSample(const int effect); // Returns a random sample from the effect type
 
+	// Int versions are private:
+	void stop(const int effect);
+	void loop(const int effect, bool loopIt = true);
+	void play(const int effect);
 public:
 	AudioPlayer();
 	AudioPlayer(const std::vector<std::vector<sf::SoundBuffer>>& buffers);
@@ -59,17 +63,13 @@ public:
 	sf::Sound& getSample(const Effect effect); // Returns a random sample from the effect type
 
 	// Play from beggining once
-	void play(const int effect);
 	void play(const Effect effect);
 
 	// Loop (or stop looping if loopIt=false)
-	void loop(const int effect, bool loopIt = true);
 	void loop(const Effect effect, bool loopIt = true);
 
 	// Stop all efects from the given type
-	void stop(const int effect);
 	void stop(const Effect effect);
-
 
 };
 

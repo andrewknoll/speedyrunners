@@ -50,7 +50,8 @@ void AudioPlayer::loop(const int effect, bool loopIt)
 {
 	auto& sound = getSample(effect);
 	sound.setLoop(loopIt);
-	sound.play();
+	if (loopIt) sound.play();
+	else sound.stop();
 }
 
 void AudioPlayer::loop(const Effect effect, bool loopIt)
