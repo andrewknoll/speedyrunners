@@ -2,30 +2,37 @@
 
 #include "Countdown.h"
 #include "Resources.h"
+#include "utils.hpp"
 
-Countdown::Countdown(const sf::RenderWindow& _window)
+Countdown::Countdown()
 	: currentSecond(3),
 	period(sf::seconds(1)),
 	audioPlayer(Resources::getInstance().getAudioPlayer())//, window(std::make_shared<sf::RenderWindow>(_window))
 {
+	//setWindow(_window);
+}
+
+
+void Countdown::setWindow(const sf::RenderWindow& _window) {
 	// Fondo:
 	bg.loadFromFile(bgPath);
 	bgSprite.setTexture(bg);
 	float width = _window.getSize().x;
-	bgSprite.setPosition(width/2.0f, 0);
 	float relation = _window.getSize().y / bgSprite.getGlobalBounds().height;
-	bgSprite.setScale(relation, relation);
+	utils::scaleToFullScreen(bgSprite, _window);
+	bgSprite.setPosition(width / 2.0f, 0);
+	//bgSprite.setScale(relation, relation);
 
 	// Texto:
 	text.loadFromFile(textPath);
 	textSprite.setTexture(text);
 	relation = _window.getSize().y / textSprite.getGlobalBounds().height / 2;
-	textSprite.setScale(relation, relation);
 	updateSprite();
+	utils::scaleToFullScreenRatio(textSprite, _window, 0.25);
+	//textSprite.setScale(relation, relation);
 	textSprite.setOrigin(textSprite.getLocalBounds().width / 2.0, textSprite.getLocalBounds().height / 2.0);
 	textSprite.setPosition(width * 3.0 / 4.0, _window.getSize().y / 2.0);
 }
-
 
 void Countdown::updateSprite()
 {

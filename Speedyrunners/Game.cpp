@@ -19,13 +19,13 @@ Game::Game()
 	state(State::Countdown),
 	selectedTile(Tiles::Collidable::FLOOR),
 	cam(sf::FloatRect(0, 0, 1600, 900)),
-	countdown(window),
 	src(Resources::getInstance())
 	//dT(0)
 {
+
 	setUpWindow();
 	setFullScreen();
-
+	countdown.setWindow(window);
 	//settings.setResolution(sf::Vector2i(window.getSize().x, window.getSize().y));
 
 	ui.setWindow(window);
