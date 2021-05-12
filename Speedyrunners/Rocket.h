@@ -19,8 +19,8 @@ private:
 	const float minVel = 10.0f;
 	const float accVal = 1.0f;
 
-	const float detonationRadius = 10.0f;
-	const float explosionRadius = 50.0f;
+	const float detonationRadius = 50.0f; // it activates at this distance from the target
+	const float explosionRadius = 200.0f; // the explosion radius
 	
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;

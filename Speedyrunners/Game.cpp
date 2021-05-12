@@ -408,6 +408,23 @@ void Game::setFullScreen() {
 	settings.setResolution(sf::Vector2i(window.getSize().x, window.getSize().y));
 }
 
+
+void Game::updateItems() {
+	// Weird loop to be able to erase (https://www.techiedelight.com/remove-elements-list-iterating-cpp/):
+	auto itr = items.cbegin();
+	while (itr != items.cend())
+	{
+		auto item = *itr;
+		if (item->update(dT)) { // if the update returns true, it should be handled
+			handleItem(item); // handle
+			itr = items.erase(itr); // and delete?
+		}
+		else {
+			++itr;
+		}
+	}
+}
+
 void Game::update()
 {
 	sf::Event event;
@@ -471,11 +488,8 @@ void Game::update()
 			if (c->isDead()) continue;
 			c->update(dT, lvl);
 		}
-		for (auto it : items) {
-			if (it->update(dT)) { 
-				handleItem(it);
-			}
-		}
+		updateItems();
+
 		updatePositions();
 		cam.follow(characters);
 		cam.update(dT);
@@ -553,17 +567,7 @@ void Game::update()
 void Game::handleItem(Game::ItemPtr item) {
 	for (auto& c : characters) {
 		item->doThingTo(c);
-	}/** idea vieja, mejor herencia creo:
-	glb::item which = item->getItemIndex();
-	switch (which) {
-	case glb::ROCKET:
-	{ // explosion
-		
-		break;
 	}
-	default:
-		std::cerr << "what the hell is this item: " << (int)which << "\n";
-	}*/
 }
 
 void Game::enableCheats(bool enable) {
