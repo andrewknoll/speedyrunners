@@ -51,6 +51,7 @@ void Animation::flip(sf::Sprite& sprite) {
 int Animation::advance_frame(sf::Sprite& sprite) {
 	int return_code = 0;
 	sf::Sprite new_sprite;
+	if (!spritesheet) return 0;
 	new_sprite.setTexture(*spritesheet);
 	if (!reverse) {
 		if (current_frame < frames.size() - 1) {
