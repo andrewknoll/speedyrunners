@@ -24,6 +24,9 @@ class Character : public sf::Transformable, public sf::Drawable
 {
 	using AnimationPtr = std::shared_ptr<Animation>;
 	using ItemPtr = std::shared_ptr<Item>;
+
+	// Item:
+	glb::item currentItem = glb::item::ROCKET;
 public:
 	//enum class State {Standing, Running, Sliding, InAir, Grappling, WallJumping, Stunned, Tripped};
 	enum AnimationIndex {
@@ -190,4 +193,10 @@ public:
 	// for UI:
 	std::string getUIIconPath() const;
 
+
+	// ITem:
+	glb::item getCurrentItem() const;
+
+	// TODO: implementar estado de stunned, con su countdown, etc
+	void getHitByRocket();
 };

@@ -451,11 +451,13 @@ void Game::update()
 				target = i; //Set target initial value to oneself
 				auto p = getPlayerAt(i);
 				if (p != nullptr && p->captureEvents(event)) {
-					if (i > 0) target--;
-					else if (i < characters.size() - 1) target++;
-					//if player is dumb and uses rockets when nobody else is playing, it will hit them
-					items.push_back(characters[i]->useItem(characters[target]));
-				};
+					if (characters[i]->getCurrentItem() == glb::item::ROCKET) {
+						if (i > 0) target--;
+						else if (i < characters.size() - 1) target++;
+						//if player is dumb and uses rockets when nobody else is playing, it will hit them
+						items.push_back(characters[i]->useItem(characters[target]));
+					}
+				}
 			}
 		}
 
@@ -470,7 +472,9 @@ void Game::update()
 			c->update(dT, lvl);
 		}
 		for (auto it : items) {
-			it->update(dT);
+			if (it->update(dT)) { 
+				handleItem(it);
+			}
 		}
 		updatePositions();
 		cam.follow(characters);
@@ -544,6 +548,22 @@ void Game::update()
 			}
 		}
 	}
+}
+
+void Game::handleItem(Game::ItemPtr item) {
+	for (auto& c : characters) {
+		item->doThingTo(c);
+	}/** idea vieja, mejor herencia creo:
+	glb::item which = item->getItemIndex();
+	switch (which) {
+	case glb::ROCKET:
+	{ // explosion
+		
+		break;
+	}
+	default:
+		std::cerr << "what the hell is this item: " << (int)which << "\n";
+	}*/
 }
 
 void Game::enableCheats(bool enable) {

@@ -132,6 +132,9 @@ public:
 	PlayerPtr getPlayerAt(int pos) const;
 	NPCPtr getNPCAt(int pos) const;
 
+	// Handle an item explosion or something (when item.update returns true):
+	void handleItem(Game::ItemPtr item);
+
 	// allow F1, F2, etc.
 	void enableCheats(bool enable);
 };

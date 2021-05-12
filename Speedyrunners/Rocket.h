@@ -18,6 +18,9 @@ private:
 	const float maxVel = 200.0f;
 	const float minVel = 10.0f;
 	const float accVal = 1.0f;
+
+	const float detonationRadius = 10.0f;
+	const float explosionRadius = 50.0f;
 	
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
@@ -25,6 +28,9 @@ private:
 
 public:
 	Rocket(sf::Vector2f pos, CharPtr target, bool facingRight);
-	virtual void update(sf::Time elapsed);
+	virtual bool update(sf::Time elapsed) override;
+
+	virtual void doThingTo(std::shared_ptr<Character> c) override; // Explode, in this case
+
 };
 

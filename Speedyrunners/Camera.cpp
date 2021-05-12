@@ -57,10 +57,10 @@ void Camera::follow(std::vector<CharPtr>& characters, int first) {
 	avg /= (float)count;
 	
 	//Ensure first player is inside bounds
-	avg.x += std::min(0.0f, firstPos.x - (avg.x - viewport.width / 2.0f * glb::viewMarginFactor));
-	avg.x += std::max(0.0f, firstPos.x - (avg.x + viewport.width / 2.0f * glb::viewMarginFactor));
-	avg.y += std::min(0.0f, firstPos.y - (avg.y - viewport.height / 2.0f * glb::viewMarginFactor));
-	avg.y += std::max(0.0f, firstPos.y - (avg.y + viewport.height / 2.0f* glb::viewMarginFactor));
+	avg.x += std::min(0.0f, firstPos.x - (avg.x - viewport.width / 2.0f * glb::viewMarginFactor)); // Correct to the left
+	avg.x += std::max(0.0f, firstPos.x - (avg.x + viewport.width / 2.0f * glb::viewMarginFactor)); // To the right
+	avg.y += std::min(0.0f, firstPos.y - (avg.y - viewport.height / 2.0f * glb::viewMarginFactor)); // Up
+	avg.y += std::max(0.0f, firstPos.y - (avg.y + viewport.height / 2.0f* glb::viewMarginFactor)); // Down
 
 	if (!suddenDeath) {
 		//Calculate scale, depending on the average of the distance of each character to the center

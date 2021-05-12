@@ -486,8 +486,21 @@ void Character::useHook(bool use)
 
 Character::ItemPtr Character::useItem(std::shared_ptr<Character> target) {
 	//TODO - Item available?
-	ItemPtr rocket = std::make_shared<Rocket>(getPosition(), target, facingRight);
-	return rocket;
+	if (currentItem == glb::item::ROCKET) {
+		ItemPtr rocket = std::make_shared<Rocket>(getPosition(), target, facingRight);
+		return rocket;
+	}
+	
+}
+
+
+void Character::getHitByRocket() {
+	std::cout << "I got hit by a rocket :(\n"; // doesnt care that much yet
+}
+
+
+glb::item Character::getCurrentItem() const {
+	return currentItem;
 }
 
 void Character::setDToCheckpoint(float d)
