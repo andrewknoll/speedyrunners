@@ -1,6 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 #include <string>
+#include <array>
 namespace glb
 {
 	const double pi = 3.14159265358979323846;
@@ -29,7 +30,7 @@ namespace glb
 		const std::string TAUNT_ANIM = "Taunt";
 		const std::string START_ANIM = "321GO";
 	};
-	const int NUMBER_OF_MISC_TEXTURES = 6;
+	const int NUMBER_OF_MISC_TEXTURES = 8;
 	const sf::Vector2f FEET_TO_HAND = sf::Vector2f(20.0, 0);// -50.0
 	// Items:
 	const int NUMBER_OF_ITEMS = 1;
@@ -37,6 +38,13 @@ namespace glb
 		NONE = 0,
 		ROCKET = 1
 	};
+
+	// For InGameUI, returns the index in the UI/Sprites/MultiplayerHUD/Powerups.png texture:
+	const std::array<int, NUMBER_OF_ITEMS+1> itemToTexIndex { {
+		0, // NONE is first (hay un hueco al principio)
+		4  // Rocket is 5th
+	} };
+
 	// Characters:
 	enum characterIndex : int {
 		SPEEDRUNNER = 0,

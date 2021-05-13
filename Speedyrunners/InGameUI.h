@@ -19,18 +19,26 @@ class InGameUI : public sf::Drawable
 	const sf::Texture& pointsTexture;
 	std::vector<std::vector<sf::Sprite>> roundPoints;
 	std::vector<std::vector<sf::Sprite>> boostSprites;
+	std::vector<std::vector<sf::Sprite>> items;
 
 	sf::Vector2u texSize;
 	sf::Vector2u boostTexSize;
+	sf::Vector2u itemTexSize;
+	sf::IntRect bgItemTexRect;
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 	void updateBoostBar(int charidx, float proportion);
 
+	void updateItem(int charidx, glb::item item);
+
+
 	void addPoints(sf::Vector2f pos, float widgetWidth);
 
 	void addBoostBar(sf::Vector2f pos, float widgetWidth);
 
+	void addItems(sf::Vector2f pos, float widgetWidth);
+	sf::IntRect texRectFor(int point);
 
 public:
 	//InGameUI(std::vector<CharPtr> characters);
@@ -41,9 +49,10 @@ public:
 
 
 
+	
+
 	void setCharacters(std::vector<CharPtr> characters);
 	void update();
-	sf::IntRect texRectFor(int point);
 	void updatePoints();
 };
 

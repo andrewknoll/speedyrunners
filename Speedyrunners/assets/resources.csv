@@ -55,3 +55,5 @@ T,2,Content/UI/MultiplayerHUD/LabelWinner.png
 T,3,Content/Sprites/BoostSection.png
 T,4,Content/UI/MultiplayerHUD/BoostBar.png
 T,5,Content/Sprites/powerup.png
+T,6,Content/UI/MultiplayerHUD/PowerUpBackground.png
+T,7,Content/UI/MultiplayerHUD/PowerUp.png

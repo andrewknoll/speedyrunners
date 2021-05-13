@@ -17,6 +17,9 @@ void InGameUI::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	for (const auto& bs : boostSprites) // boost bars
 		for (const auto& b : bs)
 			target.draw(b);
+	for (const auto& is : items) // boost bars
+		for (const auto& i : is)
+			target.draw(i);
 	target.setView(v);
 }
 
@@ -74,11 +77,36 @@ void InGameUI::addBoostBar(sf::Vector2f pos, float widgetWidth) {
 }
 
 
+void InGameUI::addItems(sf::Vector2f pos, float widgetWidth) {
+	pos.x -= widgetWidth / 2.0f; // To the left
+	// Item Background
+	auto& b = items.emplace_back();
+	const auto& t = Resources::getInstance().getMiscTexture(6);
+	auto& back = b.emplace_back(t);
+	auto size = t.getSize();
+	size.y /= 2; size.x /= 4;
+	bgItemTexRect = sf::IntRect(0, 0, size.x, size.y);
+	back.setTextureRect(bgItemTexRect);
+	utils::setWidth(back, widgetWidth/2.0);
+	back.setPosition(pos);
+	// Item:
+	const auto& itemT = Resources::getInstance().getMiscTexture(7);
+	auto& i = b.emplace_back(itemT);
+	size = itemT.getSize();
+	size.x /= 18; // 18 slots in texture, horizontally
+	i.setTextureRect(sf::IntRect(6*size.x, 0, size.x, size.y));
+	//utils::scaleToFullScreenRatio(bar, *window, 0.1);
+	float w = widgetWidth / 2.0;
+	utils::setWidth(i, 0.8 * w);
+	i.setPosition(pos+sf::Vector2f(w*0.1f, w * 0.1f));
+	itemTexSize = size;
+}
+
 void InGameUI::setCharacters(std::vector<CharPtr> characters) {
 	chars = characters;
 	roundPoints.clear();
 	boostSprites.clear();
-
+	items.clear();
 
 	// Position:
 	sf::Vector2f pos(0.05, 0.005); // initial
@@ -109,6 +137,8 @@ void InGameUI::setCharacters(std::vector<CharPtr> characters) {
 		addPoints(pos, widgetWidth);
 
 		addBoostBar(pos, widgetWidth*1.5f);
+
+		addItems(pos, widgetWidth);
 		
 		//pos.x += scale * 3.5 * window->getSize().x;
 		pos.x += 3.4 * scale * window->getSize().x;
@@ -121,10 +151,23 @@ void InGameUI::updateBoostBar(int charidx, float proportion) {
 	boostSprites[charidx][1].setTextureRect(sf::IntRect(0, boostTexSize.y, proportion * boostTexSize.x, boostTexSize.y));
 }
 
+
+void InGameUI::updateItem(int charidx, glb::item item) {
+	int itemIdx = glb::itemToTexIndex[item];
+	if (item == glb::item::NONE) // is none, dont show background
+		items[charidx][0].setTextureRect(sf::IntRect(0,0,0,0));
+	else // Show background:
+		items[charidx][0].setTextureRect(bgItemTexRect);
+	// Update the item icon:
+	items[charidx][1].setTextureRect(sf::IntRect(itemIdx * itemTexSize.x, 0, itemTexSize.x, itemTexSize.y));
+}
+
+
 void InGameUI::update() {
 	for (int i = 0; i < chars.size(); i++) {
 		float boost = chars[i]->getRemainingBoost01();
 		updateBoostBar(i, boost);
+		updateItem(i, chars[i]->getCurrentItem());
 	}
 }
 
