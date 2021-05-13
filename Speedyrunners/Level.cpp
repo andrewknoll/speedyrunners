@@ -79,6 +79,12 @@ void Level::save(const std::string& f_name) const
 		file << b.getPosition() << " ";
 	}
 	file << "\n";
+	// item pickups things:
+	file << itemPickups.size() << "\n";
+	for (const auto& i : itemPickups) {
+		file << i.getPosition() << " ";
+	}
+	file << "\n";
 	// Save checkpoints:
 	file << checkpoints.size() << "\n";
 	for (auto cp : checkpoints) {
@@ -130,6 +136,8 @@ void Level::saveDuplicateVertical(const std::string& f_name) const
 void Level::load(const std::string& f_name, const sf::RenderWindow& window)
 {
 	checkpoints.clear();
+	boostBoxes.clear();
+	itemPickups.clear();
 	std::cout << "Loading " << f_name << "\n";
 
 	std::ifstream file("../assets/levels/" + f_name);
@@ -171,6 +179,15 @@ void Level::load(const std::string& f_name, const sf::RenderWindow& window)
 	}
 	file.ignore();
 
+	// item things:
+	int nItems;
+	file >> nItems;
+	std::vector<sf::Vector2f> itemPositions;
+	for (int i = 0; i < nItems; i++) {
+		file >> x >> y;
+		itemPositions.emplace_back(x, y);
+	}
+	file.ignore();
 
 	// Load checkpoints:
 	
@@ -193,6 +210,7 @@ void Level::load(const std::string& f_name, const sf::RenderWindow& window)
 	else {
 		float tileW = collidableTiles.getTileSizeWorld().x;
 		for (const auto& p : boostPositions) boostBoxes.emplace_back(p, tileW);
+		for (const auto& p : itemPositions) itemPickups.emplace_back(p, tileW);
 		std::cout << "Level loaded\n";
 	}
 }

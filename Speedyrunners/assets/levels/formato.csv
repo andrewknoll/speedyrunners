@@ -3,6 +3,8 @@
 <<x y> posicion inicial de los chars (float float)>
 <num de boosts>
 <x y> (float, para cada boost)
+<num de items>
+<x y> (float, para cada item)
 <numero de checkpoints>
 <x y r> (para cada checkpoint)
 <cols (int)> <filas (int)>

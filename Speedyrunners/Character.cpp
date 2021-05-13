@@ -216,7 +216,7 @@ void Character::updateStunned(const sf::Time& dT) {
 		isRunning = false;
 		sliding = false;
 		stunnedRemaining -= dT;
-		rotate(3000.0 * dT.asSeconds());
+		rotate(3000.0 * dT.asSeconds()); // TODO: BUG: No funciona y no se por que!
 		if (stunnedRemaining < sf::seconds(0)) {
 			isStunned = false;
 		}
