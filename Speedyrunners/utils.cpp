@@ -136,6 +136,11 @@ namespace utils {
 		return ((1.0f - z) * x) + (z * y);
 	}
 
+	sf::Color lerp(sf::Color x, sf::Color y, float z)
+	{
+		return sf::Color(lerp(x.r,y.r,z), lerp(x.g,y.g,z), lerp(x.b,y.b,z),lerp(x.a,y.a,z));
+	}
+
 
 	sf::Vector2f toVector2f(const sf::Vector2i& v) {
 		return sf::Vector2f(float(v.x), float(v.y));

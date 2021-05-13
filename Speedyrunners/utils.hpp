@@ -37,6 +37,8 @@ public:
 
 
 namespace rng {
+	inline RNG defaultGen = RNG();
+
 	class IntSampler {
 		// Devuelve un int aleatorio entre min y max (incluidos)
 	protected:
@@ -99,6 +101,9 @@ namespace utils {
 	bool inRange(float value, float min, float max);
 
 	sf::Vector2f clampAbs(const sf::Vector2f& val, const float& limit);
+
+	float lerp(float x, float y, float z); // z must be between 0 and 1. Returns x if 0, z if 1, linearly interpolated if in between
+	sf::Color lerp(sf::Color x, sf::Color y, float z); // Same for colors (rgb interpolation)
 
 	sf::Vector2f toVector2f(const sf::Vector2i& v);
 

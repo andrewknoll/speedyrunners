@@ -7,7 +7,7 @@
 Rocket::Rocket(sf::Vector2f pos, CharPtr target, bool facingRight) :
 	Item(glb::item::ROCKET),
 	target(target),
-	particles(3),
+	particleSyst(Resources::getInstance().rocketsPartSystem),
 	position(pos),
 	audioPlayer(Resources::getInstance().getAudioPlayer())
 {
@@ -29,7 +29,7 @@ Rocket::Rocket(sf::Vector2f pos, CharPtr target, bool facingRight) :
 }
 
 void Rocket::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-	target.draw(particles, states);
+	//target.draw(particles, states);
 	target.draw(rocket, states);
 }
 
@@ -56,7 +56,7 @@ bool Rocket::update(sf::Time elapsed) {
 
 	//Move
 	position += vel * elapsed.asSeconds();
-	particles.setEmitter(position);
+	particleSyst.emit(position);
 
 	//Update velocity and angle
 	vel = vel + acc * elapsed.asSeconds();

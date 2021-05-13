@@ -38,7 +38,9 @@ Game::Game()
 	countdown.setWindow(window);
 	ui.setWindow(window);
 
-	loadLevel("big-one.csv");
+	loadLevel("defaultLevel.csv");
+
+	particleSystems.push_back(&Resources::getInstance().rocketsPartSystem);
 }
 
 void Game::clear() {
@@ -508,7 +510,7 @@ void Game::update()
 		}
 		lvl.update(dT); // respawn items, etc
 		updateItems();
-
+		for (auto ps : particleSystems) ps->update(dT); // update particles
 		updatePositions();
 		cam.follow(characters);
 		cam.update(dT);
@@ -639,7 +641,7 @@ void Game::processEditingInputs(const sf::Event& event) {
 			lvl.save(saveLevelName);
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::L)) {
-			loadLevel("big-one.csv");
+			loadLevel("defaultLevel.csv");
 		}
 		else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::J) {
 
@@ -760,7 +762,8 @@ void Game::draw(sf::Time dT)
 				window.draw(*c);
 			}
 		}
-		for (auto i : items) {
+		for (const auto ps : particleSystems) window.draw(*ps);
+		for (const auto i : items) {
 			window.draw(*i);
 		}
 		// UI:

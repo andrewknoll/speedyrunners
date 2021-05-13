@@ -52,6 +52,9 @@
     <Filter Include="Level\LevelElements">
       <UniqueIdentifier>{30a99cb4-ed15-4afa-8797-16f7af4d3ea8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Animation\Particles">
+      <UniqueIdentifier>{5824c78f-efb3-49dc-8005-548da3eb92bf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TileMap.cpp">
@@ -64,9 +67,6 @@
       <Filter>Animation</Filter>
     </ClCompile>
     <ClCompile Include="Spritesheet.cpp">
-      <Filter>Animation</Filter>
-    </ClCompile>
-    <ClCompile Include="ParticleSystem.cpp">
       <Filter>Animation</Filter>
     </ClCompile>
     <ClCompile Include="Item.cpp">
@@ -156,6 +156,12 @@
     <ClCompile Include="ItemPickup.cpp">
       <Filter>Level\LevelElements</Filter>
     </ClCompile>
+    <ClCompile Include="ParticleSystem.cpp">
+      <Filter>Animation\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="SmokeParticle.cpp">
+      <Filter>Animation\Particles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TileMap.h">
@@ -168,9 +174,6 @@
       <Filter>Animation</Filter>
     </ClInclude>
     <ClInclude Include="Animation.h">
-      <Filter>Animation</Filter>
-    </ClInclude>
-    <ClInclude Include="ParticleSystem.h">
       <Filter>Animation</Filter>
     </ClInclude>
     <ClInclude Include="Item.h">
@@ -260,6 +263,12 @@
     </ClInclude>
     <ClInclude Include="ItemPickup.h">
       <Filter>Level\LevelElements</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystem.h">
+      <Filter>Animation\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="SmokeParticle.h">
+      <Filter>Animation\Particles</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

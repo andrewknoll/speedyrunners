@@ -4,7 +4,9 @@
 #include <exception>
 #include <sstream>
 
-Resources::Resources() {
+Resources::Resources() :
+	rocketsPartSystem(100) 
+{
 	std::ifstream file(PATH_TO_ASSETS + RESOURCES_CSV);
 
 	if (!file.is_open()) {
@@ -88,6 +90,7 @@ Resources::Resources() {
 	//std::cout << 
 
 	audioPlayer.loadSoundsFromBuffers(soundBuffers);
+	rocketsPartSystem.setTexture(getMiscTexture(8));
 }
 
 Resources& Resources::getInstance() {

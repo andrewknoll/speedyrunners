@@ -7,14 +7,15 @@ class Rocket : public Item
 {
 	using CharPtr = std::shared_ptr<Character>;
 private:
-	ParticleSystem particles;
+	//ParticleSystem particles;
 	sf::Sprite rocket;
 	CharPtr target;
 
 	sf::Vector2f vel, acc, position;
-	float angle;
+	float angle = 0;
 
 	AudioPlayer& audioPlayer;
+	particles::ParticleSystem& particleSyst;
 
 	const float velValIni = 128.0f;
 	const float maxVel = 200.0f;

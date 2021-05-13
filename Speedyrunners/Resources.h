@@ -4,6 +4,8 @@
 #include "MusicPlayer.h"
 #include "Globals.hpp"
 #include "AudioPlayer.h"
+#include "ParticleSystem.h"
+
 class Resources
 {
 private:
@@ -16,6 +18,7 @@ private:
 	std::vector<std::vector<sf::SoundBuffer>> soundBuffers;
 	std::vector<sf::Texture> items = std::vector<sf::Texture>(glb::NUMBER_OF_ITEMS);
 	std::vector<sf::Texture> otherTextures = std::vector<sf::Texture>(glb::NUMBER_OF_MISC_TEXTURES);
+
 
 	//std::vector<sf::FloatRect> otherTexturesRect = std::vector<sf::FloatRect>(glb::NUMBER_OF_MISC_TEXTURES);
 
@@ -42,5 +45,7 @@ public:
 
 
 	MusicPlayer musicPlayer;
+
+	particles::ParticleSystem rocketsPartSystem;
 };
 

@@ -1,5 +1,8 @@
 #pragma once
 
+#include <list>
+#include <thread>
+#include <condition_variable>
 #include "SFML/Graphics.hpp"
 #include "Character.h"
 #include "Level.h"
@@ -13,9 +16,8 @@
 #include "NPC.h"
 #include "PlayerSlot.h"
 #include "RoundVictory.h"
-#include <list>
-#include <thread>
-#include <condition_variable>
+
+#include "ParticleSystem.h"
 
 // Defines de configuracion para debug:
 //#define USE_IMGUI
@@ -23,6 +25,7 @@
 #define DISABLE_FULLSCREEN
 
 //#define VERBOSE_DEBUG // Cambiar para quitar couts
+
 
 
 
@@ -74,6 +77,8 @@ protected:
 	std::vector<PlayerPtr> players;
 	std::vector<NPCPtr> npcs;
 	std::list<ItemPtr> items;
+
+	std::vector<particles::ParticleSystem*> particleSystems;
 
 	std::mutex restartMtx;
 	std::condition_variable restartCv;

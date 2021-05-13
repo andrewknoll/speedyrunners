@@ -298,6 +298,7 @@
     <ClCompile Include="Rocket.cpp" />
     <ClCompile Include="RoundVictory.cpp" />
     <ClCompile Include="Settings.cpp" />
+    <ClCompile Include="SmokeParticle.cpp" />
     <ClCompile Include="Spritesheet.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Character.cpp" />
@@ -336,6 +337,7 @@
     <ClInclude Include="RoundVictory.h" />
     <ClInclude Include="Settings.h" />
     <ClInclude Include="SE_Exception.h" />
+    <ClInclude Include="SmokeParticle.h" />
     <ClInclude Include="Spritesheet.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Character.h" />
