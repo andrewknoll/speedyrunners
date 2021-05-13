@@ -223,6 +223,7 @@ void Character::updateStunned(const sf::Time& dT) {
 	}
 }
 
+
 void Character::update(const sf::Time& dT, const Level& lvl)
 
 {
@@ -518,12 +519,12 @@ void Character::useHook(bool use)
 }
 
 Character::ItemPtr Character::useItem(std::shared_ptr<Character> target) {
-	//TODO - Item available?
-	if (currentItem == glb::item::ROCKET) {
-		ItemPtr rocket = std::make_shared<Rocket>(getPosition(), target, facingRight);
-		return rocket;
+	ItemPtr item;
+	if (currentItem == glb::item::ROCKET) { // Fire the rocket
+		item = std::make_shared<Rocket>(getPosition(), target, facingRight);
 	}
-	
+	currentItem = glb::item::NONE; // Used item
+	return item;
 }
 
 

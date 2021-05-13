@@ -37,14 +37,16 @@ void Level::addItemPickup(const sf::Vector2f& pos)
 	itemPickups.emplace_back(pos, collidableTiles.getTileSizeWorld().x);
 }
 
-bool Level::insideItemPickup(Character& character)
+bool Level::checkItemPickups(std::shared_ptr<Character> character)
 {
-	const auto& hb = character.getHitBox();
-	for (auto& i : itemPickups)
-		if (i.isInside(hb)) { // Collides with a pickup
-			character.setItem(i.getItem()); // sets the item and puts the pickup in cd
-			return true;
-		}
+	if (character->getCurrentItem() == glb::item::NONE) { // Only check if the character doesnt already have an item
+		const auto& hb = character->getHitBox();
+		for (auto& i : itemPickups)
+			if (i.isInside(hb)) { // Collides with a pickup
+				character->setItem(i.getItem()); // sets the item and puts the pickup in cd
+				return true;
+			}
+	}
 	return false;
 }
 

@@ -26,7 +26,7 @@ class Character : public sf::Transformable, public sf::Drawable
 	using ItemPtr = std::shared_ptr<Item>;
 
 	// Item:
-	glb::item currentItem = glb::item::ROCKET;
+	glb::item currentItem = glb::item::NONE;
 public:
 	//enum class State {Standing, Running, Sliding, InAir, Grappling, WallJumping, Stunned, Tripped};
 	enum AnimationIndex {

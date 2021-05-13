@@ -489,6 +489,7 @@ void Game::update()
 	if (state == State::Playing && dT.asSeconds() < 0.1) {
 		for (auto c : characters) {
 			if (c->isDead()) continue;
+			lvl.checkItemPickups(c); // check pickups, give the items to the character, etc
 			c->update(dT, lvl);
 		}
 		lvl.update(dT); // respawn items, etc
@@ -581,6 +582,8 @@ void Game::enableCheats(bool enable) {
 	cheatsEnabled = enable;
 #endif
 }
+
+
 
 // Controls for editing state:
 void Game::processEditingInputs(const sf::Event& event) {

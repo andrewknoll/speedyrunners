@@ -136,6 +136,7 @@ public:
 	PlayerPtr getPlayerAt(int pos) const;
 	NPCPtr getNPCAt(int pos) const;
 
+	void checkItemPickups(CharPtr c);
 
 	// allow F1, F2, etc.
 	void enableCheats(bool enable);

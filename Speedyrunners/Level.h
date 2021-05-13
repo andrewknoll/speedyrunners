@@ -50,7 +50,7 @@ public:
 
 	void addItemPickup(const sf::Vector2f& pos);
 
-	bool insideItemPickup(Character& character);
+	bool checkItemPickups(std::shared_ptr<Character> character);
 
 	void drawTile(sf::RenderTarget& target, sf::RenderStates states, const sf::Vector2i& pos, const int tileNumber) const;
 
