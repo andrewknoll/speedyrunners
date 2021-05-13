@@ -3,6 +3,8 @@
 #include "SFML/Graphics.hpp"
 #include "TileMap.h"
 
+class AudioPlayer;
+
 class Hook : public sf::Drawable, public sf::Transformable
 {
 protected:
@@ -11,6 +13,8 @@ protected:
 	sf::Sprite sprite;
 	sf::Vector2f hookerPosition, relPosition, offset;
 	sf::FloatRect hitBox;
+
+	AudioPlayer& audioPlayer;
 
 	bool hooked = false; // hit the wall
 	bool use = false;

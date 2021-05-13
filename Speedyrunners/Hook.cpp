@@ -3,7 +3,7 @@
 #include "Line.hpp"
 #include "utils.hpp"
 
-Hook::Hook()
+Hook::Hook() : audioPlayer(Resources::getInstance().getAudioPlayer())
 {
 	sprite.setTexture(Resources::getInstance().getMiscTexture(0));
 	setTextureRect(false);
@@ -59,6 +59,7 @@ int Hook::update(const sf::Time& dT, const TileMap& tiles, const sf::Vector2f& p
 				vel = sf::Vector2f(0.0, 0.0);
 				hooked = true;
 				setTextureRect(hooked);
+				audioPlayer.play(AudioPlayer::Effect::GRAPPLINGHOOK_ATTACH);
 				return 1;
 			}
 			else {
@@ -82,6 +83,7 @@ void Hook::fire(const sf::Vector2f& pos, bool facingRight)
 		vel.x = -vel.x;
 		offset.x = -offset.x;
 	}
+	audioPlayer.play(AudioPlayer::Effect::GRAPPLINGHOOK_SHOOT);
 }
 
 sf::Vector2f Hook::radius() const {

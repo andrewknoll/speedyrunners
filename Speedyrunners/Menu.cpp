@@ -2,6 +2,10 @@
 #include "utils.hpp"
 #include "Game.h"
 
+#ifdef USE_IMGUI
+#include "imgui-SFML.h"
+#endif // USE_IMGUI
+
 #define DEBUG_MOUSE_POS
 
 Menu::Menu(sf::RenderWindow& _window, Settings& _settings, Game& _game) 
@@ -420,6 +424,9 @@ void Menu::pollEvents()
 			setMainMenu();
 		}
 		else if (event.type == sf::Event::Closed) {
+#ifdef USE_IMGUI
+			ImGui::SFML::Shutdown();
+#endif
 			window->close();
 			exit(0);
 		}

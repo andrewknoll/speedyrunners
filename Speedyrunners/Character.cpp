@@ -207,6 +207,7 @@ void Character::updateBoost(const sf::Time& dT, const Level& lvl) {
 		audioPlayer.stop(AudioPlayer::Effect::CHARGE_GROUNDBOOST); // not charging
 	}
 	else {
+		audioPlayer.stop(AudioPlayer::Effect::SPEEDBOOST); // Not using speedboost
 		if (remainingBoostTime < maxBoostTime && lvl.insideBoostbox(getPosition())) { // Charging
 			audioPlayer.loop(AudioPlayer::Effect::CHARGE_GROUNDBOOST);
 			remainingBoostTime += dT;

@@ -17,6 +17,15 @@
 #include <thread>
 #include <condition_variable>
 
+// Defines de configuracion para debug:
+//#define USE_IMGUI
+#define DEV_MODE
+#define DISABLE_FULLSCREEN
+
+//#define VERBOSE_DEBUG // Cambiar para quitar couts
+
+
+
 class Game
 {
 	using CharPtr = std::shared_ptr<Character>;

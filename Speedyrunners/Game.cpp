@@ -7,11 +7,11 @@
 #include "Menu.h"
 #include "RoundVictory.h"
 
+#ifdef USE_IMGUI
+#include "imgui.h"
+#include "imgui-SFML.h"
+#endif // USE_IMGUI
 
-#define DEV_MODE
-#define DISABLE_FULLSCREEN
-
-//#define VERBOSE_DEBUG // Cambiar para quitar couts
 
 Game::Game()
 	: window(sf::VideoMode(1600, 900), "SpeedyRunners"),
@@ -29,6 +29,11 @@ Game::Game()
 #else
 	settings.setResolution(sf::Vector2i(window.getSize().x, window.getSize().y));
 #endif
+
+#ifdef USE_IMGUI
+	ImGui::SFML::Init(window);
+#endif // USE_IMGUI
+
 
 	countdown.setWindow(window);
 	ui.setWindow(window);
@@ -434,6 +439,10 @@ void Game::update()
 	int target;
 	if (window.pollEvent(event))
 	{
+#ifdef USE_IMGUI
+		ImGui::SFML::ProcessEvent(event);
+#endif // USE_IMGUI
+
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
 			loopMenu();
 		}
@@ -441,6 +450,8 @@ void Game::update()
 			running = false;
 			window.close();
 		}
+
+
 		
 		if (event.type == sf::Event::Resized)
 		{
@@ -486,6 +497,9 @@ void Game::update()
 		}
 
 	}
+#ifdef USE_IMGUI
+	ImGui::SFML::Update(window,dT);
+#endif
 	if (state == State::Playing && dT.asSeconds() < 0.1) {
 		for (auto c : characters) {
 			if (c->isDead()) continue;
@@ -685,6 +699,7 @@ void Game::printCharacterPositions(const sf::Event& e) const {
 
 void Game::draw(sf::Time dT)
 {
+
 	window.clear();
 	window.setView(cam);
 	window.draw(lvl);
@@ -760,8 +775,13 @@ void Game::draw(sf::Time dT)
 	}
 	}
 
+#ifdef USE_IMGUI
+	ImGui::Begin("Hello, world!");
+	ImGui::Button("Look at this pretty button");
+	ImGui::End();
 
-	//lvl.draw(window, cam);
-	//window.draw();
+	ImGui::SFML::Render(window);
+#endif // USE_IMGUI
+
 	window.display();
 }
