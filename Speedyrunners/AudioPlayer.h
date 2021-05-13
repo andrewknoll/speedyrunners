@@ -102,5 +102,9 @@ public:
 	// Stop all efects from the given type
 	void stop(const Effect effect);
 
+
+	// Stop all efects 
+	void stopAll();
+
 };
 

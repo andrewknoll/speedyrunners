@@ -45,8 +45,11 @@ Game::Game()
 
 void Game::clear() {
 	gameWon = false;
+	Resources::getInstance().getAudioPlayer().stopAll(); // stop all sfx
 	characters.clear();
 	players.clear();
+	items.clear(); // delete all items
+	for (auto& p : particleSystems) p->clear(); // and particles
 	running = false;
 
 	for (int i = 0; i < npcs.size(); i++) {
@@ -291,6 +294,7 @@ void Game::loop()
 
 void Game::loopMenu()
 {
+	Resources::getInstance().getAudioPlayer().stopAll();
 	Menu menu(window, settings, *this);
 	if (!src.musicPlayer.isPlaying(MusicPlayer::MusicType::MENU)) {
 		src.musicPlayer.playMusicTrack(MusicPlayer::MusicType::MENU);

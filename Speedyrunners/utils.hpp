@@ -60,11 +60,13 @@ namespace rng {
 		const std::vector<T>& vec;
 	public:
 		Sampler(const std::vector<T>& theVector);
-		T& getSample() const; // Returns a random sample from the vector
+		const T& getSample() const; // Returns a random sample from the vector
 		int getIndex() const; // Same but returns an index
 	};
 
 	inline const IntSampler itemSampler(1, glb::NUMBER_OF_ITEMS); // itemSampler.sample() devuelve el indice de uno de los items de glb
+
+	inline const Sampler bgSampler(glb::bgPaths); // devuelve el path a un background aleatorio
 
 }
 
@@ -199,7 +201,7 @@ inline rng::Sampler<T>::Sampler(const std::vector<T>& theVector) : vec(theVector
 }
 
 template<typename T>
-inline T& rng::Sampler<T>::getSample() const
+inline const T& rng::Sampler<T>::getSample() const
 {
 	return vec[sampler.sample()];
 }

@@ -15,6 +15,7 @@ Rocket::Rocket(sf::Vector2f pos, CharPtr target, bool facingRight) :
 	rocket.setTexture(t);
 	auto rect = utils::relativeToGlobalTextureRect(sf::FloatRect(0,0,1,0.5), t); // Top half only
 	rocket.setTextureRect(rect);
+	utils::centerOrigin(rocket);
 	if (facingRight) {
 		vel = sf::Vector2f(velValIni, -velValIni);
 	}

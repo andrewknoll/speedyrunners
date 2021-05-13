@@ -76,3 +76,9 @@ void AudioPlayer::stop(const Effect effect)
 	stop((int)effect);
 }
 
+void AudioPlayer::stopAll()
+{
+	for (auto& type : sounds)
+		for (auto& sound : type) sound.stop();
+}
+

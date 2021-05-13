@@ -90,7 +90,7 @@ Resources::Resources() :
 	//std::cout << 
 
 	audioPlayer.loadSoundsFromBuffers(soundBuffers);
-	rocketsPartSystem.setTexture(getMiscTexture(8));
+	rocketsPartSystem.setTexture(getMiscTexture(8), sf::FloatRect(0,0,0.5,1)); // only use first horizontal half
 }
 
 Resources& Resources::getInstance() {

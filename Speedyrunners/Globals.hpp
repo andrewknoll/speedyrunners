@@ -86,5 +86,18 @@ namespace glb
 	const std::string LEVELS_PATH = "../assets/levels/";
 
 	const std::string PASSPORT_PATH = CONTENT_PATH + "UI/Ingame/Passports/";
+
+	const std::string BG_PATH = CONTENT_PATH + "Backgrounds/";
+	const int N_BACKGROUNDS = 8;
+	const std::vector<std::string> bgPaths { 
+			BG_PATH + "ENV_Zoo/bg_1280x720.png",
+			BG_PATH + "ENV_Airport/sky_1280_720.png",
+			BG_PATH + "ENV_Boostacoke/Sky.png",
+			BG_PATH + "ENV_Casino/Sky.png",
+			BG_PATH + "ENV_Mansion/Sky.png",
+			BG_PATH + "ENV_NightClub/bg_1280_720.png",
+			BG_PATH + "ENV_Ski/bg_sky.png",
+			BG_PATH + "ENV_ThemePark/sky_1280x720.png"
+		};
 };
 

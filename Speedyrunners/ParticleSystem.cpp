@@ -13,10 +13,11 @@ namespace particles {
 		pSettings.count = nParticles;
 	}
 
-	void ParticleSystem::setTexture(const sf::Texture& t)
+	void ParticleSystem::setTexture(const sf::Texture& t, const sf::FloatRect& rect)
 	{
 		tex = &t;
 		texSize = t.getSize();
+		texRect = sf::IntRect(texSize.x * rect.left, texSize.y * rect.top, texSize.x * rect.width, texSize.y * rect.height);
 		/*for (int i = 0; i < particles.size(); i+=4) {
 			enableParticle(i);
 		}*/
@@ -24,10 +25,10 @@ namespace particles {
 
 	void ParticleSystem::enableParticle(int idx) {
 		idx *= 4;
-		vertices[idx++].texCoords = sf::Vector2f(0, 0); // top L	
-		vertices[idx++].texCoords = sf::Vector2f(0, 0); // top R
-		vertices[idx++].texCoords = sf::Vector2f(texSize.x, texSize.y); // bottom R
-		vertices[idx].texCoords   = sf::Vector2f(0, texSize.y); // bottom L
+		vertices[idx++].texCoords = sf::Vector2f(texRect.left, texRect.top);//sf::Vector2f(0, 0); // top L	
+		vertices[idx++].texCoords = sf::Vector2f(texRect.left + texRect.width, texRect.top); //sf::Vector2f(texSize.x, 0); // top R
+		vertices[idx++].texCoords = sf::Vector2f(texRect.left + texRect.width, texRect.top + texRect.height); //sf::Vector2f(texSize.x, texSize.y); // bottom R
+		vertices[idx].texCoords   = sf::Vector2f(texRect.left, texRect.top + texRect.height); // bottom L
 	}
 	void ParticleSystem::disableParticle(int idx) {
 		idx *= 4;

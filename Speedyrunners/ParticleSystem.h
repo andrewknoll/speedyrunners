@@ -7,7 +7,7 @@ struct Settings {
 	sf::Vector2f pos, 
 		vel = sf::Vector2f(0,0), 
 		velVariation = sf::Vector2f(200, 200);
-	float sizeMin = 1, sizeMax = 10;
+	float sizeMin = 100, sizeMax = 10;
 	size_t count = 1000;
 	sf::Time ttl= sf::seconds(2);
 };
@@ -43,6 +43,7 @@ protected:
 	sf::VertexArray vertices;
 
 	sf::Vector2u texSize;
+	sf::IntRect texRect;
 
 	
 
@@ -52,7 +53,7 @@ protected:
 public:
 	ParticleSystem(int nParticles = 1000);
 
-	void setTexture(const sf::Texture& t);
+	void setTexture(const sf::Texture& t, const sf::FloatRect& rect=sf::FloatRect(0,0,1,1));
 
 	
 

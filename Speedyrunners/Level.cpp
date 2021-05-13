@@ -163,7 +163,9 @@ void Level::load(const std::string& f_name, const sf::RenderWindow& window)
 	file.ignore(); // skip \n
 	std::string line;
 	file >> backgroundPath;
-	background.load(backgroundPath, window);
+	// random thing:
+	if (backgroundPath == "random") background.load(rng::bgSampler.getSample(), window); // random background
+	else background.load(backgroundPath, window);
 	file.ignore(); // skip \n
 
 	// Ini pos:
