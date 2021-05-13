@@ -6,9 +6,9 @@ namespace particles {
 struct Settings {
 	sf::Vector2f pos, 
 		vel = sf::Vector2f(0,0), 
-		velVariation = sf::Vector2f(0, 0);
-	float sizeIni = 100, sizeEnd = 10;
-	size_t count = 100;
+		velVariation = sf::Vector2f(200, 200);
+	float sizeMin = 1, sizeMax = 10;
+	size_t count = 1000;
 	sf::Time ttl= sf::seconds(2);
 };
 
@@ -23,7 +23,7 @@ public:
 
 	void setVertices(sf::VertexArray& vertices, const sf::Vector2f& pos, float r, int idx); // Sets the position of the 4 vertices
 
-	void update(sf::Time dT, sf::Time maxTtl, sf::VertexArray& vertices, int idx);
+	bool update(sf::Time dT, sf::Time maxTtl, sf::VertexArray& vertices, int idx); // returns true if it has died
 	void reset(const particles::Settings& particleSettings);
 
 };
@@ -42,19 +42,26 @@ protected:
 	size_t index;
 	sf::VertexArray vertices;
 
+	sf::Vector2u texSize;
+
 	
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
-
+	void enableParticle(int idx); // enables the particle to be drawn (sets the texCoords)
+	void disableParticle(int idx); // disables it
 public:
-	ParticleSystem(int nParticles = 100);
+	ParticleSystem(int nParticles = 1000);
 
 	void setTexture(const sf::Texture& t);
+
+	
 
 	void emit(const particles::Settings& particleSettings);
 	void emit(const sf::Vector2f& pos);
 
 	void update(sf::Time elapsed);
+
+	void clear(); // clear all particles
 
 };
 

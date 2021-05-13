@@ -16,13 +16,27 @@ namespace particles {
 	void ParticleSystem::setTexture(const sf::Texture& t)
 	{
 		tex = &t;
-		auto size = t.getSize();
-		for (int i = 0; i < vertices.getVertexCount(); i++) {
-			vertices[i++].texCoords = sf::Vector2f(0, 0);	   vertices[i++].texCoords = sf::Vector2f(size.x, 0);
-			vertices[i++].texCoords = sf::Vector2f(0, size.y); vertices[i].texCoords = sf::Vector2f(size.x, size.y);
-		}
+		texSize = t.getSize();
+		/*for (int i = 0; i < particles.size(); i+=4) {
+			enableParticle(i);
+		}*/
 	}
 
+	void ParticleSystem::enableParticle(int idx) {
+		idx *= 4;
+		vertices[idx++].texCoords = sf::Vector2f(0, 0); // top L	
+		vertices[idx++].texCoords = sf::Vector2f(0, 0); // top R
+		vertices[idx++].texCoords = sf::Vector2f(texSize.x, texSize.y); // bottom R
+		vertices[idx].texCoords   = sf::Vector2f(0, texSize.y); // bottom L
+	}
+	void ParticleSystem::disableParticle(int idx) {
+		idx *= 4;
+		sf::Vector2f empty(0, 0);
+		vertices[idx++].texCoords = empty; // top L	
+		vertices[idx++].texCoords = empty; // top R
+		vertices[idx++].texCoords = empty; // bottom R
+		vertices[idx].texCoords   = empty; // bottom L
+	}
 
 	void ParticleSystem::emit(const particles::Settings& particleSettings)
 	{
@@ -34,9 +48,10 @@ namespace particles {
 
 	void ParticleSystem::emit(const sf::Vector2f& pos)
 	{
-		std::cout << "emit index: " << index << "\n";
+		//std::cout << "emit index: " << index << "\n";
 		pSettings.pos = pos;
 		particles[index].reset(pSettings);
+		enableParticle(index); // enable the vertices
 		if (index == 0) index = particles.size() - 1;
 		else index--;
 	}
@@ -46,9 +61,15 @@ namespace particles {
 	{
 		int i = 0;
 		for (auto& p : particles) {
-			p.update(elapsed, pSettings.ttl, vertices, i);
+			if (p.update(elapsed, pSettings.ttl, vertices, i)) // the particle has died
+				disableParticle(i); // stop drawing it
 			i++;
 		}
+	}
+
+	void ParticleSystem::clear()
+	{
+		for (auto& p : particles) p.active = false;
 	}
 
 	void ParticleSystem::draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -64,15 +85,20 @@ namespace particles {
 	void Particle::setVertices(sf::VertexArray& vertices, const sf::Vector2f& pos, float r, int idx)
 	{
 		idx *= 4; // 4 times as many vertices as particles
-		vertices[idx++].position = pos + sf::Vector2f(-r,-r); vertices[idx++].position = pos + sf::Vector2f(r, -r);
-		vertices[idx++].position = pos + sf::Vector2f(-r, r); vertices[idx].position = pos + sf::Vector2f(r, r);
-		std::cout << "idx de vertices: " << idx << "\n";
+		vertices[idx++].position = pos + sf::Vector2f(-r,-r); // top L
+		vertices[idx++].position = pos + sf::Vector2f(r, -r); // top R
+		vertices[idx++].position = pos + sf::Vector2f(r, r);  // bottom R
+		vertices[idx].position	 = pos + sf::Vector2f(-r, r); // bottom L
+		//std::cout << "idx de vertices: " << idx << "\n";
 	}
 
-	void Particle::update(sf::Time dT, sf::Time maxTtl, sf::VertexArray& vertices, int idx)
+	bool Particle::update(sf::Time dT, sf::Time maxTtl, sf::VertexArray& vertices, int idx)
 	{
 		if (active) {
-			if (ttl < sf::Time::Zero) active = false;
+			if (ttl < sf::Time::Zero) {
+				active = false;
+				return true;
+			}
 			else {
 				ttl -= dT;
 				float dtSec = dT.asSeconds();
@@ -82,6 +108,7 @@ namespace particles {
 				setVertices(vertices, getPosition(), radius, idx);
 			}
 		}
+		return false;
 	}
 
 	void Particle::reset(const particles::Settings& particleSettings)
@@ -90,8 +117,8 @@ namespace particles {
 		vel = particleSettings.vel;
 		auto& var = particleSettings.velVariation;
 		vel += 0.5f * sf::Vector2f(rng::defaultGen.rand(-var.x, var.x), rng::defaultGen.rand(-var.y, var.y));
-		minRadius = particleSettings.sizeIni;
-		maxRadius = particleSettings.sizeEnd;
+		minRadius = particleSettings.sizeMin;
+		maxRadius = particleSettings.sizeMax;
 		ttl = particleSettings.ttl;
 		active = true;
 		setRotation(rng::defaultGen.rand(0, 360));

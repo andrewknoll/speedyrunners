@@ -5,7 +5,7 @@
 #include <sstream>
 
 Resources::Resources() :
-	rocketsPartSystem(100) 
+	rocketsPartSystem() 
 {
 	std::ifstream file(PATH_TO_ASSETS + RESOURCES_CSV);
 

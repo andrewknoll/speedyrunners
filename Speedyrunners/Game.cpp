@@ -528,6 +528,8 @@ void Game::update()
 		updateNPCs(true);
 		if (characters.size() > 1 && aliveCount < 2) {
 			state = State::FinishedRound;
+			items.clear(); // delete all items
+			for (auto& p : particleSystems) p->clear(); // and particles
 			for (auto c : characters) {
 				if (!c->isDead()) {
 					c->increaseScore(1);
