@@ -46,17 +46,23 @@ void AudioPlayer::play(const Effect effect)
 	play((int)effect);
 }
 
-void AudioPlayer::loop(const int effect, bool loopIt)
-{
-	auto& sound = getSample(effect);
-	sound.setLoop(loopIt);
-	if (!loopIt) sound.stop();
-	else if (!sound.Playing) sound.play();
-}
 
 void AudioPlayer::loop(const Effect effect, bool loopIt)
 {
-	loop((int)effect, loopIt);
+	setLoop(effect, loopIt);
+	continuePlaying(effect);
+}
+
+void AudioPlayer::setLoop(const Effect effect, bool loopIt)
+{	
+	for (auto& sound : sounds[(int)effect])
+		sound.setLoop(loopIt);
+}
+
+void AudioPlayer::continuePlaying(const Effect effect)
+{
+	auto& s = getSample(effect);
+	if (s.getStatus() != sf::Sound::Status::Playing) s.play();
 }
 
 void AudioPlayer::stop(const int effect)

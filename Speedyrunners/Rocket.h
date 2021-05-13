@@ -14,6 +14,8 @@ private:
 	sf::Vector2f vel, acc, position;
 	float angle;
 
+	AudioPlayer& audioPlayer;
+
 	const float velValIni = 128.0f;
 	const float maxVel = 200.0f;
 	const float minVel = 10.0f;

@@ -1,13 +1,15 @@
+#include <cmath>
 #include "Rocket.h"
 #include "Resources.h"
 #include "utils.hpp"
-#include <cmath>
+#include "Resources.h"
 
 Rocket::Rocket(sf::Vector2f pos, CharPtr target, bool facingRight) :
 	Item(glb::item::ROCKET),
 	target(target),
 	particles(3),
-	position(pos)
+	position(pos),
+	audioPlayer(Resources::getInstance().getAudioPlayer())
 {
 	auto& t = Resources::getInstance().getItemTexture(glb::item::ROCKET);
 	rocket.setTexture(t);
@@ -19,6 +21,11 @@ Rocket::Rocket(sf::Vector2f pos, CharPtr target, bool facingRight) :
 	else {
 		vel = sf::Vector2f(-velValIni, -velValIni);
 	}
+	// Sound:
+	audioPlayer.play(AudioPlayer::Effect::ROCKET_LAUNCH);
+	audioPlayer.setLoop(AudioPlayer::Effect::ROCKET_FLY_LOOP);
+	audioPlayer.continuePlaying(AudioPlayer::Effect::ROCKET_FLY_LOOP);
+
 }
 
 void Rocket::draw(sf::RenderTarget& target, sf::RenderStates states) const {
@@ -33,13 +40,18 @@ bool Rocket::update(sf::Time elapsed) {
 		diff = (target->getPosition() - position);
 		acc.x = accVal * (diff.x);
 		acc.y = accVal * (diff.y);
-		if (utils::length(diff) < detonationRadius) {
+		float dist = utils::length(diff);
+		if (dist < detonationRadius) { // Detonate
+			audioPlayer.play(AudioPlayer::Effect::ROCKET_EXPLODE);
 			return true;
 		}
-		/*if (diff.x > 0) acc.x = accVal;
-		else acc.x = -accVal;
-		if (diff.y > 0) acc.y = accVal;
-		else acc.y = -accVal;*/
+		else if (dist < 2 * detonationRadius) { // Almost hit
+			audioPlayer.setLoop(AudioPlayer::Effect::ROCKET_ALMOST_HIT_LOOP);
+			audioPlayer.continuePlaying(AudioPlayer::Effect::ROCKET_ALMOST_HIT_LOOP);
+		}
+		else { // Stop the loop if it got away
+			audioPlayer.setLoop(AudioPlayer::Effect::ROCKET_ALMOST_HIT_LOOP, false);
+		}
 	}
 
 	//Move
@@ -67,4 +79,6 @@ void Rocket::doThingTo(std::shared_ptr<Character> c)
 	if (distance < explosionRadius) {
 		c->getHitByRocket();
 	}
+	audioPlayer.stop(AudioPlayer::Effect::ROCKET_ALMOST_HIT_LOOP);
+	audioPlayer.stop(AudioPlayer::Effect::ROCKET_FLY_LOOP);
 }

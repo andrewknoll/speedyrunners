@@ -40,7 +40,32 @@ public:
 		WIN_ROUND_1,
 		WIN_ROUND_2,
 		TEXT_APPEAR,
-		TEXT_DISAPPEAR
+		TEXT_DISAPPEAR,
+		// ----------------- ITEMS:
+		SHOCKWAVE,
+		ICE_BEAM_FULL,
+		PARTY_HORN, // What the hell
+		ROCKET_FIRE,
+		CH_FREEZE,
+		CH_UNFREEZE,
+		FIREBALL_HIT,
+		TNT_EXPLODE,
+		TNT_PLACE,
+		CRATE_DROP,
+		FIREBALL_EXPLODE,
+		FIREBALL_HIT_GROUND,
+		FIREBALL_LAUNCH,
+		FIREBALL_ROLLING_LOOP,
+		GOLDEN_HOOK_HIT,
+		GOLDEN_HOOK_SHOOT,
+		GRAPPLINGHOOK_ATTACH,
+		GRAPPLINGHOOK_SHOOT,
+		ROCKET_ALMOST_HIT_LOOP,
+		ROCKET_EXPLODE,
+		ROCKET_FLY_LOOP,
+		ROCKET_LAUNCH,
+		TORNADO_ACTIVATE
+
 	};
 protected:
 	std::vector<std::vector<sf::Sound>> sounds; // like sf::Sprite for sounds
@@ -67,6 +92,12 @@ public:
 
 	// Loop (or stop looping if loopIt=false)
 	void loop(const Effect effect, bool loopIt = true);
+
+	// Set loop status (doesnt play it
+	void setLoop(const Effect effect, bool loopIt = true);
+
+	// continue playing the effect or start it
+	void continuePlaying(const Effect effect);
 
 	// Stop all efects from the given type
 	void stop(const Effect effect);
