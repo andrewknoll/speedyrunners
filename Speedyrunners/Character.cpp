@@ -198,14 +198,21 @@ void Character::updateVel(const float& dtSec) {
 void Character::updateBoost(const sf::Time& dT, const Level& lvl) {
 	if (usingBoost && utils::dot(vel, vel) > 0.01) {
 		remainingBoostTime -= dT;
+		audioPlayer.loop(AudioPlayer::Effect::SPEEDBOOST);
 		if (remainingBoostTime < sf::seconds(0)) {
 			usingBoost = false;
 			std::cout << "boost depleted\n";
+			audioPlayer.stop(AudioPlayer::Effect::SPEEDBOOST);
 		}
+		audioPlayer.stop(AudioPlayer::Effect::CHARGE_GROUNDBOOST); // not charging
 	}
 	else {
-		if (remainingBoostTime < maxBoostTime && lvl.insideBoostbox(getPosition())) {
+		if (remainingBoostTime < maxBoostTime && lvl.insideBoostbox(getPosition())) { // Charging
+			audioPlayer.loop(AudioPlayer::Effect::CHARGE_GROUNDBOOST);
 			remainingBoostTime += dT;
+		}
+		else { // Stopped charging
+			audioPlayer.stop(AudioPlayer::Effect::CHARGE_GROUNDBOOST);
 		}
 	}
 }
