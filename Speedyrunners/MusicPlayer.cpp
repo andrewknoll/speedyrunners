@@ -1,7 +1,7 @@
 #include "MusicPlayer.h"
 
 
-//#define DISABLE_MUSIC // DEBUG jeje
+#define DISABLE_MUSIC // DEBUG jeje
 
 void MusicPlayer::addTrack(std::string file, int t) {
 	std::shared_ptr<sf::Music> m = std::make_shared<sf::Music>();

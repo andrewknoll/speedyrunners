@@ -153,6 +153,9 @@
     <ClCompile Include="BoostBox.cpp">
       <Filter>Level\LevelElements</Filter>
     </ClCompile>
+    <ClCompile Include="ItemPickup.cpp">
+      <Filter>Level\LevelElements</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TileMap.h">
@@ -253,6 +256,9 @@
     </ClInclude>
     <ClInclude Include="SE_Exception.h" />
     <ClInclude Include="BoostBox.h">
+      <Filter>Level\LevelElements</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemPickup.h">
       <Filter>Level\LevelElements</Filter>
     </ClInclude>
   </ItemGroup>

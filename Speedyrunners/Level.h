@@ -5,10 +5,11 @@
 #include "Checkpoint.h"
 #include "Background.h"
 #include "BoostBox.h"
+#include "ItemPickup.h"
 
 
 class Camera; // Pre-declaracion mejor que include en el hpp
-
+class Character;
 
 //template <std::size_t rows, std::size_t cols>
 class Level : public sf::Drawable
@@ -31,7 +32,9 @@ class Level : public sf::Drawable
 
 	std::vector<Checkpoint> checkpoints;
 
+	// Interactible thingies:
 	std::vector<BoostBox> boostBoxes;
+	std::vector<ItemPickup> itemPickups;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 public:
@@ -44,6 +47,10 @@ public:
 	void addBoostBox(const sf::Vector2f& pos);
 
 	bool insideBoostbox(const sf::Vector2f& pos) const;
+
+	void addItemPickup(const sf::Vector2f& pos);
+
+	bool insideItemPickup(Character& character);
 
 	void drawTile(sf::RenderTarget& target, sf::RenderStates states, const sf::Vector2i& pos, const int tileNumber) const;
 
@@ -74,6 +81,9 @@ public:
 	void addCheckpoint(const sf::Vector2f& pos, float r);
 
 	void getCheckpoints(std::vector<Checkpoint>& _checkpoints) const;
+
+
+	void update(const sf::Time& dT);
 	//void draw(sf::RenderWindow& window, const Camera& cam) const;
 
 };

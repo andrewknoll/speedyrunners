@@ -29,13 +29,15 @@ namespace glb
 		const std::string TAUNT_ANIM = "Taunt";
 		const std::string START_ANIM = "321GO";
 	};
+	const int NUMBER_OF_MISC_TEXTURES = 6;
+	const sf::Vector2f FEET_TO_HAND = sf::Vector2f(20.0, 0);// -50.0
+	// Items:
 	const int NUMBER_OF_ITEMS = 1;
-	const int NUMBER_OF_MISC_TEXTURES = 5;
-	const sf::Vector2f FEET_TO_HAND = sf::Vector2f(20.0, 0);// -50.0);
 	enum item : int {
 		NONE = 0,
 		ROCKET = 1
 	};
+	// Characters:
 	enum characterIndex : int {
 		SPEEDRUNNER = 0,
 		COSMONAUT = 1,
@@ -48,6 +50,9 @@ namespace glb
 
 
 	const sf::Time STUN_TIME = sf::seconds(2); // Rockets, spikes
+
+
+	const sf::Time itemPickupRespawn = sf::seconds(10); // Respawn time for the capsule item thingies
 
 	const float runningAcceleration = 800;
 	const float flyingAcceleration = 350;

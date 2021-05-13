@@ -35,6 +35,38 @@ public:
 
 };
 
+
+namespace rng {
+	class IntSampler {
+		// Devuelve un int aleatorio entre min y max (incluidos)
+	protected:
+		mutable std::mt19937 gen{ std::random_device{}() }; //Standard mersenne_twister_engine seeded with rd()
+		mutable std::uniform_int_distribution<> dis;
+	public:
+		IntSampler(const int min, const int max);
+		int sample() const; // Same but returns an index
+	};
+
+	template <typename T>
+	class Sampler {
+		// Devuelve un elemento aleatorio del vector que le pasas al constructor:
+		// ej:
+		// Sampler sampler(vec)
+		// auto& sample = sampler.getSample(); // Sample es uno de los eltos de vec
+	protected:
+		IntSampler sampler;
+		const std::vector<T>& vec;
+	public:
+		Sampler(const std::vector<T>& theVector);
+		T& getSample() const; // Returns a random sample from the vector
+		int getIndex() const; // Same but returns an index
+	};
+
+	inline const IntSampler itemSampler(1, glb::NUMBER_OF_ITEMS); // itemSampler.sample() devuelve el indice de uno de los items de glb
+
+}
+
+
 // para evitar el to_string en cout
 std::ostream& operator<<(std::ostream& os, const RNG& c);
 
@@ -154,4 +186,21 @@ template<typename T>
 std::ostream& operator<<(std::ostream& os, const sf::Vector2<T>& v)
 {
 	return os << to_string(v);
+}
+
+template<typename T>
+inline rng::Sampler<T>::Sampler(const std::vector<T>& theVector) : vec(theVector), sampler(0, theVector.size()-1)
+{
+}
+
+template<typename T>
+inline T& rng::Sampler<T>::getSample() const
+{
+	return vec[sampler.sample()];
+}
+
+template<typename T>
+inline int rng::Sampler<T>::getIndex() const
+{
+	return sampler.sample();
 }

@@ -8,8 +8,8 @@
 #include "RoundVictory.h"
 
 
-//#define DEV_MODE
-
+#define DEV_MODE
+#define DISABLE_FULLSCREEN
 
 //#define VERBOSE_DEBUG // Cambiar para quitar couts
 
@@ -24,10 +24,13 @@ Game::Game()
 {
 
 	setUpWindow();
+#ifndef  DISABLE_FULLSCREEN
 	setFullScreen();
-	countdown.setWindow(window);
-	//settings.setResolution(sf::Vector2i(window.getSize().x, window.getSize().y));
+#else
+	settings.setResolution(sf::Vector2i(window.getSize().x, window.getSize().y));
+#endif
 
+	countdown.setWindow(window);
 	ui.setWindow(window);
 
 	loadLevel("big-one.csv");
@@ -488,6 +491,7 @@ void Game::update()
 			if (c->isDead()) continue;
 			c->update(dT, lvl);
 		}
+		lvl.update(dT); // respawn items, etc
 		updateItems();
 
 		updatePositions();
@@ -653,6 +657,9 @@ void Game::processEditingInputs(const sf::Event& event) {
 	}
 	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::B) {
 		lvl.addBoostBox(utils::mousePosition2f(window));
+	}
+	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::I) { // ITem pickup
+		lvl.addItemPickup(utils::mousePosition2f(window));
 	}
 
 	// Debug player positions (P to show):

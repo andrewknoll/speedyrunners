@@ -284,6 +284,7 @@
     <ClCompile Include="Hook.cpp" />
     <ClCompile Include="Item.cpp" />
     <ClCompile Include="InGameUI.cpp" />
+    <ClCompile Include="ItemPickup.cpp" />
     <ClCompile Include="Line.cpp" />
     <ClCompile Include="LobbyWidget.cpp" />
     <ClCompile Include="Menu.cpp" />
@@ -320,6 +321,7 @@
     <ClInclude Include="Hook.h" />
     <ClInclude Include="Item.h" />
     <ClInclude Include="InGameUI.h" />
+    <ClInclude Include="ItemPickup.h" />
     <ClInclude Include="Line.hpp" />
     <ClInclude Include="LobbyWidget.h" />
     <ClInclude Include="Menu.h" />

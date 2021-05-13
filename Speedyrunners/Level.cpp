@@ -32,6 +32,22 @@ bool Level::insideBoostbox(const sf::Vector2f& pos) const
 	return false;
 }
 
+void Level::addItemPickup(const sf::Vector2f& pos)
+{
+	itemPickups.emplace_back(pos, collidableTiles.getTileSizeWorld().x);
+}
+
+bool Level::insideItemPickup(Character& character)
+{
+	const auto& hb = character.getHitBox();
+	for (auto& i : itemPickups)
+		if (i.isInside(hb)) { // Collides with a pickup
+			character.setItem(i.getItem()); // sets the item and puts the pickup in cd
+			return true;
+		}
+	return false;
+}
+
 void Level::drawTile(sf::RenderTarget& target, sf::RenderStates states, const sf::Vector2i& pos, const int tileNumber) const
 {
 	collidableTiles.drawTile(target, states, pos, tileNumber);
@@ -255,7 +271,8 @@ void Level::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	target.draw(background);
 	target.draw(collidableTiles, states);
-	for (const auto& b : boostBoxes) target.draw(b, states);
+	for (const auto& b : boostBoxes)  target.draw(b, states);
+	for (const auto& i : itemPickups) target.draw(i, states);
 }
 
 
@@ -268,4 +285,9 @@ void Level::addCheckpoint(const sf::Vector2f& pos, float r)
 void Level::getCheckpoints(std::vector<Checkpoint>& _checkpoints) const
 {
 	_checkpoints = checkpoints;
+}
+
+void Level::update(const sf::Time& dT)
+{
+	for (auto& i : itemPickups) i.update(dT);
 }

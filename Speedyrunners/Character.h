@@ -197,8 +197,12 @@ public:
 	std::string getUIIconPath() const;
 
 
-	// ITem:
+	// Item:
 	glb::item getCurrentItem() const;
+	void setItem(glb::item item);
+
+	const sf::FloatRect& getHitBox() const;
+
 
 	// TODO: implementar estado de stunned, con su countdown, etc
 	void getHitByRocket();

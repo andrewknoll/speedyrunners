@@ -256,3 +256,12 @@ sf::Vector2f geometry::toWorld(const Mat2& m, const sf::Vector2f& local)
 {
 	return m*local;
 }
+
+rng::IntSampler::IntSampler(const int min, const int max) : dis(min, max)
+{
+}
+
+int rng::IntSampler::sample() const
+{
+	return dis(gen);
+}

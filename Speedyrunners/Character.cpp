@@ -534,6 +534,16 @@ void Character::getHitByRocket() {
 	isStunned = true;
 }
 
+void Character::setItem(glb::item item)
+{
+	currentItem = item;
+}
+
+const sf::FloatRect& Character::getHitBox() const
+{
+	return hitBox;
+}
+
 
 glb::item Character::getCurrentItem() const {
 	return currentItem;
