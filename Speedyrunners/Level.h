@@ -10,6 +10,7 @@
 
 class Camera; // Pre-declaracion mejor que include en el hpp
 class Character;
+class AudioPlayer;
 
 //template <std::size_t rows, std::size_t cols>
 class Level : public sf::Drawable
@@ -26,9 +27,9 @@ class Level : public sf::Drawable
 
 
 	std::string backgroundPath;
-	//int rows, cols;
-	//std::vector<std::vector<TileMap>> tileMap;
-	//std::vector<sf::Texture> spriteSheets; // se deben mantener en memoria: https://www.sfml-dev.org/documentation/2.5.1/classsf_1_1Sprite.php
+	
+	// Audio:
+	AudioPlayer& audioPlayer;
 
 	std::vector<Checkpoint> checkpoints;
 

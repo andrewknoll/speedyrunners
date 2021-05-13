@@ -4,6 +4,8 @@
 #include "SFML/Graphics.hpp"
 #include "Camera.h"
 #include "utils.hpp"
+#include "Resources.h"
+#include "AudioPlayer.h"
 
 // airport: "../assets/Content/tiles/tiles_airport.png"
 Level::Level(const sf::RenderWindow& window) : Level("../assets/Content/tiles/tiles_black_editor.png", "../assets/Content/Backgrounds/ENV_Airport/sky_1280_720.png", window)
@@ -43,6 +45,7 @@ bool Level::checkItemPickups(std::shared_ptr<Character> character)
 		const auto& hb = character->getHitBox();
 		for (auto& i : itemPickups)
 			if (i.isInside(hb)) { // Collides with a pickup
+				audioPlayer.play(AudioPlayer::Effect::PICKUP);
 				character->setItem(i.getItem()); // sets the item and puts the pickup in cd
 				return true;
 			}
@@ -217,7 +220,7 @@ void Level::load(const std::string& f_name, const sf::RenderWindow& window)
 
 
 Level::Level(const std::string& tilesetPath, const std::string& bgPath, const sf::RenderWindow& window) :
-	backgroundPath(bgPath), background(bgPath,window)
+	backgroundPath(bgPath), background(bgPath,window), audioPlayer(Resources::getInstance().getAudioPlayer())
 {	// Adapted from: https://www.sfml-dev.org/tutorials/2.5/graphics-vertex-array.php#what-is-a-vertex-and-why-are-they-always-in-arrays
 	// define the level with an array of tile indices
 	const int lvlSize = 128 * 64;
