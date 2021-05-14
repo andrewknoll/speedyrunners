@@ -61,8 +61,10 @@ void AudioPlayer::setLoop(const Effect effect, bool loopIt)
 
 void AudioPlayer::continuePlaying(const Effect effect)
 {
-	auto& s = getSample(effect);
-	if (s.getStatus() != sf::Sound::Status::Playing) s.play();
+	for (auto& sound : sounds[(int)effect])
+		if (sound.getStatus() == sf::Sound::Status::Playing)
+			return; // one is already playing
+	getSample(effect).play(); // otherwise, play one
 }
 
 void AudioPlayer::stop(const int effect)

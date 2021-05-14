@@ -162,24 +162,23 @@ void Character::updateVel(const float& dtSec) {
 		//or the running speed of the character is greater than their current velocity, set it to that
 		if (((vel.x >= 0) ^ (acc.x >= 0)) || abs(vel.x) <= abs(runningSpeed.x)) vel.x = runningSpeed.x;
 		//Otherwise slow down
-		else if (isGrounded) {
+		else if (isGrounded) { // BUG: aqui no entra nunca
+			std::cout << "applying friction\n";
+			if (rng::defaultGen.rand01() > 0.9) particleSystems[glb::particleSystemIdx::BRAKE].emit(getPosition());
+			else std::cout << "ESTOY AQUI Y NOP\n";
 			if (facingRight) vel.x = vel.x - physics::FLOOR_FRICTION * 0.5 * dtSec;
 			else vel.x = vel.x + physics::FLOOR_FRICTION * 0.5 * dtSec;
 		}
-		//// TODO: donde poner esto????????????? 
-		if (isGrounded) {
-			//vel = base * vel;
-		}
-		if (false);
-		else { // if not grounded,
-			//Likewise with y axis
-			if ((vel.y >= 0) ^ (acc.y >= 0)) vel.y = vel.y + acc.y * dtSec;
-			else if (abs(vel.y) < abs(runningSpeed.y)) vel.y = runningSpeed.y;// vel.y = (vel.y > 0) ? runningSpeed.y : -runningSpeed.y;
-			//Except we do nothing otherwise
-		}
+
+		//Likewise with y axis
+		if ((vel.y >= 0) ^ (acc.y >= 0)) vel.y = vel.y + acc.y * dtSec;
+		else if (abs(vel.y) < abs(runningSpeed.y)) vel.y = runningSpeed.y;// vel.y = (vel.y > 0) ? runningSpeed.y : -runningSpeed.y;
+		//Except we do nothing otherwise
+		
 		//if running on the ground, velocity and acceleration are oposed
 		if (!isStunned && isGrounded && isRunning && !usingHook) {
-			if (((vel.x >= 0) ^ (acc.x >= 0)) && abs(vel.x) > 50.0f) {
+			if (((vel.x >= 0) ^ (acc.x >= 0)) && abs(vel.x) > 20.0f) {
+				emitBrakeParticles();
 				setAnimation(SkidAnim, true);
 			}
 			else {
@@ -321,7 +320,7 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 		
 		if (sliding) {
 			setAnimation(SlidingAnim);
-			audioPlayer.play(AudioPlayer::Effect::SLIDE);
+			audioPlayer.continuePlaying(AudioPlayer::Effect::SLIDE);
 		}
 		updateGrounded(c.normal);
 
@@ -603,12 +602,24 @@ void Character::updateAcceleration() {
 		
 }
 
+void Character::emitBrakeParticles() {
+	audioPlayer.continuePlaying(AudioPlayer::Effect::SLIDE_DOWN_SKID);
+	if (rng::defaultGen.rand01() > 0.8)
+		particleSystems[glb::particleSystemIdx::BRAKE].emit(getPosition()+sf::Vector2f(0,getSprite().getGlobalBounds().height/2.0f)); // sliding particles
+}
+
+
 void Character::setFriction() {
 	if (!isRunning && !swinging) {
 		float eps = 10;
 		float friction;
 		if (isGrounded) {
-			if (sliding) friction = physics::FLOOR_FRICTION * 1.5;
+			if (std::abs(vel.x) > eps) {
+				emitBrakeParticles();
+				setAnimation(SkidAnim, true);
+				currentAnimation->update_orientation(!facingRight);
+			}
+			if (sliding) friction = physics::FLOOR_FRICTION * 0.5;
 			else friction = physics::FLOOR_FRICTION;
 		}
 		else friction = physics::AIR_FRICTION;

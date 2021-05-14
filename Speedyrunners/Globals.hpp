@@ -105,7 +105,8 @@ namespace glb
 	enum particleSystemIdx {
 		ROCKET_SMOKE,
 		ROCKET_CLOUD,
-		BOOST
+		BOOST,
+		BRAKE // when sliding, etc
 	};
 };
 

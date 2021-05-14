@@ -13,6 +13,9 @@ struct Settings {
 	size_t count = 1000;
 	sf::Time ttl= sf::seconds(2);
 	bool randomSprites = false;
+	bool gravity = false;
+	sf::Color colorIni = sf::Color::White, 
+		colorEnd = sf::Color::White;
 
 
 	Settings(const std::string& line, const char sep = ','); // loads the settings from a line containing the values separated by 'sep'
@@ -29,6 +32,8 @@ public:
 	bool active = false;
 
 	void setVertices(sf::VertexArray& vertices, const sf::Vector2f& pos, int idx, float r, float alpha = 255);
+
+	void setVertices(sf::VertexArray& vertices, const sf::Vector2f& pos, int idx, float r, float alpha, const sf::Color& c);
 
 	bool update(sf::Time dT, const Settings& pSettings, sf::VertexArray& vertices, int idx);// returns true if it has died
 

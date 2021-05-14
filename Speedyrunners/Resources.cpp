@@ -76,7 +76,7 @@ Resources::Resources()
 		}*/
 		else if (type == "T") {
 			for (int i = 0; i < 2; i++) std::getline(iss, token[i], ',');
-			otherTextures[stoi(token[0])].loadFromFile(PATH_TO_ASSETS + token[1]);
+			otherTextures.emplace_back().loadFromFile(PATH_TO_ASSETS + token[1]);
 		}
 		else if (type == "I") {
 			for (int i = 0; i < 2; i++) std::getline(iss, token[i], ',');
@@ -94,7 +94,7 @@ Resources::Resources()
 			std::getline(liness, line); // rest of the line until \n
 			particles::Settings pSettings(line);
 			auto& ps = particleSystems.emplace_back(pSettings);
-			std::cout <<"texRect: " << texRect.left << " "<<texRect.top << " "<<texRect.width << " "<<texRect.height << " \n";
+			//std::cout <<"texRect: " << texRect.left << " "<<texRect.top << " "<<texRect.width << " "<<texRect.height << " \n";
 			ps.setTexture(getMiscTexture(texIdx), texRect);
 		}
 		/*else if (type == "L") {

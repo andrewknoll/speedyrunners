@@ -16,7 +16,7 @@ private:
 	std::vector<std::vector<Spritesheet> > win_spritesheets;
 	std::vector<std::vector<sf::SoundBuffer>> soundBuffers;
 	std::vector<sf::Texture> items = std::vector<sf::Texture>(glb::NUMBER_OF_ITEMS);
-	std::vector<sf::Texture> otherTextures = std::vector<sf::Texture>(glb::NUMBER_OF_MISC_TEXTURES);
+	std::vector<sf::Texture> otherTextures;
 
 	std::vector<particles::ParticleSystem> particleSystems;// rocketsPartSystem;
 

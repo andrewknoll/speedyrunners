@@ -133,6 +133,7 @@ protected:
 	void updateInRamp(Tiles::Ramp ramp);
 	void setDefaultOrigin();
 	void updateBoost(const sf::Time& dT, const Level& lvl);
+	void emitBrakeParticles();
 public:
 	Character(Spritesheet sp, int ID, int variant = 0);
 

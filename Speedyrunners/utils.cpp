@@ -46,14 +46,21 @@ namespace utils {
 
 	float parseFloat(std::istringstream& is, const char sep) {
 		std::string token;
-		getline(is, token, sep);
+		if (!getline(is, token, sep)) return 0;
 		return stof(token);
 	}
 
-	float parseInt(std::istringstream& is, const char sep) {
+	int parseInt(std::istringstream& is, const char sep) {
 		std::string token;
-		getline(is, token, sep);
+		if (!getline(is, token, sep)) return 0;
 		return stoi(token);
+	}
+
+	sf::Color parseColor(std::istringstream& is, const char sep)
+	{
+		std::vector<int>rgb;
+		for (int i = 0; i < 3; i++) rgb.push_back(parseInt(is, sep));
+		return sf::Color(rgb[0], rgb[1], rgb[2]);
 	}
 
 	float stopDistance(const float& speed, const float& deceleration) {

@@ -111,17 +111,41 @@ namespace particles {
 
 		target.draw(vertices, states);
 	}
-
 	void Particle::setVertices(sf::VertexArray& vertices, const sf::Vector2f& pos, int idx, float r, float alpha)
 	{
 		idx *= 4; // 4 times as many vertices as particles
-		vertices[idx].position = pos + sf::Vector2f(-r,-r); // top L
-		vertices[idx++].color.a = alpha; // top L
-		vertices[idx].position = pos + sf::Vector2f(r, -r); // top R
-		vertices[idx++].color.a = alpha;
-		vertices[idx].position = pos + sf::Vector2f(r, r);  // bottom R
-		vertices[idx++].color.a = alpha;
-		vertices[idx].position	 = pos + sf::Vector2f(-r, r); // bottom L
+		// top L:
+		vertices[idx].position = pos + sf::Vector2f(-r, -r);
+		vertices[idx].color.a = alpha;
+		// top R:
+		vertices[++idx].position = pos + sf::Vector2f(r, -r);
+		vertices[idx].color.a = alpha;
+		// bottom R:
+		vertices[++idx].position = pos + sf::Vector2f(r, r);
+		vertices[idx].color.a = alpha;
+		// bottom L:
+		vertices[++idx].position = pos + sf::Vector2f(-r, r);
+		vertices[idx].color.a = alpha;
+		//std::cout << "idx de vertices: " << idx << "\n";
+	}
+	void Particle::setVertices(sf::VertexArray& vertices, const sf::Vector2f& pos, int idx, float r, float alpha, const sf::Color& c)
+	{
+		idx *= 4; // 4 times as many vertices as particles
+		// top L:
+		vertices[idx].position = pos + sf::Vector2f(-r,-r); 
+		vertices[idx].color = c; 
+		vertices[idx].color.a = alpha; 
+		// top R:
+		vertices[++idx].position = pos + sf::Vector2f(r, -r); 
+		vertices[idx].color = c; 
+		vertices[idx].color.a = alpha;
+		// bottom R:
+		vertices[++idx].position = pos + sf::Vector2f(r, r);  
+		vertices[idx].color = c; 
+		vertices[idx].color.a = alpha;
+		// bottom L:
+		vertices[++idx].position	 = pos + sf::Vector2f(-r, r);
+		vertices[idx].color = c; 
 		vertices[idx].color.a = alpha;
 		//std::cout << "idx de vertices: " << idx << "\n";
 	}
@@ -136,11 +160,13 @@ namespace particles {
 			else {
 				float dtSec = dT.asSeconds();
 				sf::Transformable::move(vel * dtSec);
+				if (pSettings.gravity && vel.y < physics::MAX_FALL_SPEED) vel.y += 0.4f * physics::GRAVITY * dtSec;
 				sf::Transformable::rotate(rotation * dtSec);
 				sf::Time maxTtl = pSettings.ttl;
 				float radius = utils::lerp(pSettings.sizeEnd, pSettings.sizeIni, ttl / maxTtl);
 				float alpha = utils::lerp(pSettings.alphaEnd, pSettings.alphaIni, ttl / maxTtl);
-				setVertices(vertices, getPosition(), idx, radius, alpha);
+				sf::Color c = utils::lerp(pSettings.colorEnd, pSettings.colorIni, ttl / maxTtl);
+				setVertices(vertices, getPosition(), idx, radius, alpha, c);
 				ttl -= dT;
 			}
 		}
@@ -152,8 +178,8 @@ namespace particles {
 		setPosition(particleSettings.pos);
 		vel = particleSettings.vel;
 		auto& negVar = particleSettings.velVarNeg;
-		auto& posVar = particleSettings.velVarNeg;
-		vel += 0.5f * sf::Vector2f(rng::defaultGen.rand(-negVar.x, posVar.x), rng::defaultGen.rand(-negVar.y, posVar.y));
+		auto& posVar = particleSettings.velVarPos;
+		vel += sf::Vector2f(rng::defaultGen.rand(-negVar.x, posVar.x), rng::defaultGen.rand(-negVar.y, posVar.y));
 		ttl = particleSettings.ttl;
 		active = true;
 		setRotation(rng::defaultGen.rand(0, 360));
@@ -170,10 +196,10 @@ namespace particles {
 		pos.y = parseFloat(is, sep);
 		vel.x = parseFloat(is, sep);
 		vel.y = parseFloat(is, sep);
-		velVarPos.x = parseFloat(is, sep);
-		velVarPos.y = parseFloat(is, sep);
 		velVarNeg.x = parseFloat(is, sep);
 		velVarNeg.y = parseFloat(is, sep);
+		velVarPos.x = parseFloat(is, sep);
+		velVarPos.y = parseFloat(is, sep);
 		sizeIni = parseFloat(is, sep);
 		sizeEnd = parseFloat(is, sep);
 		alphaIni = parseFloat(is, sep);
@@ -181,6 +207,16 @@ namespace particles {
 		count = size_t(parseInt(is, sep));
 		ttl = sf::seconds(parseFloat(is, sep));
 		randomSprites = parseInt(is, sep) == 1;
+		std::string rest;
+		if (getline(is, rest) && rest != "") { // There is gravity
+			is = std::istringstream(rest);
+			gravity = parseInt(is, sep) == 1;
+			if (getline(is, rest) && rest != "") { // There are colors
+				is = std::istringstream(rest);
+				colorIni = parseColor(is, sep);
+				colorEnd = parseColor(is, sep);
+			}
+		}
 	}
 
 }// Namespace particles
