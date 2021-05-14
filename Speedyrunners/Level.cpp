@@ -315,4 +315,5 @@ void Level::getCheckpoints(std::vector<Checkpoint>& _checkpoints) const
 void Level::update(const sf::Time& dT)
 {
 	for (auto& i : itemPickups) i.update(dT);
+	for (auto& b : boostBoxes)	b.update(dT); // animations
 }

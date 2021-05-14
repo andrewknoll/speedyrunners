@@ -1,6 +1,20 @@
 #include "Animation.h"
-void Animation::set_spritesheet(std::shared_ptr<sf::Texture> spritesheet) {
+void Animation::set_spritesheet(std::shared_ptr<const sf::Texture> spritesheet) {
 	this->spritesheet = spritesheet;
+}
+
+
+Animation::Animation(const sf::Vector2i& nFrames, const sf::Texture& tex) : spritesheet(std::make_shared<sf::Texture>(tex))
+{
+	loop = true;
+	sf::Vector2i size(tex.getSize().x / nFrames.x, tex.getSize().y / nFrames.y); // size of each frame
+	for (int col = 0; col < nFrames.y; col++)
+		for (int row = 0; row < nFrames.x; row++)
+			frames.emplace_back(row * size.x, col * size.y, size.x, size.y);
+}
+
+Animation::Animation(int x, int y, const sf::Texture& tex) : Animation(sf::Vector2i(x,y),tex)
+{
 }
 
 bool Animation::insert(int where, sf::IntRect new_frame) {
@@ -39,53 +53,16 @@ sf::Sprite Animation::get_first_frame() {
 
 
 void Animation::flip(sf::Sprite& sprite) {
-	sprite.setOrigin(this->get_origin_point());
-	if (!facing_right) {
-		sprite.setScale(-1.0, 1.0);
+	//sprite.setOrigin(this->get_origin_point());
+	if (!facing_right && sprite.getScale().x > 0 
+		|| facing_right && sprite.getScale().x < 0) {
+		sprite.scale(-1.0, 1.0);
 	}
-	else {
-		sprite.setScale(1.0, 1.0);
-	}
+	/*else if (facing_right && sprite.getScale().x < 0) {
+		sprite.scale(1.0, 1.0);
+	}*/
 }
-//Returns 1 if last frame
-/**
-int Animation::advance_frame(sf::Sprite& sprite) {
-	int return_code = 0;
-	sf::Sprite new_sprite;
-	if (!spritesheet) return 0;
-	new_sprite.setTexture(*spritesheet);
-	if (!reverse) {
-		if (current_frame < frames.size() - 1) {
-			new_sprite.setTextureRect(frames[++current_frame]);
-		}
-		else if (loop) {
-			current_frame = 0;
-			new_sprite.setTextureRect(frames[0]);
-		}
-		if (current_frame == frames.size() - 1) return_code = 1;
-	}
-	else {
-		if (current_frame > 0) {
-			new_sprite.setTextureRect(frames[--current_frame]);
-		}
-		else if (loop) {
-			current_frame = frames.size() - 1;
-			new_sprite.setTextureRect(frames[current_frame]);
-		}
-		if (current_frame == 0) return_code = 1;
-	}
-	if (return_code == 0) {
-		//new_sprite.setPosition(this->get_position() - this->get_center_offset());
-		new_sprite.setOrigin(this->get_origin_point());
-		new_sprite.setPosition(sprite.getPosition());
-		new_sprite.setScale(sprite.getScale());
-		sprite = new_sprite;
-	}
-	flip(sprite);
-	sprite.setRotation(angle);
-	return return_code;
-}*/
-
+// return 1 if last frame
 int Animation::advance_frame(sf::Sprite& sprite) {
 	int return_code = 0;
 	if (!spritesheet) return 0;
@@ -125,6 +102,11 @@ sf::Vector2f Animation::get_origin_point() {
 	v.y = frames[current_frame].height;
 	return v;
 }
+
+Animation::Animation()
+{
+}
+
 
 sf::Vector2f Animation::get_position() {
 	return position;

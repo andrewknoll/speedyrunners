@@ -36,7 +36,7 @@ public:
 	const Spritesheet& getSpriteSheet(int character, int variant = 0);
 	const Spritesheet& getVictorySpriteSheet(int character, int variant = 0);
 	const sf::Texture& getItemTexture(glb::item type);
-	const sf::Texture & getMiscTexture(int type);
+	const sf::Texture& getMiscTexture(int type);
 
 	const std::vector<sf::SoundBuffer>& getSoundBuffer(int type);
 	const std::vector<std::vector<sf::SoundBuffer>>& getSoundBuffers();

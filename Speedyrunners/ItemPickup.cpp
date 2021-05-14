@@ -7,8 +7,10 @@ void ItemPickup::draw(sf::RenderTarget& target, sf::RenderStates states) const
 }
 
 ItemPickup::ItemPickup(const sf::Vector2f& pos, float tileWidth)
-	: tex(Resources::getInstance().getMiscTexture(5)), sprite(tex)
+	: tex(Resources::getInstance().getMiscTexture(5)), sprite(tex),
+	animation(10, 2, tex)
 {
+	sprite = animation.get_first_frame();
 	sprite.setTextureRect(sf::IntRect(0, 0, tex.getSize().x / 10, tex.getSize().y / 2));
 	float rel = 1.75 * tileWidth / sprite.getGlobalBounds().width;
 	sprite.setScale(rel, rel);
@@ -36,6 +38,13 @@ void ItemPickup::update(sf::Time dT)
 		cdAvailable -= dT;
 		if (cdAvailable < sf::seconds(0)) {
 			available = true; // Respawn
+		}
+	}
+	else { // available, animation
+		countdown -= dT;
+		if (countdown <= sf::Time::Zero) {
+			animation.advance_frame(sprite);
+			countdown = glb::LVL_ANIMATION_PERIOD;
 		}
 	}
 }

@@ -61,6 +61,8 @@ namespace glb
 
 
 	const sf::Time itemPickupRespawn = sf::seconds(10); // Respawn time for the capsule item thingies
+	const sf::Time LVL_ANIMATION_PERIOD = sf::seconds(0.05);
+
 
 	const float runningAcceleration = 800;
 	const float flyingAcceleration = 350;
