@@ -113,7 +113,8 @@ void InGameUI::setCharacters(std::vector<CharPtr> characters) {
 	pos = utils::relativeToGlobal(pos, *window);
 	sf::Vector2f headDisplacement(-0.03,0.36);
 	headDisplacement = utils::relativeToGlobal(headDisplacement, *window);
-	float scale = 0.15 * 2.0 / characters.size(), headScale = scale*0.35; // vertical size relative to window
+	int nSlots = std::max((int)characters.size(), 3); // if less than 3, dont make them bigger
+	float scale = 0.15 * 2.0 / nSlots, headScale = scale*0.35; // vertical size relative to window
 	headDisplacement *= scale;
 	std::string path = glb::CONTENT_PATH + "UI/MultiplayerHUD/";
 	std::cout << "hay " << characters.size() << " characters\n";

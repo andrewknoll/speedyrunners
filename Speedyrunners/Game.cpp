@@ -774,8 +774,8 @@ void Game::draw(sf::Time dT)
 		}
 		// UI:
 		ui.update();
-		if (characters.size()>1)
-			window.draw(ui);
+		//if (characters.size()>1)
+		window.draw(ui);
 		break;
 	}
 	default:
