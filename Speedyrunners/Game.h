@@ -118,6 +118,10 @@ protected:
 	void handleItem(Game::ItemPtr item);
 	void clearParticles(); // clears all particles
 
+	void processMouseEditing();
+
+	void animateCharacters();
+
 	void updateItems();
 	void updateNPCs(bool follow);
 public:

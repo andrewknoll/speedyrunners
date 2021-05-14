@@ -9,6 +9,7 @@
 #include "Hook.h"
 #include "utils.hpp"
 #include "AudioPlayer.h"
+#include "ParticleSystem.h"
 
 
 #include "Item.h"
@@ -113,6 +114,9 @@ protected:
 
 	//Score
 	int score = 0;
+
+	// Particle systems:
+	std::vector<particles::ParticleSystem>& particleSystems;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 

@@ -448,7 +448,7 @@ void Game::update()
 {
 	sf::Event event;
 	int target;
-	if (window.pollEvent(event))
+	while (window.pollEvent(event))
 	{
 #ifdef USE_IMGUI
 		ImGui::SFML::ProcessEvent(event);
@@ -479,6 +479,7 @@ void Game::update()
 				state = State::Editing;
 				addingCheckpoint = false;
 				testingParticles = false;
+				clearParticles();
 			}
 			else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F4) {
 				loopMenu();
@@ -513,6 +514,7 @@ void Game::update()
 #ifdef USE_IMGUI
 	ImGui::SFML::Update(window,dT);
 #endif
+	processMouseEditing();
 	if (state == State::Playing && dT.asSeconds() < 0.1) {
 		for (auto c : characters) {
 			if (c->isDead()) continue;
@@ -568,12 +570,13 @@ void Game::update()
 	else if (state == State::FinishedRound) {
 		cam.follow(characters);
 		cam.update(dT);
-		if (rv == nullptr) {
+		if (rv == nullptr) { // first time here, create round victory
 			for (int i = 0; i < characters.size(); i++) {
 				if (!characters[i]->isDead()) {
 					clearParticles();
 					rv = std::make_unique<RoundVictory>(window, characters[i]->getID(), characters[i]->getVariant(), characters[i]->getScore());
 					respawnPosition = characters[i]->getLastSafePosition();
+					rv->update(dT);
 				}
 				else {
 					characters[i]->setAnimation(Character::AnimationIndex::StandAnim);
@@ -615,11 +618,8 @@ void Game::enableCheats(bool enable) {
 #endif
 }
 
-
-
-// Controls for editing state:
-void Game::processEditingInputs(const sf::Event& event) {
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+void Game::processMouseEditing() {
+	if (state == State::Editing && sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 		if (!addingCheckpoint && !testingParticles)
 			lvl.setTile(utils::clampMouseCoord(window), selectedTile);
 		else if (addingCheckpoint) {
@@ -627,12 +627,14 @@ void Game::processEditingInputs(const sf::Event& event) {
 			checkpoints.emplace_back(utils::mousePosition2f(window), currentRadius);
 		}
 		else {
-			//particleSystems.front()->emit(utils::mousePosition2f(window));
-			std::cout << "emiiting from " << selectedPSystem << "\n";
 			particleSystems[selectedPSystem].emit(utils::mousePosition2f(window));
 		}
-
 	}
+}
+
+// Controls for editing state:
+void Game::processEditingInputs(const sf::Event& event) {
+	
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
 		cam.moveByMouse(sf::Mouse::getPosition());
 		//cam.move(sf::Vector2f(1, 0));
@@ -729,12 +731,22 @@ void Game::printCharacterPositions(const sf::Event& e) const {
 	}
 }
 
+
+void Game::animateCharacters() {
+	for (auto c : characters) {
+		if (!c->isDead()) {
+			c->tickAnimation(dT);
+			window.draw(*c);
+		}
+	}
+}
+
 void Game::draw(sf::Time dT)
 {
 	window.clear();
 	window.setView(cam);
 	window.draw(lvl);
-	if (suddenDeath) {
+	if (suddenDeath && state != State::FinishedRound) {
 		window.draw(cam.getSuddenDeathRectangle());
 	}
 
@@ -758,7 +770,6 @@ void Game::draw(sf::Time dT)
 			for (auto l : npc->debugLines()) {
 				window.draw(l);
 			}
-
 		}
 		// Selected tile
 		if (!addingCheckpoint && !testingParticles)
@@ -768,7 +779,6 @@ void Game::draw(sf::Time dT)
 			window.draw(checkpointCircle);
 		}
 		else for (const auto& ps : particleSystems) {
-			std::cout << "drawing particles?\n";
 			window.draw(ps); // testing particles
 		}
 		break;
@@ -778,22 +788,20 @@ void Game::draw(sf::Time dT)
 		if (rv != nullptr) {
 			rv->draw(window);
 		}
+		animateCharacters();
+		break;
 	}
 	case State::Countdown:
-	{
-		if (state == State::Countdown) {
-			countdown.draw(window);
-		}
-
+	{	
+		suddenDeath = false;
+		cam.setSuddenDeath(false);
+		countdown.draw(window);
+		animateCharacters();
+		break;
 	} // no break, we also animate the characters
 	case State::Playing:
 	{ // Animaciones de personajes:
-		for (auto c : characters) {
-			if (!c->isDead()) {
-				c->tickAnimation(dT);
-				window.draw(*c);
-			}
-		}
+		animateCharacters();
 		for (const auto& ps : particleSystems) window.draw(ps);
 		for (const auto i : items) {
 			window.draw(*i);

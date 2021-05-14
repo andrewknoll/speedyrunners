@@ -28,7 +28,7 @@ double RNG::rand(const double min, const double max) const {
 // Devuelve un entero aleatorio entre [min..max), todos aprox. equiprobables
 int RNG::rand(const int min, const int max) const {
 	double r = rand(double(min), double(max+1));
-	if (int(r)==max) return int(r)-1; // que no devuelva max
+	if (int(r)==max && min!=max) return int(r)-1; // que no devuelva max
 	return int(r);
 }
 

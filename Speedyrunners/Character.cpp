@@ -12,7 +12,8 @@ Character::Character(Spritesheet sp, int ID, int variant) :
 	hitBox(glb::default_hitbox),
 	myID(ID),
 	audioPlayer(Resources::getInstance().getAudioPlayer()),
-	skin_variant(variant)
+	skin_variant(variant),
+	particleSystems(Resources::getInstance().getParticleSystems())
 {
 	animations = sp.get_animations();
 	setAnimation(StartAnim);
@@ -58,7 +59,7 @@ void Character::setPosition(const sf::Vector2f pos) {
 }
 
 void Character::useBoost(bool useIt) {
-	usingBoost = useIt;
+	usingBoost = useIt && remainingBoostTime > sf::Time::Zero;
 }
 
 void Character::fixPosition(sf::FloatRect& hitbox) {
@@ -197,6 +198,7 @@ void Character::updateVel(const float& dtSec) {
 
 void Character::updateBoost(const sf::Time& dT, const Level& lvl) {
 	if (usingBoost && utils::dot(vel, vel) > 0.01) {
+		if (rng::defaultGen.rand01() > 0.7f) particleSystems[glb::particleSystemIdx::BOOST].emit(getPosition());
 		remainingBoostTime -= dT;
 		audioPlayer.loop(AudioPlayer::Effect::SPEEDBOOST);
 		if (remainingBoostTime < sf::seconds(0)) {

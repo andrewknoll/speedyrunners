@@ -6,8 +6,7 @@
 Camera::Camera(const sf::FloatRect& rect) : sf::View(rect)
 {
 	size0 = getSize();
-	viewportShape = sf::RectangleShape(size0);
-	viewportShape.setFillColor(sf::Color::Transparent);
+	setSuddenDeath(false);
 } 
 
 void Camera::moveByMouse(sf::Vector2i pos)
@@ -99,7 +98,7 @@ void Camera::follow(std::vector<CharPtr>& characters, int first) {
 			increasingRedness = !increasingRedness;
 		}
 		viewportShape.setOutlineColor(sf::Color(redValue, 0, 0, 255));
-	}
+	} 
 	
 }
 
@@ -123,6 +122,10 @@ bool Camera::isInAllowedBounds(CharPtr character) const {
 
 void Camera::setSuddenDeath(bool sd) {
 	this->suddenDeath = sd;
+	if (!sd) {//reset rectangle:
+		viewportShape = sf::RectangleShape(size0);
+		viewportShape.setFillColor(sf::Color::Transparent);
+	}
 }
 
 void Camera::update(sf::Time dT) {

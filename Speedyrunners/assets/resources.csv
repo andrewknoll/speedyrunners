@@ -83,8 +83,11 @@ T,6,Content/UI/MultiplayerHUD/PowerUpBackground.png
 T,7,Content/UI/MultiplayerHUD/PowerUp.png
 T,8,Content/Sprites/smokeParticle.png
 T,9,Content/Sprites/cloudParticle.png
+T,10,Content/Sprites/plus_50x50.png
 
+# Particle systems (to see which is which, see Globals.hpp -> particleSystemIdx)
+# <misc texture idx>,<float rect (4)>,<ParticleSettings (see ParticleSystem.h)>
 PS,8,0,0,0.5,1,0,0,0,0,20,20,20,20,15,50,255,0,1000,2,1
-PS,9,0,0,0.5,0.5,0,0,0,0,20,20,20,20,100,150,255,0,1000,1,1
-PS,8,0,0,0.5,1,0,0,0,0,20,20,20,20,15,50,255,0,1000,2,0
-PS,9,0,0,0.5,0.5,0,0,0,0,20,20,20,20,100,150,255,0,1000,1,0
+PS,9,0,0,0.5,0.5,0,0,0,0,20,20,20,20,100,150,255,0,50,1,1
+PS,10,0,0,0.5,1,0,0,0,0,10,10,10,10,15,25,255,0,500,2,1
+PS,8,0,0,0.5,1,0,0,-30,0,20,20,20,20,15,50,255,0,1000,2,1

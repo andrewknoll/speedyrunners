@@ -3,8 +3,8 @@
 #include "utils.hpp"
 
 RoundVictory::RoundVictory(const sf::RenderWindow& _window, const int characterIdx, const int characterVariant, const int characterScore) :
-	currentSecond(4),
-	t(sf::seconds(1)),
+	currentSecond(3),
+	t(sf::seconds(0.5)),
 	audioPlayer(Resources::getInstance().getAudioPlayer()),
 	characterScore(characterScore) 
 {
@@ -75,7 +75,7 @@ void RoundVictory::update(const sf::Time& dT) {
 			else if (characterScore == 2) {
 				audioPlayer.play(AudioPlayer::Effect::WIN_ROUND_2);
 			}
-			else if (characterScore == 2) {
+			else {
 				audioPlayer.play(AudioPlayer::Effect::WIN_GOTO_SCOREBOARD);
 			}
 		}
@@ -87,7 +87,7 @@ void RoundVictory::update(const sf::Time& dT) {
 
 void RoundVictory::tickAnimation(sf::Time dT) {
 	animationCountdown -= dT;
-	if (currentSecond < 3 && animationCountdown <= sf::Time::Zero) {
+	if (currentSecond <= 3 && animationCountdown <= sf::Time::Zero) {
 		if (characterVictoryPose)
 			characterVictoryPose->advance_frame(mySprite);
 		animationCountdown = PERIOD;
