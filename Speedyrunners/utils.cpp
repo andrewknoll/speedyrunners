@@ -174,6 +174,11 @@ namespace utils {
 		return sqrt(v.x*v.x+v.y*v.y);
 	}
 
+	sf::Vector2i spritesForFloatRect(const sf::FloatRect& rect)
+	{
+		return sf::Vector2i(1.0f / rect.width, 1.0f/rect.height);
+	}
+
 	void scaleToFullScreen(sf::Sprite& s, const float& windowHeight)
 	{
 		float relation = windowHeight / s.getGlobalBounds().height;

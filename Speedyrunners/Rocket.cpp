@@ -13,8 +13,11 @@ Rocket::Rocket(sf::Vector2f pos, CharPtr target, bool facingRight, float width) 
 {
 	auto& t = Resources::getInstance().getItemTexture(glb::item::ROCKET);
 	rocket.setTexture(t);
-	auto rect = utils::relativeToGlobalTextureRect(sf::FloatRect(0,0,1,0.5), t); // Top half only
-	rocket.setTextureRect(rect);
+
+	rects.emplace_back(utils::relativeToGlobalTextureRect(sf::FloatRect(0, 0, 1, 0.5), t)); // Top half only
+	rects.emplace_back(utils::relativeToGlobalTextureRect(sf::FloatRect(0, 0.5, 1, 0.5), t)); // Bottom half only
+	
+	setTexRect(true);
 	utils::setWidth(rocket, width);
 	utils::centerOrigin(rocket);
 	if (facingRight) {
@@ -30,6 +33,10 @@ Rocket::Rocket(sf::Vector2f pos, CharPtr target, bool facingRight, float width) 
 	audioPlayer.setLoop(AudioPlayer::Effect::ROCKET_FLY_LOOP);
 	audioPlayer.continuePlaying(AudioPlayer::Effect::ROCKET_FLY_LOOP);
 
+}
+
+void Rocket::setTexRect(bool first) {
+	rocket.setTextureRect(first ? rects[0] : rects[1]);
 }
 
 void Rocket::draw(sf::RenderTarget& target, sf::RenderStates states) const {
@@ -67,11 +74,8 @@ bool Rocket::update(sf::Time elapsed, const Level& lvl) { // todo: check tiles c
 	float velMod = utils::length(vel);
 	if (velMod > maxVel) vel *= maxVel / velMod; // make it maxVel
 	else if (velMod < minVel) vel *= minVel / velMod; // make it minVel
-	//if (vel.x > maxVel) vel.x = maxVel;
-	//if (vel.y > maxVel) vel.y = maxVel;
-	/*if (utils::length(vel) < minVel) {
-		vel *= minVel / utils::length(vel);
-	}*/
+	if (velMod > (maxVel + minVel) / 2.0f) setTexRect(false); // if more than half speed, blurry texture
+	else setTexRect(true); // else normal
 
 	angle = utils::degrees(atan2f(vel.y, vel.x));
 

@@ -119,7 +119,7 @@ namespace utils {
 	// Length (modulo) of vector v
 	float length(const sf::Vector2f& v);
 
-
+	sf::Vector2i spritesForFloatRect(const sf::FloatRect& rect); // returns the number of sprites horizontally and vertically for a texture with floatRect
 
 	// Scale sprite to full window size
 	void scaleToFullScreen(sf::Sprite& s, const float& windowHeight);

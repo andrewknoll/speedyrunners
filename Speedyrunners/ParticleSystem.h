@@ -12,6 +12,7 @@ struct Settings {
 	float alphaIni = 255, alphaEnd = 0;
 	size_t count = 1000;
 	sf::Time ttl= sf::seconds(2);
+	bool randomSprites = false;
 
 
 	Settings(const std::string& line, const char sep = ','); // loads the settings from a line containing the values separated by 'sep'
@@ -29,9 +30,8 @@ public:
 
 	void setVertices(sf::VertexArray& vertices, const sf::Vector2f& pos, int idx, float r, float alpha = 255);
 
-	bool update(sf::Time dT, const Settings& pSettings, sf::VertexArray& vertices, int idx);
+	bool update(sf::Time dT, const Settings& pSettings, sf::VertexArray& vertices, int idx);// returns true if it has died
 
-	bool update(sf::Time dT, sf::Time maxTtl, sf::VertexArray& vertices, int idx); // returns true if it has died
 	void reset(const particles::Settings& particleSettings);
 
 };
@@ -51,12 +51,14 @@ protected:
 	sf::VertexArray vertices;
 
 	sf::Vector2u texSize;
+	sf::Vector2i nSprites = sf::Vector2i(1,1);
 	sf::IntRect texRect;
 
 	
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 	void enableParticle(int idx); // enables the particle to be drawn (sets the texCoords)
+	void enableParticleRandomSprite(int idx); // enables the particle to be drawn (sets the texCoords) with a random rect
 	void disableParticle(int idx); // disables it
 public:
 	ParticleSystem(const Settings& particleSettings);

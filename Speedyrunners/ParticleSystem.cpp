@@ -26,6 +26,7 @@ namespace particles {
 		tex = &t;
 		texSize = t.getSize();
 		texRect = sf::IntRect(texSize.x * rect.left, texSize.y * rect.top, texSize.x * rect.width, texSize.y * rect.height);
+		nSprites = utils::spritesForFloatRect(rect);
 		/*for (int i = 0; i < particles.size(); i+=4) {
 			enableParticle(i);
 		}*/
@@ -38,11 +39,24 @@ namespace particles {
 
 	void ParticleSystem::enableParticle(int idx) {
 		idx *= 4;
-		vertices[idx++].texCoords = sf::Vector2f(texRect.left, texRect.top);//sf::Vector2f(0, 0); // top L	
-		vertices[idx++].texCoords = sf::Vector2f(texRect.left + texRect.width, texRect.top); //sf::Vector2f(texSize.x, 0); // top R
-		vertices[idx++].texCoords = sf::Vector2f(texRect.left + texRect.width, texRect.top + texRect.height); //sf::Vector2f(texSize.x, texSize.y); // bottom R
+		vertices[idx++].texCoords = sf::Vector2f(texRect.left, texRect.top); // top L	
+		vertices[idx++].texCoords = sf::Vector2f(texRect.left + texRect.width, texRect.top); // top R
+		vertices[idx++].texCoords = sf::Vector2f(texRect.left + texRect.width, texRect.top + texRect.height); // bottom R
 		vertices[idx].texCoords   = sf::Vector2f(texRect.left, texRect.top + texRect.height); // bottom L
 	}
+	void ParticleSystem::enableParticleRandomSprite(int idx)
+	{
+		int xIdx = rng::defaultGen.rand(0, nSprites.x);
+		int yIdx = rng::defaultGen.rand(0, nSprites.y);
+
+		idx *= 4;
+		vertices[idx++].texCoords = sf::Vector2f(texRect.width * xIdx, texRect.height * yIdx); // top L	
+		vertices[idx++].texCoords = sf::Vector2f(texRect.width * (xIdx + 1), texRect.height * yIdx); // top R
+		vertices[idx++].texCoords = sf::Vector2f(texRect.width * (xIdx + 1), texRect.height * (yIdx+1)); // bottom R
+		vertices[idx].texCoords	  = sf::Vector2f(texRect.width * xIdx, texRect.height * (yIdx + 1)); // bottom L
+
+	}
+
 	void ParticleSystem::disableParticle(int idx) {
 		idx *= 4;
 		sf::Vector2f empty(0, 0);
@@ -65,7 +79,9 @@ namespace particles {
 		//std::cout << "emit index: " << index << "\n";
 		pSettings.pos = pos;
 		particles[index].reset(pSettings);
-		enableParticle(index); // enable the vertices
+		// enable the vertices:
+		if (pSettings.randomSprites) enableParticleRandomSprite(index);
+		else enableParticle(index); 
 		if (index == 0) index = particles.size() - 1;
 		else index--;
 	}
@@ -144,15 +160,6 @@ namespace particles {
 	}
 
 
-	sf::Vector2f pos,
-		vel = sf::Vector2f(0, 0),
-		velVariation = sf::Vector2f(50, 50);
-	float sizeIni = 15, sizeEnd = 50;
-	float alphaIni = 255, alphaEnd = 0;
-	size_t count = 1000;
-	sf::Time ttl = sf::seconds(2);
-
-
 	
 
 	Settings::Settings(const std::string& line, const char sep)
@@ -173,6 +180,7 @@ namespace particles {
 		alphaEnd = parseFloat(is, sep);
 		count = size_t(parseInt(is, sep));
 		ttl = sf::seconds(parseFloat(is, sep));
+		randomSprites = parseInt(is, sep) == 1;
 	}
 
 }// Namespace particles
