@@ -193,6 +193,10 @@ void Character::updateVel(const float& dtSec) {
 			else setAnimationAngle(-45.0f - utils::degrees(hook.angle()));
 		}
 	}
+	if (tumble) {
+		vel *= glb::tumbleSpeedReduction;
+		tumble = false;
+	}
 }
 
 void Character::updateBoost(const sf::Time& dT, const Level& lvl) {
@@ -232,6 +236,11 @@ void Character::updateStunned(const sf::Time& dT) {
 	}
 }
 
+
+void Character::tumbleWithBox() {
+	setAnimation(TumbleAnim);
+	tumble = true;
+}
 
 void Character::update(const sf::Time& dT, const Level& lvl)
 

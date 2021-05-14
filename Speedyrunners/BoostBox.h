@@ -22,7 +22,7 @@ protected:
 	float width;
 	particles::ParticleSystem& pSystem;
 
-	int particleCD = 7, currentParticleCD = particleCD;
+	int particleCD = 7, currentParticleCD = particleCD; // too many particles without this
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 	void emitParticles();

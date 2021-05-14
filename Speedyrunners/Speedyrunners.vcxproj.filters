@@ -159,6 +159,9 @@
     <ClCompile Include="ParticleSystem.cpp">
       <Filter>Animation\Particles</Filter>
     </ClCompile>
+    <ClCompile Include="BoxObstacle.cpp">
+      <Filter>Level\LevelElements</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TileMap.h">
@@ -263,6 +266,9 @@
     </ClInclude>
     <ClInclude Include="ParticleSystem.h">
       <Filter>Animation\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="BoxObstacle.h">
+      <Filter>Level\LevelElements</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

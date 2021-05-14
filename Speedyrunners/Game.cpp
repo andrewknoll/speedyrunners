@@ -519,6 +519,7 @@ void Game::update()
 		for (auto c : characters) {
 			if (c->isDead()) continue;
 			lvl.checkItemPickups(c); // check pickups, give the items to the character, etc
+			lvl.checkBoxCollisions(c); // check boxes, collide with the player if needed
 			c->update(dT, lvl);
 		}
 		lvl.update(dT); // respawn items, etc
@@ -708,11 +709,14 @@ void Game::processEditingInputs(const sf::Event& event) {
 		addCharacter(falcon);
 		lvl.setInitialPosition(falcon->getPosition());
 	}
-	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::B) {
+	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Num1) {
 		lvl.addBoostBox(utils::mousePosition2f(window));
 	}
-	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::I) { // ITem pickup
+	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Num2) { // ITem pickup
 		lvl.addItemPickup(utils::mousePosition2f(window));
+	}
+	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Num3) { // box obstacle
+		lvl.addBoxObstacle(utils::mousePosition2f(window));
 	}
 
 	// Debug player positions (P to show):

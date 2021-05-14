@@ -6,6 +6,7 @@
 #include "Background.h"
 #include "BoostBox.h"
 #include "ItemPickup.h"
+#include "BoxObstacle.h"
 
 
 class Camera; // Pre-declaracion mejor que include en el hpp
@@ -36,6 +37,7 @@ class Level : public sf::Drawable
 	// Interactible thingies:
 	std::vector<BoostBox> boostBoxes;
 	std::vector<ItemPickup> itemPickups;
+	std::vector<BoxObstacle> boxObstacles;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 public:
@@ -51,7 +53,11 @@ public:
 
 	void addItemPickup(const sf::Vector2f& pos);
 
+	void addBoxObstacle(const sf::Vector2f& pos);
+
 	bool checkItemPickups(std::shared_ptr<Character> character);
+
+	bool checkBoxCollisions(std::shared_ptr<Character> character);
 
 	void drawTile(sf::RenderTarget& target, sf::RenderStates states, const sf::Vector2i& pos, const int tileNumber) const;
 

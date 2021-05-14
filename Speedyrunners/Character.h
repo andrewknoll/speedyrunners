@@ -72,6 +72,8 @@ protected:
 	bool isAtWallJump = false;
 	bool sliding = false;
 
+	bool tumble = false; // if true, reduce the speed once, set to false again
+
 	// Boost
 	float boostPower = 1.5; // 10% faster
 	bool usingBoost = false;
@@ -208,7 +210,7 @@ public:
 
 	const sf::FloatRect& getHitBox() const;
 
-
-	// TODO: implementar estado de stunned, con su countdown, etc
 	void getHitByRocket();
+
+	void tumbleWithBox();
 };

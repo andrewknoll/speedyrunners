@@ -39,6 +39,11 @@ void Level::addItemPickup(const sf::Vector2f& pos)
 	itemPickups.emplace_back(pos, collidableTiles.getTileSizeWorld().x);
 }
 
+void Level::addBoxObstacle(const sf::Vector2f& pos)
+{
+	boxObstacles.emplace_back(pos, collidableTiles.getTileSizeWorld().x);
+}
+
 bool Level::checkItemPickups(std::shared_ptr<Character> character)
 {
 	if (character->getCurrentItem() == glb::item::NONE) { // Only check if the character doesnt already have an item
@@ -50,6 +55,19 @@ bool Level::checkItemPickups(std::shared_ptr<Character> character)
 				return true;
 			}
 	}
+	return false;
+}
+
+
+bool Level::checkBoxCollisions(std::shared_ptr<Character> character)
+{
+	const auto& hb = character->getHitBox();
+	for (auto& i : boxObstacles)
+		if (i.isInside(hb)) { // Collides with a box
+			audioPlayer.play(AudioPlayer::Effect::CRATE_DROP); // Not sure
+			character->tumbleWithBox();
+			return true;
+		}
 	return false;
 }
 
@@ -85,6 +103,12 @@ void Level::save(const std::string& f_name) const
 	// item pickups things:
 	file << itemPickups.size() << "\n";
 	for (const auto& i : itemPickups) {
+		file << i.getPosition() << " ";
+	}
+	file << "\n";
+	// box obstacles:
+	file << boxObstacles.size() << "\n";
+	for (const auto& i : boxObstacles) {
 		file << i.getPosition() << " ";
 	}
 	file << "\n";
@@ -141,6 +165,7 @@ void Level::load(const std::string& f_name, const sf::RenderWindow& window)
 	checkpoints.clear();
 	boostBoxes.clear();
 	itemPickups.clear();
+	boxObstacles.clear();
 	std::cout << "Loading " << f_name << "\n";
 
 	std::ifstream file("../assets/levels/" + f_name);
@@ -194,6 +219,15 @@ void Level::load(const std::string& f_name, const sf::RenderWindow& window)
 	}
 	file.ignore();
 
+	// item things:
+	int nBoxes;
+	file >> nBoxes;
+	std::vector<sf::Vector2f> boxPositions;
+	for (int i = 0; i < nBoxes; i++) {
+		file >> x >> y;
+		boxPositions.emplace_back(x, y);
+	}
+	file.ignore();
 	// Load checkpoints:
 	
 	int nCheckpoints;
@@ -216,6 +250,7 @@ void Level::load(const std::string& f_name, const sf::RenderWindow& window)
 		float tileW = collidableTiles.getTileSizeWorld().x;
 		for (const auto& p : boostPositions) boostBoxes.emplace_back(p, tileW);
 		for (const auto& p : itemPositions) itemPickups.emplace_back(p, tileW);
+		for (const auto& p : boxPositions) boxObstacles.emplace_back(p, tileW);
 		std::cout << "Level loaded\n";
 	}
 }
@@ -296,8 +331,9 @@ void Level::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	target.draw(background);
 	target.draw(collidableTiles, states);
-	for (const auto& b : boostBoxes)  target.draw(b, states);
-	for (const auto& i : itemPickups) target.draw(i, states);
+	for (const auto& b : boostBoxes)   target.draw(b, states);
+	for (const auto& b : boxObstacles) target.draw(b, states);
+	for (const auto& i : itemPickups)  target.draw(i, states);
 }
 
 
@@ -314,6 +350,7 @@ void Level::getCheckpoints(std::vector<Checkpoint>& _checkpoints) const
 
 void Level::update(const sf::Time& dT)
 {
-	for (auto& i : itemPickups) i.update(dT);
-	for (auto& b : boostBoxes)	b.update(dT); // animations
+	for (auto& i : itemPickups)  i.update(dT);
+	for (auto& b : boostBoxes)	 b.update(dT); // animations
+	for (auto& b : boxObstacles) b.update(dT); // animations
 }

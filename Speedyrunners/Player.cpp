@@ -33,6 +33,9 @@ bool Player::captureEvents(const sf::Event& event) {
 		}
 		if (event.type == sf::Event::KeyPressed) {
 
+			if (event.key.code == sf::Keyboard::Key::T) {
+				me->tumbleWithBox();
+			}
 			if (event.key.code == k_jump && !holdingUp) {
 				holdingUp = true;
 				me->startJumping();

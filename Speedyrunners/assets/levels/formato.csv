@@ -5,6 +5,8 @@
 <x y> (float, para cada boost)
 <num de items>
 <x y> (float, para cada item)
+<numero de cajas (obstaculos)>
+<x y> (para cada caja)
 <numero de checkpoints>
 <x y r> (para cada checkpoint)
 <cols (int)> <filas (int)>

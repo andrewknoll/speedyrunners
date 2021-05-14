@@ -4,6 +4,7 @@
 #include <array>
 namespace glb
 {
+
 	const double pi = 3.14159265358979323846;
 	const int NUMBER_OF_ANIMATIONS = 22;
 	namespace anim {
@@ -110,5 +111,9 @@ namespace glb
 		BOOST,
 		BRAKE // when sliding, etc
 	};
+
+	const float tumbleSpeedReduction = 0.4f;
+
+	inline const bool enableRandomObstacles = true;
 };
 
