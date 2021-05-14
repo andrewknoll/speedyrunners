@@ -21,7 +21,7 @@ public:
 	float minRadius, maxRadius;
 	bool active = false;
 
-	void setVertices(sf::VertexArray& vertices, const sf::Vector2f& pos, float r, int idx); // Sets the position of the 4 vertices
+	void setVertices(sf::VertexArray& vertices, const sf::Vector2f& pos, int idx, float r, float alpha = 255);
 
 	bool update(sf::Time dT, sf::Time maxTtl, sf::VertexArray& vertices, int idx); // returns true if it has died
 	void reset(const particles::Settings& particleSettings);

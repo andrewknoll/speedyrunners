@@ -83,13 +83,17 @@ namespace particles {
 		target.draw(vertices, states);
 	}
 
-	void Particle::setVertices(sf::VertexArray& vertices, const sf::Vector2f& pos, float r, int idx)
+	void Particle::setVertices(sf::VertexArray& vertices, const sf::Vector2f& pos, int idx, float r, float alpha)
 	{
 		idx *= 4; // 4 times as many vertices as particles
-		vertices[idx++].position = pos + sf::Vector2f(-r,-r); // top L
-		vertices[idx++].position = pos + sf::Vector2f(r, -r); // top R
-		vertices[idx++].position = pos + sf::Vector2f(r, r);  // bottom R
+		vertices[idx].position = pos + sf::Vector2f(-r,-r); // top L
+		vertices[idx++].color.a = alpha; // top L
+		vertices[idx].position = pos + sf::Vector2f(r, -r); // top R
+		vertices[idx++].color.a = alpha;
+		vertices[idx].position = pos + sf::Vector2f(r, r);  // bottom R
+		vertices[idx++].color.a = alpha;
 		vertices[idx].position	 = pos + sf::Vector2f(-r, r); // bottom L
+		vertices[idx].color.a = alpha;
 		//std::cout << "idx de vertices: " << idx << "\n";
 	}
 
@@ -101,12 +105,13 @@ namespace particles {
 				return true;
 			}
 			else {
-				ttl -= dT;
 				float dtSec = dT.asSeconds();
 				sf::Transformable::move(vel * dtSec);
 				sf::Transformable::rotate(rotation * dtSec);
 				float radius = utils::lerp(minRadius, maxRadius, ttl / maxTtl);
-				setVertices(vertices, getPosition(), radius, idx);
+				float alpha = utils::lerp(0, 255, ttl/maxTtl);
+				setVertices(vertices, getPosition(), idx, radius, alpha);
+				ttl -= dT;
 			}
 		}
 		return false;

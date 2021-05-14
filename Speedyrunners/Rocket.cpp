@@ -4,7 +4,7 @@
 #include "utils.hpp"
 #include "Resources.h"
 
-Rocket::Rocket(sf::Vector2f pos, CharPtr target, bool facingRight) :
+Rocket::Rocket(sf::Vector2f pos, CharPtr target, bool facingRight, float width) :
 	Item(glb::item::ROCKET),
 	target(target),
 	particleSyst(Resources::getInstance().rocketsPartSystem),
@@ -15,6 +15,7 @@ Rocket::Rocket(sf::Vector2f pos, CharPtr target, bool facingRight) :
 	rocket.setTexture(t);
 	auto rect = utils::relativeToGlobalTextureRect(sf::FloatRect(0,0,1,0.5), t); // Top half only
 	rocket.setTextureRect(rect);
+	utils::setWidth(rocket, width);
 	utils::centerOrigin(rocket);
 	if (facingRight) {
 		vel = sf::Vector2f(velValIni, -velValIni);
@@ -22,6 +23,8 @@ Rocket::Rocket(sf::Vector2f pos, CharPtr target, bool facingRight) :
 	else {
 		vel = sf::Vector2f(-velValIni, -velValIni);
 	}
+	rocketLength = rocket.getGlobalBounds().width;
+
 	// Sound:
 	audioPlayer.play(AudioPlayer::Effect::ROCKET_LAUNCH);
 	audioPlayer.setLoop(AudioPlayer::Effect::ROCKET_FLY_LOOP);
@@ -34,7 +37,7 @@ void Rocket::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	target.draw(rocket, states);
 }
 
-bool Rocket::update(sf::Time elapsed) {
+bool Rocket::update(sf::Time elapsed, const Level& lvl) { // todo: check tiles collisions
 	sf::Vector2f diff;
 	//Update Acceleration
 	if (target != nullptr) {
@@ -57,12 +60,14 @@ bool Rocket::update(sf::Time elapsed) {
 
 	//Move
 	position += vel * elapsed.asSeconds();
-	particleSyst.emit(position);
 
 	//Update velocity and angle
 	vel = vel + acc * elapsed.asSeconds();
-	if (vel.x > maxVel) vel.x = maxVel;
-	if (vel.y > maxVel) vel.y = maxVel;
+	float velMod = utils::length(vel);
+	if (velMod > maxVel) vel *= maxVel / velMod; // make it maxVel
+	else if (velMod < minVel) vel *= minVel / velMod; // make it minVel
+	//if (vel.x > maxVel) vel.x = maxVel;
+	//if (vel.y > maxVel) vel.y = maxVel;
 	/*if (utils::length(vel) < minVel) {
 		vel *= minVel / utils::length(vel);
 	}*/
@@ -71,6 +76,8 @@ bool Rocket::update(sf::Time elapsed) {
 
 	rocket.setPosition(position);
 	rocket.setRotation(angle);
+	auto particlesPoint = rocket.getTransform().transformPoint(sf::Vector2f(-rocketLength, 0));
+	particleSyst.emit(particlesPoint); // smoke!
 	return false;
 }
 

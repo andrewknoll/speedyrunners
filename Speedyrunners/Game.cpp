@@ -429,7 +429,7 @@ void Game::updateItems() {
 	while (itr != items.cend())
 	{
 		auto item = *itr;
-		if (item->update(dT)) { // if the update returns true, it should be handled
+		if (item->update(dT, lvl)) { // if the update returns true, it should be handled
 			handleItem(item); // handle
 			itr = items.erase(itr); // and delete?
 		}
@@ -472,6 +472,8 @@ void Game::update()
 			}
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::F2)) {
 				state = State::Editing;
+				addingCheckpoint = false;
+				testingParticles = false;
 			}
 			else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F4) {
 				loopMenu();
@@ -547,6 +549,8 @@ void Game::update()
 		}
 
 	}
+	else if (state == State::Editing && testingParticles && dT.asSeconds() < 0.1)
+		for (auto ps : particleSystems) ps->update(dT); // update particles
 	else if (state == State::Countdown) {
 		cam.follow(characters);
 		cam.update(dT);
@@ -610,11 +614,15 @@ void Game::enableCheats(bool enable) {
 // Controls for editing state:
 void Game::processEditingInputs(const sf::Event& event) {
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-		if (!addingCheckpoint)
+		if (!addingCheckpoint && !testingParticles)
 			lvl.setTile(utils::clampMouseCoord(window), selectedTile);
-		else {
+		else if (addingCheckpoint) {
 			std::cout << "adding checkpoint to " << utils::mousePosition2f(window).x << " " << utils::mousePosition2f(window).y << "\n";
 			checkpoints.emplace_back(utils::mousePosition2f(window), currentRadius);
+		}
+		else {
+			//particleSystems.front()->emit(utils::mousePosition2f(window));
+			Resources::getInstance().rocketsPartSystem.emit(utils::mousePosition2f(window));
 		}
 
 	}
@@ -636,7 +644,12 @@ void Game::processEditingInputs(const sf::Event& event) {
 			//std::cout << "New tile selected: " << selectedTile << std::endl;
 		}
 	}
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) { // sf::Keyboard::isKeyPressed(sf::Keyboard::S) &&
+	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Numpad7) {
+		testingParticles = !testingParticles;
+		addingCheckpoint = false;
+		for (auto p : particleSystems) p->clear();
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) { // sf::Keyboard::isKeyPressed(sf::Keyboard::S) &&
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
 			lvl.setCheckpoints(checkpoints);
 			//lvl.saveDuplicateVertical("first.csv");
@@ -657,6 +670,7 @@ void Game::processEditingInputs(const sf::Event& event) {
 	}
 	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::C) {
 		addingCheckpoint = !addingCheckpoint;
+		testingParticles = false;
 	}
 	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::BackSpace && !checkpoints.empty()) {
 		std::cout << "removing last checkpoint\n";
@@ -703,15 +717,11 @@ void Game::printCharacterPositions(const sf::Event& e) const {
 	}
 }
 
-
-
 void Game::draw(sf::Time dT)
 {
-
 	window.clear();
 	window.setView(cam);
 	window.draw(lvl);
-
 	if (suddenDeath) {
 		window.draw(cam.getSuddenDeathRectangle());
 	}
@@ -739,11 +749,15 @@ void Game::draw(sf::Time dT)
 
 		}
 		// Selected tile
-		if (!addingCheckpoint)
+		if (!addingCheckpoint && !testingParticles)
 			lvl.drawTile(window, sf::RenderStates(), utils::clampMouseCoord(window), selectedTile);
-		else {
+		else if (addingCheckpoint) {
 			checkpointCircle.setPosition(utils::mousePosition2f(window));
 			window.draw(checkpointCircle);
+		}
+		else for (const auto ps : particleSystems) {
+			//std::cout << "drawing particles?\n";
+			window.draw(*ps); // testing particles
 		}
 		break;
 	}

@@ -97,6 +97,8 @@ protected:
 	int activeCheckpoint;
 	// int firstCharacter;
 
+	bool testingParticles = false; // change with numpad7 in editingmode
+
 	// Countdown:
 	Countdown countdown;
 
