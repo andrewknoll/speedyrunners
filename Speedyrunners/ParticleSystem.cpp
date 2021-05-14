@@ -62,7 +62,7 @@ namespace particles {
 	{
 		int i = 0;
 		for (auto& p : particles) {
-			if (p.update(elapsed, pSettings.ttl, vertices, i)) // the particle has died
+			if (p.update(elapsed, pSettings, vertices, i)) // the particle has died
 				disableParticle(i); // stop drawing it
 			i++;
 		}
@@ -97,7 +97,7 @@ namespace particles {
 		//std::cout << "idx de vertices: " << idx << "\n";
 	}
 
-	bool Particle::update(sf::Time dT, sf::Time maxTtl, sf::VertexArray& vertices, int idx)
+	bool Particle::update(sf::Time dT, const Settings& pSettings, sf::VertexArray& vertices, int idx)
 	{
 		if (active) {
 			if (ttl < sf::Time::Zero) {
@@ -108,8 +108,9 @@ namespace particles {
 				float dtSec = dT.asSeconds();
 				sf::Transformable::move(vel * dtSec);
 				sf::Transformable::rotate(rotation * dtSec);
-				float radius = utils::lerp(minRadius, maxRadius, ttl / maxTtl);
-				float alpha = utils::lerp(0, 255, ttl/maxTtl);
+				sf::Time maxTtl = pSettings.ttl;
+				float radius = utils::lerp(pSettings.sizeEnd, pSettings.sizeIni, ttl / maxTtl);
+				float alpha = utils::lerp(pSettings.alphaEnd, pSettings.alphaIni, ttl / maxTtl);
 				setVertices(vertices, getPosition(), idx, radius, alpha);
 				ttl -= dT;
 			}
@@ -123,8 +124,6 @@ namespace particles {
 		vel = particleSettings.vel;
 		auto& var = particleSettings.velVariation;
 		vel += 0.5f * sf::Vector2f(rng::defaultGen.rand(-var.x, var.x), rng::defaultGen.rand(-var.y, var.y));
-		minRadius = particleSettings.sizeMin;
-		maxRadius = particleSettings.sizeMax;
 		ttl = particleSettings.ttl;
 		active = true;
 		setRotation(rng::defaultGen.rand(0, 360));

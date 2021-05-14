@@ -6,8 +6,9 @@ namespace particles {
 struct Settings {
 	sf::Vector2f pos, 
 		vel = sf::Vector2f(0,0), 
-		velVariation = sf::Vector2f(200, 200);
-	float sizeMin = 100, sizeMax = 10;
+		velVariation = sf::Vector2f(50, 50);
+	float sizeIni = 15, sizeEnd = 50;
+	float alphaIni = 255, alphaEnd = 0;
 	size_t count = 1000;
 	sf::Time ttl= sf::seconds(2);
 };
@@ -22,6 +23,8 @@ public:
 	bool active = false;
 
 	void setVertices(sf::VertexArray& vertices, const sf::Vector2f& pos, int idx, float r, float alpha = 255);
+
+	bool update(sf::Time dT, const Settings& pSettings, sf::VertexArray& vertices, int idx);
 
 	bool update(sf::Time dT, sf::Time maxTtl, sf::VertexArray& vertices, int idx); // returns true if it has died
 	void reset(const particles::Settings& particleSettings);
