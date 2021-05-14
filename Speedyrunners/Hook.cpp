@@ -7,7 +7,7 @@ Hook::Hook() : audioPlayer(Resources::getInstance().getAudioPlayer())
 {
 	sprite.setTexture(Resources::getInstance().getMiscTexture(0));
 	setTextureRect(false);
-	hitBox = sprite.getGlobalBounds();
+	//hitBox = sprite.getGlobalBounds();
 }
 
 void Hook::setTextureRect(bool hooked) {
@@ -35,9 +35,8 @@ void Hook::draw(sf::RenderTarget& target, sf::RenderStates states) const
 //Return -1 if hit a non-grappable surface
 //Return 0 if all went ok
 int Hook::update(const sf::Time& dT, const TileMap& tiles, const sf::Vector2f& pos) {
-	hitBox.left = getPosition().x;
-	hitBox.top = getPosition().y;
-
+	//hitBox.left = getPosition().x; // not centered
+	//hitBox.top = getPosition().y;
 	if (hooked) {
 		offset.y = -sin(angle()) * glb::FEET_TO_HAND.y;
 		offset.x = -cos(angle()) * glb::FEET_TO_HAND.x;
@@ -51,6 +50,7 @@ int Hook::update(const sf::Time& dT, const TileMap& tiles, const sf::Vector2f& p
 		sprite.setPosition(hookerPosition + relPosition);
 		sprite.setRotation(utils::degrees(atan2f(vel.y, vel.x)) + 90.0f);
 
+		hitBox = sprite.getGlobalBounds(); // centered
 		auto collisions = tiles.collision(hitBox);
 		if (!collisions.empty()) {
 			auto c = collisions.front();
@@ -63,6 +63,7 @@ int Hook::update(const sf::Time& dT, const TileMap& tiles, const sf::Vector2f& p
 				return 1;
 			}
 			else {
+				//audioPlayer.play(AudioPlayer::Effect::) // cant find the "missed hook" Sfx
 				return -1;
 			}
 		}
