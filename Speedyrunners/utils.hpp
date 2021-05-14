@@ -75,6 +75,8 @@ namespace rng {
 std::ostream& operator<<(std::ostream& os, const RNG& c);
 
 namespace utils {
+	float parseFloat(std::istringstream& is, const char sep);
+	float parseInt(std::istringstream& is, const char sep);
 	float stopDistance(const float& speed, const float& deceleration);
 
 	template <class T>

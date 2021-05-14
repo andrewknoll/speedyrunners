@@ -71,7 +71,6 @@ AW,item_rocket_fly_loop.wav
 AW,item_rocket_launch_1.wav,item_rocket_launch_2.wav
 AW,item_tornado_activate.wav
 
-
 I,0,Content/Sprites/rocket.png
 
 T,0,Content/Sprites/hook.png
@@ -83,3 +82,7 @@ T,5,Content/Sprites/powerup.png
 T,6,Content/UI/MultiplayerHUD/PowerUpBackground.png
 T,7,Content/UI/MultiplayerHUD/PowerUp.png
 T,8,Content/Sprites/smokeParticle.png
+T,9,Content/Sprites/cloudParticle.png
+
+PS,8,0,0,0.5,1,0,0,0,0,20,20,20,20,15,50,255,0,1000,2
+PS,9,0,0,0.5,0.5,0,0,0,0,20,20,20,20,100,150,255,0,1000,1

@@ -1,5 +1,6 @@
 
 #pragma warning( disable : 4244 ) 
+#include <sstream>
 #include <cmath>
 #include "utils.hpp"
 #include <cmath>
@@ -42,6 +43,18 @@ void RNG::fillRand(int* arr, const int size, const int min, const int max) const
 
 
 namespace utils {
+
+	float parseFloat(std::istringstream& is, const char sep) {
+		std::string token;
+		getline(is, token, sep);
+		return stof(token);
+	}
+
+	float parseInt(std::istringstream& is, const char sep) {
+		std::string token;
+		getline(is, token, sep);
+		return stoi(token);
+	}
 
 	float stopDistance(const float& speed, const float& deceleration) {
 		return (speed * speed) / (2 * deceleration) - (speed * speed) / deceleration;

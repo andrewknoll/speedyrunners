@@ -19,7 +19,8 @@ Game::Game()
 	state(State::Countdown),
 	selectedTile(Tiles::Collidable::FLOOR),
 	cam(sf::FloatRect(0, 0, 1600, 900)),
-	src(Resources::getInstance())
+	src(Resources::getInstance()),
+	particleSystems(src.getParticleSystems())
 	//dT(0)
 {
 
@@ -40,7 +41,7 @@ Game::Game()
 
 	loadLevel("defaultLevel.csv");
 
-	particleSystems.push_back(&Resources::getInstance().rocketsPartSystem);
+	//;// .push_back(&Resources::getInstance().getParticleSystem(glb::particleSystemIdx::ROCKET_SMOKE));
 }
 
 void Game::clear() {
@@ -49,7 +50,7 @@ void Game::clear() {
 	characters.clear();
 	players.clear();
 	items.clear(); // delete all items
-	for (auto& p : particleSystems) p->clear(); // and particles
+	clearParticles(); // and particles
 	running = false;
 
 	for (int i = 0; i < npcs.size(); i++) {
@@ -439,6 +440,10 @@ void Game::updateItems() {
 	}
 }
 
+void Game::clearParticles() {
+	for (auto& ps : particleSystems) ps.clear();
+}
+
 void Game::update()
 {
 	sf::Event event;
@@ -516,7 +521,7 @@ void Game::update()
 		}
 		lvl.update(dT); // respawn items, etc
 		updateItems();
-		for (auto ps : particleSystems) ps->update(dT); // update particles
+		for (auto &ps : particleSystems) ps.update(dT); // update particles
 		updatePositions();
 		cam.follow(characters);
 		cam.update(dT);
@@ -535,7 +540,7 @@ void Game::update()
 		if (characters.size() > 1 && aliveCount < 2) {
 			state = State::FinishedRound;
 			items.clear(); // delete all items
-			for (auto& p : particleSystems) p->clear(); // and particles
+			clearParticles(); // and particles
 			for (auto c : characters) {
 				if (!c->isDead()) {
 					c->increaseScore(1);
@@ -550,7 +555,7 @@ void Game::update()
 
 	}
 	else if (state == State::Editing && testingParticles && dT.asSeconds() < 0.1)
-		for (auto ps : particleSystems) ps->update(dT); // update particles
+		for (auto& ps : particleSystems) ps.update(dT); // update particles
 	else if (state == State::Countdown) {
 		cam.follow(characters);
 		cam.update(dT);
@@ -566,6 +571,7 @@ void Game::update()
 		if (rv == nullptr) {
 			for (int i = 0; i < characters.size(); i++) {
 				if (!characters[i]->isDead()) {
+					clearParticles();
 					rv = std::make_unique<RoundVictory>(window, characters[i]->getID(), characters[i]->getVariant(), characters[i]->getScore());
 					respawnPosition = characters[i]->getLastSafePosition();
 				}
@@ -622,7 +628,8 @@ void Game::processEditingInputs(const sf::Event& event) {
 		}
 		else {
 			//particleSystems.front()->emit(utils::mousePosition2f(window));
-			Resources::getInstance().rocketsPartSystem.emit(utils::mousePosition2f(window));
+			std::cout << "emiiting from " << selectedPSystem << "\n";
+			particleSystems[selectedPSystem].emit(utils::mousePosition2f(window));
 		}
 
 	}
@@ -647,8 +654,13 @@ void Game::processEditingInputs(const sf::Event& event) {
 	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Numpad7) {
 		testingParticles = !testingParticles;
 		addingCheckpoint = false;
-		for (auto p : particleSystems) p->clear();
+		clearParticles();
 	}
+	else if (testingParticles && event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Numpad8) {
+		selectedPSystem = (selectedPSystem + 1) % particleSystems.size();
+		std::cout << "selected PSystem: " << selectedPSystem << "\n";
+	}
+	
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) { // sf::Keyboard::isKeyPressed(sf::Keyboard::S) &&
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
 			lvl.setCheckpoints(checkpoints);
@@ -755,9 +767,9 @@ void Game::draw(sf::Time dT)
 			checkpointCircle.setPosition(utils::mousePosition2f(window));
 			window.draw(checkpointCircle);
 		}
-		else for (const auto ps : particleSystems) {
-			//std::cout << "drawing particles?\n";
-			window.draw(*ps); // testing particles
+		else for (const auto& ps : particleSystems) {
+			std::cout << "drawing particles?\n";
+			window.draw(ps); // testing particles
 		}
 		break;
 	}
@@ -782,7 +794,7 @@ void Game::draw(sf::Time dT)
 				window.draw(*c);
 			}
 		}
-		for (const auto ps : particleSystems) window.draw(*ps);
+		for (const auto& ps : particleSystems) window.draw(ps);
 		for (const auto i : items) {
 			window.draw(*i);
 		}

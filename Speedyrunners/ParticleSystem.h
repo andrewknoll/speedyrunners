@@ -6,11 +6,16 @@ namespace particles {
 struct Settings {
 	sf::Vector2f pos, 
 		vel = sf::Vector2f(0,0), 
-		velVariation = sf::Vector2f(50, 50);
+		velVarNeg = sf::Vector2f(20, 20), // negative vel variation in each axis
+		velVarPos = sf::Vector2f(20, 20); // positive vel variation in each axis
 	float sizeIni = 15, sizeEnd = 50;
 	float alphaIni = 255, alphaEnd = 0;
 	size_t count = 1000;
 	sf::Time ttl= sf::seconds(2);
+
+
+	Settings(const std::string& line, const char sep = ','); // loads the settings from a line containing the values separated by 'sep'
+
 };
 
 class Particle : sf::Transformable
@@ -54,11 +59,11 @@ protected:
 	void enableParticle(int idx); // enables the particle to be drawn (sets the texCoords)
 	void disableParticle(int idx); // disables it
 public:
-	ParticleSystem(int nParticles = 1000);
+	ParticleSystem(const Settings& particleSettings);
 
 	void setTexture(const sf::Texture& t, const sf::FloatRect& rect=sf::FloatRect(0,0,1,1));
 
-	
+	void setParticleSettings(Settings& particleSettings);
 
 	void emit(const particles::Settings& particleSettings);
 	void emit(const sf::Vector2f& pos);

@@ -1,16 +1,24 @@
 #include <iostream>
+#include <sstream>
 #include "ParticleSystem.h"
 #include "utils.hpp"
 #include "Resources.h"
 
+
+
 namespace particles {
 
-	ParticleSystem::ParticleSystem(int nParticles) 
+	/*ParticleSystem::ParticleSystem(int nParticles) 
 		: particles(nParticles), vertices(sf::Quads, nParticles *4), index(nParticles-1), tex(nullptr)
 	{
 		std::cout << "index: " << index << "\n";
 		particles.resize(nParticles);
 		pSettings.count = nParticles;
+	}*/
+	ParticleSystem::ParticleSystem(const Settings& particleSettings)
+		: pSettings(particleSettings), particles(particleSettings.count), vertices(sf::Quads, particleSettings.count * 4), index(particleSettings.count - 1), tex(nullptr)
+	{
+		particles.resize(particleSettings.count);
 	}
 
 	void ParticleSystem::setTexture(const sf::Texture& t, const sf::FloatRect& rect)
@@ -21,6 +29,11 @@ namespace particles {
 		/*for (int i = 0; i < particles.size(); i+=4) {
 			enableParticle(i);
 		}*/
+	}
+
+	void ParticleSystem::setParticleSettings(Settings& particleSettings)
+	{
+		pSettings = particleSettings;
 	}
 
 	void ParticleSystem::enableParticle(int idx) {
@@ -122,11 +135,44 @@ namespace particles {
 	{
 		setPosition(particleSettings.pos);
 		vel = particleSettings.vel;
-		auto& var = particleSettings.velVariation;
-		vel += 0.5f * sf::Vector2f(rng::defaultGen.rand(-var.x, var.x), rng::defaultGen.rand(-var.y, var.y));
+		auto& negVar = particleSettings.velVarNeg;
+		auto& posVar = particleSettings.velVarNeg;
+		vel += 0.5f * sf::Vector2f(rng::defaultGen.rand(-negVar.x, posVar.x), rng::defaultGen.rand(-negVar.y, posVar.y));
 		ttl = particleSettings.ttl;
 		active = true;
 		setRotation(rng::defaultGen.rand(0, 360));
+	}
+
+
+	sf::Vector2f pos,
+		vel = sf::Vector2f(0, 0),
+		velVariation = sf::Vector2f(50, 50);
+	float sizeIni = 15, sizeEnd = 50;
+	float alphaIni = 255, alphaEnd = 0;
+	size_t count = 1000;
+	sf::Time ttl = sf::seconds(2);
+
+
+	
+
+	Settings::Settings(const std::string& line, const char sep)
+	{
+		using namespace utils;
+		std::istringstream is(line);
+		pos.x = parseFloat(is, sep);
+		pos.y = parseFloat(is, sep);
+		vel.x = parseFloat(is, sep);
+		vel.y = parseFloat(is, sep);
+		velVarPos.x = parseFloat(is, sep);
+		velVarPos.y = parseFloat(is, sep);
+		velVarNeg.x = parseFloat(is, sep);
+		velVarNeg.y = parseFloat(is, sep);
+		sizeIni = parseFloat(is, sep);
+		sizeEnd = parseFloat(is, sep);
+		alphaIni = parseFloat(is, sep);
+		alphaEnd = parseFloat(is, sep);
+		count = size_t(parseInt(is, sep));
+		ttl = sf::seconds(parseFloat(is, sep));
 	}
 
 }// Namespace particles

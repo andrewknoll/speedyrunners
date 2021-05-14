@@ -7,7 +7,7 @@
 Rocket::Rocket(sf::Vector2f pos, CharPtr target, bool facingRight, float width) :
 	Item(glb::item::ROCKET),
 	target(target),
-	particleSyst(Resources::getInstance().rocketsPartSystem),
+	particleSyst(Resources::getInstance().getParticleSystem(glb::particleSystemIdx::ROCKET_SMOKE)),
 	position(pos),
 	audioPlayer(Resources::getInstance().getAudioPlayer())
 {
@@ -47,6 +47,7 @@ bool Rocket::update(sf::Time elapsed, const Level& lvl) { // todo: check tiles c
 		float dist = utils::length(diff);
 		if (dist < detonationRadius) { // Detonate
 			audioPlayer.play(AudioPlayer::Effect::ROCKET_EXPLODE);
+			Resources::getInstance().getParticleSystem(glb::particleSystemIdx::ROCKET_CLOUD).emit(position);
 			return true;
 		}
 		else if (dist < 2 * detonationRadius) { // Almost hit

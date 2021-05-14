@@ -78,7 +78,7 @@ protected:
 	std::vector<NPCPtr> npcs;
 	std::list<ItemPtr> items;
 
-	std::vector<particles::ParticleSystem*> particleSystems;
+	std::vector<particles::ParticleSystem>& particleSystems;
 
 	std::mutex restartMtx;
 	std::condition_variable restartCv;
@@ -98,7 +98,7 @@ protected:
 	// int firstCharacter;
 
 	bool testingParticles = false; // change with numpad7 in editingmode
-
+	int selectedPSystem = 0;
 	// Countdown:
 	Countdown countdown;
 
@@ -116,6 +116,7 @@ protected:
 
 	// Handle an item explosion or something (when item.update returns true):
 	void handleItem(Game::ItemPtr item);
+	void clearParticles(); // clears all particles
 
 	void updateItems();
 	void updateNPCs(bool follow);

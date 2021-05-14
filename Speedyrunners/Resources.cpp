@@ -3,9 +3,9 @@
 #include <iostream>
 #include <exception>
 #include <sstream>
+#include "utils.hpp"
 
-Resources::Resources() :
-	rocketsPartSystem() 
+Resources::Resources()
 {
 	std::ifstream file(PATH_TO_ASSETS + RESOURCES_CSV);
 
@@ -82,6 +82,21 @@ Resources::Resources() :
 			for (int i = 0; i < 2; i++) std::getline(iss, token[i], ',');
 			items[stoi(token[0])].loadFromFile(PATH_TO_ASSETS + token[1]);
 		}
+		else if (type == "PS") { // Particle Systems
+			char sep = ',';
+			std::string line;
+			std::getline(iss, line); // until \n
+			std::istringstream liness(line);
+			int texIdx = utils::parseInt(liness, sep);
+			std::vector<float> coords;
+			for (int i = 0; i < 4; i++) coords.push_back(utils::parseFloat(liness, sep));
+			sf::FloatRect texRect(coords[0], coords[1],coords[2],coords[3]);
+			std::getline(liness, line); // rest of the line until \n
+			particles::Settings pSettings(line);
+			auto& ps = particleSystems.emplace_back(pSettings);
+			std::cout <<"texRect: " << texRect.left << " "<<texRect.top << " "<<texRect.width << " "<<texRect.height << " \n";
+			ps.setTexture(getMiscTexture(texIdx), texRect);
+		}
 		/*else if (type == "L") {
 
 		}*/
@@ -90,7 +105,6 @@ Resources::Resources() :
 	//std::cout << 
 
 	audioPlayer.loadSoundsFromBuffers(soundBuffers);
-	rocketsPartSystem.setTexture(getMiscTexture(8), sf::FloatRect(0,0,0.5,1)); // only use first horizontal half
 }
 
 Resources& Resources::getInstance() {
@@ -124,6 +138,16 @@ const std::vector<sf::SoundBuffer>& Resources::getSoundBuffer(int type)
 const std::vector<std::vector<sf::SoundBuffer>>& Resources::getSoundBuffers()
 {
 	return soundBuffers;
+}
+
+particles::ParticleSystem& Resources::getParticleSystem(int idx)
+{
+	return particleSystems[idx];
+}
+
+std::vector<particles::ParticleSystem>& Resources::getParticleSystems()
+{
+	return particleSystems;
 }
 
 

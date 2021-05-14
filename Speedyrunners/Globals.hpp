@@ -30,7 +30,7 @@ namespace glb
 		const std::string TAUNT_ANIM = "Taunt";
 		const std::string START_ANIM = "321GO";
 	};
-	const int NUMBER_OF_MISC_TEXTURES = 9;
+	const int NUMBER_OF_MISC_TEXTURES = 10;
 	const sf::Vector2f FEET_TO_HAND = sf::Vector2f(20.0, 0);// -50.0
 	// Items:
 	const int NUMBER_OF_ITEMS = 1;
@@ -99,5 +99,12 @@ namespace glb
 			BG_PATH + "ENV_Ski/bg_sky.png",
 			BG_PATH + "ENV_ThemePark/sky_1280x720.png"
 		};
+
+
+	// particlesystems:
+	enum particleSystemIdx {
+		ROCKET_SMOKE,
+		ROCKET_CLOUD
+	};
 };
 
