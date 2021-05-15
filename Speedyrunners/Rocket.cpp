@@ -57,8 +57,6 @@ bool Rocket::update(sf::Time elapsed, const Level& lvl) { // todo: check tiles c
 		// Linear acc:
 		diff = (target->getPosition() - position);
 		float dist = utils::length(diff);
-		//linearAcc = dist * accVal;
-		//linearAcc = 8000;
 		if (dist < detonationRadius) { // Detonate
 			audioPlayer.play(AudioPlayer::Effect::ROCKET_EXPLODE);
 			Resources::getInstance().getParticleSystem(glb::particleSystemIdx::ROCKET_CLOUD).emit(position);
@@ -77,25 +75,9 @@ bool Rocket::update(sf::Time elapsed, const Level& lvl) { // todo: check tiles c
 	// linear acc:
 	sf::Vector2f facing(cos(angle), sin(angle));
 	acc = facing * linearAcc;
-	// opposed drag:
-	sf::Vector2f up(-facing.x, facing.y);
-
 
 	//Update velocity and angle
 	vel = vel + acc * elapsed.asSeconds();
-	// Apply drag:
-	/*geometry::Mat2 base(facing, up);
-	sf::Transform toWorld = base.toTransform();
-	auto inverse = toWorld.getInverse();
-	auto vLocal = inverse.transformPoint(vel);
-	auto vertVel = std::abs(vLocal.x);
-	//if (vertVel > 0.01f * minVel) { // if its too small, dont bother
-		//vertVel -= horizontalDrag * elapsed.asSeconds();
-	if (vertVel > maxVerticalVel && false) {
-		vertVel = maxVerticalVel;
-		vLocal.x = (vLocal.x < 0) ? -vertVel : vertVel;
-		vel = toWorld.transformPoint(vLocal);
-	}*/
 	// reduce if maximum reached:
 	float velMod = utils::length(vel);
 	if (velMod > maxVel) vel *= maxVel / velMod; // make it maxVel
@@ -106,7 +88,6 @@ bool Rocket::update(sf::Time elapsed, const Level& lvl) { // todo: check tiles c
 	//Move
 	position += vel * elapsed.asSeconds();
 
-	//angle = utils::degrees(atan2f(vel.y, vel.x));
 	angle = utils::degrees(angle);
 	rocket.setPosition(position);
 	rocket.setRotation(angle);
@@ -126,48 +107,3 @@ void Rocket::doThingTo(std::shared_ptr<Character> c)
 }
 
 
-
-
-/*
-bool Rocket::update(sf::Time elapsed, const Level& lvl) { // todo: check tiles collisions
-	sf::Vector2f diff;
-	//Update Acceleration
-	if (target != nullptr) {
-		diff = (target->getPosition() - position);
-		acc.x = accVal * (diff.x);
-		acc.y = accVal * (diff.y);
-		float dist = utils::length(diff);
-		if (dist < detonationRadius) { // Detonate
-			audioPlayer.play(AudioPlayer::Effect::ROCKET_EXPLODE);
-			Resources::getInstance().getParticleSystem(glb::particleSystemIdx::ROCKET_CLOUD).emit(position);
-			return true;
-		}
-		else if (dist < 2 * detonationRadius) { // Almost hit
-			audioPlayer.setLoop(AudioPlayer::Effect::ROCKET_ALMOST_HIT_LOOP);
-			audioPlayer.continuePlaying(AudioPlayer::Effect::ROCKET_ALMOST_HIT_LOOP);
-		}
-		else { // Stop the loop if it got away
-			audioPlayer.setLoop(AudioPlayer::Effect::ROCKET_ALMOST_HIT_LOOP, false);
-		}
-	}
-
-	//Update velocity and angle
-	vel = vel + acc * elapsed.asSeconds();
-	float velMod = utils::length(vel);
-	if (velMod > maxVel) vel *= maxVel / velMod; // make it maxVel
-	else if (velMod < minVel) vel *= minVel / velMod; // make it minVel
-	if (velMod > (maxVel + minVel) / 2.0f) setTexRect(false); // if more than half speed, blurry texture
-	else setTexRect(true); // else normal
-
-	//Move
-	position += vel * elapsed.asSeconds();
-
-	angle = utils::degrees(atan2f(vel.y, vel.x));
-
-	rocket.setPosition(position);
-	rocket.setRotation(angle);
-	auto particlesPoint = rocket.getTransform().transformPoint(sf::Vector2f(-rocketLength, 0));
-	particleSyst.emit(particlesPoint); // smoke!
-	return false;
-}
-*/
