@@ -63,7 +63,7 @@ int Hook::update(const sf::Time& dT, const TileMap& tiles, const sf::Vector2f& p
 				return 1;
 			}
 			else {
-				//audioPlayer.play(AudioPlayer::Effect::) // cant find the "missed hook" Sfx
+				audioPlayer.play(AudioPlayer::Effect::GRAPPLINGHOOK_MISS); // hit a black tile
 				return -1;
 			}
 		}

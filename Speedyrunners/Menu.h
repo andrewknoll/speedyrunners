@@ -6,6 +6,7 @@
 #include "TextElement.h"
 #include "Background.h"
 #include "LobbyWidget.h"
+#include "AudioPlayer.h"
 
 class Game;
 
@@ -43,9 +44,10 @@ class Menu
 	// Main menu:
 	sf::Color bgColor = sf::Color(63, 92, 123);
 	std::string menuPath = glb::CONTENT_PATH + "UI/MainMenu/";
-
-
 	std::string mainTextFontPath = glb::CONTENT_PATH + "UI/Font/Souses.ttf";
+
+	// Audio:
+	AudioPlayer& audio;
 
 	void draw();
 	void addLevels(sf::Vector2f& pos, float& size);
@@ -67,6 +69,7 @@ class Menu
 	void addTopLeftSign(const std::string& path);
 	void addExitSign();
 	void addLobbyWidgets(const std::string& lobbyPath);
+	void backToMainMenu();
 public:
 	//void addElement(const UIElement& e);
 	//Menu(std::shared_ptr<sf::RenderWindow> _window);

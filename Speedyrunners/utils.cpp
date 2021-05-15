@@ -77,6 +77,24 @@ namespace utils {
 		return false;
 	}
 
+	template<typename T>
+	sf::Vector2i toVector2i(const sf::Vector2<T>& v)
+	{
+		return sf::Vector2i(v.x,v.y);
+	}
+
+	template<typename T>
+	sf::Vector2f toVector2f(const sf::Vector2<T>& v)
+	{
+		return sf::Vector2f(v.x, v.y);
+	}
+
+	template<typename T>
+	sf::Vector2u toVector2u(const sf::Vector2<T>& v)
+	{
+		return sf::Vector2u(v.x,v.y);
+	}
+
 	int clamp(int val, int min, int max) {
 		return (val < min) ? min : (val >= max) ? max : val;
 	}
@@ -200,6 +218,18 @@ namespace utils {
 	void scaleToFullScreen(sf::Sprite& s, const Settings& settings)
 	{
 		scaleToFullScreen(s, settings.windowResolution().y);
+	}
+
+	sf::IntRect texRectInGrid(const sf::Texture& tex, int nX, int nY, int idxX, int idxY)
+	{
+		auto size2u = tex.getSize(); // tex size
+		auto size = sf::Vector2i(size2u.x / nX, size2u.y / nY); // Rect size
+		return sf::IntRect(idxX * size.x, idxY * size.y, size.x, size.y);
+	}
+
+	sf::IntRect texRectInGrid(const sf::Texture& tex, const sf::Vector2i& nSprites, const sf::Vector2i& idx)
+	{
+		return texRectInGrid(tex, nSprites.x, nSprites.y, idx.x, idx.y);
 	}
 
 	void setWidth(sf::Sprite& s, const float& width)

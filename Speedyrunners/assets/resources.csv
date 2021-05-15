@@ -66,13 +66,28 @@ AW,item_fireball_launch.wav
 AW,item_fireball_rolling_loop.wav
 AW,item_goldengrapplinghook_hit_1.wav,item_goldengrapplinghook_hit_2.wav
 AW,item_goldengrapplinghook_shoot_1.wav,item_goldengrapplinghook_shoot_2.wav,item_goldengrapplinghook_shoot_3.wav
-AW,item_grapplinghook_attach_1.wav,item_grapplinghook_attach_2.wav,item_grapplinghook_attach_3.wav
+AW,item_grapplinghook_attach_1.wav
+AW,item_grapplinghook_attach_2.wav,item_grapplinghook_attach_3.wav
 AW,item_grapplinghook_shoot_1.wav,item_grapplinghook_shoot_2.wav,item_grapplinghook_shoot_3.wav
 AW,item_rocket_almost_hit_loop.wav
 AW,item_rocket_explode_1.wav,item_rocket_explode_2.wav
 AW,item_rocket_fly_loop.wav
 AW,item_rocket_launch_1.wav,item_rocket_launch_2.wav
 AW,item_tornado_activate.wav
+# Menu:
+AM,GameShowFill_1.6s.wav
+AM,Sfx_ui_panelswipe.wav
+AM,menu_click_cancel.wav
+AM,menu_click_character_chosen.wav
+AM,menu_click_done.wav
+AM,menu_click_item.wav
+AM,menu_click_start_game.wav
+AM,menu_player_enterlobby.wav
+AM,menu_player_exitlobby.wav
+AM,menu_rollover.wav
+AM,menu_single_tab_slide_in.wav
+AM,menu_tabs_slide_in.wav
+AM,menu_toggle.wav
 
 I,0,Content/Sprites/rocket.png
 

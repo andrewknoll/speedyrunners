@@ -3,6 +3,8 @@
 #include "UISprite.h"
 #include "TextElement.h"
 #include "utils.hpp"
+#include "Resources.h"
+#include "AudioPlayer.h"
 
 void LobbyWidget::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
@@ -134,7 +136,7 @@ void LobbyWidget::clear() {
 }
 
 LobbyWidget::LobbyWidget(sf::RenderWindow& _window, const Settings& settings, const std::string lobbyPath, const sf::Vector2f& pos, bool active, int idx)
-	: window(_window), isActive(active), m_lobbyPath(lobbyPath), m_pos(pos), m_settings(settings)
+	: window(_window), isActive(active), m_lobbyPath(lobbyPath), m_pos(pos), m_settings(settings), audio(Resources::getInstance().getAudioPlayer())
 {
 	// widget background:
 	backgrounds.emplace_back(lobbyPath + "PlayerWidgetBackground.png", window, sf::FloatRect(pos.x, pos.y, 0.66 / 2.25, 0.9 / 2.25));
@@ -186,7 +188,7 @@ LobbyWidget::setCharacterSelect(sf::RenderWindow& _window, const Settings& setti
 
 void LobbyWidget::handleClick(int idx) {
 	if (isActive) {
-
+		audio.play(AudioPlayer::Effect::MENU_TOGGLE);
 		switch (idx) {
 		case 0:
 		{
@@ -207,7 +209,7 @@ void LobbyWidget::handleClick(int idx) {
 		}
 	}
 	else {
-
+		audio.play(AudioPlayer::Effect::MENU_PLAYER_ENTERLOBBY);
 		isActive = true;
 		elements.pop_back();
 		//Outline:
@@ -215,7 +217,6 @@ void LobbyWidget::handleClick(int idx) {
 		addCharacterStuff(m_lobbyPath, window, m_pos);
 		// Runner button:
 		addWidgetButton(m_lobbyPath, m_pos + sf::Vector2f(0.18, 0.1), 0.05, window, m_settings, 1);
-
 	}
 }
 

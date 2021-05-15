@@ -131,6 +131,8 @@ namespace utils {
 	// Scale sprite to full window size
 	void scaleToFullScreen(sf::Sprite& s, const Settings& settings);
 
+	sf::IntRect texRectInGrid(const sf::Texture& tex, int nX, int nY, int idxX, int idxY); // Returns the texRect of index idxX, idxY for tex assuming its in a grid of nX by nY
+	sf::IntRect texRectInGrid(const sf::Texture& tex, const sf::Vector2i& nSprites, const sf::Vector2i& idx); // same with vectors
 
 	// Post: sprite.width = width in world
 	void setWidth(sf::Sprite& s, const float& width);
@@ -151,6 +153,15 @@ namespace utils {
 
 	// Sets the origin to the center of the sprite
 	void centerOrigin(sf::Sprite& s);
+
+	template <typename T>
+	sf::Vector2i toVector2i(const sf::Vector2<T>& v);
+
+	template <typename T>
+	sf::Vector2f toVector2f(const sf::Vector2<T>& v);
+
+	template <typename T>
+	sf::Vector2u toVector2u(const sf::Vector2<T>& v);
 }
 
 

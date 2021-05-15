@@ -9,13 +9,15 @@
 #define DEBUG_MOUSE_POS
 
 Menu::Menu(sf::RenderWindow& _window, Settings& _settings, Game& _game) 
-	: window(&_window), settings(_settings), game(_game)
+	: window(&_window), settings(_settings), game(_game), 
+	audio(Resources::getInstance().getAudioPlayer())
 {
 	window->setView(window->getDefaultView());
 }
 
 Menu::Menu(sf::RenderWindow* _window, Settings& _settings, Game& _game) :
-	window(_window), settings(_settings), game(_game)
+	window(_window), settings(_settings), game(_game),
+	audio(Resources::getInstance().getAudioPlayer())
 {
 	window->setView(window->getDefaultView());
 }
@@ -214,6 +216,8 @@ void Menu::setWorkshopMenu() {
 }
 
 void Menu::handleMainMenuClick(int i) {
+	if (i!=6) audio.play(AudioPlayer::Effect::MENU_CLICK_ITEM); // not quit
+	else	  audio.play(AudioPlayer::Effect::MENU_CLICK_CANCEL); // quit
 	switch (i) {
 	case 0:
 	{
@@ -262,12 +266,18 @@ void Menu::handleMainMenuClick(int i) {
 	}
 }
 
+void Menu::backToMainMenu() {
+	audio.play(AudioPlayer::Effect::MENU_CLICK_CANCEL);
+	clear();
+	setMainMenu();
+}
+
 void Menu::handleWorkshopClick(int i) {
 	if (i == 0) { // exit
-		clear();
-		setMainMenu();
+		backToMainMenu();
 	}
 	else if (i == 1) {
+		audio.play(AudioPlayer::Effect::MENU_CLICK_START_GAME);
 		// New level
 		game.createNewLevel(levelNames.size());
 		game.clear();
@@ -275,6 +285,7 @@ void Menu::handleWorkshopClick(int i) {
 		exitMenu = true;
 	}
 	else {
+		audio.play(AudioPlayer::Effect::MENU_CLICK_START_GAME);
 		i-=2;
 		if (i >= levelNames.size()) std::cerr << i << " is not a level " << levelNames.size() << "\n";
 		game.loadLevel(levelNames[i] + ".csv");
@@ -348,11 +359,11 @@ void Menu::setControls() {
 void Menu::handleLobbyClick(int i) {
 	switch (i) {
 	case 0: // exit sign
-		clear();
-		setMainMenu();
+		backToMainMenu();
 		break;
 	case 1: // Ready
 	{
+		audio.play(AudioPlayer::Effect::MENU_CLICK_CHARACTER_CHOSEN);
 		elements.pop_back(); // remove only ready sign
 		players.clear(); npcs.clear();
 		int i = 0;
@@ -376,10 +387,10 @@ void Menu::handleLobbyClick(int i) {
 
 void Menu::handleLvlSelectClick(int i) {
 	if (i == 0) { // exit
-		clear();
-		setMainMenu();
+		backToMainMenu();
 	}
 	else {
+		audio.play(AudioPlayer::Effect::MENU_CLICK_START_GAME);
 		i -= 1;
 		if (i >= levelNames.size()) std::cerr << i << " is not a level " << levelNames.size() << "\n";
 		game.loadLevel(levelNames[i] + ".csv");
@@ -406,8 +417,7 @@ void Menu::handleClick(int i) {
 		handleLvlSelectClick(i);
 		break;
 	case Page::Controls:
-		clear();
-		setMainMenu();
+		backToMainMenu();
 		break;
 	default:
 		std::cerr << "what is this menu page\n";
@@ -420,8 +430,7 @@ void Menu::pollEvents()
 	while (window->pollEvent(event))
 	{
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
-			clear();
-			setMainMenu();
+			backToMainMenu();
 		}
 		else if (event.type == sf::Event::Closed) {
 #ifdef USE_IMGUI
