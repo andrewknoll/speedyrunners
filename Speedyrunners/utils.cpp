@@ -305,6 +305,11 @@ sf::Vector2f geometry::Mat2::operator*(const sf::Vector2f& v) const
 	return sf::Vector2f(front.x*v.x + up.x*v.y, front.y*v.x + up.y*v.y);
 }
 
+sf::Transform geometry::Mat2::toTransform() const
+{
+	return sf::Transform(front.x, front.y, 0, up.x, up.y, 0, 0,0,1);
+}
+
 sf::Vector2f geometry::normalize(const sf::Vector2f& in)
 {
 	float len = utils::length(in);
@@ -315,6 +320,14 @@ sf::Vector2f geometry::normalize(const sf::Vector2f& in)
 sf::Vector2f geometry::toWorld(const Mat2& m, const sf::Vector2f& local)
 {
 	return m*local;
+}
+
+
+
+sf::Vector2f geometry::reduceComponent(sf::Vector2f vel, const sf::Vector2f& up, const float& horizontalDrag)
+{
+
+	return sf::Vector2f(vel.x * horizontalDrag * up.x, vel.y * horizontalDrag * up.y);
 }
 
 rng::IntSampler::IntSampler(const int min, const int max) : dis(min, max)

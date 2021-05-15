@@ -166,6 +166,8 @@ namespace utils {
 
 
 namespace geometry {
+	inline const float PI = 3.141592;
+
 	struct Mat2 {
 		sf::Vector2f front;
 		sf::Vector2f up;
@@ -174,12 +176,18 @@ namespace geometry {
 
 
 		sf::Vector2f operator*(const sf::Vector2f& v) const;
+
+		sf::Transform toTransform() const;
 	};
 
 
 	sf::Vector2f normalize(const sf::Vector2f& in);
 
 	sf::Vector2f toWorld(const Mat2& m, const sf::Vector2f& local);
+
+	
+
+	sf::Vector2f reduceComponent(sf::Vector2f vel, const sf::Vector2f& up, const float& horizontalDrag);
 }
 
 template <typename T>

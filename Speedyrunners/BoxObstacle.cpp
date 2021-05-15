@@ -32,6 +32,7 @@ bool BoxObstacle::isInside(const sf::FloatRect& hitbox)
 {
 	if (available && collidable.intersects(hitbox)) {
 		available = false;
+		cdAvailable = glb::itemPickupRespawn;
 		falling = true;
 		rotSpeed = rng::defaultGen.rand(-50.0f, 50.0f);
 		vel = sf::Vector2f(rng::defaultGen.rand(-40.0f, 40.0f), rng::defaultGen.rand(-40.0f, 40.0f));
