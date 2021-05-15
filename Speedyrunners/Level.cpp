@@ -44,6 +44,11 @@ void Level::addBoxObstacle(const sf::Vector2f& pos)
 	boxObstacles.emplace_back(pos, collidableTiles.getTileSizeWorld().x);
 }
 
+// drop it, affected by gravity
+void Level::dropCrate(const sf::Vector2f& pos) {
+	boxObstacles.emplace_back(pos, collidableTiles.getTileSizeWorld().x, false).fallToFloor();
+}
+
 bool Level::checkItemPickups(std::shared_ptr<Character> character)
 {
 	if (character->getCurrentItem() == glb::item::NONE) { // Only check if the character doesnt already have an item
@@ -62,13 +67,20 @@ bool Level::checkItemPickups(std::shared_ptr<Character> character)
 bool Level::checkBoxCollisions(std::shared_ptr<Character> character)
 {
 	const auto& hb = character->getHitBox();
-	for (auto& i : boxObstacles)
+	bool hit = false; 
+	int idx = 0;
+	for (auto& i : boxObstacles) {
 		if (i.isInside(hb)) { // Collides with a box
 			audioPlayer.play(AudioPlayer::Effect::CRATE_DROP); // Not sure
 			character->tumbleWithBox();
-			return true;
+			hit = true;
+			break;
 		}
-	return false;
+		idx++;
+	}
+	if (hit && !boxObstacles[idx].respawnable()) // Remove the box if needed
+		boxObstacles.erase(boxObstacles.begin() + idx); 
+	return hit;
 }
 
 void Level::drawTile(sf::RenderTarget& target, sf::RenderStates states, const sf::Vector2i& pos, const int tileNumber) const
@@ -352,5 +364,5 @@ void Level::update(const sf::Time& dT)
 {
 	for (auto& i : itemPickups)  i.update(dT);
 	for (auto& b : boostBoxes)	 b.update(dT); // animations
-	for (auto& b : boxObstacles) b.update(dT); // animations
+	for (auto& b : boxObstacles) b.update(dT, collidableTiles); // animations
 }

@@ -4,17 +4,21 @@
 #include "Globals.hpp"
 #include "utils.hpp"
 
+class TileMap;
+
 class BoxObstacle : public sf::Drawable {
 	// Collidable obstacles
 protected:
 
-	const sf::Texture& tex;
+	const sf::Texture* tex;
 
 	sf::Sprite sprite;
 
 	sf::FloatRect collidable;
 
-	bool available = true, falling = false;
+	bool available = true, falling = false, fallingToFloor = false;
+
+	bool shouldRespawn = true;
 
 	sf::Vector2f position;
 	sf::Vector2f vel = sf::Vector2f(0, 0);
@@ -32,12 +36,15 @@ protected:
 
 public:
 
-	BoxObstacle(const sf::Vector2f& pos, float tileWidth);
+	BoxObstacle(const sf::Vector2f& pos, float tileWidth, bool respawn=true);
+
+	void fallToFloor(); // makes the crate drop to the floor (remains collidable)
 
 	sf::Vector2f getPosition() const;
 
 	bool isInside(const sf::FloatRect& hitbox);
 
-	void update(sf::Time dT);
+	void update(sf::Time dT, const TileMap& tiles);
 
+	bool respawnable() const;
 };

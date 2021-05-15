@@ -1,5 +1,6 @@
 #include "BoxObstacle.h"
 #include "Resources.h"
+#include "TileMap.h"
 
 
 
@@ -8,19 +9,24 @@ void BoxObstacle::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	if (available || falling) target.draw(sprite); // Only draw if available or falling
 }
 
-BoxObstacle::BoxObstacle(const sf::Vector2f& pos, float tileWidth)
-	: tex(Resources::getInstance().getMiscTexture(12)), sprite(tex), position(pos), rotSpeed(0)
+BoxObstacle::BoxObstacle(const sf::Vector2f& pos, float tileWidth, bool respawn)
+	: tex(&Resources::getInstance().getMiscTexture(12)), sprite(*tex), shouldRespawn(respawn), position(pos), rotSpeed(0)
 {
 	int nSprites = 20;
 	int idx = 0;
-	if (glb::enableRandomObstacles) rng::defaultGen.rand(0, nSprites);
-	int width = tex.getSize().x / nSprites; // Width of the sprite in pixels
-	sprite.setTextureRect(sf::IntRect(idx * width, 0, width, tex.getSize().y));
+	if (glb::enableRandomObstacles) idx = rng::defaultGen.rand(0, nSprites);
+	int width = tex->getSize().x / nSprites; // Width of the sprite in pixels
+	sprite.setTextureRect(sf::IntRect(idx * width, 0, width, tex->getSize().y));
 	float rel = 1.75 * tileWidth / sprite.getGlobalBounds().width;
 	sprite.setScale(rel, rel);
 	utils::centerOrigin(sprite);
 	sprite.setPosition(pos);
 	collidable = sprite.getGlobalBounds();
+}
+
+void BoxObstacle::fallToFloor() {
+	fallingToFloor = true;
+	vel = sf::Vector2f(rng::defaultGen.rand(-10.0f, 10.0f), rng::defaultGen.rand(-40.0f, 40.0f));
 }
 
 sf::Vector2f BoxObstacle::getPosition() const
@@ -33,7 +39,7 @@ bool BoxObstacle::isInside(const sf::FloatRect& hitbox)
 	if (available && collidable.intersects(hitbox)) {
 		available = false;
 		cdAvailable = glb::itemPickupRespawn;
-		falling = true;
+		falling = true; fallingToFloor = false;
 		rotSpeed = rng::defaultGen.rand(-50.0f, 50.0f);
 		vel = sf::Vector2f(rng::defaultGen.rand(-40.0f, 40.0f), rng::defaultGen.rand(-40.0f, 40.0f));
 		return true;
@@ -41,7 +47,7 @@ bool BoxObstacle::isInside(const sf::FloatRect& hitbox)
 	else return false;
 }
 
-void BoxObstacle::update(sf::Time dT)
+void BoxObstacle::update(sf::Time dT, const TileMap& tiles)
 {
 	if (!available) {
 		cdAvailable -= dT;
@@ -62,5 +68,20 @@ void BoxObstacle::update(sf::Time dT)
 			falling = false;
 		}
 	}
+	else if (fallingToFloor) {
+		auto current = sprite.getPosition();
+		sprite.move(vel * dT.asSeconds());
+		if (!tiles.collision(sprite.getGlobalBounds()).empty()) {
+			sprite.setPosition(current);
+			collidable = sprite.getGlobalBounds();
+			fallingToFloor = false;
+		}
+		vel.y += physics::GRAVITY * dT.asSeconds();
+	}
+}
+
+bool BoxObstacle::respawnable() const
+{
+	return shouldRespawn;
 }
 

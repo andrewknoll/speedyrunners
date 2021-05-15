@@ -34,16 +34,23 @@ namespace glb
 	const int NUMBER_OF_MISC_TEXTURES = 11;
 	const sf::Vector2f FEET_TO_HAND = sf::Vector2f(20.0, 0);// -50.0
 	// Items:
-	const int NUMBER_OF_ITEMS = 1;
+	const int NUMBER_OF_ITEMS = 4;
 	enum item : int {
 		NONE = 0,
-		ROCKET = 1
+		ROCKET = 1,
+		// these 3 must be last!!:
+		CRATE_3, 
+		CRATE_2,
+		CRATE,
 	};
 
 	// For InGameUI, returns the index in the UI/Sprites/MultiplayerHUD/Powerups.png texture:
 	const std::array<int, NUMBER_OF_ITEMS+1> itemToTexIndex { {
 		0, // NONE is first (hay un hueco al principio)
-		4  // Rocket is 5th
+		4,  // Rocket is 5th
+		9,// Crates
+		8,
+		2 
 	} };
 
 	// Characters:
@@ -58,7 +65,7 @@ namespace glb
 	const std::vector<std::string> characterNames{ "Speedrunner", "Cosmonaut", "Unic", "Falcon" };
 
 
-	const sf::Time STUN_TIME = sf::seconds(2); // Rockets, spikes
+	const sf::Time STUN_TIME = sf::seconds(1); // Rockets
 	const sf::Time TUMBLE_TIME = sf::seconds(0.5); // box obstacles
 
 

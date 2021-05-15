@@ -218,4 +218,6 @@ public:
 	void getHitByRocket();
 
 	void tumbleWithBox();
+
+	sf::Vector2f getBackPosition(const float& distance=30) const; // position back of the character, to spawn crates
 };

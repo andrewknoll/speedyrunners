@@ -55,6 +55,8 @@ public:
 
 	void addBoxObstacle(const sf::Vector2f& pos);
 
+	void dropCrate(const sf::Vector2f& pos);
+
 	bool checkItemPickups(std::shared_ptr<Character> character);
 
 	bool checkBoxCollisions(std::shared_ptr<Character> character);

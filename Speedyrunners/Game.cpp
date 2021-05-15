@@ -496,11 +496,16 @@ void Game::update()
 				target = i; //Set target initial value to oneself
 				auto p = getPlayerAt(i);
 				if (p != nullptr && p->captureEvents(event)) {
-					if (characters[i]->getCurrentItem() == glb::item::ROCKET) {
+					auto item = characters[i]->getCurrentItem();
+					if (item == glb::item::ROCKET) {
 						if (i > 0) target--;
 						else if (i < characters.size() - 1) target++;
 						//if player is dumb and uses rockets when nobody else is playing, it will hit them
 						items.push_back(characters[i]->useItem(characters[target]));
+					} 
+					else if ((int)item >= glb::NUMBER_OF_ITEMS-3) { // crates
+						lvl.dropCrate(characters[i]->getBackPosition());
+						characters[i]->setItem(glb::item(((int)item + 1) % (glb::NUMBER_OF_ITEMS+1)));
 					}
 				}
 			}

@@ -248,6 +248,18 @@ void Character::tumbleWithBox() {
 	tumble = true;
 }
 
+sf::Vector2f Character::getBackPosition(const float& distance) const
+{
+	float x, y = getPosition().y;
+	if (!facingRight) { // facing left, back is to the right
+		x = hitBox.left + hitBox.width + distance;
+	}
+	else {
+		x = hitBox.left - distance;
+	}
+	return sf::Vector2f(x, y);
+}
+
 void Character::update(const sf::Time& dT, const Level& lvl)
 
 {
@@ -423,6 +435,7 @@ void Character::stop(){
 void Character::respawn(sf::Vector2f position) {
 	//TO-DO: Spawnear separados
 	vel = sf::Vector2f(0, 0);
+	acc = vel;
 	dead = false;
 	setPosition(position);
 	setAnimation(StandAnim);
@@ -556,6 +569,7 @@ bool Character::isUsingSlide() const {
 
 Character::ItemPtr Character::useItem(std::shared_ptr<Character> target) {
 	ItemPtr item;
+	using namespace glb;
 	if (currentItem == glb::item::ROCKET) { // Fire the rocket
 		item = std::make_shared<Rocket>(getPosition(), target, facingRight);
 	}
