@@ -14,8 +14,6 @@ private:
 	sf::Vector2f vel, acc, position;
 
 	float linearAcc = 4000;
-	float angularSpeed;
-	float maxVerticalVel = 50;
 
 	float angle = 0;
 
@@ -24,7 +22,7 @@ private:
 
 	std::vector<sf::IntRect> rects; // texture rects
 
-	const float maxAngularSpeed = 180; // Degrees per second
+
 	const float velValIni = 300.0f;
 	const float maxVel = 500.0f; // modulo
 	const float minVel = 150.0f;
