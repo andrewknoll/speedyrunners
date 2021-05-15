@@ -167,6 +167,7 @@ public:
 
 	bool getIsStunned() const;
 
+
 	void run(bool right);
 	void stop();
 	void respawn(sf::Vector2f position);
@@ -188,6 +189,9 @@ public:
 	void setScore(int score);
 	
 	void useHook(bool use=true);
+	bool canJump() const;
+	bool isUsingHook() const;
+	bool isUsingSlide() const;
 	ItemPtr useItem(std::shared_ptr<Character> target = nullptr);
 
 

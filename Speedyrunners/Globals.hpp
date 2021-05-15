@@ -67,7 +67,7 @@ namespace glb
 
 	const float runningAcceleration = 800;
 	const float flyingAcceleration = 350;
-	const float jumpingSpeed = 150;
+	const float jumpingSpeed = 175;
 
 	const sf::Vector2f tileSize = sf::Vector2f(18.0, 18.0);
 

@@ -30,7 +30,7 @@ class NPC : public PlayerSlot
 	const float JUMP_COST_BASE_1 = 4.0f;
 	const float JUMP_COST_BASE_2 = 5.0f;
 	const float WALL_JUMP_COST = 1.5f;
-	const float DIRECTION_CHANGE_COST = 500.0f;
+	const float DIRECTION_CHANGE_COST = 200.0f;
 	const float JUMP_COST_PER_DISTANCE_UNIT = 50.0f;
 
 	const float THRESHOLD_PER_RADIUS_UNIT = 3.0f;
@@ -38,14 +38,15 @@ class NPC : public PlayerSlot
 	const sf::Time MAX_TIME_PER_STEP = sf::seconds(6.0f);
 	const sf::Time GIVE_UP_TIME = sf::seconds(20.0f);
 
-	const float CLOSENESS_THRESHOLD = 0.01f;
-	const float FARNESS_THRESHOLD = 6.0f;
+	const float CLOSENESS_THRESHOLD = 1.0f;
+	const float FARNESS_THRESHOLD = 10.0f;
 
 	using CharPtr = std::shared_ptr<Character>;
 	using TilePriorityQueue = PriorityQueue<NodeData>;
 	using TileNode = Node<NodeData>;
 	using TileMapPtr = std::shared_ptr<TileMap>;
 	using OptionalPath = std::optional< std::list<std::shared_ptr<TileNode> > >;
+	using PathIterator = std::list<std::shared_ptr<TileNode> >::iterator;
 
 private:
 	const int N_MOVES = 7;
@@ -87,6 +88,7 @@ private:
 	void halt();
 	void giveUp();
 	float nodeDistance(const TileNode& n1, const TileNode& n2) const;
+	PathIterator getClosestNode(TileNode& current, std::list<std::shared_ptr<TileNode> >& p) const;
 public:
 	NPC();
 	TileNode getCharacterCell() const;
@@ -94,12 +96,13 @@ public:
 	void addGoal(const sf::Vector2f& goalPos, const float goalRadius);
 	void plan();
 	OptionalPath planFromTo(const int n_path, const std::shared_ptr<Goal> goal);
-	bool doBasicMovement(const TileNode & current, const TileNode & n, float objDistance, bool& jumped, sf::Clock clock, bool block);
+	bool doBasicMovement(const TileNode & current, const TileNode & n, float objDistance, sf::Clock clock, bool block);
 	void followPath();
 	int getPathFound(int i) const;
 	void endMe();
 	std::list<selbaward::Line> debugLines();
 	std::list<sf::RectangleShape> debugExpanded();
 	std::list<sf::RectangleShape> debugHook();
+	sf::RectangleShape debugCurrentPos();
 };
 

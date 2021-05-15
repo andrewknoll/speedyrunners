@@ -144,7 +144,6 @@ void NPC::calculateJumpNeighbours(const TileNode & current, const Goal& goal, co
 
 			//We must be inside the ellipse, but not too close
 			if (active
-				&& dist > 0.2
 				&& dist <= 1
 				//In the case we were jumping in a vertical direction, expandVertical must be true
 				&& (x != 0 || expandVertical)
@@ -156,16 +155,19 @@ void NPC::calculateJumpNeighbours(const TileNode & current, const Goal& goal, co
 				&& (rightForbiddenY <= 0 || (!onRightSide || !utils::inRange(current.cell[0] + x, rightObstacle, rightObstacle + forbiddenX)))) {
 
 				//This tile and the tile over this one must be empty (otherwise we can't go there)
+				//If distance is less than 0.2, we only check this condition, but don't expand
 				if (n.data.tile == Tiles::AIR && (inBounds(n.cell[0], n.cell[1] - 1) && tm->getTile(n.cell[0], n.cell[1] - 1) == Tiles::AIR)) {
-					n.cost = current.cost + dist * JUMP_COST_PER_DISTANCE_UNIT + baseCost;
-					n.heuristic = heuristic(n, goal);
-					n.prev = std::make_shared<TileNode>(current);
-					n.data.jumps = jumps;
-					if (detectDirectionChange(n, current)) {
-						n.cost += DIRECTION_CHANGE_COST;
-					}
-					if (updateExpanded(current, n, n_path) >= expanded[n_path].size() && n.cost != INFINITY) {
-						frontier[n_path].insert(n);
+					if (dist > 0.2) {
+						n.cost = current.cost + dist * JUMP_COST_PER_DISTANCE_UNIT + baseCost;
+						n.heuristic = heuristic(n, goal);
+						n.prev = std::make_shared<TileNode>(current);
+						n.data.jumps = jumps;
+						if (detectDirectionChange(n, current)) {
+							n.cost += DIRECTION_CHANGE_COST;
+						}
+						if (updateExpanded(current, n, n_path) >= expanded[n_path].size() && n.cost != INFINITY) {
+							frontier[n_path].insert(n);
+						}
 					}
 				}
 				else {
@@ -218,6 +220,7 @@ void NPC::calculateHookNeighbours(const bool right, const TileNode& current, con
 	int i, radius = 1;
 	Tiles::Collidable type = Tiles::AIR;
 	bool stop = false;
+	bool grapplable = true;
 
 	while (!stop && active) {
 		if (right) {
@@ -229,7 +232,7 @@ void NPC::calculateHookNeighbours(const bool right, const TileNode& current, con
 			hook.cell[0] = current.cell[0] - radius;
 		}
 		hook.cell[1] = current.cell[1] - radius;
-		//Check the upper cell for non-air cells
+
 		if (inBounds(hook.cell[0], hook.cell[1] - 1)) {
 			type = tm->getTile(hook.cell[0], hook.cell[1] - 1);
 			stop = (type != Tiles::AIR);
@@ -237,6 +240,18 @@ void NPC::calculateHookNeighbours(const bool right, const TileNode& current, con
 		else {
 			stop = true;
 		}
+
+		//Check the upper cell for non-air cells
+		for (int x = -2; x <= 2 && grapplable; x++) {
+			if (inBounds(hook.cell[0] + x, hook.cell[1] - 1)) {
+				type = tm->getTile(hook.cell[0] + x, hook.cell[1] - 1);
+				grapplable &= (type == Tiles::GRAPPLABLE);
+			}
+			else {
+				grapplable = false;
+			}
+		}
+		
 		radius++;
 	}
 
@@ -245,7 +260,7 @@ void NPC::calculateHookNeighbours(const bool right, const TileNode& current, con
 	float radius2 = radius * radius;
 	stop = false;
 	//If we found a grapplable surface
-	if (type == Tiles::GRAPPLABLE) {
+	if (grapplable) {
 		//Loop through all of the tiles on the edge of a circle of radius = radius
 		//Max horizontal position is for an angle of -45 (or -135) degrees
 		for (int x = -radius * glb::cosine45; x <= radius && !stop && active; ++x) {
@@ -328,7 +343,7 @@ void NPC::calculateWallJumpNeighbours(const bool right, TileNode& current, const
 		}
 		
 		for (int x = 2; x <= 4 && !stop && active; x++) {
-			for (int y = 0; y <= 1 && !stop && active; y++) {
+			for (int y = 1; y <= 2 && !stop && active; y++) {
 
 				if (right) {
 					n.cell[0] = current.cell[0] + x;
@@ -373,7 +388,7 @@ std::list<std::shared_ptr<NPC::TileNode> > NPC::buildPath (TileNode foundGoal) {
 	newPath.push_front(std::make_shared<TileNode>(foundGoal));
 	std::shared_ptr<TileNode> next = foundGoal.prev;
 	while (next != nullptr) {
-		std::cout << next->cell[0] << " " << next->cell[1] << " " << next->cost << " " << next->heuristic << std::endl;
+		//std::cout << next->cell[0] << " " << next->cell[1] << " " << next->cost << " " << next->heuristic << std::endl;
 		newPath.push_front(next);
 		next = next->prev;
 	}
@@ -482,6 +497,24 @@ float NPC::nodeDistance(const TileNode & n1, const TileNode & n2) const
 	return sqrtf(hor * hor + ver * ver);
 }
 
+NPC::PathIterator NPC::getClosestNode(TileNode& current, std::list<std::shared_ptr<TileNode> >& p) const {
+	float dist, minDist = INFINITY;
+	auto it = p.begin();
+	auto minimum = it;
+
+	while (it != p.end()) {
+		dist = utils::distance(me->getPosition(), sf::Vector2f((*it)->cell[0], (*it)->cell[2]));
+		if (dist <= minDist
+			&& (current.cell[0] != (*it)->cell[0]
+				|| current.cell[1] != (*it)->cell[1])) {
+			minDist = dist;
+			minimum = it;
+		}
+		it++;
+	}
+	return minimum;
+}
+
 void NPC::plan() {
 	int n_path = 0;
 	TileNode goal0;
@@ -530,13 +563,6 @@ void NPC::plan() {
 		updateGoals();
 		choiceMtx.unlock();
 	}
-	//Choose the next one in case someone is already planning it
-	else if (!planningPath[(n_path + 1) % 2] && !pathFound[(n_path + 1) % 2]) {
-		n_path = (n_path + 1) % 2;
-		planningPath[n_path] = true;
-		updateGoals();
-		choiceMtx.unlock();
-	}
 	else {
 		choiceMtx.unlock();
 		return;
@@ -561,6 +587,7 @@ void NPC::plan() {
 		frontier[n_path].safePush(getCharacterCell());
 	}
 	else if (currentGoal[0] == nullptr) {
+		std::cout << ":(" << std::endl;
 		goalMtx.unlock();
 		choiceMtx.lock();
 		planningPath[n_path] = false;
@@ -579,7 +606,6 @@ void NPC::plan() {
 	goalNode.cell[1] = int(goal->position.y) / tm->getTileSizeWorld().y;
 
 	goalNode.data.tile = Tiles::AIR;
-	
 	auto newPath = planFromTo(n_path, goal);
 	if (newPath.has_value()) {
 		pathMtx[n_path].lock();
@@ -682,7 +708,7 @@ NPC::OptionalPath NPC::planFromTo(const int n_path, const std::shared_ptr<Goal> 
 }
 
 
-bool NPC::doBasicMovement(const TileNode& current, const TileNode& n, float objDistance, bool& jumped, sf::Clock clock, bool block) {
+bool NPC::doBasicMovement(const TileNode& current, const TileNode& n, float objDistance, sf::Clock clock, bool block) {
 	auto t0 = clock.getElapsedTime();
 	bool right = getCharacterCell().cell[0] < n.cell[0];
 	do {
@@ -690,19 +716,6 @@ bool NPC::doBasicMovement(const TileNode& current, const TileNode& n, float objD
 			me->slide();
 		}
 		else {
-			if (current.data.jumps > n.data.jumps || getCharacterCell().cell[1] - n.cell[1] > 2) {
-				//Jump (or double jump)
-				if (!jumped) {
-					me->startJumping();
-					jumped = true;
-				}
-				if (current.cell[1] - n.cell[1] < 4) {
-					me->stopJumping();
-				}
-			}
-			else if(getCharacterCell().cell[1] - n.cell[1] <= 2){
-				me->stopJumping();
-			}
 			int diff = n.cell[0] - getCharacterCell().cell[0];
 			float horSpeed = me->getVelocity().x;
 			float acc = me->getGrounded() ? glb::runningAcceleration : glb::flyingAcceleration;
@@ -724,6 +737,114 @@ bool NPC::doBasicMovement(const TileNode& current, const TileNode& n, float objD
 }
 
 void NPC::followPath() {
+	sf::Clock clock;
+	sf::Time t0;
+	bool jumped = false;
+	TileNode current = getCharacterCell();
+	PathIterator step = getClosestNode(current, path[0]), next, aux;
+	std::shared_ptr<TileNode> stepNodePtr;
+	PathIterator pathEnd = path[0].end();
+	float objDistance, verticalDist;
+	pathMtx[0].lock();
+	if (pathFound[0] == 1) {
+		_set_se_translator(SE_trans_func);
+		try {
+			step++;	//Get Next Node
+			t0 = clock.getElapsedTime();
+			while (step != pathEnd) {
+				stepNodePtr = *step;
+				if (stepNodePtr->data.canWallJumpLeft == 1 || stepNodePtr->data.canWallJumpRight == 1) {
+					me->startJumping();
+				}
+				if (stepNodePtr->data.isHooking) {
+					if (!me->isUsingHook()) {
+						me->useHook(true);
+					}
+				}
+				else {
+					me->useHook(false);
+				}
+				if (stepNodePtr->data.isSliding) {
+					if (!me->isUsingSlide()) {
+						me->slide();
+					}
+				}
+				else {
+					me->stopSliding();
+				}
+				verticalDist = getCharacterCell().cell[1] - stepNodePtr->cell[1];
+				if (!jumped && (verticalDist > 2 || stepNodePtr->data.jumps < current.data.jumps)) {
+					me->startJumping();
+					jumped = true;
+				}
+				else if (verticalDist < 3) {
+					me->stopJumping();
+				}
+				if (std::abs(getCharacterCell().cell[0] - stepNodePtr->cell[0]) > CLOSENESS_THRESHOLD) {
+					doBasicMovement(getCharacterCell(), *stepNodePtr, objDistance, clock, false);
+				}
+				else {
+					me->stop();
+				}
+				aux = getClosestNode(current, path[0]);
+				next = aux;
+				next++;
+				//Get next step
+				if (next != step || distance(getCharacterCell(), **next) < CLOSENESS_THRESHOLD) {
+					//If we are closer to another node, use that one
+					if (next != step) {
+						current = **aux;
+						step = next;
+					}
+					//Otherwise, advance iterator
+					else {
+						current = **step;
+						step++;
+					}
+					jumped = false;
+					objDistance = distance(current, **step);
+					t0 = clock.getElapsedTime();
+				}
+				else if (clock.getElapsedTime() - t0 >= GIVE_UP_TIME) {
+					giveUp();	//This function must unlock pathMtx[0]
+					return;
+				}
+			}
+			//Get next part
+			if (pathFound[1] == 1) {
+				pathFound[0] = 1;	//Next part of the path was already planned
+				auto last = path[0].back();
+				path[0].clear();
+				// Stitch the two paths together and save path[1] to path[0]
+				if (stitched) {
+					std::copy(std::begin(path[2]), std::end(path[2]), std::begin(path[0]));
+					stitched = false;
+				}
+				else {
+					path[0].push_front(last);
+				}
+				//Get next path
+				path[0].splice(path[0].end(), path[1]);
+
+				//Make sure we start planning the next part
+				pathFound[1] = 0;
+			}
+			else {
+				pathFound[0] = 0;	//We reached the end, so we make sure we replan
+			}
+		}
+		catch (...) {
+			std::cout << "Ending thread..." << std::endl;
+		}
+	}
+	else {
+		halt();
+	}
+	pathMtx[0].unlock();
+}
+
+
+/*void NPC::followPath() {
 	TileNode current = getCharacterCell();
 	Tiles::Collidable underMe;
 	int step = 0;
@@ -735,17 +856,39 @@ void NPC::followPath() {
 	std::shared_ptr<TileNode> next;
 	int recoveryMode = 0;
 	float objDistance;
+	float minDistance = INFINITY, d;
 
 	sf::Time sleeptime = sf::seconds(0.05);
 	pathMtx[0].lock();
 	_set_se_translator(SE_trans_func);
 	try {
 		if (pathFound[0] == 1) {
-			std::cout << step << std::endl;
+
 			auto it = path[0].begin();
-			while (it != path[0].end() && active) {
+			auto minIt = path[0].begin();
+			
+			while (minIt != path[0].end() && active) {
+				minDistance = INFINITY;
+				//Look for the closest node
+				while (it != path[0].end() && active) {
+					if (it == minIt) {
+						it++;
+						continue;
+					}
+					d = distance(getCharacterCell(), **it);
+					if (d <= minDistance) {
+						minDistance = d;
+						minIt = it;
+					}
+					it++;
+				}
+				if (minIt == path[0].end()) break;
+				current = **minIt;
+				//Get next node
+				minIt++;
+				if (minIt == path[0].end()) break;
 				if (recoveryMode == 1) recoveryMode = 2;
-				next = *it;
+				next = *minIt;
 				t0 = clock.getElapsedTime();
 				if (stopFollowing) {
 					break;	//A better path was found
@@ -778,7 +921,6 @@ void NPC::followPath() {
 							//Try to recover
 							recoveryMode = 1;
 							step--;
-							if (it != path[0].begin()) it--;
 							break;
 						}
 					}
@@ -802,7 +944,6 @@ void NPC::followPath() {
 							//Try to recover
 							recoveryMode = 1;
 							step--;
-							if (it != path[0].begin()) it--;
 							break;
 						}
 					}
@@ -821,7 +962,6 @@ void NPC::followPath() {
 						//Try to recover
 						recoveryMode = 1;
 						step--;
-						if (it != path[0].begin()) it--;
 						break;
 					}
 				}
@@ -838,7 +978,6 @@ void NPC::followPath() {
 					recoveryMode = 0;
 					step++;
 					current = *next;
-					std::cout << step << std::endl;
 					it++;
 				}
 			}
@@ -874,7 +1013,7 @@ void NPC::followPath() {
 		std::cout << "Ending thread..." << std::endl;
 	}
 	pathMtx[0].unlock();
-}
+}*/
 
 int NPC::getPathFound(int i) const {
 	return pathFound[i];
@@ -955,4 +1094,14 @@ std::list<sf::RectangleShape> NPC::debugHook() {
 		
 	}
 	return squares;
+}
+
+sf::RectangleShape NPC::debugCurrentPos() {
+	TileNode current = getCharacterCell();
+	sf::Vector2u size = tm->getTileSizeWorld();
+	sf::RectangleShape r;
+	r.setSize(sf::Vector2f(size.x, size.y));
+	r.setPosition(sf::Vector2f(current.cell[0] * size.x, current.cell[1] * size.y));
+	r.setFillColor(sf::Color::White);
+	return r;
 }

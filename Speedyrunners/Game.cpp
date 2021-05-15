@@ -754,6 +754,10 @@ void Game::draw(sf::Time dT)
 		window.draw(cam.getSuddenDeathRectangle());
 	}
 
+	for (auto npc : npcs) {
+		window.draw(npc->debugCurrentPos());
+	}
+
 	switch (state) {
 	case State::Editing:
 	{// sf::Mouse::getPosition() - window.getPosition()

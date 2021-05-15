@@ -454,8 +454,8 @@ void Character::startJumping() {
 		}
 		else if (isAtWallJump) {
 			vel.y = -jumpingSpeed;
-			if (facingRight) vel.x = jumpingSpeed * 0.7;
-			else vel.x = -jumpingSpeed * 0.7;
+			if (facingRight) vel.x = jumpingSpeed ;
+			else vel.x = -jumpingSpeed;
 			setAnimation(JumpAnim);
 			isAtWallJump = false;
 			hasDoubleJumped = false;
@@ -534,6 +534,18 @@ void Character::useHook(bool use)
 			setAnimation(DoubleJumpAnim);
 		}
 	}
+}
+
+bool Character::canJump() const{
+	return isGrounded || !hasDoubleJumped;
+}
+
+bool Character::isUsingHook() const {
+	return usingHook;
+}
+
+bool Character::isUsingSlide() const {
+	return sliding;
 }
 
 Character::ItemPtr Character::useItem(std::shared_ptr<Character> target) {
