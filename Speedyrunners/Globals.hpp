@@ -59,6 +59,8 @@ namespace glb
 
 
 	const sf::Time STUN_TIME = sf::seconds(2); // Rockets, spikes
+	const sf::Time TUMBLE_TIME = sf::seconds(0.5); // box obstacles
+
 
 
 	const sf::Time itemPickupRespawn = sf::seconds(10); // Respawn time for the capsule item thingies
@@ -112,7 +114,7 @@ namespace glb
 		BRAKE // when sliding, etc
 	};
 
-	const float tumbleSpeedReduction = 0.4f;
+	const float tumbleSpeedReduction = 0.85f;
 
 	inline const bool enableRandomObstacles = true;
 };

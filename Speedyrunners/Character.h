@@ -73,6 +73,7 @@ protected:
 	bool sliding = false;
 
 	bool tumble = false; // if true, reduce the speed once, set to false again
+	sf::Time tumblingTime; // remaining tumbling time
 
 	// Boost
 	float boostPower = 1.5; // 10% faster

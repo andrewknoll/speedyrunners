@@ -737,6 +737,7 @@ bool NPC::doBasicMovement(const TileNode& current, const TileNode& n, float objD
 }
 
 void NPC::followPath() {
+	return;
 	sf::Clock clock;
 	sf::Time t0;
 	bool jumped = false;
@@ -744,7 +745,7 @@ void NPC::followPath() {
 	PathIterator step = getClosestNode(current, path[0]), next, aux;
 	std::shared_ptr<TileNode> stepNodePtr;
 	PathIterator pathEnd = path[0].end();
-	float objDistance, verticalDist;
+	float objDistance=0, verticalDist;
 	pathMtx[0].lock();
 	if (pathFound[0] == 1) {
 		_set_se_translator(SE_trans_func);
