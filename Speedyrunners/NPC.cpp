@@ -943,7 +943,7 @@ void NPC::update(const sf::Time dT) { // Tries to get from current to next
 			/*if (jumped && verticalDist < 3) {
 				me->stopJumping();
 			}*/
-			if (std::abs(getCharacterCell().cell[0] - stepNodePtr->cell[0]) > CLOSENESS_THRESHOLD) {
+			if (std::abs(getCharacterCell().cell[0] - stepNodePtr->cell[0]) >= CLOSENESS_THRESHOLD) {
 				doBasicMovement(getCharacterCell(), *stepNodePtr, false);
 			}
 			else {
@@ -1197,6 +1197,7 @@ void NPC::endMe() {
 void NPC::clearPaths() {
 	pathFound[0] = 0;
 	pathFound[1] = 0;
+	halt();
 }
 
 std::list<selbaward::Line> NPC::debugLines() {

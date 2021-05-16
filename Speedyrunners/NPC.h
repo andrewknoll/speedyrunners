@@ -50,7 +50,7 @@ class NPC : public PlayerSlot
 	const sf::Time MAX_TIME_PER_STEP = sf::seconds(6.0f);
 	const sf::Time GIVE_UP_TIME = sf::seconds(2.0f);
 
-	const float CLOSENESS_THRESHOLD = 0.5f;
+	const float CLOSENESS_THRESHOLD = 1.0f;
 	const float FARNESS_THRESHOLD = 10.0f;
 
 	using CharPtr = std::shared_ptr<Character>;
