@@ -242,7 +242,7 @@ void NPC::calculateHookNeighbours(const bool right, const TileNode& current, con
 		}
 
 		//Check the upper cell for non-air cells
-		for (int x = -2; x <= 2 && grapplable; x++) {
+		for (int x = -1; x <= 1 && grapplable; x++) {
 			if (inBounds(hook.cell[0] + x, hook.cell[1] - 1)) {
 				type = tm->getTile(hook.cell[0] + x, hook.cell[1] - 1);
 				grapplable &= (type == Tiles::GRAPPLABLE);
@@ -709,8 +709,27 @@ void NPC::planFromTo(const int n_path, const std::shared_ptr<Goal> goal, NPC::Op
 	if (newPath && newPath->empty()) newPath = {};
 }
 
+void NPC::doBasicMovement(const TileNode& current, const TileNode& n, bool block) {
+	bool right = getCharacterCell().cell[0] < n.cell[0];
+	if (current.data.isSliding || n.data.isSliding) {
+		me->slide();
+	}
+	else {
+		int diff = n.cell[0] - getCharacterCell().cell[0];
+		float horSpeed = me->getVelocity().x;
+		float acc = me->getGrounded() ? glb::runningAcceleration : glb::flyingAcceleration;
+		if (horSpeed > 0.01f) diff += utils::stopDistance(horSpeed, -acc);
+		else if (horSpeed < 0.01f) diff += utils::stopDistance(horSpeed, acc);
+		if ((right && diff > 0) || (!right && diff < 0)) {
+			me->run(right);
+		}
+		else {
+			me->stop();
+		}
+	}
+}
 
-bool NPC::doBasicMovement(const TileNode& current, const TileNode& n, float objDistance, sf::Clock clock, bool block) {
+/*bool NPC::doBasicMovement(const TileNode& current, const TileNode& n, float objDistance, sf::Clock clock, bool block) {
 	auto t0 = clock.getElapsedTime();
 	bool right = getCharacterCell().cell[0] < n.cell[0];
 	do {
@@ -736,7 +755,7 @@ bool NPC::doBasicMovement(const TileNode& current, const TileNode& n, float objD
 		}
 	} while (block && !stopFollowing && nodeDistance(getCharacterCell(), n) <= FARNESS_THRESHOLD + objDistance && !nodeWasReached(n, CLOSENESS_THRESHOLD));
 	return true;
-}
+}*/
 
 void NPC::followPath() {
 	sf::Clock clock;
