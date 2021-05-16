@@ -34,7 +34,8 @@ namespace glb
 	const int NUMBER_OF_MISC_TEXTURES = 11;
 	const sf::Vector2f FEET_TO_HAND = sf::Vector2f(20.0, 0);// -50.0
 	// Items:
-	const int NUMBER_OF_ITEMS = 8;
+	const int NUMBER_OF_ITEMS = 10;
+	const int NUMBER_OF_UNOBTAINABLE_ITEMS = 3;
 	enum item : int {
 		NONE = 0,
 		ROCKET = 1,
@@ -42,8 +43,10 @@ namespace glb
 		FREEZE,
 		GOLDEN_HOOK,
 		INVINCI_DRILL,
+		TNT,
+		CRATE_3,
 		// these 3 must be last!!:
-		CRATE_3, 
+		TNT_DETONATOR,
 		CRATE_2,
 		CRATE,
 	};
@@ -56,7 +59,9 @@ namespace glb
 		16, // freeze
 		1, // golden hook
 		3, // invinci drill
+		5, // TNT
 		9,// Crates
+		6, // TNT detonator
 		8,
 		2 
 	} };
