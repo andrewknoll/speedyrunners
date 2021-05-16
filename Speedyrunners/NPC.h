@@ -96,7 +96,8 @@ public:
 	void addGoal(const sf::Vector2f& goalPos, const float goalRadius);
 	void plan();
 	OptionalPath planFromTo(const int n_path, const std::shared_ptr<Goal> goal);
-	bool doBasicMovement(const TileNode & current, const TileNode & n, float objDistance, sf::Clock clock, bool block);
+	void doBasicMovement(const TileNode& current, const TileNode& n, bool block);
+	//bool doBasicMovement(const TileNode & current, const TileNode & n, float objDistance, sf::Clock clock, bool block);
 	void followPath();
 	int getPathFound(int i) const;
 	void endMe();
