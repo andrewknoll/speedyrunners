@@ -64,7 +64,7 @@ namespace rng {
 		int getIndex() const; // Same but returns an index
 	};
 
-	inline const IntSampler itemSampler(1, glb::NUMBER_OF_ITEMS-2); // itemSampler.sample() devuelve el indice de uno de los items de glb
+	inline const IntSampler itemSampler(1, glb::NUMBER_OF_ITEMS-glb::NUMBER_OF_UNOBTAINABLE_ITEMS); // itemSampler.sample() devuelve el indice de uno de los items de glb
 
 	inline const Sampler bgSampler(glb::bgPaths); // devuelve el path a un background aleatorio
 
