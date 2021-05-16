@@ -49,6 +49,7 @@ bool Rocket::update(sf::Time elapsed, const Level& lvl) { // todo: check tiles c
 	if (!lvl.getCollidableTiles().collision(rocket.getGlobalBounds()).empty()) { // Collision with tiles
 		audioPlayer.play(AudioPlayer::Effect::ROCKET_EXPLODE);
 		Resources::getInstance().getParticleSystem(glb::particleSystemIdx::ROCKET_CLOUD).emit(position);
+		Resources::getInstance().getParticleSystem(glb::particleSystemIdx::SUDDEN_DEATH_EXPLOSION).emit(position);
 		return true;
 	}
 	//Update Acceleration
@@ -59,6 +60,7 @@ bool Rocket::update(sf::Time elapsed, const Level& lvl) { // todo: check tiles c
 		if (dist < detonationRadius) { // Detonate
 			audioPlayer.play(AudioPlayer::Effect::ROCKET_EXPLODE);
 			Resources::getInstance().getParticleSystem(glb::particleSystemIdx::ROCKET_CLOUD).emit(position);
+			Resources::getInstance().getParticleSystem(glb::particleSystemIdx::SUDDEN_DEATH_EXPLOSION).emit(position);
 			return true;
 		}
 		else if (dist < 2 * detonationRadius) { // Almost hit

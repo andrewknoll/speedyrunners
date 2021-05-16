@@ -436,7 +436,7 @@ void Character::updateRunning() {
 
 void Character::run(bool right){
 	//std::cout << "Running " << right << " \n";
-	facingRight = right;
+	if (!usingHook) facingRight = right;
 	isRunning = true;
 }
 
