@@ -386,6 +386,12 @@ void Game::updateNPCs(bool follow) {
 				});
 				//threadPool[i]->detach();
 			}
+			if (follow) 
+				if (npcs[i]->update(dT)) { // replan
+					npcs[i]->plan();
+				}
+
+			/**
 			if (follow && threadPool[2 * i + 2].threadPtr == nullptr) {
 				threadPool[2 * i + 2].finished = false;
 				threadPool[2 * i + 2].threadPtr = std::make_unique<std::thread>([&, i]() {
@@ -406,7 +412,7 @@ void Game::updateNPCs(bool follow) {
 					threadPool[2 * i + 2].finished = true;
 					finishCV.notify_one();
 				});
-			}
+			}*/
 		}
 	}
 }
@@ -503,9 +509,10 @@ void Game::update()
 						//if player is dumb and uses rockets when nobody else is playing, it will hit them
 						items.push_back(characters[i]->useItem(characters[target]));
 					} 
-					else if ((int)item >= glb::NUMBER_OF_ITEMS-2) { // crates
+					else if ((int)item >= glb::NUMBER_OF_ITEMS-glb::NUMBER_OF_UNOBTAINABLE_ITEMS 
+							&& (int)item < glb::NUMBER_OF_ITEMS) { // crates
 						lvl.dropCrate(characters[i]->getBackPosition());
-						characters[i]->setItem(glb::item(((int)item + 1) % (glb::NUMBER_OF_ITEMS+1)));
+						characters[i]->setItem(glb::item(((int)item + 1) % (glb::NUMBER_OF_ITEMS)));
 					}
 					else {
 						std::cout << "unimplemented item " << item << "\n";

@@ -46,9 +46,9 @@ namespace glb
 		TNT,
 		CRATE_3,
 		// these 3 must be last!!:
-		TNT_DETONATOR,
 		CRATE_2,
 		CRATE,
+		TNT_DETONATOR
 	};
 
 	// For InGameUI, returns the index in the UI/Sprites/MultiplayerHUD/Powerups.png texture:

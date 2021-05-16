@@ -373,13 +373,8 @@ void NPC::calculateWallJumpNeighbours(const bool right, TileNode& current, const
 		}
 	}
 	else {
-		if (right) {
-			current.data.canWallJumpRight = 0;
-		}
-		else {
-			current.data.canWallJumpLeft = 0;
-		}
-		
+		if (right)  current.data.canWallJumpRight = 0;
+		else		current.data.canWallJumpLeft = 0;
 	}
 }
 
@@ -485,7 +480,7 @@ void NPC::giveUp() {
 	halt();
 	pathFound[0] = -1;
 	path[0].clear();
-	pathMtx[0].unlock();
+	// pathMtx[0].unlock(); // TODO: cuidado
 }
 
 float NPC::nodeDistance(const TileNode & n1, const TileNode & n2) const
@@ -756,7 +751,7 @@ void NPC::doBasicMovement(const TileNode& current, const TileNode& n, bool block
 	} while (block && !stopFollowing && nodeDistance(getCharacterCell(), n) <= FARNESS_THRESHOLD + objDistance && !nodeWasReached(n, CLOSENESS_THRESHOLD));
 	return true;
 }*/
-
+/**
 void NPC::followPath() {
 	sf::Clock clock;
 	pathMtx[0].lock();
@@ -865,53 +860,64 @@ void NPC::followPath() {
 		halt();
 	}
 	pathMtx[0].unlock();
-}
+}*/
 
 
-void NPC::update(const sf::Time dT) {
+bool NPC::update(const sf::Time dT) { // Tries to get from current to next
 
 	PathIterator next, aux, pathEnd;
 	float objDistance, verticalDist;
 	std::shared_ptr<TileNode> stepNodePtr;
-	aux = step;
+	auto cellAux = current;
+	current = getCharacterCell();
+	if (cellAux.cell == current.cell) elapsed += dT;
+	else elapsed = sf::Time::Zero;
+	//aux = step;
 	step = getClosestNode(current, path[0]);
-	if (aux == step) elapsed += dT;
 	pathEnd = std::end(path[0]);
-	if (step != pathEnd) {
-		step++;	//Get Next Node
+	if (step != pathEnd && ++step != pathEnd) {
+		//step++;	//Get Next Node
 		//t0 = clock.getElapsedTime(); // ?
-		if (step != pathEnd) {
-			objDistance = nodeDistance(current, **step);
+		objDistance = nodeDistance(current, **step);
+		if (objDistance > 100) {
+			pathFound[0] = 0;
+			return true;
 		}
+		
 		// Follow:
 		stepNodePtr = *step;
 		if (stepNodePtr->data.canWallJumpLeft == 1 || stepNodePtr->data.canWallJumpRight == 1) {
+			if (stepNodePtr->data.canWallJumpLeft == 1) me->run(false);
+			else me->run(true);
 			me->startJumping();
 		}
-		if (stepNodePtr->data.isHooking) {
-			if (!me->isUsingHook()) {
-				me->useHook(true);
-			}
-		}
 		else {
-			me->useHook(false);
-		}
-		if (stepNodePtr->data.isSliding) {
-			if (!me->isUsingSlide()) {
-				me->slide();
+			if (stepNodePtr->data.isHooking) {
+				if (!me->isUsingHook()) {
+					me->useHook(true);
+				}
 			}
+			else {
+				me->useHook(false);
+			}
+			if (stepNodePtr->data.isSliding) {
+				if (!me->isUsingSlide()) {
+					me->slide();
+				}
+			}
+			else {
+				me->stopSliding();
+			}
+			verticalDist = getCharacterCell().cell[1] - stepNodePtr->cell[1];
+			if (!jumped && me->canJump() && (verticalDist > 2 || stepNodePtr->data.jumps < current.data.jumps)) {
+				me->startJumping();
+				jumped = true;
+			}
+			//if (jumped && verticalDist < 3) {
+				//me->stopJumping();
+			//}
 		}
-		else {
-			me->stopSliding();
-		}
-		verticalDist = getCharacterCell().cell[1] - stepNodePtr->cell[1];
-		if (!jumped && me->canJump() && (verticalDist > 2 || stepNodePtr->data.jumps < current.data.jumps)) {
-			me->startJumping();
-			jumped = true;
-		}
-		if (jumped && verticalDist < 3) {
-			me->stopJumping();
-		}
+		
 		if (std::abs(getCharacterCell().cell[0] - stepNodePtr->cell[0]) > CLOSENESS_THRESHOLD) {
 			doBasicMovement(getCharacterCell(), *stepNodePtr, false);
 		}
@@ -937,13 +943,18 @@ void NPC::update(const sf::Time dT) {
 			if (step != pathEnd) {
 				objDistance = nodeDistance(current, **step);
 			}
-			t0 = clock.getElapsedTime();
 		}*/
 		if (elapsed >= GIVE_UP_TIME) {
 			giveUp();	//This function must unlock pathMtx[0]
-			return;
+			return true;
 		}
 	}
+	else {
+		pathFound[0] = 0; // replan!ç
+		return true;
+		//giveUp();
+	}
+	return false;
 
 
 

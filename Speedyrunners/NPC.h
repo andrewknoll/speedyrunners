@@ -36,7 +36,7 @@ class NPC : public PlayerSlot
 	const float THRESHOLD_PER_RADIUS_UNIT = 3.0f;
 
 	const sf::Time MAX_TIME_PER_STEP = sf::seconds(6.0f);
-	const sf::Time GIVE_UP_TIME = sf::seconds(20.0f);
+	const sf::Time GIVE_UP_TIME = sf::seconds(1.50f);
 
 	const float CLOSENESS_THRESHOLD = 1.0f;
 	const float FARNESS_THRESHOLD = 10.0f;
@@ -74,7 +74,7 @@ private:
 	// Path following experiment:
 	sf::Time elapsed;
 	bool jumped = false;
-	TileNode current = getCharacterCell();
+	TileNode current;//
 	PathIterator step;
 	
 
@@ -104,7 +104,7 @@ public:
 	void plan();
 	void planFromTo(const int n_path, const std::shared_ptr<Goal> goal, OptionalPath& newPath);
 	void doBasicMovement(const TileNode& current, const TileNode& n, bool block);	void followPath();
-	void update(const sf::Time dT);
+	bool update(const sf::Time dT);
 	int getPathFound(int i) const;
 	void endMe();
 	std::list<selbaward::Line> debugLines();
