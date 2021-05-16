@@ -4,6 +4,7 @@
 #include "PriorityQueue.h"
 #include "TileMap.h"
 #include "Line.hpp"
+#include "Checkpoint.h"
 #include <deque>
 #include <atomic>
 
@@ -14,6 +15,16 @@ class NPC : public PlayerSlot
 		sf::Vector2f position;
 		float radius;
 
+		Goal(const sf::Vector2f& position, const float radius) :
+			position(position),
+			radius(radius)
+		{}
+
+		Goal(const Checkpoint& c) :
+			position(c.getPos()),
+			radius(c.getRadius())
+		{}
+
 		friend bool operator== (const Goal& a, const Goal& b) {
 			return a.position == b.position && a.radius == b.radius;
 		}
@@ -21,11 +32,12 @@ class NPC : public PlayerSlot
 		friend bool operator!= (const Goal& a, const Goal& b) {
 			return a.position != b.position && a.radius != b.radius;
 		}
+
 	};
 
 	const float RUN_COST = 3.0f;
 	const float FREE_FALL_COST = 1.0f;
-	const float HOOK_COST = 2.5f;
+	const float HOOK_COST = 1.5f;
 	const float SLIDE_COST = 3.5f;
 	const float JUMP_COST_BASE_1 = 4.0f;
 	const float JUMP_COST_BASE_2 = 5.0f;
@@ -52,8 +64,8 @@ private:
 	const int N_MOVES = 7;
 	TileMapPtr tm;
 
-	std::list<Goal> goals;
-	std::shared_ptr<Goal> currentGoal[3];
+	std::vector<Goal> goals;
+	int currentGoalIdx;
 
 	std::mutex pathMtx[2];
 	std::mutex goalMtx;
@@ -73,9 +85,11 @@ private:
 
 	// Path following experiment:
 	sf::Time elapsed;
-	bool jumped = false;
+	sf::Vector2f position;
+	bool jumped = false, wallJumped = false;
 	TileNode current;//
 	PathIterator step;
+	int retryCount = 0;
 	
 
 	int findExpanded(const TileNode& n, const int n_path) const;
@@ -88,7 +102,7 @@ private:
 	void calculateWallJumpNeighbours(const bool right, TileNode& current, const Goal& goal, const int n_path);
 	void buildPath(TileNode foundGoal, std::deque<std::shared_ptr<NPC::TileNode>>& newPath);
 	bool isGoal(const TileNode & current, const Goal& goal) const;
-	void updateGoals();
+	//void updateGoals();
 	bool nodeWasReached(const TileNode& n, const float closenessThreshold) const;
 	bool detectDirectionChange(const TileNode& n, const TileNode& current);
 	float expandToNeighbour(const TileNode & current, const Goal& goal, const int dx, const int dy, const int n_path);
@@ -100,13 +114,17 @@ public:
 	NPC();
 	TileNode getCharacterCell() const;
 	void setTileMap(TileMapPtr tm);
-	void addGoal(const sf::Vector2f& goalPos, const float goalRadius);
+	void setCheckpoints(const std::vector<Checkpoint>& cp);
+	void setActiveCheckpoint(const int c);
+	//void addGoal(const sf::Vector2f& goalPos, const float goalRadius);
 	void plan();
 	void planFromTo(const int n_path, const std::shared_ptr<Goal> goal, OptionalPath& newPath);
-	void doBasicMovement(const TileNode& current, const TileNode& n, bool block);	void followPath();
-	bool update(const sf::Time dT);
+	void doBasicMovement(const TileNode& current, const TileNode& n, bool block);
+	//void followPath();
+	void update(const sf::Time dT);
 	int getPathFound(int i) const;
 	void endMe();
+	void clearPaths();
 	std::list<selbaward::Line> debugLines();
 	std::list<sf::RectangleShape> debugExpanded();
 	std::list<sf::RectangleShape> debugHook();

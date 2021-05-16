@@ -106,9 +106,14 @@ void Game::defaultInit(const std::vector<glb::characterIndex>& _players, const s
 		// NPC
 		std::shared_ptr<NPC> npc = std::make_shared<NPC>();
 		npc->setCharacter(character);
+		npc->setCheckpoints(checkpoints);
 		npcJoin(npc);
 		character->setName("NPC " + std::to_string(i++));
 		addCharacter(character);
+	}
+	updatePositions();
+	for (auto n : npcs) {
+		n->setActiveCheckpoint(activeCheckpoint);
 	}
 	std::cout << characters.size() << " characters now!\n";
 	setState(State::Countdown);
@@ -347,10 +352,6 @@ MusicPlayer& Game::music() {
 void Game::updateNPCs(bool follow) {
 	for (int i = 0; i < npcs.size(); i++) {
 		if (npcs[i] != nullptr && checkpoints.size() > 0) {
-			Checkpoint cp = checkpoints[activeCheckpoint]; // checkpoints[1];
-			npcs[i]->addGoal(cp.getPos(), cp.getRadius());
-			cp = checkpoints[(activeCheckpoint + 1) % checkpoints.size()];
-			npcs[i]->addGoal(cp.getPos(), cp.getRadius());
 			auto& followThread = threadPool[2 * i + 1];
 			if (threadPool[2 * i].threadPtr == nullptr) {
 				threadPool[2 * i].finished = false;
@@ -386,11 +387,10 @@ void Game::updateNPCs(bool follow) {
 				});
 				//threadPool[i]->detach();
 			}
-			if (follow) 
-				if (npcs[i]->update(dT)) { // replan
-					npcs[i]->plan();
-				}
-
+			if (state == State::Playing) {
+				npcs[i]->update(dT);
+			}
+			
 			/**
 			if (follow && threadPool[2 * i + 2].threadPtr == nullptr) {
 				threadPool[2 * i + 2].finished = false;
@@ -558,6 +558,9 @@ void Game::update()
 		updateNPCs(true);
 		if (characters.size() > 1 && aliveCount < 2) {
 			state = State::FinishedRound;
+			for (auto n : npcs) {
+				n->clearPaths();
+			}
 			items.clear(); // delete all items
 			clearParticles(); // and particles
 			for (auto c : characters) {
@@ -614,6 +617,10 @@ void Game::update()
 				aliveCount = characters.size();
 				for (int i = 0; i < characters.size(); i++) {
 					characters[i]->respawn(respawnPosition);
+				}
+				updatePositions();
+				for (auto n : npcs) {
+					n->setActiveCheckpoint(activeCheckpoint);
 				}
 				restartCv.notify_all();
 			}
