@@ -43,6 +43,31 @@ namespace particles {
 		//std::cout << "idx de vertices: " << idx << "\n";
 	}
 
+
+	void Particle::setVertices(sf::VertexArray& vertices, const sf::Vector2f& pos, int idx, float r, float angle, float alpha, const sf::Color& c)
+	{
+		idx *= 4; // 4 times as many vertices as particles
+		sf::Transform t;
+		t.rotate(-angle);
+		// top L:
+		vertices[idx].position = pos + t.transformPoint(sf::Vector2f(-r , -r ));
+		vertices[idx].color = c;
+		vertices[idx].color.a = alpha;
+		// top R:
+		vertices[++idx].position = pos + t.transformPoint(sf::Vector2f(r, -r));
+		vertices[idx].color = c;
+		vertices[idx].color.a = alpha;
+		// bottom R:
+		vertices[++idx].position = pos + t.transformPoint(sf::Vector2f(r,r));
+		vertices[idx].color = c;
+		vertices[idx].color.a = alpha;
+		// bottom L:
+		vertices[++idx].position = pos + t.transformPoint(sf::Vector2f(-r, r));
+		vertices[idx].color = c;
+		vertices[idx].color.a = alpha;
+		//std::cout << "idx de vertices: " << idx << "\n";
+	}
+
 	void Particle::setAlpha(sf::VertexArray& vertices, int idx, float a) {
 		idx *= 4; // 4 times as many vertices as particles
 		// top L:
@@ -55,7 +80,7 @@ namespace particles {
 		vertices[++idx].color.a = a;
 	}
 
-	bool Particle::update(sf::Time dT, const Settings& pSettings, sf::VertexArray& vertices, int idx)
+	bool Particle::update(sf::Time dT, sf::VertexArray& vertices, int idx)
 	{
 		if (active) {
 			if (ttl < sf::Time::Zero) {
@@ -66,22 +91,15 @@ namespace particles {
 			else {
 				float dtSec = dT.asSeconds();
 				sf::Transformable::move(vel * dtSec);
-				if (pSettings.gravity && vel.y < physics::MAX_FALL_SPEED) vel.y += 0.4f * physics::GRAVITY * dtSec;
+				if (gravity && vel.y < physics::MAX_FALL_SPEED) vel.y += 0.4f * physics::GRAVITY * dtSec;
 				sf::Transformable::rotate(rotation * dtSec);
-				sf::Time maxTtl = pSettings.ttl;
-				float radius = utils::lerp(pSettings.sizeEnd, pSettings.sizeIni, ttl / maxTtl);
-				float alpha = utils::lerp(pSettings.alphaEnd, pSettings.alphaIni, ttl / maxTtl);
-				sf::Color c = utils::lerp(pSettings.colorEnd, pSettings.colorIni, ttl / maxTtl);
-				setVertices(vertices, getPosition(), idx, radius, alpha, c);
+				float radius = utils::lerp(sizeEnd, sizeIni, ttl / maxTtl);
+				float alpha = utils::lerp(alphaEnd, alphaIni, ttl / maxTtl);
+				float angle = 90 + utils::lerp(angleEnd, angleIni, ttl / maxTtl) * 180.0f / geometry::PI; // radians
+				sf::Color c = utils::lerp(colorEnd, colorIni, ttl / maxTtl);
+				//setVertices(vertices, getPosition(), idx, radius, alpha, c);
+				setVertices(vertices, getPosition(), idx, radius, angle, alpha, c);
 				ttl -= dT;
-				// animation:
-				/*if (pSettings.animate) {
-					if (animCD < sf::Time::Zero) {
-						animCD = glb::LVL_ANIMATION_PERIOD;
-						if (++currentFrame > maxFrames) currentFrame = 0;
-					}
-					else animCD -= dT;
-				}*/
 			}
 		}
 		return false;
@@ -96,7 +114,18 @@ namespace particles {
 		vel += sf::Vector2f(rng::defaultGen.rand(-negVar.x, posVar.x), rng::defaultGen.rand(-negVar.y, posVar.y));
 		ttl = particleSettings.ttl;
 		active = true;
-		setRotation(rng::defaultGen.rand(0, 360));
+
+
+		maxTtl = ttl;
+		gravity= particleSettings.gravity;
+		sizeEnd = particleSettings.sizeEnd;
+		sizeIni = particleSettings.sizeIni;
+		alphaEnd = particleSettings.alphaEnd;
+		alphaIni = particleSettings.alphaIni;
+		angleEnd = particleSettings.angleEnd;
+		angleIni = particleSettings.angleIni;
+		colorEnd = particleSettings.colorEnd;
+		colorIni = particleSettings.colorIni;
 	}
 
 	// Settings read from file:

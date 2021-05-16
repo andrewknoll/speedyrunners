@@ -140,6 +140,7 @@ protected:
 	void setDefaultOrigin();
 	void updateBoost(const sf::Time& dT, const Level& lvl);
 	void emitBrakeParticles();
+	void addTrail(const sf::Vector2f& v);
 public:
 	Character(Spritesheet sp, int ID, int variant = 0);
 

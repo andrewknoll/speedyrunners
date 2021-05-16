@@ -264,6 +264,7 @@ sf::Vector2f Character::getBackPosition(const float& distance) const
 void Character::update(const sf::Time& dT, const Level& lvl)
 
 {
+	auto pIni = getPosition();
 	updateStunned(dT);
 	auto &tiles = lvl.getCollidableTiles();
 	updateRunning();
@@ -292,6 +293,8 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 	hitBox.top += vel.y * dtSec;
 
 	fixPosition(hitBox);
+
+	sf::Vector2f posIni(hitBox.left, hitBox.top);
 	std::vector<Tiles::Collision> collisions = tiles.collision(hitBox, isGrounded);
 
 	if (!collisions.empty()) {
@@ -299,8 +302,7 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 		//for (const auto& c : collisions) {
 		// std::cout << "n: " << c.->normal.x << "," << c.->normal.y << "\tpoint: " << c.->point.x << "," << c.->point.y << " " << c.->distance << "\n";
 		// New position:
-		sf::Vector2f pos(hitBox.left, hitBox.top);
-		pos = pos + (c.normal * (c.distance));
+		auto pos = posIni + (c.normal * (c.distance));
 
 		if (c.normal.y >= 0) useHook(false);
 
@@ -391,7 +393,16 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 	if (isGrounded && !isAtWallJump) {
 		lastSafePosition = getPosition();
 	}
+	addTrail((getPosition() - pIni) / dtSec); // recalculate vel for trail
 }
+
+void Character::addTrail(const sf::Vector2f& v) {
+	if (utils::length(v) > 0.9*physics::MAX_FALL_SPEED ) {
+		//if (rng::defaultGen.rand01() > 0.0)
+		particleSystems[glb::particleSystemIdx::SUPER_SPEED].emit(getPosition() - v * 0.01f, v);
+	}
+}
+
 
 void Character::updateGrounded(const sf::Vector2f& normal) {
 	bool wasGrounded = isGrounded;

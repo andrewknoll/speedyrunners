@@ -105,6 +105,7 @@ namespace particles {
 
 	void ParticleSystem::emit(const sf::Vector2f& pos, const sf::Vector2f& dir)
 	{
+		pSettings.pos = pos;
 		pSettings.angleIni = atan2f(dir.x, dir.y);
 		pSettings.angleEnd = atan2f(dir.x, dir.y);
 		particles[index].reset(pSettings);
@@ -120,7 +121,7 @@ namespace particles {
 	{
 		int i = 0;
 		for (auto& p : particles) {
-			if (p.update(elapsed, pSettings, vertices, i)) // the particle has died
+			if (p.update(elapsed, vertices, i)) // the particle has died
 				;// nothing needed i think
 			else if (pSettings.animate) {
 				int frame = utils::lerp(nSprites.x * nSprites.y - 1, 0, p.ttl/pSettings.ttl);

@@ -33,6 +33,14 @@ namespace particles{
 		sf::Time ttl;
 		float minRadius, maxRadius;
 		bool active = false;
+
+
+		sf::Time maxTtl;
+		bool gravity;
+		float sizeEnd, sizeIni,
+			alphaEnd, alphaIni,
+			angleEnd, angleIni;
+		sf::Color colorEnd, colorIni;
 		/*int currentFrame = 0, maxFrames;
 
 		sf::Time animCD = sf::Time::Zero; // animations
@@ -41,7 +49,11 @@ namespace particles{
 
 		void setVertices(sf::VertexArray& vertices, const sf::Vector2f& pos, int idx, float r, float alpha, const sf::Color& c);
 
+		void setVertices(sf::VertexArray& vertices, const sf::Vector2f& pos, int idx, float r, float angle, float alpha, const sf::Color& c);
+
 		void setAlpha(sf::VertexArray& vertices, int idx, float a);
+
+		bool update(sf::Time dT, sf::VertexArray& vertices, int idx);
 
 		bool update(sf::Time dT, const Settings& pSettings, sf::VertexArray& vertices, int idx);// returns true if it has died
 

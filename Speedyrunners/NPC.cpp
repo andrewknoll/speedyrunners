@@ -530,6 +530,7 @@ void NPC::replan() {
 }
 
 void NPC::plan() {
+	return; // quitar..
 	int n_path = 0;
 	TileNode goal0;
 
@@ -605,7 +606,7 @@ void NPC::plan() {
 
 	
 	goalMtx.lock();
-	goal = std::make_shared<Goal>(goals[(currentGoalIdx + n_path) % goals.size()]);
+	if (!goals.empty()) goal = std::make_shared<Goal>(goals[(currentGoalIdx + n_path) % goals.size()]);
 
 	//Start from current position, if it's the first path.
 	//Start from previous goal, if it's the second one.

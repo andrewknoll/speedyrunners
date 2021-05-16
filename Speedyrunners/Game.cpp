@@ -660,7 +660,7 @@ void Game::processMouseEditing() {
 			checkpoints.emplace_back(utils::mousePosition2f(window), currentRadius);
 		}
 		else {
-			particleSystems[selectedPSystem].emit(utils::mousePosition2f(window));
+			particleSystems[selectedPSystem].emit(utils::mousePosition2f(window), utils::mousePosition2f(window));
 		}
 	}
 }
