@@ -7,6 +7,9 @@
 void BoxObstacle::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	if (available || falling) target.draw(sprite); // Only draw if available or falling
+#ifdef SHOW_BOX_HITBOX
+	target.draw(hitboxShape);
+#endif
 }
 
 BoxObstacle::BoxObstacle(const sf::Vector2f& pos, float tileWidth, bool respawn)
@@ -26,7 +29,7 @@ BoxObstacle::BoxObstacle(const sf::Vector2f& pos, float tileWidth, bool respawn)
 
 void BoxObstacle::fallToFloor() {
 	fallingToFloor = true;
-	vel = sf::Vector2f(rng::defaultGen.rand(-10.0f, 10.0f), rng::defaultGen.rand(-40.0f, 40.0f));
+	vel = sf::Vector2f(rng::defaultGen.rand(-25.0f, 25.0f), rng::defaultGen.rand(-55.0f, 40.0f));
 }
 
 sf::Vector2f BoxObstacle::getPosition() const
@@ -69,15 +72,33 @@ void BoxObstacle::update(sf::Time dT, const TileMap& tiles)
 		}
 	}
 	else if (fallingToFloor) {
-		auto current = sprite.getPosition();
+		//auto current = sprite.getPosition();
 		sprite.move(vel * dT.asSeconds());
 		if (!tiles.collision(sprite.getGlobalBounds()).empty()) {
-			sprite.setPosition(current);
+			//sprite.setPosition(current);
 			collidable = sprite.getGlobalBounds();
 			fallingToFloor = false;
 		}
 		vel.y += physics::GRAVITY * dT.asSeconds();
 	}
+}
+
+void BoxObstacle::setPositionCheckTiles(const sf::Vector2f& p, const TileMap& tiles) {
+	setPosition(p);
+#ifdef SHOW_BOX_HITBOX
+	const auto& hb = sprite.getGlobalBounds();
+	hitboxShape.setPosition(hb.left,hb.top);
+	hitboxShape.setSize(sf::Vector2f(hb.width, hb.height));
+	hitboxShape.setFillColor(sf::Color::Red);
+#endif
+	if (!tiles.collision(sprite.getGlobalBounds()).empty()) 
+		std::cout << "colliding\n";
+}
+
+void BoxObstacle::setPosition(const sf::Vector2f& p)
+{
+	position = p;
+	sprite.setPosition(p);
 }
 
 bool BoxObstacle::respawnable() const

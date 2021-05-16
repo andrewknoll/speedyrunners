@@ -4,6 +4,8 @@
 #include "Globals.hpp"
 #include "utils.hpp"
 
+//#define SHOW_BOX_HITBOX
+
 class TileMap;
 
 class BoxObstacle : public sf::Drawable {
@@ -27,6 +29,9 @@ protected:
 
 	sf::Time cdAvailable = glb::itemPickupRespawn;
 
+#ifdef SHOW_BOX_HITBOX
+	sf::RectangleShape hitboxShape;
+#endif
 	//Animation animation;
 	//sf::Time countdown = sf::seconds(rng::defaultGen.rand(0.0f, glb::LVL_ANIMATION_PERIOD.asSeconds()));
 
@@ -45,6 +50,10 @@ public:
 	bool isInside(const sf::FloatRect& hitbox);
 
 	void update(sf::Time dT, const TileMap& tiles);
+
+	void setPositionCheckTiles(const sf::Vector2f& p, const TileMap& tiles);
+
+	void setPosition(const sf::Vector2f& p);
 
 	bool respawnable() const;
 };

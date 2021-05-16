@@ -91,6 +91,7 @@ public:
 
 	void getCheckpoints(std::vector<Checkpoint>& _checkpoints) const;
 
+	void testBoxCollision(const sf::Vector2f& p);
 
 	void update(const sf::Time& dT);
 	//void draw(sf::RenderWindow& window, const Camera& cam) const;

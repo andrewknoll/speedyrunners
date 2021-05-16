@@ -668,6 +668,9 @@ void Game::processEditingInputs(const sf::Event& event) {
 		selectedPSystem = (selectedPSystem + 1) % particleSystems.size();
 		std::cout << "selected PSystem: " << selectedPSystem << "\n";
 	}
+	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Numpad4) { // box debug
+		lvl.testBoxCollision(utils::mousePosition2f(window));
+	}
 	
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) { // sf::Keyboard::isKeyPressed(sf::Keyboard::S) &&
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {

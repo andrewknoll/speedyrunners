@@ -360,6 +360,12 @@ void Level::getCheckpoints(std::vector<Checkpoint>& _checkpoints) const
 	_checkpoints = checkpoints;
 }
 
+void Level::testBoxCollision(const sf::Vector2f& p)
+{
+	auto& box = boxObstacles.front();
+	box.setPositionCheckTiles(p, collidableTiles);
+}
+
 void Level::update(const sf::Time& dT)
 {
 	for (auto& i : itemPickups)  i.update(dT);
