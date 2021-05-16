@@ -39,8 +39,8 @@ namespace glb
 	enum item : int {
 		NONE = 0,
 		ROCKET = 1,
-		BOULDER, // rolling thing
-		FREEZE,
+		BOULDER = 2, // rolling thing
+		ICERAY = 3,
 		GOLDEN_HOOK,
 		INVINCI_DRILL,
 		TNT,

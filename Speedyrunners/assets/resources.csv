@@ -7,6 +7,8 @@ WS,1,Content/Characters/Cosmonaut/win_variant00.png,Indexes/Characters/Cosmonaut
 WS,2,Content/Characters/Unic/win_variant00.png,Indexes/Characters/Unic/win_atlas_variant00.json
 WS,3,Content/Characters/Falcon/win_variant00.png,Indexes/Characters/Falcon/win_atlas_variant00.json
 
+MS,0,Content/Sprites/CustomIceBeamStartup.png,Indexes/Sprites/CustomIceBeamStartup.json
+
 M,0,Content/Audio/Music/Track 03 - Menu.ogg
 M,1,Content/Audio/Music/Track 01 - Level.ogg
 M,2,Content/Audio/Music/Track02 - SD.ogg
@@ -90,6 +92,8 @@ AM,menu_tabs_slide_in.wav
 AM,menu_toggle.wav
 
 I,0,Content/Sprites/rocket.png
+I,1,Content/Sprites/ballWeapon-150x150.png
+I,2,Content/Sprites/IceBeamWeapon_170x25.png
 
 T,0,Content/Sprites/hook.png
 T,1,Content/UI/MultiplayerHUD/Point.png

@@ -173,8 +173,8 @@ int Spritesheet::process_token(std::string matched) {
 	return 0;
 }
 
-void Spritesheet::setVictoryPose(bool victoryPose) {
-	this->victoryPose = victoryPose;
+void Spritesheet::setMonoAnimation(bool monoAnimation) {
+	this->monoAnimation = monoAnimation;
 }
 
 int Spritesheet::parse_spritesheet(std::string image_filename, std::string data_filename) {
@@ -228,7 +228,7 @@ std::vector<AnimationPtr> Spritesheet::get_animations() const {
 
 
 void Spritesheet::getSpritesVectorFromMap() {
-	if (!victoryPose) {
+	if (!monoAnimation) {
 		for (auto const& pair : animationMap) {
 			if (pair.first == glb::anim::STAND_ANIM) {
 				animationVector[CharAnimIdx::StandAnim] = pair.second;

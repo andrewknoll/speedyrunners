@@ -168,6 +168,9 @@
     <ClCompile Include="Particles.cpp">
       <Filter>Animation\Particles</Filter>
     </ClCompile>
+    <ClCompile Include="IceRay.cpp">
+      <Filter>Items</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TileMap.h">
@@ -281,6 +284,9 @@
     </ClInclude>
     <ClInclude Include="Particles.h">
       <Filter>Animation\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="IceRay.h">
+      <Filter>Items</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

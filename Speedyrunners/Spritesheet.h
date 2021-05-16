@@ -49,7 +49,7 @@ private:
 	std::map<std::string, AnimationPtr> animationMap;
 	std::vector<AnimationPtr> animationVector = std::vector<AnimationPtr>(glb::NUMBER_OF_ANIMATIONS);
 	bool flags[15];
-	bool victoryPose = false;
+	bool monoAnimation = false;
 	std::shared_ptr<sf::Texture> texture;
 
 	bool remove_commas_or_spaces(std::string& matched);
@@ -57,7 +57,7 @@ private:
 	void getSpritesVectorFromMap();
 
 public:
-	void setVictoryPose(bool victoryPose);
+	void setMonoAnimation(bool monoAnimation);
 	int parse_spritesheet(std::string image_filename, std::string data_filename);
 	std::vector<AnimationPtr> get_animations() const;
 	

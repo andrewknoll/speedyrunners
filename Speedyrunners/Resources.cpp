@@ -38,12 +38,24 @@ Resources::Resources()
 			i = stoi(token[0]);
 
 			Spritesheet sp;
-			sp.setVictoryPose(true);
+			sp.setMonoAnimation(true);
 			sp.parse_spritesheet(PATH_TO_ASSETS + token[1], PATH_TO_ASSETS + token[2]);
 			if (win_spritesheets.size() <= i) {
 				win_spritesheets.push_back(std::vector<Spritesheet>());
 			}
 			win_spritesheets[i].push_back(sp);
+		}
+		else if (type == "MS") {
+			for (int i = 0; i < 3; i++) std::getline(iss, token[i], ',');
+			i = stoi(token[0]);
+
+			Spritesheet sp;
+			sp.setMonoAnimation(true);
+			sp.parse_spritesheet(PATH_TO_ASSETS + token[1], PATH_TO_ASSETS + token[2]);
+			if (misc_spritesheets.size() <= i) {
+				misc_spritesheets.push_back(std::vector<Spritesheet>());
+			}
+			misc_spritesheets[i].push_back(sp);
 		}
 		else if (type == "M") {
 			for (int i = 0; i < 2; i++) std::getline(iss, token[i], ',');
@@ -122,6 +134,10 @@ const Spritesheet& Resources::getSpriteSheet(int character, int variant) {
 const Spritesheet & Resources::getVictorySpriteSheet(int character, int variant) {
 	std::cout << win_spritesheets.size() << " win spritesheets in resources " << win_spritesheets[character].size() << " of character " << character << "  variant: " << variant << "\n";
 	return win_spritesheets[character][variant];
+}
+
+const Spritesheet& Resources::getMiscSpriteSheet(int index) {
+	return misc_spritesheets[index];
 }
 
 const sf::Texture& Resources::getItemTexture(glb::item type) {
