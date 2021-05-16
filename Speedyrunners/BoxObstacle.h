@@ -18,9 +18,10 @@ protected:
 
 	sf::FloatRect collidable;
 
-	bool available = true, falling = false, fallingToFloor = false;
+	bool available = true, falling = false, 
+		fallingToFloor = false; // this one is for the droppable crate items
 
-	bool shouldRespawn = true;
+	bool shouldRespawn = true; // lvl ones respawn, item ones dont
 
 	sf::Vector2f position;
 	sf::Vector2f vel = sf::Vector2f(0, 0);
@@ -49,9 +50,9 @@ public:
 
 	bool isInside(const sf::FloatRect& hitbox);
 
-	void update(sf::Time dT, const TileMap& tiles);
+	void update(sf::Time dT, const TileMap& tiles); // Fall
 
-	void setPositionCheckTiles(const sf::Vector2f& p, const TileMap& tiles);
+	void setPositionCheckTiles(const sf::Vector2f& p, const TileMap& tiles); // debug only
 
 	void setPosition(const sf::Vector2f& p);
 

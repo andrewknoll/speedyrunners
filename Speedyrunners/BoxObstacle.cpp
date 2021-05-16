@@ -64,7 +64,6 @@ void BoxObstacle::update(sf::Time dT, const TileMap& tiles)
 			float dtSec = dT.asSeconds();
 			sprite.rotate(rotSpeed * dtSec);
 			sprite.move(vel * dtSec);
-			//sprite.setColor(sprite.getColor().rgb)
 			vel.y += physics::GRAVITY * dtSec;
 		}
 		else {
@@ -72,14 +71,14 @@ void BoxObstacle::update(sf::Time dT, const TileMap& tiles)
 		}
 	}
 	else if (fallingToFloor) {
-		//auto current = sprite.getPosition();
-		sprite.move(vel * dT.asSeconds());
-		if (!tiles.collision(sprite.getGlobalBounds()).empty()) {
-			//sprite.setPosition(current);
+		if (!tiles.collision(sprite.getGlobalBounds()).empty()) { // collided with floor, stop
 			collidable = sprite.getGlobalBounds();
 			fallingToFloor = false;
 		}
-		vel.y += physics::GRAVITY * dT.asSeconds();
+		else { // continue falling
+			sprite.move(vel * dT.asSeconds());
+			vel.y += physics::GRAVITY * dT.asSeconds();
+		}
 	}
 }
 

@@ -266,8 +266,8 @@ std::vector<struct Tiles::Collision> TileMap::collision(const sf::FloatRect& cha
 
 
     sf::Vector2f sizeRectTile(tileSizeWorld.x, tileSizeWorld.y);
-    std::cout << "sizeTile: " << sizeRectTile << " size hitbox: " << characterHitbox.width << " " << characterHitbox.height << "\n";
-    if (nVertical < 3) std::cout << "checking " << nHorizontal << " horizontal and " << nVertical << " vertical tiles\n";
+    //std::cout << "sizeTile: " << sizeRectTile << " size hitbox: " << characterHitbox.width << " " << characterHitbox.height << "\n";
+    //if (nVertical < 3) std::cout << "checking " << nHorizontal << " horizontal and " << nVertical << " vertical tiles\n";
     
 	for (int dj = 0; dj < nVertical; dj++) { // And 3 vertical
         //bool bothHorizontal = false; // Both horizontal tiles are collidable
@@ -277,20 +277,20 @@ std::vector<struct Tiles::Collision> TileMap::collision(const sf::FloatRect& cha
             if (idx >= tiles.size()) continue; // check bounds
             
 			auto tile = tiles[idx];
-            std::cout << "idx: " << idx << " ";
+            //std::cout << "idx: " << idx << " ";
             if (tile != 0) { // Tile isnt air 
                 auto c = Tiles::collision((Tiles::Collidable)tile, posRectTile, sizeRectTile, characterHitbox, isGrounded);
                 if (c) {
-                    std::cout << "yes ";
+                    //std::cout << "yes ";
                     c->tileType = (Tiles::Collidable)tile;
                     collisions.emplace_back(*c);
                     //std::cout << "Collided with tile " << di << " " << dj << "... " << i + di << " " << j+dj << "\n";
                     //return c; // collided, we return it, otherwise check the rest
                 }
-                else std::cout << "no ";
+                //else std::cout << "no ";
 
             }
-            else std::cout << "is air ";
+            //else std::cout << "is air ";
             std::cout << "\n";
         }
     }

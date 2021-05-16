@@ -503,9 +503,13 @@ void Game::update()
 						//if player is dumb and uses rockets when nobody else is playing, it will hit them
 						items.push_back(characters[i]->useItem(characters[target]));
 					} 
-					else if ((int)item >= glb::NUMBER_OF_ITEMS-3) { // crates
+					else if ((int)item >= glb::NUMBER_OF_ITEMS-2) { // crates
 						lvl.dropCrate(characters[i]->getBackPosition());
 						characters[i]->setItem(glb::item(((int)item + 1) % (glb::NUMBER_OF_ITEMS+1)));
+					}
+					else {
+						std::cout << "unimplemented item " << item << "\n";
+						characters[i]->setItem(glb::NONE);
 					}
 				}
 			}
