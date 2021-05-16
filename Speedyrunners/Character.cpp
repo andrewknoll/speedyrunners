@@ -176,7 +176,7 @@ void Character::updateVel(const float& dtSec) {
 		//Except we do nothing otherwise
 		
 		//if running on the ground, velocity and acceleration are oposed
-		if (!isStunned && isGrounded && isRunning && !usingHook) {
+		if (!isStunned && !tumble && isGrounded && isRunning && !usingHook) {
 			if (((vel.x >= 0) ^ (acc.x >= 0)) && abs(vel.x) > 20.0f) {
 				emitBrakeParticles();
 				setAnimation(SkidAnim, true);
@@ -194,8 +194,14 @@ void Character::updateVel(const float& dtSec) {
 		}
 	}
 	if (tumble) {
-		vel *= glb::tumbleSpeedReduction;
-		tumble = false;
+		tumblingTime -= sf::seconds(dtSec);
+		if (tumblingTime < sf::Time::Zero) {
+			tumble = false;
+		}
+		else {
+			vel *= glb::tumbleSpeedReduction;
+			setAnimation(TumbleAnim);
+		}
 	}
 }
 
@@ -238,8 +244,20 @@ void Character::updateStunned(const sf::Time& dT) {
 
 
 void Character::tumbleWithBox() {
-	setAnimation(TumbleAnim);
+	tumblingTime = glb::TUMBLE_TIME;
 	tumble = true;
+}
+
+sf::Vector2f Character::getBackPosition(const float& distance) const
+{
+	float x, y = getPosition().y;
+	if (!facingRight) { // facing left, back is to the right
+		x = hitBox.left + hitBox.width + distance;
+	}
+	else {
+		x = hitBox.left - distance;
+	}
+	return sf::Vector2f(x, y);
 }
 
 void Character::update(const sf::Time& dT, const Level& lvl)
@@ -295,7 +313,7 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 				acc.x = 0;
 				isRunning = false;
 				sliding = false;
-				if (!isStunned && isGrounded && !usingHook && !sliding) {
+				if (!isStunned && !tumble && isGrounded && !usingHook && !sliding) {
 					setAnimation(StandAnim);
 				}
 				if (c.tileType == Tiles::JUMP_WALL_L) {
@@ -357,7 +375,7 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 			swinging = true;
 		}
 	}
-	else if (!isStunned && vel.y > 0) {
+	else if (!isStunned && !tumble && vel.y > 0) {
 		if (isAtWallJump && vel.x == 0) {
 			setAnimation(WallHangAnim);
 		}
@@ -417,6 +435,7 @@ void Character::stop(){
 void Character::respawn(sf::Vector2f position) {
 	//TO-DO: Spawnear separados
 	vel = sf::Vector2f(0, 0);
+	acc = vel;
 	dead = false;
 	setPosition(position);
 	setAnimation(StandAnim);
@@ -552,6 +571,7 @@ bool Character::isUsingSlide() const {
 
 Character::ItemPtr Character::useItem(std::shared_ptr<Character> target) {
 	ItemPtr item;
+	using namespace glb;
 	if (currentItem == glb::item::ROCKET) { // Fire the rocket
 		item = std::make_shared<Rocket>(getPosition(), target, facingRight);
 	}
@@ -656,7 +676,7 @@ void Character::setFriction() {
 		else { // close to 0
 			acc.x = 0;
 			vel.x = 0;
-			if (!isStunned && isGrounded && !usingHook){
+			if (!isStunned && !tumble && isGrounded && !usingHook){
 				setAnimation(StandAnim);
 			}
 		}

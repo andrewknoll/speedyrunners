@@ -34,16 +34,31 @@ namespace glb
 	const int NUMBER_OF_MISC_TEXTURES = 11;
 	const sf::Vector2f FEET_TO_HAND = sf::Vector2f(20.0, 0);// -50.0
 	// Items:
-	const int NUMBER_OF_ITEMS = 1;
+	const int NUMBER_OF_ITEMS = 8;
 	enum item : int {
 		NONE = 0,
-		ROCKET = 1
+		ROCKET = 1,
+		BOULDER, // rolling thing
+		FREEZE,
+		GOLDEN_HOOK,
+		INVINCI_DRILL,
+		// these 3 must be last!!:
+		CRATE_3, 
+		CRATE_2,
+		CRATE,
 	};
 
 	// For InGameUI, returns the index in the UI/Sprites/MultiplayerHUD/Powerups.png texture:
 	const std::array<int, NUMBER_OF_ITEMS+1> itemToTexIndex { {
 		0, // NONE is first (hay un hueco al principio)
-		4  // Rocket is 5th
+		4,  // Rocket is 5th
+		15, // rolling thing
+		16, // freeze
+		1, // golden hook
+		3, // invinci drill
+		9,// Crates
+		8,
+		2 
 	} };
 
 	// Characters:
@@ -58,7 +73,9 @@ namespace glb
 	const std::vector<std::string> characterNames{ "Speedrunner", "Cosmonaut", "Unic", "Falcon" };
 
 
-	const sf::Time STUN_TIME = sf::seconds(2); // Rockets, spikes
+	const sf::Time STUN_TIME = sf::seconds(1); // Rockets
+	const sf::Time TUMBLE_TIME = sf::seconds(0.5); // box obstacles
+
 
 
 	const sf::Time itemPickupRespawn = sf::seconds(10); // Respawn time for the capsule item thingies
@@ -112,7 +129,7 @@ namespace glb
 		BRAKE // when sliding, etc
 	};
 
-	const float tumbleSpeedReduction = 0.4f;
+	const float tumbleSpeedReduction = 0.85f;
 
 	inline const bool enableRandomObstacles = true;
 };

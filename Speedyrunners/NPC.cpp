@@ -224,11 +224,11 @@ void NPC::calculateHookNeighbours(const bool right, const TileNode& current, con
 
 	while (!stop && active) {
 		if (right) {
-			//Search tiles in a 45º angle
+			//Search tiles in a 45ï¿½ angle
 			hook.cell[0] = current.cell[0] + radius;
 		}
 		else {
-			//Search tiles in a 135º angle
+			//Search tiles in a 135ï¿½ angle
 			hook.cell[0] = current.cell[0] - radius;
 		}
 		hook.cell[1] = current.cell[1] - radius;
@@ -737,6 +737,7 @@ bool NPC::doBasicMovement(const TileNode& current, const TileNode& n, float objD
 }
 
 void NPC::followPath() {
+	return;
 	sf::Clock clock;
 	sf::Time t0;
 	bool jumped = false;

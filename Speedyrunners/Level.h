@@ -55,6 +55,8 @@ public:
 
 	void addBoxObstacle(const sf::Vector2f& pos);
 
+	void dropCrate(const sf::Vector2f& pos);
+
 	bool checkItemPickups(std::shared_ptr<Character> character);
 
 	bool checkBoxCollisions(std::shared_ptr<Character> character);
@@ -89,6 +91,7 @@ public:
 
 	void getCheckpoints(std::vector<Checkpoint>& _checkpoints) const;
 
+	void testBoxCollision(const sf::Vector2f& p);
 
 	void update(const sf::Time& dT);
 	//void draw(sf::RenderWindow& window, const Camera& cam) const;

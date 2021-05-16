@@ -90,7 +90,7 @@ void RoundVictory::update(const sf::Time& dT) {
 
 void RoundVictory::tickAnimation(sf::Time dT) {
 	animationCountdown -= dT;
-	if (currentSecond <= 3 && animationCountdown <= sf::Time::Zero) {
+	if (currentSecond < 3 && animationCountdown <= sf::Time::Zero) {
 		if (characterVictoryPose)
 			characterVictoryPose->advance_frame(mySprite);
 		animationCountdown = PERIOD;

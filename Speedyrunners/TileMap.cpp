@@ -260,30 +260,38 @@ std::vector<struct Tiles::Collision> TileMap::collision(const sf::FloatRect& cha
     int i = int(characterHitbox.left) / tileSizeWorld.x;
     int j = int(characterHitbox.top) / tileSizeWorld.y;
     std::vector<struct Tiles::Collision> collisions;
+    
+    int nVertical = 1 + std::roundf(characterHitbox.height / tileSizeWorld.y);
+    int nHorizontal = 1 + std::roundf(characterHitbox.width / tileSizeWorld.x);
 
-    int nVertical = 1 + characterHitbox.height / tileSizeWorld.y;
-    int nHorizontal = 1 + characterHitbox.width / tileSizeWorld.x;
+
+    sf::Vector2f sizeRectTile(tileSizeWorld.x, tileSizeWorld.y);
+    //std::cout << "sizeTile: " << sizeRectTile << " size hitbox: " << characterHitbox.width << " " << characterHitbox.height << "\n";
     //if (nVertical < 3) std::cout << "checking " << nHorizontal << " horizontal and " << nVertical << " vertical tiles\n";
     
 	for (int dj = 0; dj < nVertical; dj++) { // And 3 vertical
         //bool bothHorizontal = false; // Both horizontal tiles are collidable
 		for (int di = 0; di < nHorizontal; di++) { // Check the 2 horizontal tiles
             sf::Vector2f posRectTile = sf::Vector2f((i+di) * tileSizeWorld.x, (j+dj) * tileSizeWorld.y);
-
-            sf::Vector2f sizeRectTile(tileSizeWorld.x, tileSizeWorld.y);
-            if ((i + di) + (j + dj) * width >= tiles.size()) {
-                continue;
-            }
-			auto tile = tiles[(i + di) + (j + dj) * width];
+            int idx = (i + di) + (j + dj) * width;
+            if (idx >= tiles.size()) continue; // check bounds
+            
+			auto tile = tiles[idx];
+            //std::cout << "idx: " << idx << " ";
             if (tile != 0) { // Tile isnt air 
                 auto c = Tiles::collision((Tiles::Collidable)tile, posRectTile, sizeRectTile, characterHitbox, isGrounded);
                 if (c) {
+                    //std::cout << "yes ";
                     c->tileType = (Tiles::Collidable)tile;
                     collisions.emplace_back(*c);
                     //std::cout << "Collided with tile " << di << " " << dj << "... " << i + di << " " << j+dj << "\n";
                     //return c; // collided, we return it, otherwise check the rest
                 }
+                //else std::cout << "no ";
+
             }
+            //else std::cout << "is air ";
+            std::cout << "\n";
         }
     }
     std::sort(collisions.begin(), collisions.end(), Tiles::hasPriority);
@@ -426,6 +434,8 @@ std::optional<Tiles::Collision> Tiles::collision(const Tiles::Collidable tile, c
     b_extent = (hitbox.height) / 2;
     float y_overlap = a_extent + b_extent - std::abs(hitbox.top+ b_extent - (tileRect.top+a_extent));
     if (x_overlap <= 0 || y_overlap <= 0) { // No overlap, no collision
+        if (x_overlap <= 0) std::cout << "no x overlap\n";
+        else std::cout << "no y overlap\n";
         return {};
     } // Here we have a collision:
     // if its a ramp:

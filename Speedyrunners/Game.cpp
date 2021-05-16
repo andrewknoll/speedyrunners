@@ -496,11 +496,20 @@ void Game::update()
 				target = i; //Set target initial value to oneself
 				auto p = getPlayerAt(i);
 				if (p != nullptr && p->captureEvents(event)) {
-					if (characters[i]->getCurrentItem() == glb::item::ROCKET) {
+					auto item = characters[i]->getCurrentItem();
+					if (item == glb::item::ROCKET) {
 						if (i > 0) target--;
 						else if (i < characters.size() - 1) target++;
 						//if player is dumb and uses rockets when nobody else is playing, it will hit them
 						items.push_back(characters[i]->useItem(characters[target]));
+					} 
+					else if ((int)item >= glb::NUMBER_OF_ITEMS-2) { // crates
+						lvl.dropCrate(characters[i]->getBackPosition());
+						characters[i]->setItem(glb::item(((int)item + 1) % (glb::NUMBER_OF_ITEMS+1)));
+					}
+					else {
+						std::cout << "unimplemented item " << item << "\n";
+						characters[i]->setItem(glb::NONE);
 					}
 				}
 			}
@@ -662,6 +671,9 @@ void Game::processEditingInputs(const sf::Event& event) {
 	else if (testingParticles && event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Numpad8) {
 		selectedPSystem = (selectedPSystem + 1) % particleSystems.size();
 		std::cout << "selected PSystem: " << selectedPSystem << "\n";
+	}
+	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Numpad4) { // box debug
+		lvl.testBoxCollision(utils::mousePosition2f(window));
 	}
 	
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) { // sf::Keyboard::isKeyPressed(sf::Keyboard::S) &&
