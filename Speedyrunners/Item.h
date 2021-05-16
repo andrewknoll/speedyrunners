@@ -4,11 +4,14 @@
 
 class Level;
 class Character;
+class AudioPlayer;
+
 class Item : public sf::Drawable
 {
 protected:
-	sf::Sprite icon;
 	glb::item itemIndex;
+
+	AudioPlayer& audioPlayer;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override = 0;
 public:
@@ -17,6 +20,8 @@ public:
 	virtual bool update(sf::Time elapsed, const Level& lvl) = 0; // Returns true if the item should die (rocket explodes)
 	
 	virtual void doThingTo(std::shared_ptr<Character> c); // item, do your thing
+
+	virtual void changeState(); // activate an item (tnt)
 
 	glb::item getItemIndex() const;
 };

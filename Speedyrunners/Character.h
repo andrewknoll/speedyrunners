@@ -121,6 +121,9 @@ protected:
 	// Particle systems:
 	std::vector<particles::ParticleSystem>& particleSystems;
 
+	// detonator, etc.
+	std::shared_ptr<Item> itemPtr;
+
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 	void updateAcceleration();
@@ -216,6 +219,11 @@ public:
 	const sf::FloatRect& getHitBox() const;
 
 	void getHitByRocket();
+	void getHitByTNT(const sf::Vector2f& direction); // direction is the direction of the explosion
+
+	// set the tnt pointer:
+	void setItemPtr(std::shared_ptr<Item> tnt);
+	std::shared_ptr<Item> getItemPtr();
 
 	void tumbleWithBox();
 

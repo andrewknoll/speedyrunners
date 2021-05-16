@@ -581,12 +581,28 @@ Character::ItemPtr Character::useItem(std::shared_ptr<Character> target) {
 }
 
 
+void Character::setItemPtr(std::shared_ptr<Item> tnt) {
+	itemPtr = tnt;
+}
+
+std::shared_ptr<Item> Character::getItemPtr() {
+	return itemPtr;
+}
+
+
 void Character::getHitByRocket() {
 	std::cout << "I got hit by a rocket :(\n"; // doesnt care that much yet
 	setAnimation(SpikedAnim);
 	stunnedRemaining = glb::STUN_TIME;
 	isStunned = true;
 }
+
+
+void Character::getHitByTNT(const sf::Vector2f& direction) {
+	getHitByRocket();
+	vel += direction;
+}
+
 
 void Character::setItem(glb::item item)
 {

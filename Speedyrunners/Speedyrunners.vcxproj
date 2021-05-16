@@ -311,6 +311,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="TextElement.cpp" />
     <ClCompile Include="TileMap.cpp" />
+    <ClCompile Include="TNT.cpp" />
     <ClCompile Include="UIElement.cpp" />
     <ClCompile Include="UISprite.cpp" />
     <ClCompile Include="utils.cpp" />
@@ -349,6 +350,7 @@
     <ClInclude Include="Level.h" />
     <ClInclude Include="TextElement.h" />
     <ClInclude Include="TileMap.h" />
+    <ClInclude Include="TNT.h" />
     <ClInclude Include="UIElement.h" />
     <ClInclude Include="UISprite.h" />
     <ClInclude Include="utils.hpp" />

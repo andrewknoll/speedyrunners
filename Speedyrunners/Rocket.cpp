@@ -9,8 +9,7 @@ Rocket::Rocket(sf::Vector2f pos, CharPtr target, bool facingRight, float width) 
 	Item(glb::item::ROCKET),
 	target(target),
 	particleSyst(Resources::getInstance().getParticleSystem(glb::particleSystemIdx::ROCKET_SMOKE)),
-	position(pos),
-	audioPlayer(Resources::getInstance().getAudioPlayer())
+	position(pos)
 {
 	auto& t = Resources::getInstance().getItemTexture(glb::item::ROCKET);
 	rocket.setTexture(t);

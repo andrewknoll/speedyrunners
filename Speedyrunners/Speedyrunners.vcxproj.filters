@@ -162,6 +162,9 @@
     <ClCompile Include="BoxObstacle.cpp">
       <Filter>Level\LevelElements</Filter>
     </ClCompile>
+    <ClCompile Include="TNT.cpp">
+      <Filter>Items</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TileMap.h">
@@ -269,6 +272,9 @@
     </ClInclude>
     <ClInclude Include="BoxObstacle.h">
       <Filter>Level\LevelElements</Filter>
+    </ClInclude>
+    <ClInclude Include="TNT.h">
+      <Filter>Items</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

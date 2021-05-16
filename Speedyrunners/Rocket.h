@@ -17,7 +17,6 @@ private:
 
 	float angle = 0;
 
-	AudioPlayer& audioPlayer;
 	particles::ParticleSystem& particleSyst;
 
 	std::vector<sf::IntRect> rects; // texture rects
