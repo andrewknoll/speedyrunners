@@ -180,6 +180,7 @@ void Character::updateVel(const float& dtSec) {
 			if (((vel.x >= 0) ^ (acc.x >= 0)) && abs(vel.x) > 20.0f) {
 				emitBrakeParticles();
 				setAnimation(SkidAnim, true);
+				currentAnimation->update_orientation(!facingRight);
 			}
 			else {
 				setAnimation(RunAnim, true);

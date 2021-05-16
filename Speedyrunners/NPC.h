@@ -59,7 +59,7 @@ private:
 	std::mutex goalMtx;
 	std::mutex choiceMtx;
 	bool planningPath[3] = { false, false, false };
-	std::atomic<short int> pathFound[3] = { 0, 0, 0};
+	std::atomic<short int> pathFound[3] = { 0, 0, 0}; // -1 not searched, 0 not found, 1 found
 	std::atomic<bool> stopFollowing = false;
 	std::atomic<bool> active = true;
 	std::atomic<bool> stitched = false;
@@ -71,6 +71,12 @@ private:
 	std::vector<TileNode> expanded[3];
 	std::deque<std::shared_ptr<TileNode> > path[3];
 
+	// Path following experiment:
+	sf::Time t0;
+	bool jumped = false;
+	TileNode current = getCharacterCell();
+	PathIterator step;
+
 	int findExpanded(const TileNode& n, const int n_path) const;
 	float heuristic(const TileNode& n, const Goal& goal) const;
 	bool inBounds(const int i, const int j) const;
@@ -79,7 +85,7 @@ private:
 	void calculateJumpNeighbours(const TileNode& current, const Goal& goal, const int n_path);
 	void calculateHookNeighbours(const bool right, const TileNode& current, const Goal& goal, const int n_path);
 	void calculateWallJumpNeighbours(const bool right, TileNode& current, const Goal& goal, const int n_path);
-	std::deque<std::shared_ptr<TileNode> > buildPath(TileNode foundGoal);
+	void buildPath(TileNode foundGoal, std::deque<std::shared_ptr<NPC::TileNode>>& newPath);
 	bool isGoal(const TileNode & current, const Goal& goal) const;
 	void updateGoals();
 	bool nodeWasReached(const TileNode& n, const float closenessThreshold) const;
@@ -95,9 +101,10 @@ public:
 	void setTileMap(TileMapPtr tm);
 	void addGoal(const sf::Vector2f& goalPos, const float goalRadius);
 	void plan();
-	OptionalPath planFromTo(const int n_path, const std::shared_ptr<Goal> goal);
+	void planFromTo(const int n_path, const std::shared_ptr<Goal> goal, OptionalPath& newPath);
 	bool doBasicMovement(const TileNode & current, const TileNode & n, float objDistance, sf::Clock clock, bool block);
 	void followPath();
+	void update(const sf::Time dT);
 	int getPathFound(int i) const;
 	void endMe();
 	std::list<selbaward::Line> debugLines();

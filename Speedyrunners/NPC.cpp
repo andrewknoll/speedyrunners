@@ -383,8 +383,7 @@ void NPC::calculateWallJumpNeighbours(const bool right, TileNode& current, const
 	}
 }
 
-std::deque<std::shared_ptr<NPC::TileNode> > NPC::buildPath (TileNode foundGoal) {
-	std::deque<std::shared_ptr<TileNode> > newPath = std::deque<std::shared_ptr<TileNode> >();
+void NPC::buildPath (TileNode foundGoal, std::deque<std::shared_ptr<NPC::TileNode> >& newPath) {
 	newPath.push_front(std::make_shared<TileNode>(foundGoal));
 	std::shared_ptr<TileNode> next = foundGoal.prev;
 	while (next != nullptr) {
@@ -392,7 +391,6 @@ std::deque<std::shared_ptr<NPC::TileNode> > NPC::buildPath (TileNode foundGoal) 
 		newPath.push_front(next);
 		next = next->prev;
 	}
-	return newPath;
 }
 
 bool NPC::isGoal(const TileNode & current, const Goal& goal) const {
@@ -530,12 +528,13 @@ void NPC::plan() {
 				choiceMtx.unlock();
 				goal = std::make_shared<Goal>();
 				goal->position = nodeCellVec(path[1].front());
-				goal->radius = 2.0f;
+				goal->radius = 20.0f;
 				frontier[2].safePush(*path[0].back());
 				goalMtx.lock();
 				currentGoal[2] = goal;
 				goalMtx.unlock();
-				auto res = planFromTo(2, goal);
+				OptionalPath res;
+				planFromTo(2, goal, res);
 				planningPath[2] = false;
 				if (res.has_value()) {
 					pathFound[2] = 1;
@@ -606,7 +605,8 @@ void NPC::plan() {
 	goalNode.cell[1] = int(goal->position.y) / tm->getTileSizeWorld().y;
 
 	goalNode.data.tile = Tiles::AIR;
-	auto newPath = planFromTo(n_path, goal);
+	OptionalPath newPath;
+	planFromTo(n_path, goal, newPath);
 	if (newPath.has_value()) {
 		pathMtx[n_path].lock();
 		path[n_path] = newPath.value();	//Once it's safe, replace the old path with the new one
@@ -615,14 +615,18 @@ void NPC::plan() {
 	}
 }
 
-NPC::OptionalPath NPC::planFromTo(const int n_path, const std::shared_ptr<Goal> goal) {
+void NPC::planFromTo(const int n_path, const std::shared_ptr<Goal> goal, NPC::OptionalPath& newPath) {
 	TileNode current, nextToMe;
 	std::unique_ptr<TileNode> prev = nullptr;
 	Tiles::Collidable underMe;
 	float auxCost;
-	std::deque<std::shared_ptr<TileNode> > newPath;
-	if (!active) return {};
-	_set_se_translator(SE_trans_func);
+	//std::deque<std::shared_ptr<TileNode> > newPath;
+	if (newPath) newPath->clear();
+	if (!active) {
+		newPath = {};
+		return;
+	}
+	//_set_se_translator(SE_trans_func);
 	try {
 		expanded[n_path].clear();
 		while (!frontier[n_path].safeEmpty() && active) {
@@ -635,7 +639,8 @@ NPC::OptionalPath NPC::planFromTo(const int n_path, const std::shared_ptr<Goal> 
 
 			if (isGoal(current, *goal)) {
 				stopFollowing = true;	//Tell moving thread to stop following the path
-				newPath = buildPath(current);
+				newPath = { std::deque<std::shared_ptr<NPC::TileNode> > ()};
+				buildPath(current, *newPath);
 				break;
 			}
 
@@ -701,10 +706,7 @@ NPC::OptionalPath NPC::planFromTo(const int n_path, const std::shared_ptr<Goal> 
 	currentGoal[n_path] = nullptr;
 	goalMtx.unlock();
 	
-	if (!newPath.empty())
-		return newPath;
-	else
-		return {};
+	if (newPath && newPath->empty()) newPath = {};
 }
 
 
@@ -737,21 +739,12 @@ bool NPC::doBasicMovement(const TileNode& current, const TileNode& n, float objD
 }
 
 void NPC::followPath() {
-	return;
 	sf::Clock clock;
-	sf::Time t0;
-	bool jumped = false;
-	TileNode current = getCharacterCell();
-	Tiles::Collidable underMe;
-	PathIterator step, next, aux;
-	std::shared_ptr<TileNode> stepNodePtr;
-	PathIterator pathEnd;
-	float objDistance, verticalDist;
 	pathMtx[0].lock();
 	if (pathFound[0] == 1) {
 		step = getClosestNode(current, path[0]);
 		pathEnd = std::end(path[0]);
-		_set_se_translator(SE_trans_func);
+		//_set_se_translator(SE_trans_func);
 		try {
 			if (step != pathEnd) {
 				step++;	//Get Next Node
@@ -855,6 +848,85 @@ void NPC::followPath() {
 	pathMtx[0].unlock();
 }
 
+
+void NPC::update(const sf::Time dT) {
+
+	PathIterator next, aux, pathEnd;
+	float objDistance, verticalDist;
+	std::shared_ptr<TileNode> stepNodePtr;
+	step = getClosestNode(current, path[0]);
+	pathEnd = std::end(path[0]);
+	if (step != pathEnd) {
+		step++;	//Get Next Node
+		//t0 = clock.getElapsedTime(); // ?
+		if (step != pathEnd) {
+			objDistance = nodeDistance(current, **step);
+		}
+		// Follow:
+		stepNodePtr = *step;
+		if (stepNodePtr->data.canWallJumpLeft == 1 || stepNodePtr->data.canWallJumpRight == 1) {
+			me->startJumping();
+		}
+		if (stepNodePtr->data.isHooking) {
+			if (!me->isUsingHook()) {
+				me->useHook(true);
+			}
+		}
+		else {
+			me->useHook(false);
+		}
+		if (stepNodePtr->data.isSliding) {
+			if (!me->isUsingSlide()) {
+				me->slide();
+			}
+		}
+		else {
+			me->stopSliding();
+		}
+		verticalDist = getCharacterCell().cell[1] - stepNodePtr->cell[1];
+		if (!jumped && me->canJump() && (verticalDist > 2 || stepNodePtr->data.jumps < current.data.jumps)) {
+			me->startJumping();
+			jumped = true;
+		}
+		if (jumped && verticalDist < 3) {
+			me->stopJumping();
+		}
+		if (std::abs(getCharacterCell().cell[0] - stepNodePtr->cell[0]) > CLOSENESS_THRESHOLD) {
+			doBasicMovement(getCharacterCell(), *stepNodePtr, objDistance, dT, false);
+		}
+		else {
+			me->stop();
+		}
+		aux = getClosestNode(current, path[0]);
+		next = aux;
+		next++;
+		//Get next step
+		if (next != step || nodeDistance(getCharacterCell(), **next) < CLOSENESS_THRESHOLD) {
+			//If we are closer to another node, use that one
+			if (next != step) {
+				current = **aux;
+				step = next;
+			}
+			//Otherwise, advance iterator
+			else {
+				current = **step;
+				step++;
+			}
+			jumped = false;
+			if (step != pathEnd) {
+				objDistance = nodeDistance(current, **step);
+			}
+			t0 = clock.getElapsedTime();
+		}
+		else if (clock.getElapsedTime() - t0 >= GIVE_UP_TIME) {
+			giveUp();	//This function must unlock pathMtx[0]
+			return;
+		}
+	}
+
+
+
+}
 
 /*void NPC::followPath() {
 	TileNode current = getCharacterCell();
