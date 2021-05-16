@@ -388,7 +388,8 @@ void Game::updateNPCs(bool follow) {
 			}
 			if (follow) 
 				if (npcs[i]->update(dT)) { // replan
-					npcs[i]->plan();
+					std::cout << "REPLANNING\n";
+					npcs[i]->replan();
 				}
 
 			/**

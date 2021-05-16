@@ -508,6 +508,13 @@ NPC::PathIterator NPC::getClosestNode(TileNode& current, const std::deque<std::s
 	return minimum;
 }
 
+
+void NPC::replan() {
+	pathFound[0] = -1;
+	pathFound[1] = -1;
+	plan();
+}
+
 void NPC::plan() {
 	int n_path = 0;
 	TileNode goal0;
@@ -871,7 +878,10 @@ bool NPC::update(const sf::Time dT) { // Tries to get from current to next
 	auto cellAux = current;
 	current = getCharacterCell();
 	if (cellAux.cell == current.cell) elapsed += dT;
-	else elapsed = sf::Time::Zero;
+	else {
+		elapsed = sf::Time::Zero;
+		std::cout << cellAux.cell << " "<<  current.cell << " elapsed reset\n";
+	}
 	//aux = step;
 	step = getClosestNode(current, path[0]);
 	pathEnd = std::end(path[0]);

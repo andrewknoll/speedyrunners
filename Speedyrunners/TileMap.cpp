@@ -291,7 +291,7 @@ std::vector<struct Tiles::Collision> TileMap::collision(const sf::FloatRect& cha
 
             }
             //else std::cout << "is air ";
-            std::cout << "\n";
+            //std::cout << "\n";
         }
     }
     std::sort(collisions.begin(), collisions.end(), Tiles::hasPriority);
@@ -434,8 +434,8 @@ std::optional<Tiles::Collision> Tiles::collision(const Tiles::Collidable tile, c
     b_extent = (hitbox.height) / 2;
     float y_overlap = a_extent + b_extent - std::abs(hitbox.top+ b_extent - (tileRect.top+a_extent));
     if (x_overlap <= 0 || y_overlap <= 0) { // No overlap, no collision
-        if (x_overlap <= 0) std::cout << "no x overlap\n";
-        else std::cout << "no y overlap\n";
+        /*if (x_overlap <= 0) std::cout << "no x overlap\n";
+        else std::cout << "no y overlap\n";*/
         return {};
     } // Here we have a collision:
     // if its a ramp:

@@ -102,6 +102,7 @@ public:
 	void setTileMap(TileMapPtr tm);
 	void addGoal(const sf::Vector2f& goalPos, const float goalRadius);
 	void plan();
+	void replan();
 	void planFromTo(const int n_path, const std::shared_ptr<Goal> goal, OptionalPath& newPath);
 	void doBasicMovement(const TileNode& current, const TileNode& n, bool block);	void followPath();
 	bool update(const sf::Time dT);
