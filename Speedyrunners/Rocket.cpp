@@ -21,10 +21,10 @@ Rocket::Rocket(sf::Vector2f pos, CharPtr target, bool facingRight, float width) 
 	utils::setWidth(rocket, width);
 	utils::centerOrigin(rocket);
 	if (facingRight) {
-		vel = sf::Vector2f(velValIni, -velValIni);
+		vel = sf::Vector2f(0.5f * velValIni, -1.25 * velValIni);
 	}
 	else {
-		vel = sf::Vector2f(-velValIni, -velValIni);
+		vel = sf::Vector2f(-0.5f * velValIni, -1.25 * velValIni);
 	}
 	rocketLength = rocket.getGlobalBounds().width;
 
@@ -48,7 +48,7 @@ bool Rocket::update(sf::Time elapsed, const Level& lvl) { // todo: check tiles c
 	sf::Vector2f diff;
 	if (!lvl.getCollidableTiles().collision(rocket.getGlobalBounds()).empty()) { // Collision with tiles
 		audioPlayer.play(AudioPlayer::Effect::ROCKET_EXPLODE);
-		Resources::getInstance().getParticleSystem(glb::particleSystemIdx::ROCKET_CLOUD).emit(position);
+		Resources::getInstance().getParticleSystem(glb::particleSystemIdx::ROCKET_CLOUD).burst(position, 50, 5);
 		Resources::getInstance().getParticleSystem(glb::particleSystemIdx::SUDDEN_DEATH_EXPLOSION).emit(position);
 		return true;
 	}
@@ -59,7 +59,7 @@ bool Rocket::update(sf::Time elapsed, const Level& lvl) { // todo: check tiles c
 		float dist = utils::length(diff);
 		if (dist < detonationRadius) { // Detonate
 			audioPlayer.play(AudioPlayer::Effect::ROCKET_EXPLODE);
-			Resources::getInstance().getParticleSystem(glb::particleSystemIdx::ROCKET_CLOUD).emit(position);
+			Resources::getInstance().getParticleSystem(glb::particleSystemIdx::ROCKET_CLOUD).burst(position, 50, 5);
 			Resources::getInstance().getParticleSystem(glb::particleSystemIdx::SUDDEN_DEATH_EXPLOSION).emit(position);
 			return true;
 		}

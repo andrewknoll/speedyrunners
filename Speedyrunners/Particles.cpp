@@ -95,9 +95,8 @@ namespace particles {
 				sf::Transformable::rotate(rotation * dtSec);
 				float radius = utils::lerp(sizeEnd, sizeIni, ttl / maxTtl);
 				float alpha = utils::lerp(alphaEnd, alphaIni, ttl / maxTtl);
-				float angle = 90 + utils::lerp(angleEnd, angleIni, ttl / maxTtl) * 180.0f / geometry::PI; // radians
+				float angle = utils::lerp(angleEnd, angleIni, ttl / maxTtl) * 180.0f / geometry::PI; // degrees
 				sf::Color c = utils::lerp(colorEnd, colorIni, ttl / maxTtl);
-				//setVertices(vertices, getPosition(), idx, radius, alpha, c);
 				setVertices(vertices, getPosition(), idx, radius, angle, alpha, c);
 				ttl -= dT;
 			}

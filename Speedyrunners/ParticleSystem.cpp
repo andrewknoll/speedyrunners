@@ -106,14 +106,36 @@ namespace particles {
 	void ParticleSystem::emit(const sf::Vector2f& pos, const sf::Vector2f& dir)
 	{
 		pSettings.pos = pos;
-		pSettings.angleIni = atan2f(dir.x, dir.y);
-		pSettings.angleEnd = atan2f(dir.x, dir.y);
+		pSettings.angleIni = geometry::PI/2.0f + atan2f(dir.x, dir.y);
+		pSettings.angleEnd = geometry::PI/2.0f + atan2f(dir.x, dir.y);
 		particles[index].reset(pSettings);
 		// enable the vertices:
 		if (pSettings.randomSprites) enableParticleRandomSprite(index);
 		else enableParticle(index);
 		if (index == 0) index = particles.size() - 1;
 		else index--;
+	}
+
+	void ParticleSystem::burst(const sf::Vector2f& center, const float& radius, int nParticles)
+	{
+		for (int i = 0; i < nParticles; i++)
+		{
+			float angle = rng::defaultGen.rand(0.0f, 2.0f * geometry::PI);
+			float dist = rng::defaultGen.rand(0.0f, radius);
+			sf::Vector2f dir(cos(angle), sin(angle));
+			emit(center + (dist * dir));
+		}
+	}
+
+	void ParticleSystem::burstOut(const sf::Vector2f& center, const float& radius, int nParticles)
+	{
+		for (int i = 0; i < nParticles; i++)
+		{
+			float angle = rng::defaultGen.rand(0.0f, 2.0f * geometry::PI);
+			float dist = rng::defaultGen.rand(0.0f, radius);
+			sf::Vector2f dir(cos(angle), sin(angle));
+			emit(center + (dist * dir), dir);
+		}
 	}
 
 	
