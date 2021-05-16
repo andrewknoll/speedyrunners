@@ -11,6 +11,7 @@
 #include "imgui.h"
 #include "imgui-SFML.h"
 #endif // USE_IMGUI
+#include "TNT.h"
 
 
 Game::Game()
@@ -387,10 +388,9 @@ void Game::updateNPCs(bool follow) {
 				});
 				//threadPool[i]->detach();
 			}
-			if (state == State::Playing) {
+			if (follow && state == State::Playing) {
 				npcs[i]->update(dT);
 			}
-			
 			/**
 			if (follow && threadPool[2 * i + 2].threadPtr == nullptr) {
 				threadPool[2 * i + 2].finished = false;
@@ -438,7 +438,7 @@ void Game::updateItems() {
 		auto item = *itr;
 		if (item->update(dT, lvl)) { // if the update returns true, it should be handled
 			handleItem(item); // handle
-			itr = items.erase(itr); // and delete?
+			itr = items.erase(itr); // and delete
 		}
 		else {
 			++itr;
@@ -513,6 +513,15 @@ void Game::update()
 							&& (int)item < glb::NUMBER_OF_ITEMS) { // crates
 						lvl.dropCrate(characters[i]->getBackPosition());
 						characters[i]->setItem(glb::item(((int)item + 1) % (glb::NUMBER_OF_ITEMS)));
+					}
+					else if (item == glb::TNT) {
+						auto& tnt = items.emplace_back(std::make_shared<TNT>(characters[i]->getBackPosition(), lvl.getCollidableTiles().getTileSizeWorld().x));
+						characters[i]->setItemPtr(tnt);
+						characters[i]->setItem(glb::item::TNT_DETONATOR);
+					}
+					else if (item == glb::TNT_DETONATOR) {
+						characters[i]->getItemPtr()->changeState();
+						characters[i]->setItem(glb::item::NONE);
 					}
 					else {
 						std::cout << "unimplemented item " << item << "\n";

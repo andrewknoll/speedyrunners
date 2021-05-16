@@ -48,9 +48,9 @@ class NPC : public PlayerSlot
 	const float THRESHOLD_PER_RADIUS_UNIT = 3.0f;
 
 	const sf::Time MAX_TIME_PER_STEP = sf::seconds(6.0f);
-	const sf::Time GIVE_UP_TIME = sf::seconds(1.50f);
+	const sf::Time GIVE_UP_TIME = sf::seconds(2.0f);
 
-	const float CLOSENESS_THRESHOLD = 1.0f;
+	const float CLOSENESS_THRESHOLD = 0.5f;
 	const float FARNESS_THRESHOLD = 10.0f;
 
 	using CharPtr = std::shared_ptr<Character>;
@@ -118,6 +118,7 @@ public:
 	void setActiveCheckpoint(const int c);
 	//void addGoal(const sf::Vector2f& goalPos, const float goalRadius);
 	void plan();
+	void replan();
 	void planFromTo(const int n_path, const std::shared_ptr<Goal> goal, OptionalPath& newPath);
 	void doBasicMovement(const TileNode& current, const TileNode& n, bool block);
 	//void followPath();

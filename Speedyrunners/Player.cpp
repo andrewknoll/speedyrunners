@@ -1,5 +1,8 @@
 #include "Player.h"
 
+
+#define WEIRD_CHEATS
+
 Player::Player(const Settings& settings, int id) {
 	std::vector<sf::Keyboard::Key> controls;
 	settings.getControlScheme(controls, id);
@@ -32,10 +35,15 @@ bool Player::captureEvents(const sf::Event& event) {
 			me->useBoost(false);
 		}
 		if (event.type == sf::Event::KeyPressed) {
-
+#ifdef WEIRD_CHEATS
 			if (event.key.code == sf::Keyboard::Key::T) {
 				me->tumbleWithBox();
 			}
+			if (event.key.code == sf::Keyboard::Key::I) {
+				int current = me->getCurrentItem();
+				me->setItem(glb::item((current + 1) % (glb::NUMBER_OF_ITEMS - glb::NUMBER_OF_UNOBTAINABLE_ITEMS)));
+			}
+#endif
 			if (event.key.code == k_jump && !holdingUp) {
 				holdingUp = true;
 				me->startJumping();

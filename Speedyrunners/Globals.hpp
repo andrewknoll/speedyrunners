@@ -60,10 +60,10 @@ namespace glb
 		1, // golden hook
 		3, // invinci drill
 		5, // TNT
-		9,// Crates
-		6, // TNT detonator
+		9, // Crates
 		8,
-		2 
+		2,
+		6 // TNT detonator
 	} };
 
 	// Characters:

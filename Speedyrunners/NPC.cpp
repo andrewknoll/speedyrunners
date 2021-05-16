@@ -494,7 +494,7 @@ void NPC::giveUp() {
 	halt();
 	pathFound[0] = -1;
 	path[0].clear();
-	// pathMtx[0].unlock(); // TODO: cuidado
+	pathMtx[0].unlock(); // TODO: cuidado
 }
 
 float NPC::nodeDistance(const TileNode & n1, const TileNode & n2) const
@@ -520,6 +520,13 @@ NPC::PathIterator NPC::getClosestNode(TileNode& current, const std::deque<std::s
 		it++;
 	}
 	return minimum;
+}
+
+
+void NPC::replan() {
+	pathFound[0] = -1;
+	pathFound[1] = -1;
+	plan();
 }
 
 void NPC::plan() {
@@ -560,6 +567,9 @@ void NPC::plan() {
 		else {
 			n_path = 1;
 		}
+	}
+	if (planningPath[0]) {
+		n_path = 1;
 	}
 
 	//Check nobody else is planning this path
@@ -611,12 +621,14 @@ void NPC::plan() {
 		pathMtx[n_path].lock();
 		path[n_path] = newPath.value();	//Once it's safe, replace the old path with the new one
 		pathFound[n_path] = 1;
+		if (n_path == 0) {
+			step = std::begin(path[0]);
+		}
 		pathMtx[n_path].unlock();
 	}
 }
 
 void NPC::planFromTo(const int n_path, const std::shared_ptr<Goal> goal, NPC::OptionalPath& newPath) {
-	std::cout << "PLANNING HOSTIA" << std::endl;
 	TileNode current, nextToMe;
 	std::unique_ptr<TileNode> prev = nullptr;
 	Tiles::Collidable underMe;
@@ -870,29 +882,26 @@ void NPC::followPath() {
 
 
 void NPC::update(const sf::Time dT) { // Tries to get from current to next
-
+	bool canAdvance = true;
 	PathIterator next, aux, pathEnd;
 	sf::Vector2f newPosition;
 	float objDistance, verticalDist;
 	std::shared_ptr<TileNode> stepNodePtr;
-	auto cellAux = current;
-	current = getCharacterCell();
-	if (cellAux.cell == current.cell) elapsed += dT;
-	else elapsed = sf::Time::Zero;
 	//aux = step;
 	if (me->canJump()) {
 		jumped = false;
 	}
 	pathMtx[0].lock();
-	step = getClosestNode(current, path[0]);
 	pathEnd = std::end(path[0]);
-	if (step != pathEnd && ++step != pathEnd) {
+	if (pathFound[0] == 1 && step != pathEnd && ++step != pathEnd) {
+		elapsed += dT;
 		newPosition = me->getPosition();
 		objDistance = nodeDistance(current, **step);
-		if (objDistance > 100) {
+		/*if (objDistance > 100) {
 			pathFound[0] = 0;
+			pathMtx[0].unlock();
 			return;
-		}
+		}*/
 		
 		// Follow:
 		stepNodePtr = *step;
@@ -902,6 +911,9 @@ void NPC::update(const sf::Time dT) { // Tries to get from current to next
 			if (!wallJumped && me->canWallJump()) {
 				me->startJumping();
 				wallJumped = true;
+			}
+			else {
+				canAdvance = false;
 			}
 			
 		}
@@ -928,22 +940,21 @@ void NPC::update(const sf::Time dT) { // Tries to get from current to next
 				me->startJumping();
 				jumped = true;
 			}
-			if (jumped && verticalDist < 3) {
+			/*if (jumped && verticalDist < 3) {
 				me->stopJumping();
+			}*/
+			if (std::abs(getCharacterCell().cell[0] - stepNodePtr->cell[0]) > CLOSENESS_THRESHOLD) {
+				doBasicMovement(getCharacterCell(), *stepNodePtr, false);
 			}
-		}
-		
-		if (std::abs(getCharacterCell().cell[0] - stepNodePtr->cell[0]) > CLOSENESS_THRESHOLD) {
-			doBasicMovement(getCharacterCell(), *stepNodePtr, false);
-		}
-		else {
-			me->stop();
+			else {
+				me->stop();
+			}
 		}
 		aux = getClosestNode(current, path[0]);
 		next = aux;
 		next++;
 		//Get next step
-		/*if (next != step || nodeDistance(getCharacterCell(), **next) < CLOSENESS_THRESHOLD) {
+		if (canAdvance && (next != step || nodeDistance(getCharacterCell(), **next) < CLOSENESS_THRESHOLD)) {
 			//If we are closer to another node, use that one
 			if (next != step) {
 				current = **aux;
@@ -958,8 +969,9 @@ void NPC::update(const sf::Time dT) { // Tries to get from current to next
 			if (step != pathEnd) {
 				objDistance = nodeDistance(current, **step);
 			}
-		}*/
+		}
 		if (elapsed >= GIVE_UP_TIME) {
+			elapsed = sf::Time::Zero;
 			giveUp();	//This function must unlock pathMtx[0]
 			return;
 		}
@@ -971,8 +983,10 @@ void NPC::update(const sf::Time dT) { // Tries to get from current to next
 			retryCount = 0;
 		}
 	}
-	else {
+	else if(pathFound[0] == 1){
+		elapsed = sf::Time::Zero;
 		currentGoalIdx = (currentGoalIdx + 1) % goals.size();
+		std::cout << "Completed... Now I want " << currentGoalIdx << std::endl;
 		//Get next part
 		if (pathFound[1] == 1) {
 			pathFound[0] = 1;	//Next part of the path was already planned
