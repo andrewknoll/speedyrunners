@@ -877,7 +877,7 @@ bool NPC::update(const sf::Time dT) { // Tries to get from current to next
 	std::shared_ptr<TileNode> stepNodePtr;
 	auto cellAux = current;
 	current = getCharacterCell();
-	if (cellAux.cell == current.cell) elapsed += dT;
+	if (nodeDistance(current, cellAux) < 0.5) elapsed += dT;
 	else {
 		elapsed = sf::Time::Zero;
 		std::cout << cellAux.cell << " "<<  current.cell << " elapsed reset\n";
@@ -955,6 +955,7 @@ bool NPC::update(const sf::Time dT) { // Tries to get from current to next
 			}
 		}*/
 		if (elapsed >= GIVE_UP_TIME) {
+			elapsed = sf::Time::Zero;
 			giveUp();	//This function must unlock pathMtx[0]
 			return true;
 		}

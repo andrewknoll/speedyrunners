@@ -36,7 +36,7 @@ class NPC : public PlayerSlot
 	const float THRESHOLD_PER_RADIUS_UNIT = 3.0f;
 
 	const sf::Time MAX_TIME_PER_STEP = sf::seconds(6.0f);
-	const sf::Time GIVE_UP_TIME = sf::seconds(1.50f);
+	const sf::Time GIVE_UP_TIME = sf::seconds(2.0f);
 
 	const float CLOSENESS_THRESHOLD = 1.0f;
 	const float FARNESS_THRESHOLD = 10.0f;
