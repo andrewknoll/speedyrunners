@@ -533,12 +533,31 @@ void NPC::plan() {
 	int n_path = 0;
 	TileNode goal0;
 
-	std::shared_ptr<Goal> goal, prevGoal;
+	std::shared_ptr<Goal> goal, goal1, prevGoal;
 	TileNode goalNode;
+	float backHeur;
 
 	if (pathFound[0] == 1) {
 		if (pathFound[1] == 1) {
-			choiceMtx.lock();
+			if (!stitched) {
+				pathMtx[1].lock();
+				goal1 = std::make_shared<Goal>(goals[(currentGoalIdx + 1) % goals.size()]);
+				backHeur = heuristic(*path[0].back(), *goal1);
+				std::copy(path[1].begin(), path[1].end(), path[2].begin());
+				PathIterator p;
+				p = std::begin(path[1]);
+				while (p != std::end(path[1])) {
+					if (((*p)->heuristic < backHeur)) {
+						break;
+					}
+					p++;
+				}
+				path[1].erase(std::begin(path[1]), p);
+				stitched = true;
+				path[1].push_front(path[0].back());
+				pathMtx[1].unlock();
+			}
+			/*choiceMtx.lock();
 			if (!stitched && !planningPath[2]) {
 				planningPath[2] = true;
 				choiceMtx.unlock();
@@ -559,10 +578,10 @@ void NPC::plan() {
 				expanded[2].clear();
 				return;
 			}
-			else {
+			else {*/
 				choiceMtx.unlock();
 				return;
-			}
+			//}
 		}
 		else {
 			n_path = 1;
@@ -954,18 +973,18 @@ void NPC::update(const sf::Time dT) { // Tries to get from current to next
 		next = aux;
 		next++;
 		//Get next step
-		if (canAdvance && (next != step || nodeDistance(getCharacterCell(), **next) < CLOSENESS_THRESHOLD)) {
+		if (canAdvance /*&& (next != step || nodeDistance(getCharacterCell(), **next) < CLOSENESS_THRESHOLD)*/) {
 			//If we are closer to another node, use that one
-			if (next != step) {
+			//if (next != step) {
 				current = **aux;
 				step = next;
-			}
+			//}
 			//Otherwise, advance iterator
-			else {
+			/*else {
 				current = **step;
 				step++;
-			}
-			jumped = false;
+			}*/
+			//jumped = false;
 			if (step != pathEnd) {
 				objDistance = nodeDistance(current, **step);
 			}
@@ -989,23 +1008,23 @@ void NPC::update(const sf::Time dT) { // Tries to get from current to next
 		std::cout << "Completed... Now I want " << currentGoalIdx << std::endl;
 		//Get next part
 		if (pathFound[1] == 1) {
+			pathMtx[1].lock();
 			pathFound[0] = 1;	//Next part of the path was already planned
 			auto last = path[0].back();
 			path[0].clear();
 			// Stitch the two paths together and save path[1] to path[0]
 			if (stitched) {
-				std::copy(std::begin(path[2]), std::end(path[2]), std::begin(path[0]));
+				std::copy(std::begin(path[1]), std::end(path[1]), std::begin(path[0]));
 				stitched = false;
 			}
 			else {
 				path[0].push_front(last);
 			}
-			//Get next path
-			path[0].insert(path[0].end(), std::make_move_iterator(path[1].begin()), std::make_move_iterator(path[1].end()));
 			path[1].clear();
 
 			//Make sure we start planning the next part
 			pathFound[1] = 0;
+			pathMtx[1].unlock();
 		}
 		else {
 			pathFound[0] = 0;	//We reached the end, so we make sure we replan
