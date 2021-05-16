@@ -17,7 +17,7 @@ private:
 
 	float angle = 0;
 
-	particles::ParticleSystem& particleSyst;
+	particles::PSystem& particleSyst;
 
 	std::vector<sf::IntRect> rects; // texture rects
 

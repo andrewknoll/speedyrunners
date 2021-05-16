@@ -78,7 +78,7 @@ protected:
 	std::vector<NPCPtr> npcs;
 	std::list<ItemPtr> items;
 
-	std::vector<particles::ParticleSystem>& particleSystems;
+	std::vector<particles::PSystem>& particleSystems;
 
 	std::mutex restartMtx;
 	std::condition_variable restartCv;

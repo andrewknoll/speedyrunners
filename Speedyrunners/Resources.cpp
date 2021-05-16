@@ -143,12 +143,12 @@ const std::vector<std::vector<sf::SoundBuffer>>& Resources::getSoundBuffers()
 	return soundBuffers;
 }
 
-particles::ParticleSystem& Resources::getParticleSystem(int idx)
+particles::PSystem& Resources::getParticleSystem(int idx)
 {
 	return particleSystems[idx];
 }
 
-std::vector<particles::ParticleSystem>& Resources::getParticleSystems()
+std::vector<particles::PSystem>& Resources::getParticleSystems()
 {
 	return particleSystems;
 }

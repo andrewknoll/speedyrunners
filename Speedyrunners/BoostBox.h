@@ -20,7 +20,7 @@ protected:
 	sf::Time countdown = sf::seconds(rng::defaultGen.rand(0.0f, 2.0f*glb::LVL_ANIMATION_PERIOD.asSeconds()));
 	
 	float width;
-	particles::ParticleSystem& pSystem;
+	particles::PSystem& pSystem;
 
 	int particleCD = 7, currentParticleCD = particleCD; // too many particles without this
 

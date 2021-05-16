@@ -35,6 +35,7 @@ bool TNT::update(sf::Time elapsed, const Level& lvl)
 	if (detonated) {// exploded
 		audioPlayer.play(AudioPlayer::Effect::TNT_EXPLODE);
 		Resources::getInstance().getParticleSystem(glb::particleSystemIdx::ROCKET_CLOUD).emit(sprite.getPosition());
+		Resources::getInstance().getParticleSystem(glb::particleSystemIdx::SUDDEN_DEATH_EXPLOSION).emit(sprite.getPosition());
 	}
 	return detonated; // returns true if it should be removed
 }
@@ -43,7 +44,7 @@ void TNT::doThingTo(std::shared_ptr<Character> c)
 {
 	auto dir = c->getPosition() - sprite.getPosition();
 	auto dist = utils::length(dir);
-	if (dist < explosionRadius) 
+	if (dist < explosionRadius) // in the explosion, add a vel based on distance to center
 		c->getHitByTNT(explosionMultiplier * (explosionRadius-dist) * dir / dist);
 }
 

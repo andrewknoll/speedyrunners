@@ -119,7 +119,7 @@ protected:
 	int score = 0;
 
 	// Particle systems:
-	std::vector<particles::ParticleSystem>& particleSystems;
+	std::vector<particles::PSystem>& particleSystems;
 
 	// detonator, etc.
 	std::shared_ptr<Item> itemPtr;

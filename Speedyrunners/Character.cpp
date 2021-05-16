@@ -410,7 +410,7 @@ void Character::updateRunning() {
 	if (!isStunned && isRunning && !swinging) {
 		if (isGrounded) {
 			acc.x = runningAcceleration;
-			audioPlayer.loop(AudioPlayer::Effect::FOOTSTEP);
+			// audioPlayer.loop(AudioPlayer::Effect::FOOTSTEP); // Suena demasiado y no se pq
 		}
 		else
 			acc.x = flyingAcceleration;

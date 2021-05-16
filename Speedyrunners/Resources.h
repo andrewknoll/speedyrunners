@@ -18,7 +18,7 @@ private:
 	std::vector<sf::Texture> items = std::vector<sf::Texture>(glb::NUMBER_OF_ITEMS);
 	std::vector<sf::Texture> otherTextures;
 
-	std::vector<particles::ParticleSystem> particleSystems;// rocketsPartSystem;
+	std::vector<particles::PSystem> particleSystems;// rocketsPartSystem;
 
 	//std::vector<sf::FloatRect> otherTexturesRect = std::vector<sf::FloatRect>(glb::NUMBER_OF_MISC_TEXTURES);
 
@@ -42,9 +42,9 @@ public:
 	const std::vector<sf::SoundBuffer>& getSoundBuffer(int type);
 	const std::vector<std::vector<sf::SoundBuffer>>& getSoundBuffers();
 
-	particles::ParticleSystem& getParticleSystem(int idx);
+	particles::PSystem& getParticleSystem(int idx);
 
-	std::vector<particles::ParticleSystem>& getParticleSystems();
+	std::vector<particles::PSystem>& getParticleSystems();
 
 	AudioPlayer& getAudioPlayer();
 

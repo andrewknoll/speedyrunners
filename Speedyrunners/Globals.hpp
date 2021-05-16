@@ -131,7 +131,9 @@ namespace glb
 		ROCKET_SMOKE,
 		ROCKET_CLOUD,
 		BOOST,
-		BRAKE // when sliding, etc
+		BRAKE, // when sliding, etc
+		SUPER_SPEED,
+		SUDDEN_DEATH_EXPLOSION
 	};
 
 	const float tumbleSpeedReduction = 0.85f;
