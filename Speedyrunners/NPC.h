@@ -72,10 +72,11 @@ private:
 	std::deque<std::shared_ptr<TileNode> > path[3];
 
 	// Path following experiment:
-	sf::Time t0;
+	sf::Time elapsed;
 	bool jumped = false;
 	TileNode current = getCharacterCell();
 	PathIterator step;
+	
 
 	int findExpanded(const TileNode& n, const int n_path) const;
 	float heuristic(const TileNode& n, const Goal& goal) const;

@@ -873,7 +873,9 @@ void NPC::update(const sf::Time dT) {
 	PathIterator next, aux, pathEnd;
 	float objDistance, verticalDist;
 	std::shared_ptr<TileNode> stepNodePtr;
+	aux = step;
 	step = getClosestNode(current, path[0]);
+	if (aux == step) elapsed += dT;
 	pathEnd = std::end(path[0]);
 	if (step != pathEnd) {
 		step++;	//Get Next Node
@@ -911,7 +913,7 @@ void NPC::update(const sf::Time dT) {
 			me->stopJumping();
 		}
 		if (std::abs(getCharacterCell().cell[0] - stepNodePtr->cell[0]) > CLOSENESS_THRESHOLD) {
-			doBasicMovement(getCharacterCell(), *stepNodePtr, objDistance, dT, false);
+			doBasicMovement(getCharacterCell(), *stepNodePtr, false);
 		}
 		else {
 			me->stop();
@@ -920,7 +922,7 @@ void NPC::update(const sf::Time dT) {
 		next = aux;
 		next++;
 		//Get next step
-		if (next != step || nodeDistance(getCharacterCell(), **next) < CLOSENESS_THRESHOLD) {
+		/*if (next != step || nodeDistance(getCharacterCell(), **next) < CLOSENESS_THRESHOLD) {
 			//If we are closer to another node, use that one
 			if (next != step) {
 				current = **aux;
@@ -936,8 +938,8 @@ void NPC::update(const sf::Time dT) {
 				objDistance = nodeDistance(current, **step);
 			}
 			t0 = clock.getElapsedTime();
-		}
-		else if (clock.getElapsedTime() - t0 >= GIVE_UP_TIME) {
+		}*/
+		if (elapsed >= GIVE_UP_TIME) {
 			giveUp();	//This function must unlock pathMtx[0]
 			return;
 		}
