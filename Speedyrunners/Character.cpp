@@ -445,6 +445,7 @@ void Character::stopSliding() {
 void Character::startJumping() {
 	if (!isStunned) {
 		if (isGrounded && currJumpCD == sf::Time::Zero) {
+			isGrounded = false;
 			holdingJump = true;
 			vel.y = -jumpingSpeed * 0.9;
 			isGrounded = false;
@@ -453,6 +454,7 @@ void Character::startJumping() {
 			audioPlayer.play(AudioPlayer::Effect::JUMP);
 		}
 		else if (isAtWallJump) {
+			isGrounded = false;
 			vel.y = -jumpingSpeed;
 			if (facingRight) vel.x = jumpingSpeed ;
 			else vel.x = -jumpingSpeed;
@@ -462,6 +464,7 @@ void Character::startJumping() {
 			audioPlayer.play(AudioPlayer::Effect::JUMP);
 		}
 		else if (!hasDoubleJumped) { // in air and hasnt double jumped yet
+			isGrounded = false;
 			holdingJump = true;
 			vel.y = -jumpingSpeed;
 			hasDoubleJumped = true;
@@ -469,7 +472,6 @@ void Character::startJumping() {
 			isAtWallJump = false;
 			audioPlayer.play(AudioPlayer::Effect::DOUBLE_JUMP);
 		}
-		isGrounded = false;
 	}
 }
 

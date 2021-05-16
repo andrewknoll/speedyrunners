@@ -44,6 +44,10 @@ void RNG::fillRand(int* arr, const int size, const int min, const int max) const
 
 namespace utils {
 
+	float distanceToLine(sf::Vector2f l0, sf::Vector2f lf, sf::Vector2f p) {
+		return std::abs((lf.x - l0.x) * (l0.y - p.y) - (l0.x - p.x) * (lf.y - l0.y)) / sqrtf((lf.x - l0.x) * (lf.x - l0.x) + (lf.y - l0.y) * (lf.y - l0.y));
+	}
+
 	float parseFloat(std::istringstream& is, const char sep) {
 		std::string token;
 		if (!getline(is, token, sep)) return 0;

@@ -4,7 +4,7 @@
 #include "PriorityQueue.h"
 #include "TileMap.h"
 #include "Line.hpp"
-#include <list>
+#include <deque>
 #include <atomic>
 
 class NPC : public PlayerSlot
@@ -30,7 +30,7 @@ class NPC : public PlayerSlot
 	const float JUMP_COST_BASE_1 = 4.0f;
 	const float JUMP_COST_BASE_2 = 5.0f;
 	const float WALL_JUMP_COST = 1.5f;
-	const float DIRECTION_CHANGE_COST = 200.0f;
+	const float DIRECTION_CHANGE_COST = 500.0f;
 	const float JUMP_COST_PER_DISTANCE_UNIT = 50.0f;
 
 	const float THRESHOLD_PER_RADIUS_UNIT = 3.0f;
@@ -45,8 +45,8 @@ class NPC : public PlayerSlot
 	using TilePriorityQueue = PriorityQueue<NodeData>;
 	using TileNode = Node<NodeData>;
 	using TileMapPtr = std::shared_ptr<TileMap>;
-	using OptionalPath = std::optional< std::list<std::shared_ptr<TileNode> > >;
-	using PathIterator = std::list<std::shared_ptr<TileNode> >::iterator;
+	using OptionalPath = std::optional< std::deque<std::shared_ptr<TileNode> > >;
+	using PathIterator = std::deque<std::shared_ptr<TileNode> >::const_iterator;
 
 private:
 	const int N_MOVES = 7;
@@ -69,7 +69,7 @@ private:
 	// 2 -> Stitch
 	TilePriorityQueue frontier[3];
 	std::vector<TileNode> expanded[3];
-	std::list<std::shared_ptr<TileNode> > path[3];
+	std::deque<std::shared_ptr<TileNode> > path[3];
 
 	int findExpanded(const TileNode& n, const int n_path) const;
 	float heuristic(const TileNode& n, const Goal& goal) const;
@@ -79,7 +79,7 @@ private:
 	void calculateJumpNeighbours(const TileNode& current, const Goal& goal, const int n_path);
 	void calculateHookNeighbours(const bool right, const TileNode& current, const Goal& goal, const int n_path);
 	void calculateWallJumpNeighbours(const bool right, TileNode& current, const Goal& goal, const int n_path);
-	std::list<std::shared_ptr<TileNode> > buildPath(TileNode foundGoal);
+	std::deque<std::shared_ptr<TileNode> > buildPath(TileNode foundGoal);
 	bool isGoal(const TileNode & current, const Goal& goal) const;
 	void updateGoals();
 	bool nodeWasReached(const TileNode& n, const float closenessThreshold) const;
@@ -88,7 +88,7 @@ private:
 	void halt();
 	void giveUp();
 	float nodeDistance(const TileNode& n1, const TileNode& n2) const;
-	PathIterator getClosestNode(TileNode& current, std::list<std::shared_ptr<TileNode> >& p) const;
+	PathIterator getClosestNode(TileNode& current, const std::deque<std::shared_ptr<TileNode> >& p) const;
 public:
 	NPC();
 	TileNode getCharacterCell() const;

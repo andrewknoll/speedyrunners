@@ -75,6 +75,7 @@ namespace rng {
 std::ostream& operator<<(std::ostream& os, const RNG& c);
 
 namespace utils {
+	float distanceToLine(sf::Vector2f l0, sf::Vector2f lf, sf::Vector2f p);
 	float parseFloat(std::istringstream& is, const char sep);
 	int parseInt(std::istringstream& is, const char sep);
 	sf::Color parseColor(std::istringstream& is, const char sep);

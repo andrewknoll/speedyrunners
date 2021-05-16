@@ -45,12 +45,19 @@ struct Node {
 		return n1.cell[0] == n2.cell[0] && n1.cell[1] == n2.cell[1] && n1.data == n2.data;
 	}
 
-	friend float distance(const Node<T>& n1, const Node<T>& n2) {
+	friend float nodeDistance(const Node<T>& n1, const Node<T>& n2) {
 		int h = n2.cell[0] - n1.cell[0];
 		int v = n2.cell[0] - n1.cell[0];
 		return sqrtf(h * h + v * v);
 	}
 	
+	friend sf::Vector2f nodeCellVec(const Node<T>& n, float off_x = 0, float off_y = 0) {
+		return sf::Vector2f(n.cell[0] + off_x, n.cell[1] + off_y);
+	}
+
+	friend sf::Vector2f nodeCellVec(const std::shared_ptr<Node<T> >& n, float off_x = 0, float off_y = 0) {
+		return sf::Vector2f(n->cell[0] + off_x, n->cell[1] + off_y);
+	}
 };
 
 template<class T>

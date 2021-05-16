@@ -383,8 +383,8 @@ void NPC::calculateWallJumpNeighbours(const bool right, TileNode& current, const
 	}
 }
 
-std::list<std::shared_ptr<NPC::TileNode> > NPC::buildPath (TileNode foundGoal) {
-	std::list<std::shared_ptr<TileNode> > newPath = std::list<std::shared_ptr<TileNode> >();
+std::deque<std::shared_ptr<NPC::TileNode> > NPC::buildPath (TileNode foundGoal) {
+	std::deque<std::shared_ptr<TileNode> > newPath = std::deque<std::shared_ptr<TileNode> >();
 	newPath.push_front(std::make_shared<TileNode>(foundGoal));
 	std::shared_ptr<TileNode> next = foundGoal.prev;
 	while (next != nullptr) {
@@ -421,7 +421,7 @@ void NPC::updateGoals() {
 }
 
 bool NPC::nodeWasReached(const TileNode & n, const float closenessThreshold) const {
-	return ((me->canWallJump() || (n.data.canWallJumpLeft != 1 && n.data.canWallJumpRight != 1)) && distance(getCharacterCell(), n) <= closenessThreshold);
+	return ((me->canWallJump() || (n.data.canWallJumpLeft != 1 && n.data.canWallJumpRight != 1)) && nodeDistance(getCharacterCell(), n) <= closenessThreshold);
 }
 
 bool NPC::detectDirectionChange(const TileNode & n, const TileNode & current)
@@ -497,13 +497,13 @@ float NPC::nodeDistance(const TileNode & n1, const TileNode & n2) const
 	return sqrtf(hor * hor + ver * ver);
 }
 
-NPC::PathIterator NPC::getClosestNode(TileNode& current, std::list<std::shared_ptr<TileNode> >& p) const {
+NPC::PathIterator NPC::getClosestNode(TileNode& current, const std::deque<std::shared_ptr<TileNode> >& p) const {
 	float dist, minDist = INFINITY;
-	auto it = p.begin();
-	auto minimum = it;
+	PathIterator it = std::begin(p);
+	PathIterator minimum = it;
 
-	while (it != p.end()) {
-		dist = utils::distance(me->getPosition(), sf::Vector2f((*it)->cell[0], (*it)->cell[2]));
+	while (it != std::end(p)) {
+		dist = nodeDistance(getCharacterCell(), **it);
 		if (dist <= minDist
 			&& (current.cell[0] != (*it)->cell[0]
 				|| current.cell[1] != (*it)->cell[1])) {
@@ -529,7 +529,7 @@ void NPC::plan() {
 				planningPath[2] = true;
 				choiceMtx.unlock();
 				goal = std::make_shared<Goal>();
-				goal->position = sf::Vector2f(path[1].front()->cell[0], path[1].front()->cell[1]);
+				goal->position = nodeCellVec(path[1].front());
 				goal->radius = 2.0f;
 				frontier[2].safePush(*path[0].back());
 				goalMtx.lock();
@@ -620,7 +620,7 @@ NPC::OptionalPath NPC::planFromTo(const int n_path, const std::shared_ptr<Goal> 
 	std::unique_ptr<TileNode> prev = nullptr;
 	Tiles::Collidable underMe;
 	float auxCost;
-	std::list<std::shared_ptr<TileNode> > newPath;
+	std::deque<std::shared_ptr<TileNode> > newPath;
 	if (!active) return {};
 	_set_se_translator(SE_trans_func);
 	try {
@@ -732,7 +732,7 @@ bool NPC::doBasicMovement(const TileNode& current, const TileNode& n, float objD
 				//Try to recover
 			return false;
 		}
-	} while (block && !stopFollowing && distance(getCharacterCell(), n) <= FARNESS_THRESHOLD + objDistance && !nodeWasReached(n, CLOSENESS_THRESHOLD));
+	} while (block && !stopFollowing && nodeDistance(getCharacterCell(), n) <= FARNESS_THRESHOLD + objDistance && !nodeWasReached(n, CLOSENESS_THRESHOLD));
 	return true;
 }
 
@@ -741,16 +741,24 @@ void NPC::followPath() {
 	sf::Time t0;
 	bool jumped = false;
 	TileNode current = getCharacterCell();
-	PathIterator step = getClosestNode(current, path[0]), next, aux;
+	Tiles::Collidable underMe;
+	PathIterator step, next, aux;
 	std::shared_ptr<TileNode> stepNodePtr;
-	PathIterator pathEnd = path[0].end();
+	PathIterator pathEnd;
 	float objDistance, verticalDist;
 	pathMtx[0].lock();
 	if (pathFound[0] == 1) {
+		step = getClosestNode(current, path[0]);
+		pathEnd = std::end(path[0]);
 		_set_se_translator(SE_trans_func);
 		try {
-			step++;	//Get Next Node
-			t0 = clock.getElapsedTime();
+			if (step != pathEnd) {
+				step++;	//Get Next Node
+				t0 = clock.getElapsedTime();
+				if (step != pathEnd) {
+					objDistance = nodeDistance(current, **step);
+				}
+			}
 			while (step != pathEnd) {
 				stepNodePtr = *step;
 				if (stepNodePtr->data.canWallJumpLeft == 1 || stepNodePtr->data.canWallJumpRight == 1) {
@@ -773,11 +781,11 @@ void NPC::followPath() {
 					me->stopSliding();
 				}
 				verticalDist = getCharacterCell().cell[1] - stepNodePtr->cell[1];
-				if (!jumped && (verticalDist > 2 || stepNodePtr->data.jumps < current.data.jumps)) {
+				if (!jumped && me->canJump() && (verticalDist > 2 || stepNodePtr->data.jumps < current.data.jumps)) {
 					me->startJumping();
 					jumped = true;
 				}
-				else if (verticalDist < 3) {
+				if (jumped && verticalDist < 3) {
 					me->stopJumping();
 				}
 				if (std::abs(getCharacterCell().cell[0] - stepNodePtr->cell[0]) > CLOSENESS_THRESHOLD) {
@@ -790,7 +798,7 @@ void NPC::followPath() {
 				next = aux;
 				next++;
 				//Get next step
-				if (next != step || distance(getCharacterCell(), **next) < CLOSENESS_THRESHOLD) {
+				if (next != step || nodeDistance(getCharacterCell(), **next) < CLOSENESS_THRESHOLD) {
 					//If we are closer to another node, use that one
 					if (next != step) {
 						current = **aux;
@@ -802,7 +810,9 @@ void NPC::followPath() {
 						step++;
 					}
 					jumped = false;
-					objDistance = distance(current, **step);
+					if (step != pathEnd) {
+						objDistance = nodeDistance(current, **step);
+					}
 					t0 = clock.getElapsedTime();
 				}
 				else if (clock.getElapsedTime() - t0 >= GIVE_UP_TIME) {
@@ -824,7 +834,8 @@ void NPC::followPath() {
 					path[0].push_front(last);
 				}
 				//Get next path
-				path[0].splice(path[0].end(), path[1]);
+				path[0].insert(path[0].end(), std::make_move_iterator(path[1].begin()), std::make_move_iterator(path[1].end()));
+				path[1].clear();
 
 				//Make sure we start planning the next part
 				pathFound[1] = 0;
