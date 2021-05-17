@@ -297,7 +297,7 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 	sf::Vector2f posIni(hitBox.left, hitBox.top);
 	std::vector<Tiles::Collision> collisions = tiles.collision(hitBox, isGrounded);
 
-
+	bool wasAtWallJump = isAtWallJump;
 	if (isAtWallJump) { // get out of walljump mode
 		isAtWallJump = false; // we assume it is not, and set it if it is
 		const std::vector<Tiles::Collidable>& side = tiles.tilesToTheSide(hitBox, !facingRight);// facing right, wall jump should be to the left, and viceversa
@@ -325,6 +325,7 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 
 		if (ramp == Ramp::NONE) {
 			if (c.normal.x != 0) { // Make 0 the component of the collision
+				float xSpeed = std::abs(vel.x); // for walljumps
 				vel.x = 0;
 				acc.x = 0;
 				isRunning = false;
@@ -341,6 +342,7 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 						isAtWallJump = true;
 						facingRight = false;
 						setAnimation(WallHangAnim);
+						vel.y = vel.y - xSpeed;
 					}
 				}
 				else if (c.tileType == Tiles::JUMP_WALL_R) {
@@ -351,6 +353,7 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 					if (!isStunned) {
 						isAtWallJump = true;
 						facingRight = true;
+						vel.y = vel.y - xSpeed;
 						setAnimation(WallHangAnim);
 					}
 				}
@@ -500,8 +503,9 @@ void Character::startJumping() {
 		}
 		else if (isAtWallJump) {
 			isGrounded = false;
-			vel.y = std::min(vel.y-jumpingSpeed, -jumpingSpeed); // if going up, keeps momentum
-			if (facingRight) vel.x = jumpingSpeed ;
+			//vel.y = std::min(vel.y-jumpingSpeed, -jumpingSpeed); // if going up, keeps momentum
+			vel.y = std::min(vel.y, 0.0f);// -jumpingSpeed * 0.3; // TODO: vel.x en funcion de vel.y?
+			if (facingRight) vel.x = jumpingSpeed;
 			else vel.x = -jumpingSpeed;
 			setAnimation(JumpAnim);
 			isAtWallJump = false;
