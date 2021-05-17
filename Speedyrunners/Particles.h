@@ -53,11 +53,11 @@ namespace particles{
 
 		void setAlpha(sf::VertexArray& vertices, int idx, float a);
 
-		bool update(sf::Time dT, sf::VertexArray& vertices, int idx);
+		bool update(sf::Time dT, sf::VertexArray& vertices, int idx); // true if it has died
 
-		bool update(sf::Time dT, const Settings& pSettings, sf::VertexArray& vertices, int idx);// returns true if it has died
+		void reset(const particles::Settings& particleSettings); // respawns it according to <particleSettings>
 
-		void reset(const particles::Settings& particleSettings);
+		void disable(sf::VertexArray& vertices, int idx); // disables the particle - wont be updated or drawn until reset()
 
 	};
 

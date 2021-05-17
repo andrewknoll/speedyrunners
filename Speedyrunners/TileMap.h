@@ -117,6 +117,9 @@ public:
 
 	std::vector<struct Tiles::Collision> collision(const sf::FloatRect& characterHitbox, bool isGrounded=false) const;
 
+	// returns the tiles to the right or left of the hitbox (in a rectangle of 0.1*width of the hitbox)
+	std::vector<Tiles::Collidable> tilesToTheSide(const sf::FloatRect& characterHitbox, bool rightSide=true, float checkWidth=0.1f) const;
+
 	sf::Vector2u getTileSizeWorld() const;
 
 

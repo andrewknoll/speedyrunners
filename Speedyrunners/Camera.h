@@ -42,6 +42,10 @@ public:
 
 	bool isInAllowedBounds(CharPtr character) const;
 
+	//void emitDeathParticles(bool multipleExplosions = false);
+	sf::Vector2f closestInView(const sf::Vector2f& p) const; // closest point to p in view
+
+
 	void setSuddenDeath(bool sd);
 	void update(sf::Time dT);
 };

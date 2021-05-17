@@ -556,6 +556,8 @@ void Game::update()
 		for (int i = 1; i < characters.size(); i++) {
 			if (characters[i]->isDead()) continue;
 			if (!cam.isInAllowedBounds(characters[i])) {
+				//std::cout << "one down\n";
+				//particleSystems[glb::SUDDEN_DEATH_EXPLOSION].burst(cam.closestInView(characters[i]->getPosition()),50,10); // TODO: no consigo sacar la posicion en el mundo de la camara
 				characters[i]->die();
 				src.getAudioPlayer().play(AudioPlayer::Effect::CHARACTER_OUTOFSCREEN);
 				src.getAudioPlayer().play(AudioPlayer::Effect::DEATH);

@@ -297,6 +297,18 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 	sf::Vector2f posIni(hitBox.left, hitBox.top);
 	std::vector<Tiles::Collision> collisions = tiles.collision(hitBox, isGrounded);
 
+
+	if (isAtWallJump) { // get out of walljump mode
+		isAtWallJump = false; // we assume it is not, and set it if it is
+		const std::vector<Tiles::Collidable>& side = tiles.tilesToTheSide(hitBox, !facingRight);// facing right, wall jump should be to the left, and viceversa
+		Tiles::Collidable searching = (!facingRight) ? Tiles::Collidable::JUMP_WALL_L : Tiles::Collidable::JUMP_WALL_R;
+		//std::cout << side.size() << " to the " << (facingRight ? "left" : "right")<< "\n";
+		for (const auto& t : side) if (t == searching) {
+			isAtWallJump = true;
+			break;
+		}
+	}
+
 	if (!collisions.empty()) {
 		Tiles::Collision c = collisions.front();
 		//for (const auto& c : collisions) {
@@ -310,6 +322,7 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 		using namespace Tiles;
 		auto ramp = Tiles::toRamp(c.tileType);
 		setBaseFromRamp(ramp);
+
 		if (ramp == Ramp::NONE) {
 			if (c.normal.x != 0) { // Make 0 the component of the collision
 				vel.x = 0;
@@ -320,24 +333,24 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 					setAnimation(StandAnim);
 				}
 				if (c.tileType == Tiles::JUMP_WALL_L) {
-					if (!isAtWallJump) {
+					if (false&&vel.y>0 && !isAtWallJump) {
 						acc.y = 0;
 						vel.y = 0;
 					}
-					facingRight = false;
 					if (!isStunned) {
 						isAtWallJump = true;
+						facingRight = false;
 						setAnimation(WallHangAnim);
 					}
 				}
 				else if (c.tileType == Tiles::JUMP_WALL_R) {
-					if (!isAtWallJump) {
+					if (false&& vel.y>0 && !isAtWallJump) {
 						acc.y = 0;
 						vel.y = 0;
 					}
-					facingRight = true;
 					if (!isStunned) {
 						isAtWallJump = true;
+						facingRight = true;
 						setAnimation(WallHangAnim);
 					}
 				}
@@ -376,6 +389,7 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 			omega = utils::length(vel) / utils::length(hook.radius());
 			if (!facingRight) omega = -omega;
 			swinging = true;
+			hasDoubleJumped = false; // resets when swinging
 		}
 	}
 	else if (!isStunned && !tumble && vel.y > 0) {
@@ -436,8 +450,8 @@ void Character::updateRunning() {
 
 void Character::run(bool right){
 	//std::cout << "Running " << right << " \n";
-	if (!usingHook) facingRight = right;
-	isRunning = true;
+	if (!usingHook && !isAtWallJump) facingRight = right;
+	if (!isAtWallJump) isRunning = true;
 }
 
 void Character::stop(){
@@ -486,7 +500,7 @@ void Character::startJumping() {
 		}
 		else if (isAtWallJump) {
 			isGrounded = false;
-			vel.y = -jumpingSpeed;
+			vel.y = std::min(vel.y-jumpingSpeed, -jumpingSpeed); // if going up, keeps momentum
 			if (facingRight) vel.x = jumpingSpeed ;
 			else vel.x = -jumpingSpeed;
 			setAnimation(JumpAnim);
