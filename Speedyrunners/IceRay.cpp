@@ -14,7 +14,7 @@ IceRay::IceRay(CharPtr user, bool facingRight) :
 
 	beamAnim = Animation(1, 11, t);
 
-	setTexRect(true);
+	//setTexRect(true);
 
 	// Sound:
 	audioPlayer.play(AudioPlayer::Effect::ICE_BEAM_FULL);

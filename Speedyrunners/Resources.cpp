@@ -52,10 +52,7 @@ Resources::Resources()
 			Spritesheet sp;
 			sp.setMonoAnimation(true);
 			sp.parse_spritesheet(PATH_TO_ASSETS + token[1], PATH_TO_ASSETS + token[2]);
-			if (misc_spritesheets.size() <= i) {
-				misc_spritesheets.push_back(std::vector<Spritesheet>());
-			}
-			misc_spritesheets[i].push_back(sp);
+			misc_spritesheets.push_back(sp);
 		}
 		else if (type == "M") {
 			for (int i = 0; i < 2; i++) std::getline(iss, token[i], ',');

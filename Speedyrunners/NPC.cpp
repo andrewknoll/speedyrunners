@@ -530,7 +530,6 @@ void NPC::replan() {
 }
 
 void NPC::plan() {
-	return; // quitar..
 	int n_path = 0;
 	TileNode goal0;
 
