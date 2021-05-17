@@ -24,15 +24,13 @@ RoundVictory::RoundVictory(const sf::RenderWindow& _window, const int characterI
 
 	utils::scaleToFullScreenRatio(bgSprite, _window, 0.4);
 	//bgSprite.setScale(relation, relation);
-	if (characterIdx != 2) { // Unic da erorr
-		auto& spritesheet = Resources::getInstance().getVictorySpriteSheet(characterIdx, characterVariant);
-		characterVictoryPose = spritesheet.get_animations()[0]; // BUG: characterVictoryPose es null para Unic y luego da error
-		mySprite = characterVictoryPose->get_first_frame();
-		utils::scaleToFullScreenRatio(mySprite, _window, 0.4);
-		mySprite.setPosition(width * 0.2, height * 0.85);
-		if (characterIdx == 0) { // Speedrunner mas parriba
-			//mySprite.move(0, +height * 0.1);
-		}
+	auto& spritesheet = Resources::getInstance().getVictorySpriteSheet(characterIdx, characterVariant);
+	characterVictoryPose = spritesheet.get_animations()[0]; // BUG: characterVictoryPose es null para Unic y luego da error
+	mySprite = characterVictoryPose->get_first_frame();
+	utils::scaleToFullScreenRatio(mySprite, _window, 0.4);
+	mySprite.setPosition(width * 0.2, height * 0.85);
+	if (characterIdx == 0) { // Speedrunner mas parriba
+		//mySprite.move(0, +height * 0.1);
 	}
 
 
