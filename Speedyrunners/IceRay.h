@@ -14,6 +14,8 @@ private:
 	CharPtr user;
 	int beamFrame = 0;
 
+	//Camera& cam;
+
 	//particles::PSystem& particleSyst;
 
 	std::vector<sf::IntRect> beamRects; // texture rects

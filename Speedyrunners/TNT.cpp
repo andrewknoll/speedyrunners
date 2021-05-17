@@ -14,7 +14,7 @@ TNT::TNT(const sf::Vector2f& pos, float tileWidth) :
 	vel(rng::defaultGen.rand(-40.0f, 40.0f), rng::defaultGen.rand(-55.0f, 40.0f))
 {
 	sprite.setTextureRect(utils::relativeToGlobalTextureRect(sf::FloatRect(0,0.0,1,1.0/3.0), *tex));
-	utils::setWidth(sprite, 1.5 * tileWidth);
+	utils::setWidth(sprite, 2.125f * tileWidth);
 	utils::centerOrigin(sprite);
 	sprite.setPosition(pos);
 }

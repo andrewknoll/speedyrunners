@@ -187,9 +187,6 @@ void Menu::setWorkshopMenu() {
 	levelNames.clear();
 
 	addExitSign();
-
-
-
 	sf::Vector2f pos(0.05, 0.5);
 	float size = 0.05;
 	elements.emplace_back(std::make_unique<TextElement>(settings, mainTextFontPath, "NEW", size, pos, true));
@@ -199,6 +196,11 @@ void Menu::setWorkshopMenu() {
 		"RMB: move camera",
 		"LMB: place selected tile",
 		"Mouse wheel: change selected tile",
+		"C: checkpoint mode",
+		"+,-, change checkpoint size",
+		"Bonus:",
+		"Numpad7: particle system test",
+		"(Numpad8 to change particles)",
 		"CTRL+S: Save"
 	};
 	pos = sf::Vector2f(0.6, 0.33);
