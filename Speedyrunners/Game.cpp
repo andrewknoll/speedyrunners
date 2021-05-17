@@ -153,7 +153,10 @@ void Game::defaultInit(int N_PLAYERS) {
 	}
 	std::shared_ptr<NPC> other = std::make_shared<NPC>();
 	other->setCharacter(cosmonaut);
+	other->setCheckpoints(checkpoints);
 	npcJoin(other);
+	updatePositions();
+	other->setActiveCheckpoint(activeCheckpoint);
 	cosmonaut->setName("NPC");
 	addCharacter(cosmonaut);
 	setState(State::Countdown);
