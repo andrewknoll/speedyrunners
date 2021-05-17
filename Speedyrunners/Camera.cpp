@@ -1,6 +1,7 @@
 #include "SFML/Graphics.hpp"
 #include "Camera.h"
 #include "utils.hpp"
+#include "Resources.h"
 
 
 Camera::Camera(const sf::FloatRect& rect) : sf::View(rect)
@@ -119,6 +120,18 @@ bool Camera::isInAllowedBounds(CharPtr character) const {
 	auto pos = character->getPosition();
 	return viewRectangle().contains(pos);
 }
+
+sf::Vector2f Camera::closestInView(const sf::Vector2f& p) const
+{
+	// TODO: esto no funciona!
+	auto center = getCenter();
+	auto direction = p - center;
+	auto r = utils::length(getSize())/2.0f;
+	std::cout << "center: " << center << "\n";
+	return center;// +direction * r;
+}
+
+
 
 void Camera::setSuddenDeath(bool sd) {
 	this->suddenDeath = sd;
