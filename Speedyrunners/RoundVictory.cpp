@@ -40,7 +40,7 @@ RoundVictory::RoundVictory(const sf::RenderWindow& _window, const int characterI
 }
 
 void RoundVictory::setRectForPoint(sf::Sprite& s, int points) {
-	auto texSize = Resources::getInstance().getMiscTexture(1).getSize();
+	auto texSize = Resources::getInstance().getMiscTexture(glb::SCORE_POINT_TEX).getSize();
 	texSize.x /= 7; // 7 sprites horizontally
 	s.setTextureRect(sf::IntRect((points - 1) * texSize.x, 0, texSize.x, texSize.y));
 }
@@ -50,13 +50,13 @@ void RoundVictory::addScoreStuff(const sf::RenderWindow& _window, int score) {
 	auto size = _window.getDefaultView().getSize();
 	sf::Vector2f pos(size.x * 0.45, size.y* 0.6);
 	if (score == 3) { // Winner
-		sprites.emplace_back(Resources::getInstance().getMiscTexture(2));
+		sprites.emplace_back(Resources::getInstance().getMiscTexture(glb::WINNER_LABEL_TEX));
 		sprites.back().setPosition(pos);
 		utils::scaleToFullScreenRatio(sprites.back(), _window, 0.2);
 	}
 	else { // Display points
 		for (int i = 0; i < score; i++) {
-			sprites.emplace_back(Resources::getInstance().getMiscTexture(1));
+			sprites.emplace_back(Resources::getInstance().getMiscTexture(glb::SCORE_POINT_TEX));
 			auto& s = sprites.back();
 			setRectForPoint(s, i + 1);
 			utils::scaleToFullScreenRatio(s, _window, 0.2);

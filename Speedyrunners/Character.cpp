@@ -13,7 +13,8 @@ Character::Character(Spritesheet sp, int ID, int variant) :
 	myID(ID),
 	audioPlayer(Resources::getInstance().getAudioPlayer()),
 	skin_variant(variant),
-	particleSystems(Resources::getInstance().getParticleSystems())
+	particleSystems(Resources::getInstance().getParticleSystems()),
+	iceCubeAnim(2, 1, Resources::getInstance().getMiscTexture(glb::ICE_CUBE_TEX))
 {
 	animations = sp.get_animations();
 	setAnimation(StartAnim);
@@ -176,7 +177,7 @@ void Character::updateVel(const float& dtSec) {
 		//Except we do nothing otherwise
 		
 		//if running on the ground, velocity and acceleration are oposed
-		if (!isStunned && !tumble && isGrounded && isRunning && !usingHook) {
+		if (!isStunned && !isFrozen && !tumble && isGrounded && isRunning && !usingHook) {
 			if (((vel.x >= 0) ^ (acc.x >= 0)) && abs(vel.x) > 20.0f) {
 				emitBrakeParticles();
 				setAnimation(SkidAnim, true);
@@ -231,7 +232,7 @@ void Character::updateBoost(const sf::Time& dT, const Level& lvl) {
 }
 
 void Character::updateStunned(const sf::Time& dT) {
-	if (isStunned) {
+	if (isStunned || isFrozen) {
 		usingHook = false;
 		isRunning = false;
 		sliding = false;
@@ -309,6 +310,24 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 		}
 	}
 
+	if (isFrozen) {
+		if (stunnedRemaining <= glb::FREEZE_TIME / 2.0f) {
+			iceCubeAnim.advance_frame(iceCube);
+		}
+		else {
+			iceCube = iceCubeAnim.get_first_frame();
+		}
+		if (hasFrozenWiggled) {
+			//Move to a random relative position
+			move(sf::Vector2f(rng::defaultGen.rand(-2, 2), rng::defaultGen.rand(-2, 2)));
+			stunnedRemaining -= sf::seconds(0.5);
+			if (wiggleFrames <= 0) { //See tickAnimation
+				hasFrozenWiggled = false;
+				wiggleFrames = glb::WIGGLE_FRAMES;
+			}
+		}
+	}
+
 	if (!collisions.empty()) {
 		Tiles::Collision c = collisions.front();
 		//for (const auto& c : collisions) {
@@ -337,7 +356,7 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 						acc.y = 0;
 						vel.y = 0;
 					}
-					if (!isStunned) {
+					if (!isStunned && !isFrozen) {
 						isAtWallJump = true;
 						facingRight = false;
 						setAnimation(WallHangAnim);
@@ -348,7 +367,7 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 						acc.y = 0;
 						vel.y = 0;
 					}
-					if (!isStunned) {
+					if (!isStunned && !isFrozen) {
 						isAtWallJump = true;
 						facingRight = true;
 						setAnimation(WallHangAnim);
@@ -417,6 +436,13 @@ void Character::addTrail(const sf::Vector2f& v) {
 	}
 }
 
+void Character::frozenWiggle() {
+	if (frozenWiggleCooldown <= sf::Time::Zero) {
+		hasFrozenWiggled = true;
+		frozenWiggleCooldown = glb::FROZEN_WIGGLE_CD;
+	}
+}
+
 
 void Character::updateGrounded(const sf::Vector2f& normal) {
 	bool wasGrounded = isGrounded;
@@ -432,7 +458,7 @@ void Character::updateGrounded(const sf::Vector2f& normal) {
 
 void Character::updateRunning() {
 	//If it's running, not swinging
-	if (!isStunned && isRunning && !swinging) {
+	if (!isStunned && !isFrozen && isRunning && !swinging) {
 		if (isGrounded) {
 			acc.x = runningAcceleration;
 			// audioPlayer.loop(AudioPlayer::Effect::FOOTSTEP); // Suena demasiado y no se pq
@@ -449,9 +475,13 @@ void Character::updateRunning() {
 }
 
 void Character::run(bool right){
-	//std::cout << "Running " << right << " \n";
-	if (!usingHook && !isAtWallJump) facingRight = right;
-	if (!isAtWallJump) isRunning = true;
+	if (isFrozen) {
+		frozenWiggle();
+	}
+	else {
+		if (!usingHook && !isAtWallJump) facingRight = right;
+		if (!isAtWallJump) isRunning = true;
+	}
 }
 
 void Character::stop(){
@@ -476,7 +506,7 @@ void Character::die() {
 }
 
 void Character::slide() {
-	if (isGrounded && isRunning) {
+	if (!isStunned && !isFrozen && isGrounded && isRunning) {
 		setAnimation(SlideAnim);
 		sliding = true;
 		isRunning = false;
@@ -488,7 +518,10 @@ void Character::stopSliding() {
 }
 
 void Character::startJumping() {
-	if (!isStunned) {
+	if (isFrozen) {
+		frozenWiggle();
+	}
+	else if (!isStunned) {
 		if (isGrounded && currJumpCD == sf::Time::Zero) {
 			isGrounded = false;
 			holdingJump = true;
@@ -622,6 +655,12 @@ void Character::getHitByRocket() {
 	isStunned = true;
 }
 
+void Character::getFrozen() {
+	stunnedRemaining = glb::FREEZE_TIME;
+	iceCube = iceCubeAnim.get_first_frame();
+	isFrozen = true;
+}
+
 
 void Character::getHitByTNT(const sf::Vector2f& direction) {
 	getHitByRocket();
@@ -709,6 +748,7 @@ void Character::setFriction() {
 		}
 		else friction = physics::AIR_FRICTION;
 		if (isStunned) friction *= 2;
+		if (isFrozen) friction /= 3;
 		if (vel.x > eps) {// pos vel, negative friction
 			acc.x = -friction;
 		}
@@ -726,10 +766,12 @@ void Character::setFriction() {
 }
 
 void Character::tickAnimation(sf::Time dT) {
-	countdown -= dT;
-	if (countdown <= sf::Time::Zero) {
-		currentAnimation->advance_frame(mySprite);
-		countdown = PERIOD;
+	if (!isFrozen) {
+		countdown -= dT;
+		if (countdown <= sf::Time::Zero) {
+			currentAnimation->advance_frame(mySprite);
+			countdown = PERIOD;
+		}
 	}
 }
 
@@ -742,6 +784,7 @@ void Character::updateHitBoxRectangle() {
 }
 
 void Character::draw(sf::RenderTarget& target, sf::RenderStates states) const {
+	if (isFrozen) target.draw(iceCube);
 	if (usingHook) target.draw(hook);
 	// apply the transform
 	states.transform *= getTransform();
@@ -767,14 +810,16 @@ void Character::setVerticalSpeed(float vel) {
 }
 
 void Character::setAnimation(AnimationIndex i, bool loop, bool reverse) {
-	if (animIdx != i) {
-		currentAnimation = animations[i];
-		mySprite = currentAnimation->get_first_frame();
-		animIdx = i;
+	if (!isFrozen) {
+		if (animIdx != i) {
+			currentAnimation = animations[i];
+			mySprite = currentAnimation->get_first_frame();
+			animIdx = i;
+		}
+		currentAnimation->set_loop(loop);
+		currentAnimation->set_reverse(reverse);
+		currentAnimation->update_orientation(facingRight);
 	}
-	currentAnimation->set_loop(loop);
-	currentAnimation->set_reverse(reverse);
-	currentAnimation->update_orientation(facingRight);
 }
 
 void Character::setAnimationAngle(float angle) {

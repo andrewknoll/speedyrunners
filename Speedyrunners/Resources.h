@@ -5,8 +5,10 @@
 #include "Globals.hpp"
 #include "AudioPlayer.h"
 #include "ParticleSystem.h"
+#include <variant>
 class Resources
 {
+	using Other = std::variant<sf::IntRect>;
 private:
 	Resources();
 
@@ -18,6 +20,7 @@ private:
 	std::vector<std::vector<sf::SoundBuffer>> soundBuffers;
 	std::vector<sf::Texture> items = std::vector<sf::Texture>(glb::NUMBER_OF_ITEMS);
 	std::vector<sf::Texture> otherTextures;
+	std::vector<Other> otherResources;
 
 	std::vector<particles::PSystem> particleSystems;// rocketsPartSystem;
 
@@ -40,6 +43,7 @@ public:
 	const Spritesheet& getMiscSpriteSheet(int index);
 	const sf::Texture& getItemTexture(glb::item type);
 	const sf::Texture& getMiscTexture(int type);
+	const Other& getOtherResources(int pos);
 
 	const std::vector<sf::SoundBuffer>& getSoundBuffer(int type);
 	const std::vector<std::vector<sf::SoundBuffer>>& getSoundBuffers();

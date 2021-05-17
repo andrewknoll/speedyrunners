@@ -24,69 +24,36 @@ IceRay::IceRay(CharPtr user, bool facingRight) :
 void IceRay::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	//target.draw(particles, states);
 	target.draw(source, states);
-	//TO-DO: Muchos beams
-	target.draw(beam, states);
+	if (utils::inRange(beamAnim.get_current_frame(), 2, 10)) {
+		for (auto& s : beam) {
+			target.draw(s, states);
+		}
+	}
+	
 }
-/*
-bool IceRay::update(sf::Time elapsed, const Level& lvl) { // todo: check tiles collisions
-	sf::Vector2f diff;
-	if (!lvl.getCollidableTiles().collision(IceRay.getGlobalBounds()).empty()) { // Collision with tiles
-		audioPlayer.play(AudioPlayer::Effect::IceRay_EXPLODE);
-		Resources::getInstance().getParticleSystem(glb::particleSystemIdx::IceRay_CLOUD).emit(position);
-		return true;
+
+bool IceRay::update(sf::Time elapsed, const Level& lvl) {
+	sf::Vector2f pos = user->getPosition();
+	source.setPosition(pos);
+	int i = beamFrame;
+	
+	while (pos.x < lvl.getCollidableTiles().getWidth()) {
+		pos.x = pos.x + beamWidth;
+		sf::Sprite s;
+		s.setTexture(beamTex);
+		s.setTextureRect(beamRects[++i % beamRects.size()]);
+		s.setPosition(pos);
+		beam.push_back(s);
 	}
-	//Update Acceleration
-	if (target != nullptr) {
-		// Linear acc:
-		diff = (target->getPosition() - position);
-		float dist = utils::length(diff);
-		if (dist < detonationRadius) { // Detonate
-			audioPlayer.play(AudioPlayer::Effect::IceRay_EXPLODE);
-			Resources::getInstance().getParticleSystem(glb::particleSystemIdx::IceRay_CLOUD).emit(position);
-			return true;
-		}
-		else if (dist < 2 * detonationRadius) { // Almost hit
-			audioPlayer.setLoop(AudioPlayer::Effect::IceRay_ALMOST_HIT_LOOP);
-			audioPlayer.continuePlaying(AudioPlayer::Effect::IceRay_ALMOST_HIT_LOOP);
-		}
-		else { // Stop the loop if it got away
-			audioPlayer.setLoop(AudioPlayer::Effect::IceRay_ALMOST_HIT_LOOP, false);
-		}
-		// angle:
-		angle = atan2f(diff.y, diff.x); // in rad
-	}
-	// linear acc:
-	sf::Vector2f facing(cos(angle), sin(angle));
-	acc = facing * linearAcc;
-
-	//Update velocity and angle
-	vel = vel + acc * elapsed.asSeconds();
-	// reduce if maximum reached:
-	float velMod = utils::length(vel);
-	if (velMod > maxVel) vel *= maxVel / velMod; // make it maxVel
-	else if (velMod < minVel) vel *= minVel / velMod; // make it minVel
-	if (velMod > (maxVel + minVel) / 2.0f) setTexRect(false); // if more than half speed, blurry texture
-	else setTexRect(true); // else normal
-
-	//Move
-	position += vel * elapsed.asSeconds();
-
-	angle = utils::degrees(angle);
-	IceRay.setPosition(position);
-	IceRay.setRotation(angle);
-	auto particlesPoint = IceRay.getTransform().transformPoint(sf::Vector2f(-IceRayLength, 10));
-	particleSyst.emit(particlesPoint); // smoke!
 	return false;
 }
 
+
 void IceRay::doThingTo(std::shared_ptr<Character> c)
 {
-	float distance = utils::length(c->getPosition() - position);
-	if (distance < explosionRadius) {
-		c->getHitByIceRay();
+	if (utils::inRange(c->getPosition().y - user->getPosition().y, -16, 16)) {
+
 	}
-	audioPlayer.stop(AudioPlayer::Effect::IceRay_ALMOST_HIT_LOOP);
-	audioPlayer.stop(AudioPlayer::Effect::IceRay_FLY_LOOP);
 }
-*/
+
 

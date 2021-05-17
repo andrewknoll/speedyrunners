@@ -10,7 +10,7 @@ void TNT::draw(sf::RenderTarget& target, sf::RenderStates states) const
 }
 
 TNT::TNT(const sf::Vector2f& pos, float tileWidth) : 
-	Item(glb::TNT), tex(&Resources::getInstance().getMiscTexture(13)), sprite(*tex), position(pos), falling(true),
+	Item(glb::TNT), tex(&Resources::getInstance().getMiscTexture(glb::BOMB_TEX)), sprite(*tex), position(pos), falling(true),
 	vel(rng::defaultGen.rand(-40.0f, 40.0f), rng::defaultGen.rand(-55.0f, 40.0f))
 {
 	sprite.setTextureRect(utils::relativeToGlobalTextureRect(sf::FloatRect(0,0.0,1,1.0/3.0), *tex));

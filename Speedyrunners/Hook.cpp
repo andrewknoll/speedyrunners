@@ -5,13 +5,13 @@
 
 Hook::Hook() : audioPlayer(Resources::getInstance().getAudioPlayer())
 {
-	sprite.setTexture(Resources::getInstance().getMiscTexture(0));
+	sprite.setTexture(Resources::getInstance().getMiscTexture(glb::HOOK_TEX));
 	setTextureRect(false);
 	//hitBox = sprite.getGlobalBounds();
 }
 
 void Hook::setTextureRect(bool hooked) {
-	auto size = Resources::getInstance().getMiscTexture(0).getSize(); // whole texture size
+	auto size = Resources::getInstance().getMiscTexture(glb::HOOK_TEX).getSize(); // whole texture size
 	sf::IntRect rect(sf::Vector2i(0, 0), sf::Vector2i(size.x / 2, size.y)); // first horizontal half
 	if (hooked) { // if its hooked, second half
 		rect.left += rect.width;

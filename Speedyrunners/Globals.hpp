@@ -79,9 +79,11 @@ namespace glb
 
 
 	const sf::Time STUN_TIME = sf::seconds(1); // Rockets
+	const sf::Time FREEZE_TIME = sf::seconds(3);
 	const sf::Time TUMBLE_TIME = sf::seconds(0.5); // box obstacles
+	const sf::Time FROZEN_WIGGLE_CD = sf::seconds(0.3);
 
-
+	const int WIGGLE_FRAMES = 6;
 
 	const sf::Time itemPickupRespawn = sf::seconds(10); // Respawn time for the capsule item thingies
 	const sf::Time LVL_ANIMATION_PERIOD = sf::seconds(0.05);
@@ -125,6 +127,27 @@ namespace glb
 			BG_PATH + "ENV_ThemePark/sky_1280x720.png"
 		};
 
+	//MiscTextures:
+	enum miscTextureIdx {
+		HOOK_TEX,
+		SCORE_POINT_TEX,
+		WINNER_LABEL_TEX,
+		BOOST_SECTION_TEX,
+		BOOST_BAR_TEX,
+		POWER_UP_TEX,
+		POWER_UP_HUD_BG_TEX,
+		POWER_UP_HUD_TEX,
+		SMOKE_P_TEX,
+		CLOUD_P_TEX,
+		PLUS_P_TEX,
+		BRAKE_P_TEX,
+		OBSTACLES_TEX,
+		BOMB_TEX,
+		SUPER_BOOST_TEX,
+		FIRE_P_TEX,
+		TRAIL_TEX,
+		ICE_CUBE_TEX
+	};
 
 	// particlesystems:
 	enum particleSystemIdx {

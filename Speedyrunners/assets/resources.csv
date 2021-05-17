@@ -112,6 +112,7 @@ T,13,Content/Sprites/droppedBomb.png
 T,14,Content/Sprites/superBoost.png
 T,15,Content/UI/SuddenDeath/fireParticle_280x280.png
 T,16,Content/Sprites/trail_ESL.png
+T,17,Content/Sprites/IceBlock_300x350.png
 
 
 # Particle systems (to see which is which, see Globals.hpp -> particleSystemIdx)

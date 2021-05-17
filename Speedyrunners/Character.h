@@ -60,6 +60,8 @@ protected:
 
 	sf::Time stunnedRemaining;
 	bool isStunned = false; // spikes, rockets, etc
+	bool isFrozen = false;
+	bool hasFrozenWiggled = false;
 	bool isGrounded = false;
 	bool hasDoubleJumped = false;
 	bool dead = false;
@@ -71,6 +73,7 @@ protected:
 	bool isRunning = false;
 	bool isAtWallJump = false;
 	bool sliding = false;
+	int wiggleFrames = glb::WIGGLE_FRAMES;
 
 	bool tumble = false; // if true, reduce the speed once, set to false again
 	sf::Time tumblingTime; // remaining tumbling time
@@ -83,10 +86,13 @@ protected:
 
 
 	std::shared_ptr<Animation> currentAnimation;
+	Animation iceCubeAnim;
 	sf::Sprite mySprite;
+	sf::Sprite iceCube;
 	sf::Time countdown = PERIOD;
 	sf::Time jumpCoolDown = sf::seconds(0.1);
 	sf::Time currJumpCD = jumpCoolDown;
+	sf::Time frozenWiggleCooldown = glb::FROZEN_WIGGLE_CD;
 
 	std::vector<AnimationPtr> animations = std::vector<AnimationPtr>(glb::NUMBER_OF_ANIMATIONS);
 
@@ -141,6 +147,8 @@ protected:
 	void updateBoost(const sf::Time& dT, const Level& lvl);
 	void emitBrakeParticles();
 	void addTrail(const sf::Vector2f& v);
+
+	void frozenWiggle();
 public:
 	Character(Spritesheet sp, int ID, int variant = 0);
 
@@ -220,6 +228,7 @@ public:
 	const sf::FloatRect& getHitBox() const;
 
 	void getHitByRocket();
+	void getFrozen();
 	void getHitByTNT(const sf::Vector2f& direction); // direction is the direction of the explosion
 
 	// set the tnt pointer:
