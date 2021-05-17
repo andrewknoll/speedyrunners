@@ -43,6 +43,13 @@ public:
 	void emit(const sf::Vector2f& pos);
 	void emit(const sf::Vector2f& pos, const sf::Vector2f& dir);
 
+	// emits nParticles around center, maximum radius distance
+	void burst(const sf::Vector2f& center, const float& radius, int nParticles);
+
+	// emits nParticles around center, maximum radius distance, all particles are emited facing outwards
+	void burstOut(const sf::Vector2f& center, const float& radius, int nParticles);
+
+
 	void update(sf::Time elapsed);
 
 	void clear(); // clear all particles

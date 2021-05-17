@@ -23,12 +23,11 @@ private:
 
 
 	const float velValIni = 300.0f;
-	const float maxVel = 500.0f; // modulo
-	const float minVel = 150.0f;
-	const float accVal = 1.0f;
+	const float maxVel = 425.0f; // modulo
+	const float minVel = 125.0f;
 
 	const float detonationRadius = 50.0f; // it activates at this distance from the target
-	const float explosionRadius = 200.0f; // the explosion radius
+	const float explosionRadius = 100.0f; // the explosion radius
 	
 	float rocketLength; // length of the sprite in world (for particles)
 

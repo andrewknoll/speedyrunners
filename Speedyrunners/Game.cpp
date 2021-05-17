@@ -663,6 +663,7 @@ void Game::processMouseEditing() {
 			particleSystems[selectedPSystem].emit(utils::mousePosition2f(window));
 		}
 	}
+
 }
 
 // Controls for editing state:
@@ -695,6 +696,8 @@ void Game::processEditingInputs(const sf::Event& event) {
 		selectedPSystem = (selectedPSystem + 1) % particleSystems.size();
 		std::cout << "selected PSystem: " << selectedPSystem << "\n";
 	}
+	else if (testingParticles && event.type == sf::Event::MouseButtonPressed && event.key.code ==sf::Mouse::Middle)
+		particleSystems[selectedPSystem].burstOut(utils::mousePosition2f(window), 200, 100);
 	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Numpad4) { // box debug
 		lvl.testBoxCollision(utils::mousePosition2f(window));
 	}
