@@ -84,8 +84,7 @@ namespace particles {
 	{
 		if (active) {
 			if (ttl < sf::Time::Zero) {
-				active = false;
-				setAlpha(vertices, idx, 0); // hide
+				disable(vertices, idx);
 				return true;
 			}
 			else {
@@ -125,6 +124,12 @@ namespace particles {
 		angleIni = particleSettings.angleIni;
 		colorEnd = particleSettings.colorEnd;
 		colorIni = particleSettings.colorIni;
+	}
+
+	void Particle::disable(sf::VertexArray& vertices, int idx)
+	{
+		active = false; // wont be updated
+		setAlpha(vertices, idx, 0); // hide
 	}
 
 	// Settings read from file:

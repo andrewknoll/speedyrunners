@@ -73,12 +73,13 @@ namespace particles {
 
 	
 	void ParticleSystem::disableParticle(int idx) {
-		idx *= 4;
+		particles[idx].disable(vertices, idx);
+		/*idx *= 4;
 		sf::Vector2f empty(0, 0);
 		vertices[idx++].texCoords = empty; // top L	
 		vertices[idx++].texCoords = empty; // top R
 		vertices[idx++].texCoords = empty; // bottom R
-		vertices[idx].texCoords   = empty; // bottom L
+		vertices[idx].texCoords   = empty; // bottom L*/
 	}
 
 	
@@ -143,11 +144,10 @@ namespace particles {
 	{
 		int i = 0;
 		for (auto& p : particles) {
-			if (p.update(elapsed, vertices, i)) // the particle has died
-				;// nothing needed i think
-			else if (pSettings.animate) {
-				int frame = utils::lerp(nSprites.x * nSprites.y - 1, 0, p.ttl/pSettings.ttl);
-				enableParticle(i, frame);
+			bool died = p.update(elapsed, vertices, i);
+			if (!died && pSettings.animate) {
+				int frame = utils::lerp(nSprites.x * nSprites.y - 1, 0, p.ttl/pSettings.ttl); // get frame from ttl
+				enableParticle(i, frame); // set it
 			}
 			i++;
 		}
@@ -156,7 +156,8 @@ namespace particles {
 	
 	void ParticleSystem::clear()
 	{
-		for (auto& p : particles) p.active = false;
+		for (int i = 0; i < particles.size(); i++) 
+			disableParticle(i);
 	}
 
 
