@@ -10,8 +10,7 @@
 #include "utils.hpp"
 #include "AudioPlayer.h"
 #include "ParticleSystem.h"
-
-
+#include <variant>
 #include "Item.h"
 
 //#define DEBUG_HITBOX
@@ -23,6 +22,7 @@ class Level;
 
 class Character : public sf::Transformable, public sf::Drawable
 {
+	using CharPtr = std::shared_ptr<Character>;
 	using AnimationPtr = std::shared_ptr<Animation>;
 	using ItemPtr = std::shared_ptr<Item>;
 
@@ -47,8 +47,6 @@ protected:
 	// Base:
 	geometry::Mat2 base = geometry::Mat2(sf::Vector2f(1,0), sf::Vector2f(0,1));
 	bool inRamp = false;
-
-	const sf::Time PERIOD = sf::milliseconds(1000 / 30);
 
 	int myID;
 	int skin_variant = 0;
@@ -89,7 +87,7 @@ protected:
 	Animation iceCubeAnim;
 	sf::Sprite mySprite;
 	sf::Sprite iceCube;
-	sf::Time countdown = PERIOD;
+	sf::Time countdown = glb::ANIMATION_PERIOD;
 	sf::Time jumpCoolDown = sf::seconds(0.1);
 	sf::Time currJumpCD = jumpCoolDown;
 	sf::Time frozenWiggleCooldown = glb::FROZEN_WIGGLE_CD;
@@ -168,6 +166,8 @@ public:
 	void setAnimation(AnimationIndex i, bool loop = false, bool reverse = false);
 	void setAnimationAngle(float angle);
 
+	bool isFacingRight() const;
+
 	void setBaseFromRamp(Tiles::Ramp ramp);
 
 	void update(const sf::Time& dT, const Level& lvl);
@@ -205,7 +205,7 @@ public:
 	bool canJump() const;
 	bool isUsingHook() const;
 	bool isUsingSlide() const;
-	ItemPtr useItem(std::shared_ptr<Character> target = nullptr);
+	void resetItem();
 
 
 	void setDToCheckpoint(float d);

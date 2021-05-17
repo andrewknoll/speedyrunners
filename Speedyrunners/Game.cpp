@@ -7,6 +7,9 @@
 #include "Menu.h"
 #include "RoundVictory.h"
 
+#include "Rocket.h"
+#include "IceRay.h"
+
 #ifdef USE_IMGUI
 #include "imgui.h"
 #include "imgui-SFML.h"
@@ -510,7 +513,10 @@ void Game::update()
 						if (i > 0) target--;
 						else if (i < characters.size() - 1) target++;
 						//if player is dumb and uses rockets when nobody else is playing, it will hit them
-						items.push_back(characters[i]->useItem(characters[target]));
+						auto rocket = std::make_shared<Rocket>(characters[i]->getPosition(), characters[target], characters[i]->isFacingRight());
+						
+						items.push_back(rocket);
+						characters[i]->resetItem();
 					} 
 					else if ((int)item >= glb::NUMBER_OF_ITEMS-glb::NUMBER_OF_UNOBTAINABLE_ITEMS 
 							&& (int)item < glb::NUMBER_OF_ITEMS) { // crates
@@ -524,7 +530,12 @@ void Game::update()
 					}
 					else if (item == glb::TNT_DETONATOR) {
 						characters[i]->getItemPtr()->changeState();
-						characters[i]->setItem(glb::item::NONE);
+						characters[i]->resetItem();
+					}
+					else if (item == glb::ICERAY) {
+						auto iceray = std::make_shared<IceRay>(cam, characters[i]);
+						items.push_back(iceray);
+						characters[i]->resetItem();
 					}
 					else {
 						std::cout << "unimplemented item " << item << "\n";
