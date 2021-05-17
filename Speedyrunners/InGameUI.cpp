@@ -24,11 +24,11 @@ void InGameUI::draw(sf::RenderTarget& target, sf::RenderStates states) const
 }
 
 
-InGameUI::InGameUI() : window(nullptr), pointsTexture(Resources::getInstance().getMiscTexture(1))
+InGameUI::InGameUI() : window(nullptr), pointsTexture(Resources::getInstance().getMiscTexture(glb::SCORE_POINT_TEX))
 {
 }
 
-InGameUI::InGameUI(sf::RenderWindow& _window) : window(&_window), pointsTexture(Resources::getInstance().getMiscTexture(1))
+InGameUI::InGameUI(sf::RenderWindow& _window) : window(&_window), pointsTexture(Resources::getInstance().getMiscTexture(glb::SCORE_POINT_TEX))
 {
 }
 
@@ -60,7 +60,7 @@ void InGameUI::addBoostBar(sf::Vector2f pos, float widgetWidth) {
 	// Back rectangle
 	auto &b = boostSprites.emplace_back();
 	pos.y += widgetWidth * 0.28f;
-	const auto& t = Resources::getInstance().getMiscTexture(4);
+	const auto& t = Resources::getInstance().getMiscTexture(glb::BOOST_BAR_TEX);
 	auto &back = b.emplace_back(t);
 	auto size = t.getSize();
 	size.y /= 3;
@@ -81,7 +81,7 @@ void InGameUI::addItems(sf::Vector2f pos, float widgetWidth) {
 	pos.x -= widgetWidth / 2.0f; // To the left
 	// Item Background
 	auto& b = items.emplace_back();
-	const auto& t = Resources::getInstance().getMiscTexture(6);
+	const auto& t = Resources::getInstance().getMiscTexture(glb::POWER_UP_HUD_BG_TEX);
 	auto& back = b.emplace_back(t);
 	auto size = t.getSize();
 	size.y /= 2; size.x /= 4;
@@ -90,7 +90,7 @@ void InGameUI::addItems(sf::Vector2f pos, float widgetWidth) {
 	utils::setWidth(back, widgetWidth/2.0);
 	back.setPosition(pos);
 	// Item:
-	const auto& itemT = Resources::getInstance().getMiscTexture(7);
+	const auto& itemT = Resources::getInstance().getMiscTexture(glb::POWER_UP_HUD_TEX);
 	auto& i = b.emplace_back(itemT);
 	size = itemT.getSize();
 	size.x /= 18; // 18 slots in texture, horizontally

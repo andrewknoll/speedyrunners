@@ -29,7 +29,7 @@ public:
 	sf::Sprite get_first_frame();
 	void flip(sf::Sprite& sprite);
 	int advance_frame(sf::Sprite& sprite);
-	int get_current_frame();
+	int get_current_frame() const;
 	sf::Vector2f get_origin_point();
 	void set_loop(bool loop);
 	bool get_loop() const;

@@ -7,7 +7,7 @@ void ItemPickup::draw(sf::RenderTarget& target, sf::RenderStates states) const
 }
 
 ItemPickup::ItemPickup(const sf::Vector2f& pos, float tileWidth)
-	: tex(Resources::getInstance().getMiscTexture(5)), sprite(tex),
+	: tex(Resources::getInstance().getMiscTexture(glb::POWER_UP_TEX)), sprite(tex),
 	animation(10, 2, tex)
 {
 	sprite = animation.get_first_frame();

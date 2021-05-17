@@ -145,6 +145,10 @@ const sf::Texture& Resources::getMiscTexture(int type) {
 	return otherTextures[type];
 }
 
+const Resources::Other & Resources::getOtherResources(int pos){
+	return otherResources[pos];
+}
+
 
 const std::vector<sf::SoundBuffer>& Resources::getSoundBuffer(int type)
 {

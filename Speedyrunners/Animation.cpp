@@ -92,7 +92,7 @@ int Animation::advance_frame(sf::Sprite& sprite) {
 	return return_code;
 }
 
-int Animation::get_current_frame() {
+int Animation::get_current_frame() const {
 	return current_frame;
 }
 

@@ -13,7 +13,7 @@ void BoxObstacle::draw(sf::RenderTarget& target, sf::RenderStates states) const
 }
 
 BoxObstacle::BoxObstacle(const sf::Vector2f& pos, float tileWidth, bool respawn)
-	: tex(&Resources::getInstance().getMiscTexture(12)), sprite(*tex), shouldRespawn(respawn), position(pos), rotSpeed(0)
+	: tex(&Resources::getInstance().getMiscTexture(glb::OBSTACLES_TEX)), sprite(*tex), shouldRespawn(respawn), position(pos), rotSpeed(0)
 {
 	int nSprites = 20;
 	int idx = 0;

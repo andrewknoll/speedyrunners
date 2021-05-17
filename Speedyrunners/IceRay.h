@@ -1,6 +1,7 @@
 #pragma once
 #include "Item.h"
 #include "Animation.h"
+#include "Character.h"
 class IceRay : public Item {
 	using CharPtr = std::shared_ptr<Character>;
 private:
@@ -8,8 +9,10 @@ private:
 	Animation beamAnim;
 	sf::Texture beamTex;
 	sf::Sprite source;
-	sf::Sprite beam;
+	std::vector<sf::Sprite> beam;
+	float beamWidth;
 	CharPtr user;
+	int beamFrame = 0;
 
 	//particles::PSystem& particleSyst;
 
@@ -20,9 +23,9 @@ private:
 public:
 	IceRay(CharPtr user, bool facingRight);
 	//void setTexRect(bool first); // Sets the first or the second tex rect
-	//virtual bool update(sf::Time elapsed, const Level& lvl) override;
+	virtual bool update(sf::Time elapsed, const Level& lvl) override;
 
-	//virtual void doThingTo(std::shared_ptr<Character> c) override; // Explode, in this case
+	virtual void doThingTo(std::shared_ptr<Character> c) override; // Explode, in this case
 
 };
 

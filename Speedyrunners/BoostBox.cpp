@@ -9,7 +9,7 @@ void BoostBox::draw(sf::RenderTarget& target, sf::RenderStates states) const
 }
 
 BoostBox::BoostBox(const sf::Vector2f& pos, float tileWidth) 
-	: tex(Resources::getInstance().getMiscTexture(3)), sprite(tex),
+	: tex(Resources::getInstance().getMiscTexture(glb::BOOST_SECTION_TEX)), sprite(tex),
 	animation(sf::Vector2i(5,3),tex),
 	width(tileWidth*10),
 	pSystem(Resources::getInstance().getParticleSystem(glb::particleSystemIdx::BOOST))
