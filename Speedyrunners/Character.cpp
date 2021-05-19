@@ -150,6 +150,7 @@ void Character::setBaseFromRamp(Tiles::Ramp ramp) {
 		setDefaultOrigin();
 		setRotation(0);
 	}
+	
 }
 
 void Character::updateVel(const float& dtSec) {
@@ -307,6 +308,7 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 			isAtWallJump = true;
 			break;
 		}
+		if (!isAtWallJump) setAnimation(AnimationIndex::LongFallAnim);
 	}
 
 	if (isFrozen) {
@@ -352,26 +354,26 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 					setAnimation(StandAnim);
 				}
 				if (c.tileType == Tiles::JUMP_WALL_L) {
-					if (false&&vel.y>0 && !isAtWallJump) {
+					/*if (false&&vel.y>0 && !isAtWallJump) {
 						acc.y = 0;
 						vel.y = 0;
-					}
+					}*/
 					if (!isStunned && !isFrozen) {
 						isAtWallJump = true;
 						facingRight = false;
 						setAnimation(WallHangAnim);
-						vel.y = vel.y - xSpeed;
+						vel.y = std::max(vel.y - xSpeed, -physics::MAX_FALL_SPEED);
 					}
 				}
 				else if (c.tileType == Tiles::JUMP_WALL_R) {
-					if (false&& vel.y>0 && !isAtWallJump) {
+					/*if (false&& vel.y>0 && !isAtWallJump) {
 						acc.y = 0;
 						vel.y = 0;
-					}
+					}*/
 					if (!isStunned && !isFrozen) {
 						isAtWallJump = true;
 						facingRight = true;
-						vel.y = vel.y - xSpeed;
+						vel.y = std::max(vel.y - xSpeed, -physics::MAX_FALL_SPEED);
 						setAnimation(WallHangAnim);
 					}
 				}
@@ -413,15 +415,20 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 			hasDoubleJumped = false; // resets when swinging
 		}
 	}
-	else if (!isStunned && !tumble && vel.y > 0) {
-		if (isAtWallJump && vel.x == 0) {
-			setAnimation(WallHangAnim);
+	else if (!isStunned && !tumble) {
+		if (vel.y > 0) {
+			if (isAtWallJump && vel.x == 0) {
+				setAnimation(WallHangAnim);
+			}
+			else if (hasDoubleJumped) {
+				setAnimation(DoubleJumpFallAnim);
+			}
+			else if (!isGrounded) {
+				setAnimation(FallAnim);
+			}
 		}
-		else if (hasDoubleJumped) {
-			setAnimation(DoubleJumpFallAnim);
-		}
-		else if (!isGrounded) {
-			setAnimation(FallAnim);
+		else if (!isGrounded && !isAtWallJump) {
+			setAnimation(LongFallAnim);
 		}
 	}
 	updateHitBoxRectangle(); // Debug
@@ -537,8 +544,8 @@ void Character::startJumping() {
 			isGrounded = false;
 			//vel.y = std::min(vel.y-jumpingSpeed, -jumpingSpeed); // if going up, keeps momentum
 			vel.y = std::min(vel.y, 0.0f);// -jumpingSpeed * 0.3; // TODO: vel.x en funcion de vel.y?
-			if (facingRight) vel.x = jumpingSpeed;
-			else vel.x = -jumpingSpeed;
+			if (facingRight) vel.x = 1.4*jumpingSpeed;
+			else vel.x = -1.4*jumpingSpeed;
 			setAnimation(JumpAnim);
 			isAtWallJump = false;
 			hasDoubleJumped = false;
