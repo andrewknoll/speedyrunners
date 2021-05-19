@@ -91,7 +91,7 @@ void RoundVictory::tickAnimation(sf::Time dT) {
 	if (currentSecond < 3 && animationCountdown <= sf::Time::Zero) {
 		if (characterVictoryPose)
 			characterVictoryPose->advance_frame(mySprite);
-		animationCountdown = PERIOD;
+		animationCountdown = glb::ANIMATION_PERIOD;
 	}
 }
 

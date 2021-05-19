@@ -82,6 +82,7 @@ namespace glb
 	const sf::Time FREEZE_TIME = sf::seconds(3);
 	const sf::Time TUMBLE_TIME = sf::seconds(0.5); // box obstacles
 	const sf::Time FROZEN_WIGGLE_CD = sf::seconds(0.3);
+	const sf::Time ANIMATION_PERIOD = sf::milliseconds(1000 / 30);
 
 	const int WIGGLE_FRAMES = 6;
 

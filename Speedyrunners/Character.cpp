@@ -5,7 +5,6 @@
 #include "utils.hpp" // physics
 #include "Globals.hpp" //animation names
 #include "Spritesheet.h"
-#include "Rocket.h"
 #include "Resources.h"
 #include "Level.h"
 Character::Character(Spritesheet sp, int ID, int variant) :
@@ -632,14 +631,8 @@ bool Character::isUsingSlide() const {
 	return sliding;
 }
 
-Character::ItemPtr Character::useItem(std::shared_ptr<Character> target) {
-	ItemPtr item;
-	using namespace glb;
-	if (currentItem == glb::item::ROCKET) { // Fire the rocket
-		item = std::make_shared<Rocket>(getPosition(), target, facingRight);
-	}
+void Character::resetItem() {
 	currentItem = glb::item::NONE; // Used item
-	return item;
 }
 
 
@@ -774,7 +767,7 @@ void Character::tickAnimation(sf::Time dT) {
 		countdown -= dT;
 		if (countdown <= sf::Time::Zero) {
 			currentAnimation->advance_frame(mySprite);
-			countdown = PERIOD;
+			countdown = glb::ANIMATION_PERIOD;
 		}
 	}
 }
@@ -828,4 +821,8 @@ void Character::setAnimation(AnimationIndex i, bool loop, bool reverse) {
 
 void Character::setAnimationAngle(float angle) {
 	//currentAnimation->update_angle(mySprite, angle);
+}
+
+bool Character::isFacingRight() const {
+	return facingRight;
 }

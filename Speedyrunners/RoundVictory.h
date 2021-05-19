@@ -14,7 +14,6 @@ private:
 	std::shared_ptr<Animation> characterVictoryPose;
 	int characterScore;
 	AudioPlayer& audioPlayer;
-	const sf::Time PERIOD = sf::milliseconds(1000 / 30);
 	sf::Sprite mySprite;
 
 	std::string bgPath = glb::CONTENT_PATH + "UI/MultiplayerHUD/Bar.png";

@@ -2,28 +2,31 @@
 #include "Item.h"
 #include "Animation.h"
 #include "Character.h"
+#include "Camera.h"
 class IceRay : public Item {
 	using CharPtr = std::shared_ptr<Character>;
+	using AnimationPtr = std::shared_ptr<Animation>;
 private:
-	Animation sourceAnim;
+	AnimationPtr sourceAnim;
 	Animation beamAnim;
 	sf::Texture beamTex;
 	sf::Sprite source;
 	std::vector<sf::Sprite> beam;
 	float beamWidth;
 	CharPtr user;
-	int beamFrame = 0;
 
-	//Camera& cam;
+	const Camera& cam;
+	bool facingRight;
+	sf::Time countdown;
 
 	//particles::PSystem& particleSyst;
 
-	std::vector<sf::IntRect> beamRects; // texture rects
-
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
+	void tickAnimation(sf::Time dT);
+
 public:
-	IceRay(CharPtr user, bool facingRight);
+	IceRay(const Camera& cam, CharPtr user);
 	//void setTexRect(bool first); // Sets the first or the second tex rect
 	virtual bool update(sf::Time elapsed, const Level& lvl) override;
 
