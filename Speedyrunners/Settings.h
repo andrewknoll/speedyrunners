@@ -2,7 +2,7 @@
 #include "Globals.hpp"
 #include "SFML/Graphics.hpp"
 
-const int N_CONTROLS = 6; // number of keys (left, right, down, jump, hook, item)
+const int N_CONTROLS = 7; // number of keys (left, right, down, jump, hook, item, boost)
 class Settings
 {
 	using Controls = std::array<sf::Keyboard::Key, N_CONTROLS>;
@@ -32,15 +32,18 @@ public:
 	void setLocalisation(const std::string& loc);
 
 	void getControlScheme(std::vector<sf::Keyboard::Key>& scheme, int id) const;
+	void setControlScheme(const std::vector<sf::Keyboard::Key>& scheme, int id);
 
 	sf::Vector2i windowResolution() const;
 
 	std::string getLocalisationPath() const;
 
-	void save(const std::string& file) const;
+	void save(const std::string& file=glb::SETTINGS_PATH) const;
 
-	void load(const std::string& file);
+	void load(const std::string& file=glb::SETTINGS_PATH);
 
 	void editControl(const int idControl, const Settings::Key key, const sf::Keyboard::Key newKey);
+
+	std::string to_string(const sf::Keyboard::Key& k); // Returns "" if the key is not supported
 };
 

@@ -29,6 +29,7 @@ public:
 
 	void setPosition(const sf::Vector2f& pos);
 
+	void setText(const std::string& s) override;
 
 	void selectSecondColor();
 

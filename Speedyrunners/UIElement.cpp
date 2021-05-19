@@ -25,6 +25,10 @@ sf::FloatRect UIElement::getClickableArea() const
 	return clickableBox;
 }
 
+void UIElement::setText(const std::string& s)
+{
+}
+
 /*void UIElement::draw(sf::RenderWindow& window) const
 {
 	std::cout << "draw de UIELEMENT.......\n";

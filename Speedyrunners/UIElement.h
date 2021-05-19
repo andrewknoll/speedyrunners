@@ -19,6 +19,7 @@ public:
 	void setClickableArea(const sf::FloatRect& _clickableBox);
 	sf::FloatRect getClickableArea() const;
 
+	virtual void setText(const std::string& s);
 
 	//virtual void draw(sf::RenderWindow& window) const = 0;
 	//virtual void draw(sf::RenderWindow* window) const = 0;

@@ -153,13 +153,18 @@ void Menu::loop()
 	}
 }
 
+bool Menu::drawKey(int idx) const {
+	return !changingControl || (idx - 2) != controlIdx;
+}
+
 void Menu::draw()
 {
 	window->clear(bgColor);// sf::Color(255, 0, 0));
 	
 	for (auto bg : backgrounds)		window->draw(bg);
 	for (const auto& w : widgets)	window->draw(w);
-	for (const auto& e : elements)	window->draw(*e);
+	int idx = 0;
+	for (const auto& e : elements) window->draw(*e);
 	window->display();
 }
 
@@ -270,6 +275,7 @@ void Menu::handleMainMenuClick(int i) {
 
 void Menu::backToMainMenu() {
 	audio.play(AudioPlayer::Effect::MENU_CLICK_CANCEL);
+	changingControl = false;
 	clear();
 	setMainMenu();
 }
@@ -314,23 +320,39 @@ void Menu::setControls() {
 	elements.clear();
 	widgets.clear();
 	addExitSign();
+
+	// Save settings:
+	// Ready
+	{
+		sf::Vector2f pos(0.46, 0.865);
+		float size = 0.08;
+		elements.emplace_back(std::make_unique<TextElement>(settings, mainTextFontPath, "SAVE", size, pos, true));
+	}
 	currentMenuPage = Page::Controls;
 	sf::Vector2f pos(0.05, 0.43);
 	float size = 0.05;
 
 	std::vector<std::string> actions{
-		"", "Left", "Right", "Slide","Jump","Grapple","Boost"
+		"", "Left", "Right", "Slide","Jump","Grapple","Use item", "Boost"
 	};
-
+	// Single player scheme:
 	std::vector<std::string> singlePlayer{
-		"SINGLE PLAYER", "Left","Right","Down","Z","X","Spacebar"
+		"SINGLE PLAYER"//, "Left","Right","Down","Z","X","Spacebar"
 	}; 
+	settings.getControlScheme(schemes[0], 0);
+	for (auto k : schemes[0]) singlePlayer.emplace_back(settings.to_string(k));
+	// Multiplayer 1 scheme:
 	std::vector<std::string> firstPlayer{
-		"MULTIPLAYER 1", "A","D","S","V","B","Spacebar"
+		"MULTIPLAYER 1"//, "A","D","S","V","B","Spacebar"
 	};
+	settings.getControlScheme(schemes[1], 1);
+	for (auto k : schemes[1]) firstPlayer.emplace_back(settings.to_string(k));
+	// Multiplayer 2 scheme:
 	std::vector<std::string> secondPlayer{
-		"MULTIPLAYER 2", "Left","Right","Down","Numpad1","Numpad2","Numpad0"
+		"MULTIPLAYER 2"//, "Left","Right","Down","Numpad1","Numpad2","Numpad0"
 	};
+	settings.getControlScheme(schemes[2], 2);
+	for (auto k : schemes[2]) secondPlayer.emplace_back(settings.to_string(k));
 
 	std::vector<std::vector<std::string>> texts{ singlePlayer, firstPlayer, secondPlayer };
 	pos = sf::Vector2f(0.3, 0.38);
@@ -349,8 +371,12 @@ void Menu::setControls() {
 	pos.x += 0.16;
 	pos.y = h;
 	for (const auto& v : texts) {
+		bool isFirst = true;
+		controlElementsFirst.push_back(elements.size()+1);
 		for (const auto& t : v) {
-			elements.emplace_back(std::make_unique<TextElement>(settings, font, t, size, pos, false, sf::Color::White));
+			if (isFirst) elements.emplace_back(std::make_unique<TextElement>(settings, font, t, size, pos, false, sf::Color::White));
+			else elements.emplace_back(std::make_unique<TextElement>(settings, font, t, size, pos, true));
+			isFirst = false;
 			pos.y += size * 1.35;
 		}
 		pos.x += 0.2;
@@ -404,6 +430,39 @@ void Menu::handleLvlSelectClick(int i) {
 	}
 }
 
+void Menu::saveCurrentControls() {
+	audio.play(AudioPlayer::Effect::MENU_CLICK_DONE);
+	//for (int i = 0; i < 3; i++) settings.setControlScheme(schemes[i], i);
+	int scheme = 0, control;
+	for (const auto& v : schemes) {
+		control = 0;
+		for (const auto& k : v)
+			settings.editControl(scheme, Settings::Key(control++), k);
+		scheme++;
+	}
+	settings.save();
+}
+
+void Menu::handleControlsClick(int i) {
+	if (i == 0) { // exit
+		backToMainMenu();
+	}
+	else if (i == 1) {
+		saveCurrentControls();
+		backToMainMenu();
+	}
+	else if (!changingControl) {
+		audio.play(AudioPlayer::Effect::MENU_TOGGLE);
+		elements[i]->setText("Press a key");
+		elementIdx = i;
+		changingControl = true;
+		for (int j = 0; j < 3; j++)
+			if (elementIdx >= controlElementsFirst[j]) 
+				controlIdx = i - controlElementsFirst[j] + j * N_CONTROLS;
+		//std::cout << "element idx: " <<elementIdx<< " controlIdx" << controlIdx << "\n";
+	}
+}
+
 void Menu::handleClick(int i) {
 	switch (currentMenuPage) {
 	case Page::Main: // main menu
@@ -419,7 +478,7 @@ void Menu::handleClick(int i) {
 		handleLvlSelectClick(i);
 		break;
 	case Page::Controls:
-		backToMainMenu();
+		handleControlsClick(i);
 		break;
 	default:
 		std::cerr << "what is this menu page\n";
@@ -431,8 +490,14 @@ void Menu::pollEvents()
 	sf::Event event;
 	while (window->pollEvent(event))
 	{
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
-			backToMainMenu();
+		if (event.type == sf::Event::KeyPressed && event.key.code == (sf::Keyboard::Key::Escape)) {
+			if (changingControl) {
+				changingControl = false; 
+				int scheme = controlIdx / N_CONTROLS, id = controlIdx % N_CONTROLS;
+				elements[elementIdx]->setText(settings.to_string(schemes[scheme][id]));
+				audio.play(AudioPlayer::Effect::MENU_CLICK_CANCEL);
+			}
+			else backToMainMenu();
 		}
 		else if (event.type == sf::Event::Closed) {
 #ifdef USE_IMGUI
@@ -456,6 +521,21 @@ void Menu::pollEvents()
 				}
 			}
 			for (auto& w : widgets) w.update(event, mousePos);
+		}
+		else if (changingControl && event.type == sf::Event::KeyPressed) {
+			auto k = event.key.code;
+			int scheme = controlIdx / N_CONTROLS;
+			int id = controlIdx % N_CONTROLS;
+			std::string asString = settings.to_string(k);
+			if (asString != "") {
+				schemes[scheme][id] = k;
+				elements[elementIdx]->setText(asString);
+				audio.play(AudioPlayer::Effect::MENU_TOGGLE);
+				changingControl = false;
+			}
+			else { // invalid key
+				audio.play(AudioPlayer::Effect::MENU_CLICK_CANCEL);
+			}
 		}
 	}
 }

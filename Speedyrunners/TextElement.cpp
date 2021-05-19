@@ -54,6 +54,12 @@ void TextElement::setPosition(const sf::Vector2f& pos)
 	text.setPosition(pos);
 }
 
+void TextElement::setText(const std::string& s)
+{
+	text.setString(s);
+	makeClickable(); // update clickable area
+}
+
 void TextElement::makeClickable()
 {
 	setClickableArea(text.getGlobalBounds());

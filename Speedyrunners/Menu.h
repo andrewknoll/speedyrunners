@@ -46,6 +46,12 @@ class Menu
 	std::string menuPath = glb::CONTENT_PATH + "UI/MainMenu/";
 	std::string mainTextFontPath = glb::CONTENT_PATH + "UI/Font/Souses.ttf";
 
+	// Controls:
+	std::array<std::vector<sf::Keyboard::Key>, 3> schemes; 
+	bool changingControl = false;
+	int controlIdx = 0, elementIdx=0;
+	std::vector<int> controlElementsFirst;
+
 	// Audio:
 	AudioPlayer& audio;
 
@@ -65,11 +71,15 @@ class Menu
 	void setCharacterSelect();
 	void setControls();
 
+	bool drawKey(int idx) const;
+
 	void clear();
 	void addTopLeftSign(const std::string& path);
 	void addExitSign();
 	void addLobbyWidgets(const std::string& lobbyPath);
 	void backToMainMenu();
+	void handleControlsClick(int i);
+	void saveCurrentControls();
 public:
 	//void addElement(const UIElement& e);
 	//Menu(std::shared_ptr<sf::RenderWindow> _window);
