@@ -486,7 +486,7 @@ std::vector<Tiles::Collidable> TileMap::tilesToTheSide(const sf::FloatRect& char
         j = int(characterHitbox.top - widthChecked) / tileSizeWorld.y;
     }
 
-    int nVertical = 1 + std::roundf(characterHitbox.height / tileSizeWorld.y);
+    int nVertical = std::max(1, int(std::round(characterHitbox.height / tileSizeWorld.y)));
     int nHorizontal = 1 + std::roundf(widthChecked / tileSizeWorld.x);
 
 

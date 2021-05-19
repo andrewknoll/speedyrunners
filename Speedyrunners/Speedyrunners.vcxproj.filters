@@ -171,6 +171,9 @@
     <ClCompile Include="IceRay.cpp">
       <Filter>Items</Filter>
     </ClCompile>
+    <ClCompile Include="GoldenHook.cpp">
+      <Filter>Items</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TileMap.h">
@@ -286,6 +289,9 @@
       <Filter>Animation\Particles</Filter>
     </ClInclude>
     <ClInclude Include="IceRay.h">
+      <Filter>Items</Filter>
+    </ClInclude>
+    <ClInclude Include="GoldenHook.h">
       <Filter>Items</Filter>
     </ClInclude>
   </ItemGroup>

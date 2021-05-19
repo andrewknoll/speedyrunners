@@ -299,7 +299,7 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 	std::vector<Tiles::Collision> collisions = tiles.collision(hitBox, isGrounded);
 
 	bool wasAtWallJump = isAtWallJump;
-	if (isAtWallJump) { // get out of walljump mode
+	if (!isFrozen && !isStunned && isAtWallJump) { // get out of walljump mode
 		isAtWallJump = false; // we assume it is not, and set it if it is
 		const std::vector<Tiles::Collidable>& side = tiles.tilesToTheSide(hitBox, !facingRight);// facing right, wall jump should be to the left, and viceversa
 		Tiles::Collidable searching = (!facingRight) ? Tiles::Collidable::JUMP_WALL_L : Tiles::Collidable::JUMP_WALL_R;
@@ -344,7 +344,7 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 
 		if (ramp == Ramp::NONE) {
 			if (c.normal.x != 0) { // Make 0 the component of the collision
-				float xSpeed = std::abs(vel.x); // for walljumps
+				float xSpeed = 0.65*std::abs(vel.x); // for walljumps
 				vel.x = 0;
 				acc.x = 0;
 				isRunning = false;
