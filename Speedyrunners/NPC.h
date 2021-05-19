@@ -35,15 +35,16 @@ class NPC : public PlayerSlot
 
 	};
 
-	const float RUN_COST = 3.0f;
-	const float FREE_FALL_COST = 1.0f;
-	const float HOOK_COST = 1.5f;
-	const float SLIDE_COST = 3.5f;
-	const float JUMP_COST_BASE_1 = 4.0f;
-	const float JUMP_COST_BASE_2 = 5.0f;
-	const float WALL_JUMP_COST = 1.5f;
-	const float DIRECTION_CHANGE_COST = 500.0f;
-	const float JUMP_COST_PER_DISTANCE_UNIT = 50.0f;
+	const float RUN_COST = 30.0f;
+	const float FREE_FALL_COST = 10.0f;
+	const float HOOK_COST = 15.0f;
+	const float SLIDE_COST = 35.0f;
+	const float JUMP_COST_BASE_1 = 10*4.0f;
+	const float JUMP_COST_BASE_2 = 10*5.0f;
+	const float WALL_JUMP_COST = 10 * 1.5f;
+	const float DIRECTION_CHANGE_COST = 10 * 500.0f;
+	const float JUMP_COST_PER_DISTANCE_UNIT = 10 * 50.0f;
+
 
 	const float THRESHOLD_PER_RADIUS_UNIT = 3.0f;
 
@@ -90,6 +91,10 @@ private:
 	TileNode current;//
 	PathIterator step;
 	int retryCount = 0;
+
+
+	bool isPerformingWallJump = false;
+	bool wallJumpStep2 = false;
 	
 
 	int findExpanded(const TileNode& n, const int n_path) const;

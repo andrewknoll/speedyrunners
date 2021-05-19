@@ -161,6 +161,14 @@ namespace utils {
 	template <typename T>
 	sf::Vector2f toVector2f(const sf::Vector2<T>& v);
 
+
+
+	template<typename T>
+	inline sf::Vector2f toVector2f(const sf::Vector2<T>& v)
+	{
+		return sf::Vector2f(v.x, v.y);
+	}
+
 	template <typename T>
 	sf::Vector2u toVector2u(const sf::Vector2<T>& v);
 }
@@ -199,10 +207,10 @@ std::ostream& operator<<(std::ostream& os, const sf::Vector2<T>& v);
 
 
 namespace physics {
-	const float GRAVITY = 25*9.821;
-	const float MAX_FALL_SPEED = 400;
-	const float FLOOR_FRICTION = GRAVITY*1.5;
-	const float AIR_FRICTION = GRAVITY * 0.5;
+	const float GRAVITY = 50*9.821; // was 25*
+	const float MAX_FALL_SPEED = 425;
+	const float FLOOR_FRICTION = GRAVITY*1.5/2.0;
+	const float AIR_FRICTION = GRAVITY * 0.5 /2.0;
 
 }
 

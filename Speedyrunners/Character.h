@@ -96,6 +96,7 @@ protected:
 	sf::Time countdown = glb::ANIMATION_PERIOD;
 	sf::Time jumpCoolDown = sf::seconds(0.1);
 	sf::Time currJumpCD = jumpCoolDown;
+	sf::Time currHookCD = 0.5f*jumpCoolDown;
 	sf::Time frozenWiggleCooldown = glb::FROZEN_WIGGLE_CD;
 
 	std::vector<AnimationPtr> animations = std::vector<AnimationPtr>(glb::NUMBER_OF_ANIMATIONS);

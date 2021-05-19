@@ -259,7 +259,8 @@ void Character::tumbleWithBox() {
 sf::Vector2f Character::getBackPosition(const float& distance) const
 {
 	float x, y = getPosition().y;
-	if (!facingRight) { // facing left, back is to the right
+	bool right = isAtWallJump ? !facingRight : facingRight;
+	if (!right) { // facing left, back is to the right
 		x = hitBox.left + hitBox.width + distance;
 	}
 	else {
@@ -291,6 +292,13 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 	}
 	else {
 		currJumpCD = sf::Time::Zero;
+	}
+
+	if (currHookCD > sf::Time::Zero) {
+		currHookCD = currHookCD - dT;
+	}
+	else {
+		currHookCD = sf::Time::Zero;
 	}
 
 	// New vel:
@@ -352,7 +360,7 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 
 		if (ramp == Ramp::NONE) {
 			if (c.normal.x != 0) { // Make 0 the component of the collision
-				float xSpeed = 0.65*std::abs(vel.x); // for walljumps
+				float xSpeed = 0.45*std::abs(vel.x); // for walljumps
 				vel.x = 0;
 				acc.x = 0;
 				isRunning = false;
@@ -543,32 +551,32 @@ void Character::startJumping() {
 		frozenWiggle();
 	}
 	else if (!isStunned) {
-		if (isGrounded && currJumpCD == sf::Time::Zero) {
+		if (isGrounded && currJumpCD <= sf::Time::Zero) {
+			if (!holdingJump) setAnimation(JumpAnim);
 			isGrounded = false;
 			holdingJump = true;
 			vel.y = -jumpingSpeed * 0.9;
 			isGrounded = false;
-			setAnimation(JumpAnim);
 			currJumpCD = jumpCoolDown;
 			audioPlayer.play(AudioPlayer::Effect::JUMP);
 		}
 		else if (isAtWallJump) {
+			if (!holdingJump) setAnimation(JumpAnim);
 			isGrounded = false;
 			//vel.y = std::min(vel.y-jumpingSpeed, -jumpingSpeed); // if going up, keeps momentum
-			vel.y = std::min(vel.y, 0.0f);// -jumpingSpeed * 0.3; // TODO: vel.x en funcion de vel.y?
+			vel.y = std::min(vel.y, -0.15f*jumpingSpeed);// -jumpingSpeed * 0.3; // TODO: vel.x en funcion de vel.y?
 			if (facingRight) vel.x = 1.4*jumpingSpeed;
 			else vel.x = -1.4*jumpingSpeed;
-			setAnimation(JumpAnim);
 			isAtWallJump = false;
 			hasDoubleJumped = false;
 			audioPlayer.play(AudioPlayer::Effect::JUMP);
 		}
 		else if (!hasDoubleJumped) { // in air and hasnt double jumped yet
+			if (!holdingJump) setAnimation(DoubleJumpAnim);
 			isGrounded = false;
 			holdingJump = true;
 			vel.y = -jumpingSpeed;
 			hasDoubleJumped = true;
-			setAnimation(DoubleJumpAnim);
 			isAtWallJump = false;
 			audioPlayer.play(AudioPlayer::Effect::DOUBLE_JUMP);
 		}
@@ -619,21 +627,21 @@ void Character::useHook(bool use)
 {
 	if (!isStunned) {
 		if (use) {
-			if (!usingHook) { // just used it
-				usingHook = true;
-				hook.fire(getPosition(), facingRight);
+			if (!usingHook && currHookCD <= sf::Time::Zero) { // just used it
+				currHookCD = 0.5f * jumpCoolDown;
 				if (isGrounded && isRunning) {
 					setAnimation(RunningHookAnim);
 				}
 				else setAnimation(HookshotAnim);
-
+				usingHook = true;
+				hook.fire(getPosition(), facingRight);
 			}
 		}
 		else {
+			if (usingHook) setAnimation(DoubleJumpAnim);
 			swinging = false;
 			usingHook = false;
 			hook.destroy();
-			setAnimation(DoubleJumpAnim);
 		}
 	}
 }
