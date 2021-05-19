@@ -21,8 +21,12 @@ protected:
 		{sf::Keyboard::Key::A, sf::Keyboard::Key::D, sf::Keyboard::Key::S, sf::Keyboard::Key::V, sf::Keyboard::Key::B, sf::Keyboard::Key::N, sf::Keyboard::Key::Space},
 		{sf::Keyboard::Key::Left, sf::Keyboard::Key::Right, sf::Keyboard::Key::Down, sf::Keyboard::Key::Numpad1, sf::Keyboard::Key::Numpad2, sf::Keyboard::Key::Numpad3, sf::Keyboard::Key::Numpad0}
 	};
+	
 
 public:
+	Settings();
+
+
 	void setResolution(const sf::Vector2i& res);
 
 	void setLocalisation(const std::string& loc);
