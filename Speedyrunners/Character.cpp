@@ -229,6 +229,12 @@ void Character::updateBoost(const sf::Time& dT, const Level& lvl) {
 			audioPlayer.stop(AudioPlayer::Effect::CHARGE_GROUNDBOOST);
 		}
 	}
+	if (hasSuperSpeed) {
+		if (superSpeedRemaining <= sf::Time::Zero) {
+			hasSuperSpeed = false;
+		}
+		superSpeedRemaining -= dT;
+	}
 }
 
 void Character::updateStunned(const sf::Time& dT) {
@@ -275,6 +281,7 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 	if (usingBoost) { // updating dT is the same as updating all speeds and acc
 		dtSec *= boostPower;
 	}
+	if (hasSuperSpeed) dtSec *= superSpeedPower;
 
 
 	sf::Vector2f runningSpeed = vel;
@@ -406,7 +413,12 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 			usingHook = false;
 			hook.destroy();
 		}
-		else if (res == 1 && !swinging) {
+		else if (res == 1 && !swinging) { // starts swinging
+			if (hasSuperSpeed) dtSec = dtSec / superSpeedPower; // shouldnt affect this
+			if (vel.y > 0.95 * physics::MAX_FALL_SPEED) {
+				hasSuperSpeed = true;
+				superSpeedRemaining = maxSuperSpeed;
+			}
 			if (vel.x < 500.0f) vel.x = 500.0f;
 			setAnimation(SwingAnim);
 			omega = utils::length(vel) / utils::length(hook.radius());
@@ -439,7 +451,7 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 }
 
 void Character::addTrail(const sf::Vector2f& v) {
-	if (utils::length(v) > 0.9*physics::MAX_FALL_SPEED ) {
+	if (hasSuperSpeed) { //utils::length(v) > 0.9*physics::MAX_FALL_SPEED ) {
 		//if (rng::defaultGen.rand01() > 0.0)
 		particleSystems[glb::particleSystemIdx::SUPER_SPEED].emit(getPosition() - v * 0.01f, v);
 	}

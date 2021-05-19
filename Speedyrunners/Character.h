@@ -77,8 +77,14 @@ protected:
 	sf::Time tumblingTime; // remaining tumbling time
 
 	// Boost
-	float boostPower = 1.5; // 10% faster
+	float boostPower = 1.5; // 50% faster
 	bool usingBoost = false;
+
+	bool hasSuperSpeed = false;
+	float superSpeedPower = 1.3;
+	sf::Time maxSuperSpeed = sf::seconds(1);
+	sf::Time superSpeedRemaining;
+
 	sf::Time maxBoostTime = sf::seconds(2);
 	sf::Time remainingBoostTime = maxBoostTime;
 
