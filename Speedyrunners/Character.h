@@ -77,8 +77,14 @@ protected:
 	sf::Time tumblingTime; // remaining tumbling time
 
 	// Boost
-	float boostPower = 1.5; // 10% faster
+	float boostPower = 1.5; // 50% faster
 	bool usingBoost = false;
+
+	bool hasSuperSpeed = false;
+	float superSpeedPower = 1.3;
+	sf::Time maxSuperSpeed = sf::seconds(1);
+	sf::Time superSpeedRemaining;
+
 	sf::Time maxBoostTime = sf::seconds(2);
 	sf::Time remainingBoostTime = maxBoostTime;
 
@@ -90,6 +96,7 @@ protected:
 	sf::Time countdown = glb::ANIMATION_PERIOD;
 	sf::Time jumpCoolDown = sf::seconds(0.1);
 	sf::Time currJumpCD = jumpCoolDown;
+	sf::Time currHookCD = 0.5f*jumpCoolDown;
 	sf::Time frozenWiggleCooldown = glb::FROZEN_WIGGLE_CD;
 
 	std::vector<AnimationPtr> animations = std::vector<AnimationPtr>(glb::NUMBER_OF_ANIMATIONS);

@@ -87,11 +87,6 @@ namespace utils {
 		return sf::Vector2i(v.x,v.y);
 	}
 
-	template<typename T>
-	sf::Vector2f toVector2f(const sf::Vector2<T>& v)
-	{
-		return sf::Vector2f(v.x, v.y);
-	}
 
 	template<typename T>
 	sf::Vector2u toVector2u(const sf::Vector2<T>& v)
