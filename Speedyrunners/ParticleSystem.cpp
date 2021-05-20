@@ -147,7 +147,7 @@ namespace particles {
 		sf::Vector2f p = origin;
 		for (int i = 0; i < nParticles; i++) {
 			emit(p);
-			p.x += distance / nParticles;
+			p.x += std::floor(distance / nParticles);
 		}
 	}
 	

@@ -75,6 +75,7 @@ private:
 	std::atomic<short int> pathFound[3] = { 0, 0, 0}; // -1 not searched, 0 not found, 1 found
 	std::atomic<bool> stopFollowing = false;
 	std::atomic<bool> active = true;
+	std::atomic<bool> resetPlan = false;
 	std::atomic<bool> stitched = false;
 
 	// 0 -> First path
