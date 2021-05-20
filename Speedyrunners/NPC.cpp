@@ -773,7 +773,7 @@ void NPC::tryToWallJump() {
 		me->run(facingR);
 
 		if (wallJumpStep2 && me->getGrounded()) { // end
-			std::cout << "END WALLJUMP MODE\n";
+			//std::cout << "END WALLJUMP MODE\n";
 			isPerformingWallJump = false; wallJumpStep2 = false;
 		}
 		else if (me->canWallJump()) {
@@ -783,7 +783,7 @@ void NPC::tryToWallJump() {
 			if ((v.y >= -0.05 * physics::MAX_FALL_SPEED || detectWallJump(facingR, 10))) { // if its high enough OR we are going up slowly 
 				me->startJumping();
 				wallJumpStep2 = true;
-				std::cout << "jumping in wall, now STEP 2\n";
+				//std::cout << "jumping in wall, now STEP 2\n";
 			}
 		}
 		else {
@@ -792,7 +792,7 @@ void NPC::tryToWallJump() {
 			if (closeToWall && me->canJump()) {
 				me->startJumping();
 				wallJumpStep2 = true;
-				std::cout << "jumping, now STEP 2\n";
+				//std::cout << "jumping, now STEP 2\n";
 			}
 		}
 	}
@@ -833,7 +833,7 @@ void NPC::update(const sf::Time dT) { // Tries to get from current to next
 	if (pathFound[0] != 1) moveWithoutPath();
 
 	if (!isPerformingWallJump) {
-		isPerformingWallJump = detectWallJump(me->isFacingRight(), 10); // if there are wall jump tiles, try to jump them
+		isPerformingWallJump = detectWallJump(me->isFacingRight(), 6); // if there are wall jump tiles, try to jump them
 		if (isPerformingWallJump) {
 			std::cout << "NEW WALLJUMP\n";
 			return;

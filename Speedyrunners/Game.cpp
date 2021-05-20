@@ -677,11 +677,7 @@ void Game::processMouseEditing() {
 	if (state == State::Editing && sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 		if (!addingCheckpoint && !testingParticles)
 			lvl.setTile(utils::clampMouseCoord(window), selectedTile);
-		else if (addingCheckpoint) {
-			std::cout << "adding checkpoint to " << utils::mousePosition2f(window).x << " " << utils::mousePosition2f(window).y << "\n";
-			checkpoints.emplace_back(utils::mousePosition2f(window), currentRadius);
-		}
-		else {
+		else if (!addingCheckpoint) {
 			particleSystems[selectedPSystem].emit(utils::mousePosition2f(window));
 		}
 	}
@@ -721,6 +717,10 @@ void Game::processEditingInputs(const sf::Event& event) {
 	else if (testingParticles && event.type == sf::Event::MouseButtonPressed && event.key.code ==sf::Mouse::Middle)
 		//particleSystems[selectedPSystem].burstOut(utils::mousePosition2f(window), 200, 100);
 		particleSystems[selectedPSystem].emitLinear(utils::mousePosition2f(window), 1000);
+	else if (addingCheckpoint && event.type == sf::Event::MouseButtonPressed && event.key.code == sf::Mouse::Left) {
+		std::cout << "adding checkpoint to " << utils::mousePosition2f(window).x << " " << utils::mousePosition2f(window).y << "\n";
+		checkpoints.emplace_back(utils::mousePosition2f(window), currentRadius);
+	}
 	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Numpad4) { // box debug
 		lvl.testBoxCollision(utils::mousePosition2f(window));
 	}
