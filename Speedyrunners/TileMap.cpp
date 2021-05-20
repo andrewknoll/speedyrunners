@@ -479,11 +479,11 @@ std::vector<Tiles::Collidable> TileMap::tilesToTheSide(const sf::FloatRect& char
     float widthChecked = characterHitbox.width * checkWidth;
     if (rightSide) {
         i = int(characterHitbox.left + characterHitbox.width) / tileSizeWorld.x;
-        j = int(characterHitbox.top + characterHitbox.height) / tileSizeWorld.y;
+        j = int(characterHitbox.top) / tileSizeWorld.y;
     }
     else {
         i = int(characterHitbox.left - widthChecked) / tileSizeWorld.x;
-        j = int(characterHitbox.top - widthChecked) / tileSizeWorld.y;
+        j = int(characterHitbox.top) / tileSizeWorld.y;
     }
 
     int nVertical = std::max(1, int(std::round(characterHitbox.height / tileSizeWorld.y)));
@@ -492,7 +492,7 @@ std::vector<Tiles::Collidable> TileMap::tilesToTheSide(const sf::FloatRect& char
 
     sf::Vector2f sizeRectTile(tileSizeWorld.x, tileSizeWorld.y);
     //std::cout << "sizeTile: " << sizeRectTile << " size hitbox: " << characterHitbox.width << " " << characterHitbox.height << "\n";
-    //if (nVertical < 3) std::cout << "checking " << nHorizontal << " horizontal and " << nVertical << " vertical tiles\n";
+    //std::cout << "checking " << nHorizontal << " horizontal and " << nVertical << " vertical tiles\n";
 
     for (int dj = 0; dj < nVertical; dj++) { // And 3 vertical
         //bool bothHorizontal = false; // Both horizontal tiles are collidable

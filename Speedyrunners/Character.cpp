@@ -319,7 +319,7 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 		const std::vector<Tiles::Collidable>& side = tiles.tilesToTheSide(hitBox, !facingRight);// facing right, wall jump should be to the left, and viceversa
 		Tiles::Collidable searching = (!facingRight) ? Tiles::Collidable::JUMP_WALL_L : Tiles::Collidable::JUMP_WALL_R;
 		//std::cout << side.size() << " to the " << (facingRight ? "left" : "right")<< "\n";
-		for (const auto& t : side) if (t == searching) {
+		for (const auto& t : side) if (!isGrounded && t == searching) {
 			isAtWallJump = true;
 			break;
 		}

@@ -899,54 +899,70 @@ void NPC::followPath() {
 	pathMtx[0].unlock();
 }*/
 
+void NPC::die() {
+
+	isPerformingWallJump = false; wallJumpStep2 = false;
+}
+bool NPC::detectWallJump(bool right, float widthMultiplier) {
+
+	bool detected = false;
+	const auto& side = tm->tilesToTheSide(me->getHitBox(), right, widthMultiplier);// facing right, wall jump should be to the left, and viceversa
+	auto searching = (right) ? Tiles::Collidable::JUMP_WALL_L : Tiles::Collidable::JUMP_WALL_R;
+	//std::cout << side.size() << " to the " << (!facingR ? "left" : "right") << " in wall\n";
+	for (const auto& t : side) if (t == searching) {
+		return true;
+	}
+	return false;
+}
+
+void NPC::tryToWallJump() {
+	if (isPerformingWallJump) {
+		sf::Vector2f posGoal;
+		bool facingR = me->isFacingRight();
+		me->run(facingR);
+
+		if (wallJumpStep2 && me->getGrounded()) { // end
+			std::cout << "END WALLJUMP MODE\n";
+			isPerformingWallJump = false; wallJumpStep2 = false;
+		}
+		else if (me->canWallJump()) {
+			// check if there are things to the other side
+			const auto& v = me->getVelocity();
+			//me->canJump() && 
+			if ((v.y >= -0.05 * physics::MAX_FALL_SPEED || detectWallJump(facingR, 10))) { // if its high enough OR we are going up slowly 
+				me->startJumping();
+				wallJumpStep2 = true;
+				std::cout << "jumping in wall, now STEP 2\n";
+			}
+		}
+		else {
+			//std::cout << "Im close to the wall to the "
+			bool closeToWall = detectWallJump(facingR, 6);
+			if (closeToWall && me->canJump()) {
+				me->startJumping();
+				wallJumpStep2 = true;
+				std::cout << "jumping, now STEP 2\n";
+			}
+		}
+	}
+}
+
+void NPC::moveWithoutPath()
+{
+	auto goalpos = goals[currentGoalIdx].position;
+	bool right = goalpos.x > me->getPosition().x;
+	me->run(right);
+	//if (goals[currentGoalIdx])
+}
 
 void NPC::update(const sf::Time dT) { // Tries to get from current to next
 	if (me->isDead()) {
 		isPerformingWallJump = false; wallJumpStep2 = false;
 		return;
 	}
-	if (isPerformingWallJump) {
-		std::cout << "im here\n";
-		sf::Vector2f posGoal;
-		bool facingR = me->isFacingRight();
-		facingR = !facingR;
-		me->run(facingR);
-		if (me->canWallJump()) {
-			// check if there are things to the other side
-			bool highEnough = false;
-			const auto& side = tm->tilesToTheSide(me->getHitBox(), !facingR, 8);// facing right, wall jump should be to the left, and viceversa
-			auto searching = (!facingR) ? Tiles::Collidable::JUMP_WALL_L : Tiles::Collidable::JUMP_WALL_R;
-			std::cout << side.size() << " to the " << (facingR ? "left" : "right") << "\n";
-			for (const auto& t : side) if (t == searching) {
-				highEnough = true;
-				break;
-			}
-			const auto& v = me->getVelocity();
-			if (highEnough || v.y>-0.1*physics::MAX_FALL_SPEED) { // if its high enough OR we are going up slowly 
-				me->startJumping();
-				wallJumpStep2 = true;
-			}
-		}
-		else {
-			//std::cout << "Im close to the wall to the "
-			bool closeToWall = false; // we assume it is not, and set it if it is
-			const std::vector<Tiles::Collidable>& side = tm->tilesToTheSide(me->getHitBox(), !facingR, 3);// facing right, wall jump should be to the left, and viceversa
-			Tiles::Collidable searching = (!facingR) ? Tiles::Collidable::JUMP_WALL_L : Tiles::Collidable::JUMP_WALL_R;
-			std::cout << side.size() << " to the " << (facingR ? "left" : "right")<< "\n";
-			for (const auto& t : side) if (t == searching) {
-				closeToWall = true;
-				break;
-			}
-			if (closeToWall && me->canJump()) {
-				me->startJumping();
-				wallJumpStep2 = true;
-			}
-		}
-		if (me->getGrounded() && wallJumpStep2) {
-			isPerformingWallJump = false; wallJumpStep2 = false;
-		}
-		return;
-	}
+	tryToWallJump();
+	if (isPerformingWallJump) return;
+
 
 
 	bool canAdvance = true;
@@ -959,8 +975,21 @@ void NPC::update(const sf::Time dT) { // Tries to get from current to next
 		jumped = false;
 	}
 	pathMtx[0].lock();
+
+	if (pathFound[0] != 1) moveWithoutPath();
+
+	if (!isPerformingWallJump) {
+		isPerformingWallJump = detectWallJump(me->isFacingRight(), 10); // if there are wall jump tiles, try to jump them
+		if (isPerformingWallJump) {
+			std::cout << "NEW WALLJUMP\n";
+			pathMtx[0].unlock();
+			return;
+		}
+	}
+
+
 	pathEnd = std::end(path[0]);
-	if (pathFound[0] == 1 && step != pathEnd && ++step != pathEnd) {
+	if (pathFound[0] == 1 && step != pathEnd){// && ++step != pathEnd) {
 		elapsed += dT;
 		newPosition = me->getPosition();
 		objDistance = nodeDistance(current, **step);
@@ -973,17 +1002,24 @@ void NPC::update(const sf::Time dT) { // Tries to get from current to next
 		// Follow:
 		stepNodePtr = *step;
 
-		if (++step != pathEnd && (*step)->data.canWallJumpLeft || (*step)->data.canWallJumpRight) {
+		/*if (++step != pathEnd && (*step)->data.canWallJumpLeft || (*step)->data.canWallJumpRight) {
+			std::cout << "ENTERING WALL JUMP MODE\n";
 			isPerformingWallJump = true; // TODO: dejar esto o no??
 			pathMtx[0].unlock();
 			return;
-		}
-		else if (!wallJumped && stepNodePtr->data.canWallJumpLeft == 1 || stepNodePtr->data.canWallJumpRight == 1) {
-
+		}*/
+		if (!wallJumped && stepNodePtr->data.canWallJumpLeft == 1 || stepNodePtr->data.canWallJumpRight == 1) {
+			isPerformingWallJump = true;
+			std::cout << "ENTERING WALL JUMP MODE\n";
+			pathMtx[0].unlock();
+			return;
 			
 
 			if (stepNodePtr->data.canWallJumpLeft == 1) me->run(false);
 			else me->run(true);
+			if (me->canJump()) me->startJumping();
+			pathMtx[0].unlock();
+			return;
 			if (!wallJumped && me->canWallJump()) {
 				me->startJumping();
 				wallJumped = true;

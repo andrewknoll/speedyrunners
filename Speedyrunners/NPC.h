@@ -115,6 +115,9 @@ private:
 	void giveUp();
 	float nodeDistance(const TileNode& n1, const TileNode& n2) const;
 	PathIterator getClosestNode(TileNode& current, const std::deque<std::shared_ptr<TileNode> >& p) const;
+	void moveWithoutPath(); // tries to get closer to the objective before having the path
+	void tryToWallJump();
+	bool detectWallJump(bool right, float widthMultiplier);// returns if there are jump wall to the <right>, in a rectangle of width hitbox*widthMultiplier
 public:
 	NPC();
 	TileNode getCharacterCell() const;
@@ -131,6 +134,8 @@ public:
 	int getPathFound(int i) const;
 	void endMe();
 	void clearPaths();
+
+	void die(); // resets states of path follower part
 	std::list<selbaward::Line> debugLines();
 	std::list<sf::RectangleShape> debugExpanded();
 	std::list<sf::RectangleShape> debugHook();

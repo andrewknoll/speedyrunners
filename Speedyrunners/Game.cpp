@@ -367,6 +367,7 @@ void Game::updateNPCs(bool follow) {
 				threadPool[2 * i].threadPtr = std::make_unique<std::thread>([&, i]() {
 					while (running) {
 						if (npcs[i]->getCharacter()->isDead()) {
+							npcs[i]->die();
 							{ std::unique_lock<std::mutex> lck(restartMtx);
 							restartCv.wait(lck); }
 						}
@@ -384,6 +385,7 @@ void Game::updateNPCs(bool follow) {
 				threadPool[2 * i + 1].threadPtr = std::make_unique<std::thread>([&, i]() {
 					while (running) {
 						if (npcs[i]->getCharacter()->isDead()) {
+							npcs[i]->die();
 							{ std::unique_lock<std::mutex> lck(restartMtx);
 							restartCv.wait(lck); }
 						}
