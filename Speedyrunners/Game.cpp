@@ -9,6 +9,7 @@
 
 #include "Rocket.h"
 #include "IceRay.h"
+#include "GoldenHook.h"
 
 #ifdef USE_IMGUI
 #include "imgui.h"
@@ -510,13 +511,14 @@ void Game::update()
 			//characters.front().processInput(event); // Podemos cambiarlo por Player en el futuro
 			for (int i = 0; i < characters.size(); i++) {
 				target = i; //Set target initial value to oneself
+
+				if (i > 0) target--;
+				else if (i < characters.size() - 1) target++;
+				//if player is dumb and uses rockets when nobody else is playing, it will hit them
 				auto p = getPlayerAt(i);
 				if (p != nullptr && p->captureEvents(event)) {
 					auto item = characters[i]->getCurrentItem();
 					if (item == glb::item::ROCKET) {
-						if (i > 0) target--;
-						else if (i < characters.size() - 1) target++;
-						//if player is dumb and uses rockets when nobody else is playing, it will hit them
 						auto rocket = std::make_shared<Rocket>(characters[i]->getPosition(), characters[target], characters[i]->isFacingRight());
 						
 						items.push_back(rocket);
@@ -540,6 +542,11 @@ void Game::update()
 						auto iceray = std::make_shared<IceRay>(cam, characters[i]);
 						items.push_back(iceray);
 						characters[i]->resetItem();
+					}
+					else if (item == glb::GOLDEN_HOOK) {
+						auto ghook = std::make_shared<GoldenHook>(characters[i], characters[target]);
+						items.push_back(ghook);
+						// characters[i]->resetItem();
 					}
 					else {
 						std::cout << "unimplemented item " << item << "\n";

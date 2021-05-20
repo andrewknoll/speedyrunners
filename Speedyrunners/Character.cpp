@@ -714,6 +714,23 @@ void Character::setItemPtr(std::shared_ptr<Item> tnt) {
 	itemPtr = tnt;
 }
 
+void Character::pullTowards(const sf::Vector2f& target, float pullSpeed)
+{
+	auto dir = target - getPosition();
+	dir = dir / utils::length(dir); // normalize
+	vel = dir * pullSpeed;
+	setAnimation(AnimationIndex::SwingAnim);
+}
+
+
+void Character::bePulledTowards(const sf::Vector2f& target, float pullSpeed)
+{
+	auto dir = target - getPosition();
+	dir = dir / utils::length(dir); // normalize
+	vel = dir * pullSpeed;
+	setAnimation(AnimationIndex::GrabbedAnim);
+}
+
 std::shared_ptr<Item> Character::getItemPtr() {
 	return itemPtr;
 }

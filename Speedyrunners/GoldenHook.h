@@ -11,33 +11,31 @@ private:
 	sf::Sprite hook;
 	CharPtr from, target;
 
-	sf::Vector2f vel, acc, position;
+	sf::Vector2f vel, position, offset = glb::FEET_TO_HAND;
 
-	float linearVel = 300;
+	bool flying = true, hooked = false, missed = false;
+
+	sf::Time remainingPull = sf::seconds(0.75);
+
+	float linearVel = 2000;
+	float pullSpeed = 400;
 
 	float angle = 0;
-	bool hooked = false;
 
 	particles::PSystem& particleSyst;
 
 	std::vector<sf::IntRect> rects; // texture rects
 
-
-	const float velValIni = 300.0f;
-	const float maxVel = 425.0f; // modulo
-	const float minVel = 125.0f;
-
-	const float detonationRadius = 50.0f; // it activates at this distance from the target
-	const float explosionRadius = 100.0f; // the explosion radius
-
-	float GoldenHookLength; // length of the sprite in world (for particles)
+	const float maxVertical = 0.5; // max vertical component of the direction (0.5 is 45º)
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
+	void setTexRect(bool first);
+
 
 public:
-	GoldenHook(sf::Vector2f pos, CharPtr target, bool facingRight, float tileW); // width is its world width
-	void setTexRect(bool first); // Sets the first or the second tex rect
+	GoldenHook(CharPtr _from, CharPtr _target, float width=15); // width is its world width
+
 	virtual bool update(sf::Time elapsed, const Level& lvl) override;
 
 	virtual void doThingTo(std::shared_ptr<Character> c) override; // Explode, in this case

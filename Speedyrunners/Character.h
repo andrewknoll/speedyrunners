@@ -73,7 +73,7 @@ protected:
 	bool sliding = false;
 	int wiggleFrames = glb::WIGGLE_FRAMES;
 
-	bool tumble = false; // if true, reduce the speed once, set to false again
+	bool tumble = false; // tumbling
 	sf::Time tumblingTime; // remaining tumbling time
 
 	// Boost
@@ -81,7 +81,7 @@ protected:
 	bool usingBoost = false;
 
 	bool hasSuperSpeed = false;
-	float superSpeedPower = 1.3;
+	float superSpeedPower = 1.4;
 	sf::Time maxSuperSpeed = sf::seconds(1);
 	sf::Time superSpeedRemaining;
 
@@ -233,6 +233,10 @@ public:
 	// Item:
 	glb::item getCurrentItem() const;
 	void setItem(glb::item item);
+
+	// Golden hook:
+	void pullTowards(const sf::Vector2f& target, float pullSpeed);
+	void bePulledTowards(const sf::Vector2f& target, float pullSpeed);
 
 	const sf::FloatRect& getHitBox() const;
 
