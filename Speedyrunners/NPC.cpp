@@ -494,7 +494,6 @@ void NPC::giveUp() {
 	halt();
 	pathFound[0] = -1;
 	path[0].clear();
-	pathMtx[0].unlock(); // TODO: cuidado
 }
 
 float NPC::nodeDistance(const TileNode & n1, const TileNode & n2) const
@@ -952,7 +951,7 @@ void NPC::update(const sf::Time dT) { // Tries to get from current to next
 	if (me->canJump()) {
 		jumped = false;
 	}
-	pathMtx[0].lock();
+	const std::lock_guard<std::mutex> lock0(pathMtx[0]);
 	pathEnd = std::end(path[0]);
 	if (pathFound[0] == 1 && step != pathEnd && ++step != pathEnd) {
 		elapsed += dT;
@@ -960,7 +959,6 @@ void NPC::update(const sf::Time dT) { // Tries to get from current to next
 		objDistance = nodeDistance(current, **step);
 		/*if (objDistance > 100) {
 			pathFound[0] = 0;
-			pathMtx[0].unlock();
 			return;
 		}*/
 		
@@ -1041,7 +1039,7 @@ void NPC::update(const sf::Time dT) { // Tries to get from current to next
 		}
 		if (elapsed >= GIVE_UP_TIME) {
 			elapsed = sf::Time::Zero;
-			giveUp();	//This function must unlock pathMtx[0]
+			giveUp();
 			return;
 		}
 		if (!me->getIsStunned() && utils::distance(position, newPosition) < CLOSENESS_THRESHOLD) {
@@ -1058,7 +1056,7 @@ void NPC::update(const sf::Time dT) { // Tries to get from current to next
 		std::cout << "Completed... Now I want " << currentGoalIdx << std::endl;
 		//Get next part
 		if (pathFound[1] == 1) {
-			pathMtx[1].lock();
+			const std::lock_guard<std::mutex> lock1(pathMtx[1]);
 			pathFound[0] = 1;	//Next part of the path was already planned
 			auto last = path[0].back();
 			path[0].clear();
@@ -1074,13 +1072,11 @@ void NPC::update(const sf::Time dT) { // Tries to get from current to next
 
 			//Make sure we start planning the next part
 			pathFound[1] = 0;
-			pathMtx[1].unlock();
 		}
 		else {
 			pathFound[0] = 0;	//We reached the end, so we make sure we replan
 		}
 	}
-	pathMtx[0].unlock();
 }
 
 /*void NPC::followPath() {

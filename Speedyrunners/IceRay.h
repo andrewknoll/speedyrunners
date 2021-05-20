@@ -13,8 +13,9 @@ private:
 	CharPtr user;
 
 	const Camera& cam;
-	bool facingRight;
+	bool facingRight, emitted = false;
 	sf::Time countdown;
+	sf::Time ttl;
 
 	//particles::PSystem& particleSyst;
 

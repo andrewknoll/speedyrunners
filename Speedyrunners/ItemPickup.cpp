@@ -13,6 +13,7 @@ ItemPickup::ItemPickup(const sf::Vector2f& pos, float tileWidth)
 	sprite = animation.get_first_frame();
 	sprite.setTextureRect(sf::IntRect(0, 0, tex.getSize().x / 10, tex.getSize().y / 2));
 	float rel = 1.75 * tileWidth / sprite.getGlobalBounds().width;
+	animation.set_scale(rel, rel);
 	sprite.setScale(rel, rel);
 	utils::centerOrigin(sprite);
 	sprite.setPosition(pos);

@@ -46,8 +46,10 @@ sf::Sprite Animation::get_first_frame() {
 	//sprite.setPosition(this->get_position() - this->get_center_offset());
 	sprite.setOrigin(this->get_origin_point());
 	//sprite.setOrigin(sprite.getOrigin());
+	sprite.setScale(getScale());
 	flip(sprite);
-	sprite.setRotation(angle);
+	sprite.setRotation(getRotation());
+	finished = false;
 	return sprite;
 }
 
@@ -87,8 +89,9 @@ int Animation::advance_frame(sf::Sprite& sprite) {
 		}
 		if (current_frame == 0) return_code = 1;
 	}
+	sprite.setScale(getScale());
 	flip(sprite);
-	sprite.setRotation(angle);
+	sprite.setRotation(getRotation());
 	if (return_code == 1) {
 		finished = true;
 	}
@@ -117,19 +120,6 @@ Animation::Animation()
 {
 }
 
-
-sf::Vector2f Animation::get_position() {
-	return position;
-}
-
-void Animation::setPosition(sf::Vector2f new_position) {
-	position = new_position;
-}
-
-void Animation::setPosition(float x, float y) {
-	position = sf::Vector2f(x, y);
-}
-
 void Animation::set_loop(bool loop) {
 	this->loop = loop;
 }
@@ -151,7 +141,10 @@ void Animation::update_orientation(bool right) {
 }
 
 void Animation::update_angle(sf::Sprite& sp, float angle) {
-	this->angle = angle;
+	setRotation(angle);
 	sp.setRotation(angle);
 }
 
+void Animation::set_scale(float x, float y) {
+	setScale(x, y);
+}

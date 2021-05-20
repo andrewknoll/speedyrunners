@@ -15,8 +15,14 @@ IceRay::IceRay(const Camera& cam, CharPtr user) :
 	sourceAnim = Resources::getInstance().getMiscSpriteSheet(0).get_animations()[0];
 	auto& t = Resources::getInstance().getItemTexture(glb::item::ICERAY);
 
+	sourceAnim->set_scale(0.5f, 0.5f);
+
+	source.setScale(0.5f, 0.5f);
+	sf::Vector2f o = sourceAnim->get_origin_point();
+	o.y /= 2;
+	source.setOrigin(o);
 	source = sourceAnim->get_first_frame();
-	//setTexRect(true);
+	ttl = beamParticles.getSettings().ttl;
 
 	// Sound:
 	audioPlayer.play(AudioPlayer::Effect::ICE_BEAM_FULL);
@@ -25,8 +31,10 @@ IceRay::IceRay(const Camera& cam, CharPtr user) :
 
 void IceRay::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	//target.draw(particles, states);
-	target.draw(source, states);
-	if (sourceAnim->get_current_frame() > 3) {
+	if (!sourceAnim->getFinished()) {
+		target.draw(source, states);
+	}
+	else {
 		target.draw(beamParticles);
 	}
 	
@@ -35,13 +43,29 @@ void IceRay::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 bool IceRay::update(sf::Time elapsed, const Level& lvl) {
 	sf::Vector2f pos = user->getPosition();
 	
-	source.setPosition(pos);
-	tickAnimation(elapsed);
+	
+	if (!sourceAnim->getFinished()) {
+		sf::Vector2f o = sourceAnim->get_origin_point();
+		o.y /= 2;
+		source.setOrigin(o);
+		source.setPosition(pos);
+		tickAnimation(elapsed);
+		return false;
+	}
+	else if(ttl > sf::Time::Zero){
+		if (!emitted && sourceAnim->get_current_frame() > 10) {
+			beamParticles.emitLinear(sf::Vector2f(0, 0), cam.viewRectangle().width);
+			emitted = true;
+		}
+		beamParticles.setScale(1.0f, 0.3f);
+		beamParticles.setPosition(pos);
 
-	beamParticles.emitLinear(pos, cam.viewRectangle().width);
-	//beamParticles.setAllParticlesPosition(pos);
-
-	return sourceAnim->getFinished();
+		beamParticles.update(elapsed);
+		ttl -= elapsed;
+		
+		return false;
+	}
+	return true;
 }
 
 void IceRay::tickAnimation(sf::Time dT) {
