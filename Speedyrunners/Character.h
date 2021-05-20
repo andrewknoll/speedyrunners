@@ -152,7 +152,7 @@ protected:
 	void updateBoost(const sf::Time& dT, const Level& lvl);
 	void emitBrakeParticles();
 	void addTrail(const sf::Vector2f& v);
-
+	void updateHook(sf::Time dT, const TileMap& tiles);
 	void frozenWiggle();
 public:
 	Character(Spritesheet sp, int ID, int variant = 0);
@@ -196,6 +196,8 @@ public:
 	void stopSliding();
 	void startJumping();
 	void stopJumping();
+
+	float getMaxS() const; // Returns current max speed (modified by boost and superspeed)
 
 	bool isDead() const;
 	bool isSwinging() const;

@@ -96,7 +96,8 @@ float Hook::angle() const {
 }
 
 sf::Vector2f Hook::tangent() const {
-	return sf::Vector2f(-sin(angle()), -cos(angle()));
+	sf::Vector2f v(-sin(angle()), -cos(angle()));
+	return v / utils::length(v);
 }
 
 void Hook::destroy() {

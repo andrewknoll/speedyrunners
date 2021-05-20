@@ -322,12 +322,12 @@ Tiles::Ramp Tiles::toRamp(Collidable tile)
     else if (tile == Collidable::RAMP_UP || tile == Collidable::STAIRS_UP) {
         return UP;
     }
-    else if (tile == Collidable::RAMP_CEIL_DOWN) {
+    /*else if (tile == Collidable::RAMP_CEIL_DOWN) {
         return CEIL_DOWN;
     }
     else if (tile == Collidable::RAMP_CEIL_UP) {
         return CEIL_UP;
-    }
+    }*/
     else {
         return Ramp::NONE;
     }
@@ -404,7 +404,7 @@ std::optional<Tiles::Collision> Tiles::rampCollision(const Tiles::Ramp ramp, con
 
         //sf::sleep(sf::seconds(2));
         if (!isGrounded && dist > 0) return {};
-        return Tiles::Collision{ downCenter, n, -dist };
+        return Tiles::Collision{ downCenter, n/utils::length(n), -dist };
     }
     else {
         // TODO: los otros 4 tipos de rampas
@@ -465,14 +465,16 @@ std::optional<Tiles::Collision> Tiles::collision(const Tiles::Collidable tile, c
         point = collision2;
     }
     //std::cout << x_overlap << " " << y_overlap << "\n";
+    /*if (tile == Collidable::GRAPPLABLE) {
+        std::cout << "collision with grapplable: " << n << " " << dist << "\n";
+    }*/
 
-    return Tiles::Collision{ point, n, dist };// TODO: This is wrong!
+    return Tiles::Collision{ point, n/utils::length(n), dist };// TODO: This is wrong!
 }
 
 std::vector<Tiles::Collidable> TileMap::tilesToTheSide(const sf::FloatRect& characterHitbox, bool rightSide, float checkWidth) const
 {
     std::vector<Tiles::Collidable> side;
-
 
     // Tile coordinates of upper left tile:
     int i, j;
