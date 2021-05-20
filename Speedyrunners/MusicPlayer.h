@@ -7,7 +7,7 @@ public:
 private:
 	const int n_types = 3;
 	std::vector<std::vector<std::shared_ptr<sf::Music> > > tracks = std::vector<std::vector<std::shared_ptr<sf::Music> > >(n_types);
-	
+	float volume = 30; // between 0 and 100
 public:
 	void addTrack(std::string file, int t);
 	void addTrack(std::string file, MusicType t);
@@ -19,5 +19,8 @@ public:
 
 	bool isPlaying(int t);
 	bool isPlaying(MusicType t);
+
+	void setVolume(float v);
+	float getVolume() const;
 };
 

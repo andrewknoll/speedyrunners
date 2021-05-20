@@ -322,12 +322,12 @@ Tiles::Ramp Tiles::toRamp(Collidable tile)
     else if (tile == Collidable::RAMP_UP || tile == Collidable::STAIRS_UP) {
         return UP;
     }
-    else if (tile == Collidable::RAMP_CEIL_DOWN) {
+    /*else if (tile == Collidable::RAMP_CEIL_DOWN) {
         return CEIL_DOWN;
     }
     else if (tile == Collidable::RAMP_CEIL_UP) {
         return CEIL_UP;
-    }
+    }*/
     else {
         return Ramp::NONE;
     }
@@ -404,7 +404,7 @@ std::optional<Tiles::Collision> Tiles::rampCollision(const Tiles::Ramp ramp, con
 
         //sf::sleep(sf::seconds(2));
         if (!isGrounded && dist > 0) return {};
-        return Tiles::Collision{ downCenter, n, -dist };
+        return Tiles::Collision{ downCenter, n/utils::length(n), -dist };
     }
     else {
         // TODO: los otros 4 tipos de rampas
@@ -465,25 +465,27 @@ std::optional<Tiles::Collision> Tiles::collision(const Tiles::Collidable tile, c
         point = collision2;
     }
     //std::cout << x_overlap << " " << y_overlap << "\n";
+    /*if (tile == Collidable::GRAPPLABLE) {
+        std::cout << "collision with grapplable: " << n << " " << dist << "\n";
+    }*/
 
-    return Tiles::Collision{ point, n, dist };// TODO: This is wrong!
+    return Tiles::Collision{ point, n/utils::length(n), dist };// TODO: This is wrong!
 }
 
 std::vector<Tiles::Collidable> TileMap::tilesToTheSide(const sf::FloatRect& characterHitbox, bool rightSide, float checkWidth) const
 {
     std::vector<Tiles::Collidable> side;
 
-
     // Tile coordinates of upper left tile:
     int i, j;
     float widthChecked = characterHitbox.width * checkWidth;
     if (rightSide) {
         i = int(characterHitbox.left + characterHitbox.width) / tileSizeWorld.x;
-        j = int(characterHitbox.top + characterHitbox.height) / tileSizeWorld.y;
+        j = int(characterHitbox.top) / tileSizeWorld.y;
     }
     else {
         i = int(characterHitbox.left - widthChecked) / tileSizeWorld.x;
-        j = int(characterHitbox.top - widthChecked) / tileSizeWorld.y;
+        j = int(characterHitbox.top) / tileSizeWorld.y;
     }
 
     int nVertical = std::max(1, int(std::round(characterHitbox.height / tileSizeWorld.y)));
@@ -492,7 +494,7 @@ std::vector<Tiles::Collidable> TileMap::tilesToTheSide(const sf::FloatRect& char
 
     sf::Vector2f sizeRectTile(tileSizeWorld.x, tileSizeWorld.y);
     //std::cout << "sizeTile: " << sizeRectTile << " size hitbox: " << characterHitbox.width << " " << characterHitbox.height << "\n";
-    //if (nVertical < 3) std::cout << "checking " << nHorizontal << " horizontal and " << nVertical << " vertical tiles\n";
+    //std::cout << "checking " << nHorizontal << " horizontal and " << nVertical << " vertical tiles\n";
 
     for (int dj = 0; dj < nVertical; dj++) { // And 3 vertical
         //bool bothHorizontal = false; // Both horizontal tiles are collidable

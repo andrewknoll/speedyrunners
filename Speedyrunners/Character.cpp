@@ -113,6 +113,10 @@ void Character::updateInRamp(Tiles::Ramp ramp) {
 void Character::setBaseFromRamp(Tiles::Ramp ramp) {
 	using namespace Tiles;
 	if (ramp == Ramp::DOWN || ramp == Ramp::CEIL_DOWN) {
+		if (!isGrounded && (vel.y > glb::SUPERSPEED_THRESHOLD * physics::MAX_FALL_SPEED) && vel.x >= 0) { // going to the right
+			hasSuperSpeed = true;
+			superSpeedRemaining = maxSuperSpeed;
+		}
 		base = geometry::Mat2(
 			geometry::normalize(sf::Vector2f(1.0f, 1.0f)),
 			geometry::normalize(sf::Vector2f(1.0f, 1.0f))
@@ -120,6 +124,10 @@ void Character::setBaseFromRamp(Tiles::Ramp ramp) {
 		
 	} 
 	else if (ramp == Ramp::UP || ramp == Ramp::CEIL_UP) {
+		if (!isGrounded  && (vel.y > glb::SUPERSPEED_THRESHOLD * physics::MAX_FALL_SPEED) && vel.x <= 0) { // to the left
+			hasSuperSpeed = true;
+			superSpeedRemaining = maxSuperSpeed;
+		}
 		base = geometry::Mat2(
 			geometry::normalize(sf::Vector2f(1.0f, -1.0f)),
 			geometry::normalize(sf::Vector2f(-1.0f, -1.0f))
@@ -153,20 +161,30 @@ void Character::setBaseFromRamp(Tiles::Ramp ramp) {
 	
 }
 
+float Character::getMaxS() const {
+	float maxS = physics::MAX_FALL_SPEED;
+	//if (usingHook) return maxS;
+	if (usingBoost) maxS *= boostPower;
+	if (hasSuperSpeed) maxS *= superSpeedPower;
+	return maxS;
+}
+
+
 void Character::updateVel(const float& dtSec) {
 	/*if (isStunned) {
 		acc.x = 0;
 	}*/
+	float maxS = getMaxS();
 	if (!swinging) {
-		sf::Vector2f runningSpeed = utils::clampAbs(vel + acc * dtSec, physics::MAX_FALL_SPEED);
+		if (usingBoost) acc *= boostPower;
+		if (hasSuperSpeed) acc *= superSpeedPower;
+		sf::Vector2f runningSpeed = utils::clampAbs(vel + acc * dtSec, maxS);
 		//if signs of velocity and acceleration are opposed,
 		//or the running speed of the character is greater than their current velocity, set it to that
 		if (((vel.x >= 0) ^ (acc.x >= 0)) || abs(vel.x) <= abs(runningSpeed.x)) vel.x = runningSpeed.x;
 		//Otherwise slow down
 		else if (isGrounded) { // BUG: aqui no entra nunca
-			std::cout << "applying friction\n";
 			if (rng::defaultGen.rand01() > 0.9) particleSystems[glb::particleSystemIdx::BRAKE].emit(getPosition());
-			else std::cout << "ESTOY AQUI Y NOP\n";
 			if (facingRight) vel.x = vel.x - physics::FLOOR_FRICTION * 0.5 * dtSec;
 			else vel.x = vel.x + physics::FLOOR_FRICTION * 0.5 * dtSec;
 		}
@@ -188,8 +206,9 @@ void Character::updateVel(const float& dtSec) {
 			}
 		}
 	}
-	else {
+	else { // is swinging
 		vel = utils::length(hook.radius()) * hook.tangent() * omega;
+		//std::cout << "swinging vel " << vel << "\n";
 		if (!isStunned) {
 			if (facingRight) setAnimationAngle(-135.0f - utils::degrees(hook.angle()));
 			else setAnimationAngle(-45.0f - utils::degrees(hook.angle()));
@@ -269,6 +288,43 @@ sf::Vector2f Character::getBackPosition(const float& distance) const
 	return sf::Vector2f(x, y);
 }
 
+
+void Character::updateHook(sf::Time dT, const TileMap& tiles) {
+	// hook
+	if (usingHook) {
+		int res = hook.update(dT, tiles, getPosition());
+		if (res == -1 || (facingRight && utils::degrees(hook.angle()) > -30) || (!facingRight && utils::degrees(hook.angle()) > 150)) {
+			swinging = false;
+			usingHook = false;
+			hook.destroy();
+		}
+		else if (res == 1) { // is swinging
+			if (hasSuperSpeed) {
+				superSpeedRemaining = maxSuperSpeed; // time starts when we stop swinging
+			}
+			if (!swinging) { // starts swinging
+				if (vel.y > glb::SUPERSPEED_THRESHOLD * physics::MAX_FALL_SPEED) {
+					hasSuperSpeed = true;
+					superSpeedRemaining = maxSuperSpeed; // time starts when we stop swinging
+				}
+				//float velx = std::abs(vel.x);
+				//if (velx < 500.0f) vel.x = 500.0f;
+
+				auto v = vel;
+				if (std::abs(v.x) < 500.0f) v.x = 500.0f;
+				setAnimation(SwingAnim);
+				omega = utils::length(v) / utils::length(hook.radius());
+				if (!facingRight) omega = -omega;
+				swinging = true;
+				hasDoubleJumped = false; // resets when swinging
+			}
+		}
+	} // end of hook
+	else {
+		swinging = false;
+	}
+}
+
 void Character::update(const sf::Time& dT, const Level& lvl)
 
 {
@@ -279,11 +335,11 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 	setFriction();
 	float dtSec = dT.asSeconds();
 	updateBoost(dT, lvl);
-	if (usingBoost) { // updating dT is the same as updating all speeds and acc
+	/*if (usingBoost) { // updating dT is the same as updating all speeds and acc
 		dtSec *= boostPower;
 	}
 	if (hasSuperSpeed) dtSec *= superSpeedPower;
-
+	*/
 
 	sf::Vector2f runningSpeed = vel;
 
@@ -300,17 +356,21 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 	else {
 		currHookCD = sf::Time::Zero;
 	}
+	updateHook(dT, tiles);
 
 	// New vel:
 	updateVel(dtSec);
+
 	
 	// Move:
 	hitBox.left += vel.x * dtSec;
 	hitBox.top += vel.y * dtSec;
+	//std::cout << swinging << " vely: " << vel.y << "\n";
 
-	fixPosition(hitBox);
+	//fixPosition(hitBox);
 
 	sf::Vector2f posIni(hitBox.left, hitBox.top);
+	//std::cout << "After move: " << posIni << "\n";
 	std::vector<Tiles::Collision> collisions = tiles.collision(hitBox, isGrounded);
 
 	bool wasAtWallJump = isAtWallJump;
@@ -319,7 +379,7 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 		const std::vector<Tiles::Collidable>& side = tiles.tilesToTheSide(hitBox, !facingRight);// facing right, wall jump should be to the left, and viceversa
 		Tiles::Collidable searching = (!facingRight) ? Tiles::Collidable::JUMP_WALL_L : Tiles::Collidable::JUMP_WALL_R;
 		//std::cout << side.size() << " to the " << (facingRight ? "left" : "right")<< "\n";
-		for (const auto& t : side) if (t == searching) {
+		for (const auto& t : side) if (!isGrounded && t == searching) {
 			isAtWallJump = true;
 			break;
 		}
@@ -350,8 +410,12 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 		// std::cout << "n: " << c.->normal.x << "," << c.->normal.y << "\tpoint: " << c.->point.x << "," << c.->point.y << " " << c.->distance << "\n";
 		// New position:
 		auto pos = posIni + (c.normal * (c.distance));
-
-		if (c.normal.y >= 0) useHook(false);
+		//std::cout << "newpos: " << pos << "\n";
+		if (c.normal.y >= 0) {
+			useHook(false);
+			/*vel.y = 0;
+			acc.y = physics::GRAVITY;*/
+		}
 
 		// may be ramp
 		using namespace Tiles;
@@ -388,8 +452,8 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 					if (!isStunned && !isFrozen) {
 						isAtWallJump = true;
 						facingRight = true;
-						vel.y = std::max(vel.y - xSpeed, -physics::MAX_FALL_SPEED);
 						setAnimation(WallHangAnim);
+						vel.y = std::max(vel.y - xSpeed, -getMaxS()); // modified by boost and so on
 					}
 				}
 			}
@@ -412,35 +476,17 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 		isGrounded = false;
 	}
 
-	updateAcceleration();
 	setPosition(hitBox.left, hitBox.top); // Del rectangulo
-	if (usingHook) {
-		int res = hook.update(dT, tiles, getPosition());
-		if (res == -1 || (facingRight && utils::degrees(hook.angle()) > 30) || (!facingRight && utils::degrees(hook.angle()) > 150)) {
-			swinging = false;
-			usingHook = false;
-			hook.destroy();
-		}
-		else if (res == 1 && !swinging) { // starts swinging
-			if (hasSuperSpeed) dtSec = dtSec / superSpeedPower; // shouldnt affect this
-			if (vel.y > 0.95 * physics::MAX_FALL_SPEED) {
-				hasSuperSpeed = true;
-				superSpeedRemaining = maxSuperSpeed;
-			}
-			if (vel.x < 500.0f) vel.x = 500.0f;
-			setAnimation(SwingAnim);
-			omega = utils::length(vel) / utils::length(hook.radius());
-			if (!facingRight) omega = -omega;
-			swinging = true;
-			hasDoubleJumped = false; // resets when swinging
-		}
-	}
+	updateAcceleration();
+	
+	if (usingHook);
 	else if (!isStunned && !tumble) {
-		if (vel.y > 0) {
-			if (isAtWallJump && vel.x == 0) {
-				setAnimation(WallHangAnim);
-			}
-			else if (hasDoubleJumped) {
+		if (isAtWallJump && vel.x == 0) {
+			if (rng::defaultGen.rand01() > 0.8) particleSystems[glb::particleSystemIdx::BRAKE].emit(getPosition());
+			setAnimation(WallHangAnim);
+		}
+		else if (vel.y > 0) {
+			if (hasDoubleJumped) {
 				setAnimation(DoubleJumpFallAnim);
 			}
 			else if (!isGrounded) {
@@ -451,6 +497,7 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 			setAnimation(LongFallAnim);
 		}
 	}
+
 	updateHitBoxRectangle(); // Debug
 	if (isGrounded && !isAtWallJump) {
 		lastSafePosition = getPosition();

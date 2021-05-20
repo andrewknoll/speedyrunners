@@ -41,7 +41,7 @@ class NPC : public PlayerSlot
 	const float SLIDE_COST = 35.0f;
 	const float JUMP_COST_BASE_1 = 10*4.0f;
 	const float JUMP_COST_BASE_2 = 10*5.0f;
-	const float WALL_JUMP_COST = 10 * 1.5f;
+	const float WALL_JUMP_COST = 1.5f;
 	const float DIRECTION_CHANGE_COST = 10 * 500.0f;
 	const float JUMP_COST_PER_DISTANCE_UNIT = 10 * 50.0f;
 
@@ -75,6 +75,7 @@ private:
 	std::atomic<short int> pathFound[3] = { 0, 0, 0}; // -1 not searched, 0 not found, 1 found
 	std::atomic<bool> stopFollowing = false;
 	std::atomic<bool> active = true;
+	std::atomic<bool> resetPlan = false;
 	std::atomic<bool> stitched = false;
 
 	// 0 -> First path
@@ -115,6 +116,9 @@ private:
 	void giveUp();
 	float nodeDistance(const TileNode& n1, const TileNode& n2) const;
 	PathIterator getClosestNode(TileNode& current, const std::deque<std::shared_ptr<TileNode> >& p) const;
+	void moveWithoutPath(); // tries to get closer to the objective before having the path
+	void tryToWallJump();
+	bool detectWallJump(bool right, float widthMultiplier);// returns if there are jump wall to the <right>, in a rectangle of width hitbox*widthMultiplier
 public:
 	NPC();
 	TileNode getCharacterCell() const;
@@ -131,6 +135,8 @@ public:
 	int getPathFound(int i) const;
 	void endMe();
 	void clearPaths();
+
+	void die(); // resets states of path follower part
 	std::list<selbaward::Line> debugLines();
 	std::list<sf::RectangleShape> debugExpanded();
 	std::list<sf::RectangleShape> debugHook();

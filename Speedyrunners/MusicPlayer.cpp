@@ -1,7 +1,7 @@
 #include "MusicPlayer.h"
 
 
-#define DISABLE_MUSIC // DEBUG jeje
+//#define DISABLE_MUSIC // DEBUG jeje
 
 void MusicPlayer::addTrack(std::string file, int t) {
 	std::shared_ptr<sf::Music> m = std::make_shared<sf::Music>();
@@ -20,6 +20,7 @@ void MusicPlayer::playMusicTrack(int t, int variant) {
 		for (int j = 0; j < tracks[i].size(); j++) {
 			if (i != t || j != variant) tracks[i][j]->stop();
 			else {
+				tracks[i][j]->setVolume(volume);
 				tracks[i][j]->setLoop(true);
 				tracks[i][j]->play();
 			}
@@ -51,4 +52,14 @@ bool MusicPlayer::isPlaying(int t) {
 
 bool MusicPlayer::isPlaying(MusicType t) {
 	return isPlaying((int)t);
+}
+
+void MusicPlayer::setVolume(float v)
+{
+	volume = v;
+}
+
+float MusicPlayer::getVolume() const
+{
+	return volume;
 }
