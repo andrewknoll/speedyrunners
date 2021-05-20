@@ -113,6 +113,10 @@ void Character::updateInRamp(Tiles::Ramp ramp) {
 void Character::setBaseFromRamp(Tiles::Ramp ramp) {
 	using namespace Tiles;
 	if (ramp == Ramp::DOWN || ramp == Ramp::CEIL_DOWN) {
+		if (!hasSuperSpeed && (vel.y > glb::SUPERSPEED_THRESHOLD * physics::MAX_FALL_SPEED) && vel.x >= 0) { // going to the right
+			hasSuperSpeed = true;
+			superSpeedRemaining = maxSuperSpeed;
+		}
 		base = geometry::Mat2(
 			geometry::normalize(sf::Vector2f(1.0f, 1.0f)),
 			geometry::normalize(sf::Vector2f(1.0f, 1.0f))
@@ -120,6 +124,10 @@ void Character::setBaseFromRamp(Tiles::Ramp ramp) {
 		
 	} 
 	else if (ramp == Ramp::UP || ramp == Ramp::CEIL_UP) {
+		if (!hasSuperSpeed && (vel.y > glb::SUPERSPEED_THRESHOLD * physics::MAX_FALL_SPEED) && vel.x <= 0) { // to the left
+			hasSuperSpeed = true;
+			superSpeedRemaining = maxSuperSpeed;
+		}
 		base = geometry::Mat2(
 			geometry::normalize(sf::Vector2f(1.0f, -1.0f)),
 			geometry::normalize(sf::Vector2f(-1.0f, -1.0f))
@@ -421,18 +429,23 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 			usingHook = false;
 			hook.destroy();
 		}
-		else if (res == 1 && !swinging) { // starts swinging
-			if (hasSuperSpeed) dtSec = dtSec / superSpeedPower; // shouldnt affect this
-			if (vel.y > 0.95 * physics::MAX_FALL_SPEED) {
-				hasSuperSpeed = true;
-				superSpeedRemaining = maxSuperSpeed;
+		else if (res == 1) { // is swinging
+			if (hasSuperSpeed) {
+				dtSec = dtSec / superSpeedPower; // shouldnt affect this
+				superSpeedRemaining = maxSuperSpeed; // time starts when we stop swinging
 			}
-			if (vel.x < 500.0f) vel.x = 500.0f;
-			setAnimation(SwingAnim);
-			omega = utils::length(vel) / utils::length(hook.radius());
-			if (!facingRight) omega = -omega;
-			swinging = true;
-			hasDoubleJumped = false; // resets when swinging
+			if (!swinging) { // starts swinging
+				if (vel.y > glb::SUPERSPEED_THRESHOLD * physics::MAX_FALL_SPEED) {
+					hasSuperSpeed = true;
+					superSpeedRemaining = maxSuperSpeed; // time starts when we stop swinging
+				}
+				if (vel.x < 500.0f) vel.x = 500.0f;
+				setAnimation(SwingAnim);
+				omega = utils::length(vel) / utils::length(hook.radius());
+				if (!facingRight) omega = -omega;
+				swinging = true;
+				hasDoubleJumped = false; // resets when swinging
+			}
 		}
 	}
 	else if (!isStunned && !tumble) {
