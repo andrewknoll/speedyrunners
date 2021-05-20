@@ -823,11 +823,11 @@ void Game::draw(sf::Time dT)
 			window.draw(cp);
 		}
 		// characters (sin hacer tick a las animaciones):
-		for (auto c : characters) {
+		/*for (auto c : characters) {
 			if (!c->isDead()) {
 				window.draw(*c);
 			}
-		}
+		}*/
 		for (auto npc : npcs) {
 			for (auto l : npc->debugExpanded()) {
 				window.draw(l);
@@ -843,23 +843,13 @@ void Game::draw(sf::Time dT)
 			checkpointCircle.setPosition(utils::mousePosition2f(window));
 			window.draw(checkpointCircle);
 		}
-		else for (const auto& ps : particleSystems) {
+		/*else for (const auto& ps : particleSystems) {
 			window.draw(ps); // testing particles
-		}
-	}
-	else if(state == State::FinishedRound) {
-		if (rv != nullptr) {
-			rv->draw(window);
-		}
-	}
-	else if(state == State::Countdown) {	
-		suddenDeath = false;
-		cam.setSuddenDeath(false);
-		countdown.draw(window);
-		animateCharacters();
+		}*/
 	}
 
 	// Characters
+	
 	animateCharacters();
 	for (const auto& ps : particleSystems) window.draw(ps);
 	for (const auto i : items) {
@@ -870,6 +860,18 @@ void Game::draw(sf::Time dT)
 	if (state != State::Editing) {
 		window.setView(window.getDefaultView());
 		window.draw(cam);
+	}
+
+	if (state == State::FinishedRound) {
+		if (rv != nullptr) {
+			rv->draw(window);
+		}
+	}
+	else if (state == State::Countdown) {
+		suddenDeath = false;
+		cam.setSuddenDeath(false);
+		countdown.draw(window);
+		//animateCharacters();
 	}
 
 	// UI

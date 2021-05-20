@@ -41,7 +41,7 @@ class NPC : public PlayerSlot
 	const float SLIDE_COST = 35.0f;
 	const float JUMP_COST_BASE_1 = 10*4.0f;
 	const float JUMP_COST_BASE_2 = 10*5.0f;
-	const float WALL_JUMP_COST = 10 * 1.5f;
+	const float WALL_JUMP_COST = 1.5f;
 	const float DIRECTION_CHANGE_COST = 10 * 500.0f;
 	const float JUMP_COST_PER_DISTANCE_UNIT = 10 * 50.0f;
 

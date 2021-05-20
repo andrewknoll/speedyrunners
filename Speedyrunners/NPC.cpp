@@ -486,6 +486,8 @@ void NPC::halt() {
 	me->stopJumping();
 	me->stopSliding();
 	me->useHook(false);
+	isPerformingWallJump = false;
+	wallJumpStep2 = false;
 }
 
 
@@ -524,9 +526,37 @@ NPC::PathIterator NPC::getClosestNode(TileNode& current, const std::deque<std::s
 
 
 void NPC::replan() {
-	pathFound[0] = -1;
-	pathFound[1] = -1;
-	plan();
+
+	if (pathFound[0] != -1) {
+		pathFound[0] = -1;
+		path[0].clear();
+		elapsed = sf::Time::Zero;
+		currentGoalIdx = (currentGoalIdx + 1) % goals.size();
+		std::cout << "Completed... Now I want " << currentGoalIdx << std::endl;
+	}
+	
+	//Get next part
+	if (pathFound[1] == 1) {
+		const std::lock_guard<std::mutex> lock1(pathMtx[1]);
+		pathFound[0] = 1;	//Next part of the path was already planned
+		auto last = path[0].back();
+		path[0].clear();
+		// Stitch the two paths together and save path[1] to path[0]
+		if (stitched) {
+			std::copy(std::begin(path[1]), std::end(path[1]), std::begin(path[0]));
+			stitched = false;
+		}
+		else {
+			path[0].push_front(last);
+		}
+		path[1].clear();
+
+		//Make sure we start planning the next part
+		pathFound[1] = 0;
+	}
+	else {
+		pathFound[0] = 0;	//We reached the end, so we make sure we replan
+	}
 }
 
 void NPC::plan() {
@@ -952,6 +982,8 @@ void NPC::moveWithoutPath()
 	auto goalpos = goals[currentGoalIdx].position;
 	bool right = goalpos.x > me->getPosition().x;
 	me->run(right);
+	if (isGoal(getCharacterCell(), goals[currentGoalIdx])) // reached a goal
+		replan();
 	//if (goals[currentGoalIdx])
 }
 
