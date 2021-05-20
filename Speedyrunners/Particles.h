@@ -25,7 +25,7 @@ namespace particles{
 	};
 
 
-	class Particle : sf::Transformable
+	class Particle : public sf::Transformable
 	{
 	public:
 		sf::Vector2f vel;

@@ -6,6 +6,9 @@
 class RoundVictory
 {
 private:
+
+	float width, height;
+
 	//sf::Time remaining;
 	int currentSecond;
 

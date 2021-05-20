@@ -138,7 +138,18 @@ namespace particles {
 			emit(center + (dist * dir), dir);
 		}
 	}
+	
+	void ParticleSystem::emitLinear(const sf::Vector2f& origin, const float& distance) {
+		emitLinear(origin, distance, std::abs(distance) / (pSettings.sizeEnd * 2));
+	}
 
+	void ParticleSystem::emitLinear(const sf::Vector2f& origin, const float& distance, int nParticles) {
+		sf::Vector2f p = origin;
+		for (int i = 0; i < nParticles; i++) {
+			emit(p);
+			p.x += distance / nParticles;
+		}
+	}
 	
 	void ParticleSystem::update(sf::Time elapsed)
 	{
@@ -170,6 +181,12 @@ namespace particles {
 		states.texture = tex;
 
 		target.draw(vertices, states);
+	}
+
+	void ParticleSystem::setAllParticlesPosition(sf::Vector2f pos) {
+		for (auto& p : particles) {
+			p.setPosition(pos);
+		}
 	}
 	
 

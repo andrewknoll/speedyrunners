@@ -148,7 +148,8 @@ namespace glb
 		SUPER_BOOST_TEX,
 		FIRE_P_TEX,
 		TRAIL_TEX,
-		ICE_CUBE_TEX
+		ICE_CUBE_TEX,
+		ICE_BEAM
 	};
 
 	// particlesystems:
@@ -158,7 +159,8 @@ namespace glb
 		BOOST,
 		BRAKE, // when sliding, etc
 		SUPER_SPEED,
-		SUDDEN_DEATH_EXPLOSION
+		SUDDEN_DEATH_EXPLOSION,
+		ICE_BEAM_PS
 	};
 
 	const float tumbleSpeedReduction = 0.85f;

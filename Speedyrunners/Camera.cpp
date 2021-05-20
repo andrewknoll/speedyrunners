@@ -4,9 +4,17 @@
 #include "Resources.h"
 
 
+void Camera::draw(sf::RenderTarget & target, sf::RenderStates states) const {
+	target.draw(viewportShape, states);
+}
+
 Camera::Camera(const sf::FloatRect& rect) : sf::View(rect)
 {
 	size0 = getSize();
+	viewportShape = sf::RectangleShape(size0);
+	viewportShape.setFillColor(sf::Color::Transparent);
+	viewportShape.setOrigin(sf::Vector2f(rect.width / 2.0f, rect.height / 2.0f));
+	viewportShape.setPosition(getCenter()/*+ sf::Vector2f(rect.width / 2.0f, rect.height / 2.0f)*/);
 	setSuddenDeath(false);
 } 
 
@@ -34,6 +42,11 @@ void Camera::operator=(const sf::View& v)
 	setCenter(v.getCenter());
 	setRotation(v.getRotation());
 	setSize(v.getSize());
+}
+
+void Camera::immediateFollow(std::vector<CharPtr>& characters, int first) {
+	follow(characters, first);
+	setCenter(objectivePos);
 }
 
 void Camera::follow(std::vector<CharPtr>& characters, int first) {
@@ -80,37 +93,12 @@ void Camera::follow(std::vector<CharPtr>& characters, int first) {
 	//TO-DO: Check max value
 
 	objectivePos = avg;
-
-	if (suddenDeath) {
-		setSize(size0);
-		if (rectSizeFactor > 0.3) {
-			rectSizeFactor -= 1e-4f;
-			viewportShape.setSize(size0 * rectSizeFactor);
-		}
-		viewportShape.setOutlineThickness(std::max(size0.x, size0.y) * (1.0f - rectSizeFactor) + 1.0f);
-		viewportShape.setPosition(getCenter() - size0 * rectSizeFactor / 2.0f);
-		if (increasingRedness) {
-			redValue += 2;
-		}
-		else {
-			redValue -= 2;
-		}
-		if (redValue < 2 || redValue > 253) {
-			increasingRedness = !increasingRedness;
-		}
-		viewportShape.setOutlineColor(sf::Color(redValue, 0, 0, 255));
-	} 
-	
-}
-
-sf::RectangleShape Camera::getSuddenDeathRectangle() {
-	return viewportShape;
 }
 
 sf::FloatRect Camera::viewRectangle() const {
 	sf::FloatRect viewport = sf::FloatRect();
-	viewport.width = viewportShape.getSize().x;
-	viewport.height = viewportShape.getSize().y;
+	viewport.width = viewportShape.getSize().x * viewportShape.getScale().x;
+	viewport.height = viewportShape.getSize().y * viewportShape.getScale().y;
 	viewport.left = getCenter().x - viewport.width / 2;
 	viewport.top = getCenter().y - viewport.height / 2;
 	return viewport;
@@ -135,18 +123,40 @@ sf::Vector2f Camera::closestInView(const sf::Vector2f& p) const
 
 void Camera::setSuddenDeath(bool sd) {
 	this->suddenDeath = sd;
-	if (!sd) {//reset rectangle:
-		viewportShape = sf::RectangleShape(size0);
-		viewportShape.setFillColor(sf::Color::Transparent);
-	}
 }
 
 void Camera::update(sf::Time dT) {
 	sf::Vector2f movement = objectivePos - getCenter();
 	sf::Vector2f sizeDiff = objectiveSize - getSize();
 	move(movement * dT.asSeconds() * 5.0f);
-	if (!suddenDeath) {
-		setSize(size0 + sizeDiff * dT.asSeconds());
-		viewportShape.setSize(size0 + sizeDiff * dT.asSeconds());
+	viewportShape.setOutlineThickness(std::max(size0.x, size0.y) * (1.0f - rectSizeFactor) + 1.0f);
+	viewportShape.setOutlineColor(sf::Color(redValue, 0, 0, 255));
+	if (suddenDeath) {
+		setSize(size0);
+		if (rectSizeFactor > 0.5) {
+			rectSizeFactor -= 1e-4f;
+			viewportShape.setScale(rectSizeFactor, rectSizeFactor);
+		}
+		if (increasingRedness) {
+			redValue += 2;
+		}
+		else {
+			redValue -= 2;
+		}
+		if (redValue < 2 || redValue > 253) {
+			increasingRedness = !increasingRedness;
+		}
+	}
+	else {
+		if (rectSizeFactor < 1) {
+			rectSizeFactor += 0.001;
+			viewportShape.setScale(rectSizeFactor, rectSizeFactor);
+		}
+		else {
+			if (rectSizeFactor > 1) {
+				rectSizeFactor = 1.0f;
+			}
+			setSize(size0 + sizeDiff * dT.asSeconds());
+		}
 	}
 }

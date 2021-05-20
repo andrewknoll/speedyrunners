@@ -89,7 +89,17 @@ int Animation::advance_frame(sf::Sprite& sprite) {
 	}
 	flip(sprite);
 	sprite.setRotation(angle);
+	if (return_code == 1) {
+		finished = true;
+	}
+	else {
+		finished = false;
+	}
 	return return_code;
+}
+
+bool Animation::getFinished() const {
+	return finished;
 }
 
 int Animation::get_current_frame() const {

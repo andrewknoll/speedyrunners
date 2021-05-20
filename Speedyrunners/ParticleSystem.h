@@ -49,10 +49,18 @@ public:
 	// emits nParticles around center, maximum radius distance, all particles are emited facing outwards
 	void burstOut(const sf::Vector2f& center, const float& radius, int nParticles);
 
+	// fills a line with particles
+	void emitLinear(const sf::Vector2f& origin, const float& distance);
+
+	// emits nParticles in a line
+	void emitLinear(const sf::Vector2f& origin, const float& distance, int nParticles);
+
 
 	void update(sf::Time elapsed);
 
 	void clear(); // clear all particles
+
+	void setAllParticlesPosition(sf::Vector2f pos);
 
 };
 

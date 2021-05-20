@@ -9,24 +9,13 @@ IceRay::IceRay(const Camera& cam, CharPtr user) :
 	Item(glb::item::ICERAY),
 	user(user),
 	cam(cam),
-	facingRight(user->isFacingRight())
+	facingRight(user->isFacingRight()),
+	beamParticles(Resources::getInstance().getParticleSystem(glb::particleSystemIdx::ICE_BEAM_PS))
 {
 	sourceAnim = Resources::getInstance().getMiscSpriteSheet(0).get_animations()[0];
 	auto& t = Resources::getInstance().getItemTexture(glb::item::ICERAY);
 
-	
-	beamAnim = Animation(1, 11, t);
-	
-	beamAnim.set_loop(true);
-	sf::Sprite s = beamAnim.get_first_frame();
-	if (!facingRight) {
-		sourceAnim->flip(source);
-		beamAnim.flip(s);
-	}
-	beamWidth = s.getGlobalBounds().width;
-	beam.push_back(s);
-	
-
+	source = sourceAnim->get_first_frame();
 	//setTexRect(true);
 
 	// Sound:
@@ -37,45 +26,28 @@ IceRay::IceRay(const Camera& cam, CharPtr user) :
 void IceRay::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	//target.draw(particles, states);
 	target.draw(source, states);
-	if (utils::inRange(beamAnim.get_current_frame(), 2, 10)) {
-		for (auto& s : beam) {
-			target.draw(s, states);
-		}
+	if (sourceAnim->get_current_frame() > 3) {
+		target.draw(beamParticles);
 	}
 	
 }
 
 bool IceRay::update(sf::Time elapsed, const Level& lvl) {
 	sf::Vector2f pos = user->getPosition();
-	for (int i = 0; i < beam.size(); i++) {
-		pos.x += beamWidth;
-	}
 	
 	source.setPosition(pos);
-	
-	while ((facingRight && pos.x < cam.viewRectangle().width) || (!facingRight && pos.x > cam.viewRectangle().left)) {
-		if (facingRight) {
-			pos.x = pos.x + beamWidth;
-		}
-		else {
-			pos.x = pos.x - beamWidth;
-		}
-		sf::Sprite s = beam.back();
-		beamAnim.advance_frame(s);
-		s.setPosition(pos);
-		beam.push_back(s);
-	}
 	tickAnimation(elapsed);
-	return false;
+
+	beamParticles.emitLinear(pos, cam.viewRectangle().width);
+	//beamParticles.setAllParticlesPosition(pos);
+
+	return sourceAnim->getFinished();
 }
 
 void IceRay::tickAnimation(sf::Time dT) {
 	countdown -= dT;
 	if (countdown <= sf::Time::Zero) {
 		sourceAnim->advance_frame(source);
-		for (auto& b : beam) {
-			beamAnim.advance_frame(b);
-		}
 		countdown = glb::ANIMATION_PERIOD;
 	}
 }

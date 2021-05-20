@@ -93,7 +93,6 @@ AM,menu_toggle.wav
 
 I,0,Content/Sprites/rocket.png
 I,1,Content/Sprites/ballWeapon-150x150.png
-I,2,Content/Sprites/IceBeamWeapon_170x25.png
 
 T,0,Content/Sprites/hook.png
 T,1,Content/UI/MultiplayerHUD/Point.png
@@ -113,18 +112,20 @@ T,14,Content/Sprites/superBoost.png
 T,15,Content/UI/SuddenDeath/fireParticle_280x280.png
 T,16,Content/Sprites/trail_ESL.png
 T,17,Content/Sprites/IceBlock_300x350.png
+T,18,Content/Sprites/IceBeamWeapon_170x25.png
 
 
 # Particle systems (to see which is which, see Globals.hpp -> particleSystemIdx)
 # <misc texture idx>,<float rect (4)>,<ParticleSettings:
 # posx,posy,velx,vely,velvarnegx,velvarnegy,velvarposx,velvarposy,sizeini,sizeend,
-alphaini,alphaend,maxcount,ttl,[randomsprite],[colorini<r,g,b>,colorend (optional)]>[animated]
+# alphaini,alphaend,maxcount,ttl,[randomsprite],[colorini<r,g,b>,colorend (optional)]>[animated]
 PS,8,0,0,0.5,1,0,0,0,0,20,20,20,20,15,50,255,0,1000,2,1
 PS,9,0,0,0.5,0.5,0,0,0,0,20,20,20,20,100,150,255,0,50,1,1
 PS,10,0,0,0.5,1,0,0,0,-20,10,10,10,10,15,16,255,0,500,2,1
 PS,11,0,0,1,1,0,0,0,0,40,100,40,0,3.5,3.5,255,0,500,1,0,1,50,50,50,50,50,50
 PS,16,0,0,0.2,1,0,0,0,0,0,0,0,0,5,20,255,0,1000,1,0,0,255,255,255,255,255,255,0
 PS,15,0,0,0.1429,0.3333,0,0,0,0,0,0,0,0,70,100,255,255,100,0.5,1,0,255,255,255,255,255,255,1
+PS,18,0,0,1.0,0.09090909,0,0,0,0,0,0,0,0,25,25,255,255,100,3.5,1,0,255,255,255,255,255,255,1
 
 
 

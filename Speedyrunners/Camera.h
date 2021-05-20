@@ -3,7 +3,7 @@
 #include "SFML/Graphics.hpp"
 
 
-class Camera : public sf::View
+class Camera : public sf::View, public sf::Drawable
 {
 	using CharPtr = std::shared_ptr<Character>;
 	//sf::View view;
@@ -24,6 +24,8 @@ private:
 	sf::Vector2f size0;
 	sf::Vector2f objectivePos, objectiveSize;
 
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
+
 public:
 	Camera(const sf::FloatRect& rect = sf::FloatRect(0,0,10,10));
 	//sf::Rect<float> view;
@@ -34,9 +36,9 @@ public:
 	
 	void operator= (const sf::View& v);
 
-	void follow(std::vector<CharPtr>& characters, int first = 0);
+	void immediateFollow(std::vector<CharPtr>& characters, int first = 0);
 
-	sf::RectangleShape getSuddenDeathRectangle();
+	void follow(std::vector<CharPtr>& characters, int first = 0);
 
 	sf::FloatRect viewRectangle() const;
 

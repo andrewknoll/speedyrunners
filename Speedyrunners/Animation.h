@@ -15,6 +15,7 @@ private:
 	bool loop = false;
 	bool reverse = false;
 	bool facing_right = true;
+	bool finished = false;
 public:
 	//Animation(const std::vector<sf::IntRect>& _frames, sf::Texture& tex);
 	Animation();
@@ -37,5 +38,6 @@ public:
 	bool get_reverse() const;
 	void update_orientation(bool right);
 	void update_angle(sf::Sprite& sp, float angle);
+	bool getFinished() const;
 };
 

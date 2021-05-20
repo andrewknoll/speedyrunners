@@ -8,11 +8,8 @@ class IceRay : public Item {
 	using AnimationPtr = std::shared_ptr<Animation>;
 private:
 	AnimationPtr sourceAnim;
-	Animation beamAnim;
-	sf::Texture beamTex;
 	sf::Sprite source;
-	std::vector<sf::Sprite> beam;
-	float beamWidth;
+	particles::PSystem beamParticles;
 	CharPtr user;
 
 	const Camera& cam;

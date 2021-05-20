@@ -11,8 +11,8 @@ RoundVictory::RoundVictory(const sf::RenderWindow& _window, const int characterI
 	// Fondo:
 	bg.loadFromFile(bgPath);
 	bgSprite.setTexture(bg);
-	float width = _window.getDefaultView().getSize().x;
-	float height = _window.getDefaultView().getSize().y;
+	width = _window.getDefaultView().getSize().x;
+	height = _window.getDefaultView().getSize().y;
 	bgSprite.setPosition(0, height / 2.0f);
 
 	sf::IntRect rect;
@@ -25,10 +25,10 @@ RoundVictory::RoundVictory(const sf::RenderWindow& _window, const int characterI
 	utils::scaleToFullScreenRatio(bgSprite, _window, 0.4);
 	//bgSprite.setScale(relation, relation);
 	auto& spritesheet = Resources::getInstance().getVictorySpriteSheet(characterIdx, characterVariant);
-	characterVictoryPose = spritesheet.get_animations()[0]; // BUG: characterVictoryPose es null para Unic y luego da error
+	characterVictoryPose = spritesheet.get_animations()[0];
 	mySprite = characterVictoryPose->get_first_frame();
 	utils::scaleToFullScreenRatio(mySprite, _window, 0.4);
-	mySprite.setPosition(width * 0.2, height * 0.85);
+	mySprite.setPosition(width * 0.2f, height * 0.882f);
 	if (characterIdx == 0) { // Speedrunner mas parriba
 		//mySprite.move(0, +height * 0.1);
 	}
@@ -89,8 +89,11 @@ void RoundVictory::update(const sf::Time& dT) {
 void RoundVictory::tickAnimation(sf::Time dT) {
 	animationCountdown -= dT;
 	if (currentSecond < 3 && animationCountdown <= sf::Time::Zero) {
-		if (characterVictoryPose)
+		if (characterVictoryPose) {
 			characterVictoryPose->advance_frame(mySprite);
+			mySprite.setOrigin(mySprite.getTextureRect().width / 2, mySprite.getTextureRect().height);
+			mySprite.setPosition(width * 0.2f, height * 0.882f);
+		}
 		animationCountdown = glb::ANIMATION_PERIOD;
 	}
 }

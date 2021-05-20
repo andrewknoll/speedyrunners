@@ -39,7 +39,6 @@ Game::Game()
 	ImGui::SFML::Init(window);
 #endif // USE_IMGUI
 
-
 	countdown.setWindow(window);
 	ui.setWindow(window);
 
@@ -75,6 +74,7 @@ void Game::clear() {
 	npcs.clear();
 
 	countdown.end();
+	cam.setSuddenDeath(false);
 
 
 	threadPool.resize(8);
@@ -119,6 +119,7 @@ void Game::defaultInit(const std::vector<glb::characterIndex>& _players, const s
 	for (auto n : npcs) {
 		n->setActiveCheckpoint(activeCheckpoint);
 	}
+	cam.immediateFollow(characters);
 	std::cout << characters.size() << " characters now!\n";
 	setState(State::Countdown);
 	running = true;
@@ -162,6 +163,7 @@ void Game::defaultInit(int N_PLAYERS) {
 	other->setActiveCheckpoint(activeCheckpoint);
 	cosmonaut->setName("NPC");
 	addCharacter(cosmonaut);
+	cam.immediateFollow(characters);
 	setState(State::Countdown);
 	running = true;
 }
@@ -554,6 +556,9 @@ void Game::update()
 	ImGui::SFML::Update(window,dT);
 #endif
 	processMouseEditing();
+	if (state != State::Editing) {
+		cam.update(dT);
+	}
 	if (state == State::Playing && dT.asSeconds() < 0.1) {
 		for (auto c : characters) {
 			if (c->isDead()) continue;
@@ -566,7 +571,6 @@ void Game::update()
 		for (auto &ps : particleSystems) ps.update(dT); // update particles
 		updatePositions();
 		cam.follow(characters);
-		cam.update(dT);
 		for (int i = 1; i < characters.size(); i++) {
 			if (characters[i]->isDead()) continue;
 			if (!cam.isInAllowedBounds(characters[i])) {
@@ -582,6 +586,7 @@ void Game::update()
 		}
 		updateNPCs(true);
 		if (characters.size() > 1 && aliveCount < 2) {
+			cam.setSuddenDeath(false);
 			state = State::FinishedRound;
 			for (auto n : npcs) {
 				n->clearPaths();
@@ -638,7 +643,6 @@ void Game::update()
 				countdown.reset();
 				rv = nullptr;
 				suddenDeath = false;
-				cam.setSuddenDeath(false);
 				aliveCount = characters.size();
 				for (int i = 0; i < characters.size(); i++) {
 					characters[i]->respawn(respawnPosition);
@@ -713,7 +717,8 @@ void Game::processEditingInputs(const sf::Event& event) {
 		std::cout << "selected PSystem: " << selectedPSystem << "\n";
 	}
 	else if (testingParticles && event.type == sf::Event::MouseButtonPressed && event.key.code ==sf::Mouse::Middle)
-		particleSystems[selectedPSystem].burstOut(utils::mousePosition2f(window), 200, 100);
+		//particleSystems[selectedPSystem].burstOut(utils::mousePosition2f(window), 200, 100);
+		particleSystems[selectedPSystem].emitLinear(utils::mousePosition2f(window), 1000);
 	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Numpad4) { // box debug
 		lvl.testBoxCollision(utils::mousePosition2f(window));
 	}
@@ -804,17 +809,13 @@ void Game::draw(sf::Time dT)
 	window.clear();
 	window.setView(cam);
 	window.draw(lvl);
-	if (suddenDeath && state != State::FinishedRound) {
-		window.draw(cam.getSuddenDeathRectangle());
-	}
 
-	for (auto npc : npcs) {
+	/*for (auto npc : npcs) {
 		window.draw(npc->debugCurrentPos());
-	}
+	}*/
 
-	switch (state) {
-	case State::Editing:
-	{// sf::Mouse::getPosition() - window.getPosition()
+	if(state == State::Editing) {
+		// sf::Mouse::getPosition() - window.getPosition()
 		// Visualizar checkpoints:
 		for (auto cp : checkpoints) {
 			window.draw(cp);
@@ -843,42 +844,35 @@ void Game::draw(sf::Time dT)
 		else for (const auto& ps : particleSystems) {
 			window.draw(ps); // testing particles
 		}
-		break;
 	}
-	case State::FinishedRound:
-	{
+	else if(state == State::FinishedRound) {
 		if (rv != nullptr) {
 			rv->draw(window);
 		}
-		animateCharacters();
-		break;
 	}
-	case State::Countdown:
-	{	
+	else if(state == State::Countdown) {	
 		suddenDeath = false;
 		cam.setSuddenDeath(false);
 		countdown.draw(window);
 		animateCharacters();
-		break;
-	} // no break, we also animate the characters
-	case State::Playing:
-	{ // Animaciones de personajes:
-		animateCharacters();
-		for (const auto& ps : particleSystems) window.draw(ps);
-		for (const auto i : items) {
-			window.draw(*i);
-		}
-		// UI:
-		ui.update();
-		//if (characters.size()>1)
-		window.draw(ui);
-		break;
 	}
-	default:
-	{
-		//std::cout << "unknown game state\n" << (int)state;
+
+	// Characters
+	animateCharacters();
+	for (const auto& ps : particleSystems) window.draw(ps);
+	for (const auto i : items) {
+		window.draw(*i);
 	}
+
+	//Sudden death screen
+	if (state != State::Editing) {
+		window.setView(window.getDefaultView());
+		window.draw(cam);
 	}
+
+	// UI
+	ui.update();
+	window.draw(ui);
 
 #ifdef USE_IMGUI
 	ImGui::Begin("Hello, world!");
