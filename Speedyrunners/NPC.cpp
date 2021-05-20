@@ -555,7 +555,7 @@ void NPC::replan() {
 		pathFound[1] = 0;
 	}
 	else {
-		pathFound[0] = 0;	//We reached the end, so we make sure we replan
+		pathFound[0] = -1;	//We reached the end, so we make sure we replan
 	}
 }
 
@@ -791,144 +791,6 @@ void NPC::doBasicMovement(const TileNode& current, const TileNode& n, bool block
 	}
 }
 
-/*bool NPC::doBasicMovement(const TileNode& current, const TileNode& n, float objDistance, sf::Clock clock, bool block) {
-	auto t0 = clock.getElapsedTime();
-	bool right = getCharacterCell().cell[0] < n.cell[0];
-	do {
-		if (current.data.isSliding || n.data.isSliding) {
-			me->slide();
-		}
-		else {
-			int diff = n.cell[0] - getCharacterCell().cell[0];
-			float horSpeed = me->getVelocity().x;
-			float acc = me->getGrounded() ? glb::runningAcceleration : glb::flyingAcceleration;
-			if (horSpeed > 0.01f) diff += utils::stopDistance(horSpeed, -acc);
-			else if (horSpeed < 0.01f) diff += utils::stopDistance(horSpeed, acc);
-			if ((right && diff > 0) || (!right && diff < 0)) {
-				me->run(right);
-			}
-			else {
-				me->stop();
-			}
-		}
-		if(block && clock.getElapsedTime() - t0 > MAX_TIME_PER_STEP) {
-				//Try to recover
-			return false;
-		}
-	} while (block && !stopFollowing && nodeDistance(getCharacterCell(), n) <= FARNESS_THRESHOLD + objDistance && !nodeWasReached(n, CLOSENESS_THRESHOLD));
-	return true;
-}*/
-/**
-void NPC::followPath() {
-	sf::Clock clock;
-	pathMtx[0].lock();
-	if (pathFound[0] == 1) {
-		step = getClosestNode(current, path[0]);
-		pathEnd = std::end(path[0]);
-		//_set_se_translator(SE_trans_func);
-		try {
-			if (step != pathEnd) {
-				step++;	//Get Next Node
-				t0 = clock.getElapsedTime();
-				if (step != pathEnd) {
-					objDistance = nodeDistance(current, **step);
-				}
-			}
-			while (step != pathEnd) {
-				stepNodePtr = *step;
-				if (stepNodePtr->data.canWallJumpLeft == 1 || stepNodePtr->data.canWallJumpRight == 1) {
-					me->startJumping();
-				}
-				if (stepNodePtr->data.isHooking) {
-					if (!me->isUsingHook()) {
-						me->useHook(true);
-					}
-				}
-				else {
-					me->useHook(false);
-				}
-				if (stepNodePtr->data.isSliding) {
-					if (!me->isUsingSlide()) {
-						me->slide();
-					}
-				}
-				else {
-					me->stopSliding();
-				}
-				verticalDist = getCharacterCell().cell[1] - stepNodePtr->cell[1];
-				if (!jumped && me->canJump() && (verticalDist > 2 || stepNodePtr->data.jumps < current.data.jumps)) {
-					me->startJumping();
-					jumped = true;
-				}
-				if (jumped && verticalDist < 3) {
-					me->stopJumping();
-				}
-				if (std::abs(getCharacterCell().cell[0] - stepNodePtr->cell[0]) > CLOSENESS_THRESHOLD) {
-					doBasicMovement(getCharacterCell(), *stepNodePtr, objDistance, clock, false);
-				}
-				else {
-					me->stop();
-				}
-				aux = getClosestNode(current, path[0]);
-				next = aux;
-				next++;
-				//Get next step
-				if (next != step || nodeDistance(getCharacterCell(), **next) < CLOSENESS_THRESHOLD) {
-					//If we are closer to another node, use that one
-					if (next != step) {
-						current = **aux;
-						step = next;
-					}
-					//Otherwise, advance iterator
-					else {
-						current = **step;
-						step++;
-					}
-					jumped = false;
-					if (step != pathEnd) {
-						objDistance = nodeDistance(current, **step);
-					}
-					t0 = clock.getElapsedTime();
-				}
-				else if (clock.getElapsedTime() - t0 >= GIVE_UP_TIME) {
-					giveUp();	//This function must unlock pathMtx[0]
-					return;
-				}
-			}
-			//Get next part
-			if (pathFound[1] == 1) {
-				pathFound[0] = 1;	//Next part of the path was already planned
-				auto last = path[0].back();
-				path[0].clear();
-				// Stitch the two paths together and save path[1] to path[0]
-				if (stitched) {
-					std::copy(std::begin(path[2]), std::end(path[2]), std::begin(path[0]));
-					stitched = false;
-				}
-				else {
-					path[0].push_front(last);
-				}
-				//Get next path
-				path[0].insert(path[0].end(), std::make_move_iterator(path[1].begin()), std::make_move_iterator(path[1].end()));
-				path[1].clear();
-
-				//Make sure we start planning the next part
-				pathFound[1] = 0;
-			}
-			else {
-				pathFound[0] = 0;	//We reached the end, so we make sure we replan
-			}
-		}
-		catch (...) {
-			std::cout << "Ending thread..." << std::endl;
-		}
-	}
-	else {
-		halt();
-	}
-	pathMtx[0].unlock();
-}*/
-
 void NPC::die() {
 
 	isPerformingWallJump = false; wallJumpStep2 = false;
@@ -952,7 +814,7 @@ void NPC::tryToWallJump() {
 		me->run(facingR);
 
 		if (wallJumpStep2 && me->getGrounded()) { // end
-			std::cout << "END WALLJUMP MODE\n";
+			//std::cout << "END WALLJUMP MODE\n";
 			isPerformingWallJump = false; wallJumpStep2 = false;
 		}
 		else if (me->canWallJump()) {
@@ -962,7 +824,7 @@ void NPC::tryToWallJump() {
 			if ((v.y >= -0.05 * physics::MAX_FALL_SPEED || detectWallJump(facingR, 10))) { // if its high enough OR we are going up slowly 
 				me->startJumping();
 				wallJumpStep2 = true;
-				std::cout << "jumping in wall, now STEP 2\n";
+				//std::cout << "jumping in wall, now STEP 2\n";
 			}
 		}
 		else {
@@ -971,7 +833,7 @@ void NPC::tryToWallJump() {
 			if (closeToWall && me->canJump()) {
 				me->startJumping();
 				wallJumpStep2 = true;
-				std::cout << "jumping, now STEP 2\n";
+				//std::cout << "jumping, now STEP 2\n";
 			}
 		}
 	}
@@ -1011,7 +873,7 @@ void NPC::update(const sf::Time dT) { // Tries to get from current to next
 	if (pathFound[0] != 1) moveWithoutPath();
 
 	if (!isPerformingWallJump) {
-		isPerformingWallJump = detectWallJump(me->isFacingRight(), 10); // if there are wall jump tiles, try to jump them
+		isPerformingWallJump = detectWallJump(me->isFacingRight(), 6); // if there are wall jump tiles, try to jump them
 		if (isPerformingWallJump) {
 			std::cout << "NEW WALLJUMP\n";
 			pathMtx[0].unlock();
