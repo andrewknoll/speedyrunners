@@ -293,7 +293,7 @@ void Character::updateHook(sf::Time dT, const TileMap& tiles) {
 	// hook
 	if (usingHook) {
 		int res = hook.update(dT, tiles, getPosition());
-		if (res == -1 || (facingRight && utils::degrees(hook.angle()) > -30) || (!facingRight && utils::degrees(hook.angle()) > 150)) {
+		if (res == -1 || (facingRight && utils::degrees(hook.angle()) > 15) || (!facingRight && utils::degrees(hook.angle()) > 165)) {
 			swinging = false;
 			usingHook = false;
 			hook.destroy();
@@ -424,7 +424,7 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 
 		if (ramp == Ramp::NONE) {
 			if (c.normal.x != 0) { // Make 0 the component of the collision
-				float xSpeed = 0.45*std::abs(vel.x); // for walljumps
+				float xSpeed = 0.75*std::abs(vel.x); // for walljumps
 				vel.x = 0;
 				acc.x = 0;
 				isRunning = false;
