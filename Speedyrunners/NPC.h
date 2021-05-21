@@ -67,6 +67,8 @@ private:
 
 	std::vector<Goal> goals;
 	int currentGoalIdx;
+	bool tryingToFindAir = false;
+	bool mustReposition = false;
 
 	std::mutex pathMtx[2];
 	std::mutex goalMtx;
@@ -93,6 +95,8 @@ private:
 	PathIterator step;
 	int retryCount = 0;
 
+	std::shared_ptr<MetaTile> currentMT;
+	sf::Vector2i MTposition;
 
 	bool isPerformingWallJump = false;
 	bool wallJumpStep2 = false;
@@ -115,7 +119,7 @@ private:
 	void halt();
 	void giveUp();
 	float nodeDistance(const TileNode& n1, const TileNode& n2) const;
-	PathIterator getClosestNode(TileNode& current, const std::deque<std::shared_ptr<TileNode> >& p) const;
+	PathIterator getClosestNode(const TileNode& current, const std::deque<std::shared_ptr<TileNode> >& p) const;
 	void moveWithoutPath(); // tries to get closer to the objective before having the path
 	void tryToWallJump();
 	bool detectWallJump(bool right, float widthMultiplier);// returns if there are jump wall to the <right>, in a rectangle of width hitbox*widthMultiplier

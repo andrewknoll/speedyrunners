@@ -1,5 +1,5 @@
 #include "PriorityQueue.h"
-#include "TileMap.h"
+#include "Tiles.h"
 
 
 template<class T>
