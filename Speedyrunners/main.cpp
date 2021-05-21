@@ -1,10 +1,11 @@
 
 #include "SFML/Graphics.hpp"
-#include "GameServer.h"
+#include "Lobby.h"
 #include "Spritesheet.h"
 #include "NPC.h"
 #include "MusicPlayer.h"
 #include "Resources.h"
+#include "SFML/Network.hpp"
 
 void rngTest() {
 	auto& sam = rng::itemSampler;
@@ -17,12 +18,10 @@ void rngTest() {
 
 int main() {
 	
-	GameServer game;
+	Lobby game;
 	Resources& src = Resources::getInstance();
 
 	game.loopMenu();
 
-	//game.defaultInit(2);
-	
 	game.loop();
 }

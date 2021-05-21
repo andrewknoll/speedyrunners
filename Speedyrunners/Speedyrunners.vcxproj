@@ -279,6 +279,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="GameClient.cpp" />
     <ClCompile Include="GoldenHook.cpp" />
     <ClCompile Include="IceRay.cpp" />
     <ClCompile Include="MetaTile.cpp" />
@@ -310,7 +311,7 @@
     <ClCompile Include="Spritesheet.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Character.cpp" />
-    <ClCompile Include="GameServer.cpp" />
+    <ClCompile Include="Lobby.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="TextElement.cpp" />
@@ -322,6 +323,7 @@
     <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GameClient.h" />
     <ClInclude Include="GoldenHook.h" />
     <ClInclude Include="IceRay.h" />
     <ClInclude Include="MetaTile.h" />
@@ -355,7 +357,7 @@
     <ClInclude Include="Spritesheet.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Character.h" />
-    <ClInclude Include="GameServer.h" />
+    <ClInclude Include="Lobby.h" />
     <ClInclude Include="Level.h" />
     <ClInclude Include="TextElement.h" />
     <ClInclude Include="TileMap.h" />

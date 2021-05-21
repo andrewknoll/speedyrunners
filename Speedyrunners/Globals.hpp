@@ -4,7 +4,13 @@
 #include <array>
 namespace glb
 {
-
+	const int MATCHMAKING_PORT = 55001;
+	const int GAME_PORT_0 = 55002;
+	const int HASH_LENGTH = 4;
+	const std::string ALPHANUMERIC_CHARACTERS[] =
+	{ "0123456789",
+		"ABCDEFGHIJKLMNOPQRSTUVWXYZ",
+		"abcdefghijklmnopqrstuvwxyz" };
 	const double pi = 3.14159265358979323846;
 	const int NUMBER_OF_ANIMATIONS = 22;
 	namespace anim {

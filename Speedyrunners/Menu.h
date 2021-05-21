@@ -8,7 +8,7 @@
 #include "LobbyWidget.h"
 #include "AudioPlayer.h"
 
-class GameServer;
+class Lobby;
 
 class Menu
 {
@@ -20,7 +20,7 @@ class Menu
 		Controls
 	};
 
-	GameServer& game;
+	Lobby& game;
 	sf::RenderWindow* window;
 	Settings& settings;
 	
@@ -83,9 +83,9 @@ class Menu
 public:
 	//void addElement(const UIElement& e);
 	//Menu(std::shared_ptr<sf::RenderWindow> _window);
-	Menu(sf::RenderWindow& _window, Settings& _settings, GameServer& _game);
+	Menu(sf::RenderWindow& _window, Settings& _settings, Lobby& _game);
 
-	Menu(sf::RenderWindow* _window, Settings& _settings, GameServer& _game);
+	Menu(sf::RenderWindow* _window, Settings& _settings, Lobby& _game);
 
 	void addElement(std::unique_ptr<UIElement> e);
 

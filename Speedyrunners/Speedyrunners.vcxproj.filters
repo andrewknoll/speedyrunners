@@ -173,7 +173,10 @@
     </ClCompile>
     <ClCompile Include="MetaTile.cpp" />
     <ClCompile Include="Tiles.cpp" />
-    <ClCompile Include="GameServer.cpp">
+    <ClCompile Include="GameClient.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Lobby.cpp">
       <Filter>Game</Filter>
     </ClCompile>
   </ItemGroup>
@@ -295,7 +298,10 @@
     </ClInclude>
     <ClInclude Include="MetaTile.h" />
     <ClInclude Include="Tiles.h" />
-    <ClInclude Include="GameServer.h">
+    <ClInclude Include="GameClient.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Lobby.h">
       <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>

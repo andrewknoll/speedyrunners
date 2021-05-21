@@ -1,6 +1,6 @@
 #include "InGameUI.h"
 #include "UISprite.h"
-#include "GameServer.h"
+#include "Lobby.h"
 #include "Resources.h"
 
 

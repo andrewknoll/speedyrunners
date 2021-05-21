@@ -1,6 +1,6 @@
 #include "Menu.h"
 #include "utils.hpp"
-#include "GameServer.h"
+#include "Lobby.h"
 
 #ifdef USE_IMGUI
 #include "imgui-SFML.h"
@@ -8,14 +8,14 @@
 
 #define DEBUG_MOUSE_POS
 
-Menu::Menu(sf::RenderWindow& _window, Settings& _settings, GameServer& _game) 
+Menu::Menu(sf::RenderWindow& _window, Settings& _settings, Lobby& _game) 
 	: window(&_window), settings(_settings), game(_game), 
 	audio(Resources::getInstance().getAudioPlayer())
 {
 	window->setView(window->getDefaultView());
 }
 
-Menu::Menu(sf::RenderWindow* _window, Settings& _settings, GameServer& _game) :
+Menu::Menu(sf::RenderWindow* _window, Settings& _settings, Lobby& _game) :
 	window(_window), settings(_settings), game(_game),
 	audio(Resources::getInstance().getAudioPlayer())
 {
@@ -229,7 +229,7 @@ void Menu::handleMainMenuClick(int i) {
 	case 0:
 	{
 		std::cout << "Clicked multiplayer\n";
-		nPlayers = 2;
+		nPlayers = 2;	//CONNECT TO SERVERRRRRRRRRRR
 		setCharacterSelect();
 		break;
 	}
@@ -289,7 +289,7 @@ void Menu::handleWorkshopClick(int i) {
 		// New level
 		game.createNewLevel(levelNames.size());
 		game.clear();
-		game.setState(GameServer::State::Editing);
+		game.setState(Lobby::State::Editing);
 		exitMenu = true;
 	}
 	else {
@@ -298,7 +298,7 @@ void Menu::handleWorkshopClick(int i) {
 		if (i >= levelNames.size()) std::cerr << i << " is not a level " << levelNames.size() << "\n";
 		game.loadLevel(levelNames[i] + ".csv");
 		game.clear();
-		game.setState(GameServer::State::Editing);
+		game.setState(Lobby::State::Editing);
 		game.setSaveName(levelNames[i] + ".csv");
 		exitMenu = true;
 	}
@@ -422,7 +422,7 @@ void Menu::handleLvlSelectClick(int i) {
 		i -= 1;
 		if (i >= levelNames.size()) std::cerr << i << " is not a level " << levelNames.size() << "\n";
 		game.loadLevel(levelNames[i] + ".csv");
-		game.setState(GameServer::State::Playing);
+		game.setState(Lobby::State::Playing);
 		game.enableCheats(false);
 		game.setSaveName(levelNames[i] + ".csv");
 		game.defaultInit(players, npcs);
