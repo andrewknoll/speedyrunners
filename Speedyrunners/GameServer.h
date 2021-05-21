@@ -29,7 +29,7 @@
 
 
 
-class Game
+class GameServer
 {
 	using CharPtr = std::shared_ptr<Character>;
 	using PlayerPtr = std::shared_ptr<Player>;
@@ -115,7 +115,7 @@ protected:
 	void updatePositions();
 
 	// Handle an item explosion or something (when item.update returns true):
-	void handleItem(Game::ItemPtr item);
+	void handleItem(GameServer::ItemPtr item);
 	void clearParticles(); // clears all particles
 
 	void processMouseEditing();
@@ -126,7 +126,7 @@ protected:
 	void updateNPCs(bool follow);
 public:
 
-	Game();
+	GameServer();
 
 	void clear();
 

@@ -1,7 +1,7 @@
 #include <iostream>
 #include <time.h>
 
-#include "Game.h"
+#include "GameServer.h"
 #include "utils.hpp"
 #include "Player.h"
 #include "Menu.h"
@@ -18,7 +18,7 @@
 #include "TNT.h"
 
 
-Game::Game()
+GameServer::GameServer()
 	: window(sf::VideoMode(1600, 900), "SpeedyRunners"),
 	lvl(window),
 	state(State::Countdown),
@@ -48,7 +48,7 @@ Game::Game()
 	//;// .push_back(&Resources::getInstance().getParticleSystem(glb::particleSystemIdx::ROCKET_SMOKE));
 }
 
-void Game::clear() {
+void GameServer::clear() {
 	gameWon = false;
 	Resources::getInstance().getAudioPlayer().stopAll(); // stop all sfx
 	characters.clear();
@@ -81,7 +81,7 @@ void Game::clear() {
 	threadPool.resize(8);
 }
 
-void Game::defaultInit(const std::vector<glb::characterIndex>& _players, const std::vector<glb::characterIndex>& _npcs) {
+void GameServer::defaultInit(const std::vector<glb::characterIndex>& _players, const std::vector<glb::characterIndex>& _npcs) {
 	clear();
 	int N_PLAYERS = players.size();
 	sf::Vector2f spawnPosition = lvl.getInitialPosition();
@@ -141,7 +141,7 @@ void Game::defaultInit(const std::vector<glb::characterIndex>& _players, const s
 }
 
 
-void Game::defaultInit(int N_PLAYERS) {
+void GameServer::defaultInit(int N_PLAYERS) {
 
 	sf::Vector2f spawnPosition = lvl.getInitialPosition();
 
@@ -201,13 +201,13 @@ void Game::defaultInit(int N_PLAYERS) {
 	running = true;
 }
 
-void Game::setState(const State _state)
+void GameServer::setState(const State _state)
 {
 	state = _state;
 	if (state == State::Countdown) countdown.reset();
 }
 
-void Game::setUpWindow() {
+void GameServer::setUpWindow() {
 
 	window.setFramerateLimit(60); //60 FPS?
 	window.setVerticalSyncEnabled(true);
@@ -218,7 +218,7 @@ void Game::setUpWindow() {
 
 
 // update the positions based on distance to the active checkpoint
-void Game::updatePositions()
+void GameServer::updatePositions()
 {
 	if (!checkpoints.empty()) {
 		Checkpoint cp = checkpoints[activeCheckpoint];
@@ -256,7 +256,7 @@ void Game::updatePositions()
 	}
 }
 
-void Game::playerJoin(PlayerPtr newPlayer) {
+void GameServer::playerJoin(PlayerPtr newPlayer) {
 	if (characters.size() < 4) {
 		/*Slot s;
 		s.controlIndex = players.size();
@@ -268,7 +268,7 @@ void Game::playerJoin(PlayerPtr newPlayer) {
 	}
 }
 
-void Game::npcJoin(NPCPtr newNPC){
+void GameServer::npcJoin(NPCPtr newNPC){
 	if (characters.size() < 4) {
 		/*Slot s;R
 		s.controlIndex = npcs.size();
@@ -280,17 +280,17 @@ void Game::npcJoin(NPCPtr newNPC){
 	}
 }
 
-const Settings& Game::getSettings() const
+const Settings& GameServer::getSettings() const
 {
 	return settings;
 }
 
-int Game::getFirstCharacterIdx() const
+int GameServer::getFirstCharacterIdx() const
 {
 	return 0;
 }
 
-void Game::loadLevel(const std::string& lvlPath)
+void GameServer::loadLevel(const std::string& lvlPath)
 {
 	lvl.load(lvlPath, window);
 	checkpoints.clear();
@@ -303,11 +303,11 @@ void Game::loadLevel(const std::string& lvlPath)
 }
 
 
-void Game::setSaveName(std::string fileName) {
+void GameServer::setSaveName(std::string fileName) {
 	saveLevelName = fileName;
 }
 
-void Game::loop()
+void GameServer::loop()
 {
 	// de https://en.sfml-dev.org/forums/index.php?topic=7018.0:
 	float fps, showPeriod = 2;
@@ -340,7 +340,7 @@ void Game::loop()
 	clear();
 }
 
-void Game::loopMenu()
+void GameServer::loopMenu()
 {
 	Resources::getInstance().getAudioPlayer().stopAll();
 	Menu menu(window, settings, *this);
@@ -350,11 +350,11 @@ void Game::loopMenu()
 	menu.setMainMenu();
 	menu.loop(); // , this);
 	std::cout << "State after menu: " << (int)state << "\n";
-	//state = (Game::State)menu.getGameState();
+	//state = (GameServer::State)menu.getGameState();
 	//characters = menu.getCharacters
 }
 
-void Game::addCharacter(const CharPtr character)
+void GameServer::addCharacter(const CharPtr character)
 {
 	if (characters.size() < 4) {
 		characters.emplace_back(character);
@@ -363,35 +363,35 @@ void Game::addCharacter(const CharPtr character)
 	}
 
 }
-void Game::createNewLevel(int nLevels)
+void GameServer::createNewLevel(int nLevels)
 {
 	loadLevel("default_level.csv");
 	saveLevelName = "USER_LEVEL_" + std::to_string(nLevels) + ".csv";
 }
 /*
-Game::CharPtr Game::getCharacterAt(int pos) const {
+GameServer::CharPtr GameServer::getCharacterAt(int pos) const {
 	return characters[positions[pos].index];
 }*/
 
-Game::PlayerPtr Game::getPlayerAt(int pos) const {
+GameServer::PlayerPtr GameServer::getPlayerAt(int pos) const {
 	for (const auto& p : players) {
 		if (p->getCharacter() == characters[pos]) return p;
 	}
 	return nullptr;
 }
 
-Game::NPCPtr Game::getNPCAt(int pos) const {
+GameServer::NPCPtr GameServer::getNPCAt(int pos) const {
 	for (const auto& npc : npcs) {
 		if (npc->getCharacter() == characters[pos]) return npc;
 	}
 	return nullptr;
 }
 
-MusicPlayer& Game::music() {
+MusicPlayer& GameServer::music() {
 	return src.musicPlayer;
 }
 
-void Game::updateNPCs(bool follow) {
+void GameServer::updateNPCs(bool follow) {
 	for (int i = 0; i < npcs.size(); i++) {
 		if (npcs[i] != nullptr && checkpoints.size() > 0) {
 			auto& followThread = threadPool[2 * i + 1];
@@ -460,7 +460,7 @@ void Game::updateNPCs(bool follow) {
 	}
 }
 
-void Game::setFullScreen() {
+void GameServer::setFullScreen() {
 	sf::VideoMode vMode = sf::VideoMode::getFullscreenModes().front();
 	if (!vMode.isValid()) {
 		std::cerr << "NOPE\n";
@@ -473,7 +473,7 @@ void Game::setFullScreen() {
 }
 
 
-void Game::updateItems() {
+void GameServer::updateItems() {
 	int handle;
 	// Weird loop to be able to erase (https://www.techiedelight.com/remove-elements-list-iterating-cpp/):
 	auto itr = items.cbegin();
@@ -493,11 +493,11 @@ void Game::updateItems() {
 	}
 }
 
-void Game::clearParticles() {
+void GameServer::clearParticles() {
 	for (auto& ps : particleSystems) ps.clear();
 }
 
-void Game::update()
+void GameServer::update()
 {
 	sf::Event event;
 	int target;
@@ -711,13 +711,13 @@ void Game::update()
 	}
 }
 
-void Game::handleItem(Game::ItemPtr item) {
+void GameServer::handleItem(GameServer::ItemPtr item) {
 	for (auto& c : characters) {
 		item->doThingTo(c);
 	}
 }
 
-void Game::enableCheats(bool enable) {
+void GameServer::enableCheats(bool enable) {
 #ifdef DEV_MODE
 	cheatsEnabled = true;
 #else
@@ -725,7 +725,7 @@ void Game::enableCheats(bool enable) {
 #endif
 }
 
-void Game::processMouseEditing() {
+void GameServer::processMouseEditing() {
 	if (state == State::Editing && sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 		if (!addingCheckpoint && !testingParticles)
 			lvl.setTile(utils::clampMouseCoord(window), selectedTile);
@@ -737,7 +737,7 @@ void Game::processMouseEditing() {
 }
 
 // Controls for editing state:
-void Game::processEditingInputs(const sf::Event& event) {
+void GameServer::processEditingInputs(const sf::Event& event) {
 	
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
 		cam.moveByMouse(sf::Mouse::getPosition());
@@ -837,7 +837,7 @@ void Game::processEditingInputs(const sf::Event& event) {
 
 }
 
-void Game::printCharacterPositions(const sf::Event& e) const {
+void GameServer::printCharacterPositions(const sf::Event& e) const {
 
 	if (e.type == sf::Event::KeyPressed && e.key.code == (sf::Keyboard::P)) {
 		std::cout << "Character positions:\n";
@@ -849,7 +849,7 @@ void Game::printCharacterPositions(const sf::Event& e) const {
 }
 
 
-void Game::animateCharacters() {
+void GameServer::animateCharacters() {
 	for (auto c : characters) {
 		if (!c->isDead()) {
 			c->tickAnimation(dT);
@@ -858,7 +858,7 @@ void Game::animateCharacters() {
 	}
 }
 
-void Game::draw(sf::Time dT)
+void GameServer::draw(sf::Time dT)
 {
 	window.clear();
 	window.setView(cam);

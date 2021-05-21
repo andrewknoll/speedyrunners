@@ -1,6 +1,6 @@
 #include "Menu.h"
 #include "utils.hpp"
-#include "Game.h"
+#include "GameServer.h"
 
 #ifdef USE_IMGUI
 #include "imgui-SFML.h"
@@ -8,14 +8,14 @@
 
 #define DEBUG_MOUSE_POS
 
-Menu::Menu(sf::RenderWindow& _window, Settings& _settings, Game& _game) 
+Menu::Menu(sf::RenderWindow& _window, Settings& _settings, GameServer& _game) 
 	: window(&_window), settings(_settings), game(_game), 
 	audio(Resources::getInstance().getAudioPlayer())
 {
 	window->setView(window->getDefaultView());
 }
 
-Menu::Menu(sf::RenderWindow* _window, Settings& _settings, Game& _game) :
+Menu::Menu(sf::RenderWindow* _window, Settings& _settings, GameServer& _game) :
 	window(_window), settings(_settings), game(_game),
 	audio(Resources::getInstance().getAudioPlayer())
 {
@@ -289,7 +289,7 @@ void Menu::handleWorkshopClick(int i) {
 		// New level
 		game.createNewLevel(levelNames.size());
 		game.clear();
-		game.setState(Game::State::Editing);
+		game.setState(GameServer::State::Editing);
 		exitMenu = true;
 	}
 	else {
@@ -298,7 +298,7 @@ void Menu::handleWorkshopClick(int i) {
 		if (i >= levelNames.size()) std::cerr << i << " is not a level " << levelNames.size() << "\n";
 		game.loadLevel(levelNames[i] + ".csv");
 		game.clear();
-		game.setState(Game::State::Editing);
+		game.setState(GameServer::State::Editing);
 		game.setSaveName(levelNames[i] + ".csv");
 		exitMenu = true;
 	}
@@ -422,7 +422,7 @@ void Menu::handleLvlSelectClick(int i) {
 		i -= 1;
 		if (i >= levelNames.size()) std::cerr << i << " is not a level " << levelNames.size() << "\n";
 		game.loadLevel(levelNames[i] + ".csv");
-		game.setState(Game::State::Playing);
+		game.setState(GameServer::State::Playing);
 		game.enableCheats(false);
 		game.setSaveName(levelNames[i] + ".csv");
 		game.defaultInit(players, npcs);

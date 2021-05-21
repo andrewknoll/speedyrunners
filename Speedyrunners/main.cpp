@@ -1,6 +1,6 @@
 
 #include "SFML/Graphics.hpp"
-#include "Game.h"
+#include "GameServer.h"
 #include "Spritesheet.h"
 #include "NPC.h"
 #include "MusicPlayer.h"
@@ -17,7 +17,7 @@ void rngTest() {
 
 int main() {
 	
-	Game game;
+	GameServer game;
 	Resources& src = Resources::getInstance();
 
 	game.loopMenu();

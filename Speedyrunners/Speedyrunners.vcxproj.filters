@@ -102,9 +102,6 @@
     <ClCompile Include="MusicPlayer.cpp">
       <Filter>Audio</Filter>
     </ClCompile>
-    <ClCompile Include="Game.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>Game</Filter>
     </ClCompile>
@@ -176,6 +173,9 @@
     </ClCompile>
     <ClCompile Include="MetaTile.cpp" />
     <ClCompile Include="Tiles.cpp" />
+    <ClCompile Include="GameServer.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TileMap.h">
@@ -225,9 +225,6 @@
     </ClInclude>
     <ClInclude Include="MusicPlayer.h">
       <Filter>Audio</Filter>
-    </ClInclude>
-    <ClInclude Include="Game.h">
-      <Filter>Game</Filter>
     </ClInclude>
     <ClInclude Include="Countdown.h">
       <Filter>UI\InGame</Filter>
@@ -298,6 +295,9 @@
     </ClInclude>
     <ClInclude Include="MetaTile.h" />
     <ClInclude Include="Tiles.h" />
+    <ClInclude Include="GameServer.h">
+      <Filter>Game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
