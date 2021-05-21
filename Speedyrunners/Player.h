@@ -1,8 +1,7 @@
 #pragma once
 #include "Character.h"
 #include "Globals.hpp"
-#include "PlayerSlot.h"
-class Player : public PlayerSlot
+class Player
 {
 	using CharPtr = std::shared_ptr<Character>;
 private:

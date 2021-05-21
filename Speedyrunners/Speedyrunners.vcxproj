@@ -38,7 +38,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{85663A8B-14D0-4352-9E63-25B868612CE3}</ProjectGuid>
     <RootNamespace>Speedyrunners</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -301,7 +301,6 @@
     <ClCompile Include="NPC.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="PlayerSlot.cpp" />
     <ClCompile Include="PriorityQueue.cpp" />
     <ClCompile Include="Resources.cpp" />
     <ClCompile Include="Rocket.cpp" />
@@ -345,7 +344,6 @@
     <ClInclude Include="NPC.h" />
     <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="PlayerSlot.h" />
     <ClInclude Include="PriorityQueue.h" />
     <ClInclude Include="Resources.h" />
     <ClInclude Include="Rocket.h" />

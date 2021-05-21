@@ -55,11 +55,11 @@
     <Filter Include="Animation\Particles">
       <UniqueIdentifier>{5824c78f-efb3-49dc-8005-548da3eb92bf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Level\Tiles">
+      <UniqueIdentifier>{e104037f-319a-4a5a-8823-9107f615db96}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="TileMap.cpp">
-      <Filter>Level</Filter>
-    </ClCompile>
     <ClCompile Include="Level.cpp">
       <Filter>Level</Filter>
     </ClCompile>
@@ -138,9 +138,6 @@
     <ClCompile Include="PriorityQueue.cpp">
       <Filter>utils</Filter>
     </ClCompile>
-    <ClCompile Include="PlayerSlot.cpp">
-      <Filter>Characters</Filter>
-    </ClCompile>
     <ClCompile Include="AudioPlayer.cpp">
       <Filter>Audio</Filter>
     </ClCompile>
@@ -174,13 +171,17 @@
     <ClCompile Include="GoldenHook.cpp">
       <Filter>Items</Filter>
     </ClCompile>
-    <ClCompile Include="MetaTile.cpp" />
-    <ClCompile Include="Tiles.cpp" />
+    <ClCompile Include="MetaTile.cpp">
+      <Filter>Level\Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="TileMap.cpp">
+      <Filter>Level\Tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="Tiles.cpp">
+      <Filter>Level\Tiles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="TileMap.h">
-      <Filter>Level</Filter>
-    </ClInclude>
     <ClInclude Include="Level.h">
       <Filter>Level</Filter>
     </ClInclude>
@@ -259,9 +260,6 @@
     <ClInclude Include="PriorityQueue.h">
       <Filter>utils</Filter>
     </ClInclude>
-    <ClInclude Include="PlayerSlot.h">
-      <Filter>Characters</Filter>
-    </ClInclude>
     <ClInclude Include="AudioPlayer.h">
       <Filter>Audio</Filter>
     </ClInclude>
@@ -296,8 +294,15 @@
     <ClInclude Include="GoldenHook.h">
       <Filter>Items</Filter>
     </ClInclude>
-    <ClInclude Include="MetaTile.h" />
-    <ClInclude Include="Tiles.h" />
+    <ClInclude Include="MetaTile.h">
+      <Filter>Level\Tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="TileMap.h">
+      <Filter>Level\Tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="Tiles.h">
+      <Filter>Level\Tiles</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
