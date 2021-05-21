@@ -45,7 +45,6 @@ class NPC : public PlayerSlot
 	const float DIRECTION_CHANGE_COST = 10 * 500.0f;
 	const float JUMP_COST_PER_DISTANCE_UNIT = 10 * 50.0f;
 
-
 	const float THRESHOLD_PER_RADIUS_UNIT = 3.0f;
 
 	const sf::Time MAX_TIME_PER_STEP = sf::seconds(6.0f);
@@ -53,6 +52,7 @@ class NPC : public PlayerSlot
 
 	const float CLOSENESS_THRESHOLD = 1.0f;
 	const float FARNESS_THRESHOLD = 10.0f;
+	const float USE_ITEM_THRESHOLD = 40.0f;
 
 	using CharPtr = std::shared_ptr<Character>;
 	using TilePriorityQueue = PriorityQueue<NodeData>;
@@ -79,6 +79,7 @@ private:
 	std::atomic<bool> active = true;
 	std::atomic<bool> resetPlan = false;
 	std::atomic<bool> stitched = false;
+	std::atomic<bool> useItem = false;
 
 	// 0 -> First path
 	// 1 -> Next step
@@ -139,6 +140,7 @@ public:
 	int getPathFound(int i) const;
 	void endMe();
 	void clearPaths();
+	bool getAndResetUseItem();
 
 	void die(); // resets states of path follower part
 	std::list<selbaward::Line> debugLines();

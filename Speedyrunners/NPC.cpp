@@ -867,6 +867,13 @@ void NPC::update(const sf::Time dT) { // Tries to get from current to next
 		tryingToFindAir = false;
 		return;
 	}
+	int r = rng::defaultGen.rand(0, 10);
+	if (r > 8 || me->getDToCheckpoint() > USE_ITEM_THRESHOLD) {
+		if (r > 3) {
+			useItem = true;
+		}
+	}
+
 	tryToWallJump();
 	if (isPerformingWallJump) return;
 
@@ -1069,6 +1076,12 @@ void NPC::clearPaths() {
 	pathFound[1] = 0;
 	halt();
 
+}
+
+bool NPC::getAndResetUseItem() {
+	bool a = useItem;
+	useItem = false;
+	return a;
 }
 
 std::list<selbaward::Line> NPC::debugLines() {

@@ -516,13 +516,15 @@ void Game::update()
 				else if (i < characters.size() - 1) target++;
 				//if player is dumb and uses rockets when nobody else is playing, it will hit them
 				auto p = getPlayerAt(i);
-				if (p != nullptr && p->captureEvents(event)) {
+				auto n = getNPCAt(i);
+				if (p != nullptr && p->captureEvents(event)
+					|| n != nullptr && n->getAndResetUseItem()) {
 					auto item = characters[i]->getCurrentItem();
 					if (item == glb::item::ROCKET) {
 						auto rocket = std::make_shared<Rocket>(characters[i]->getPosition(), characters[target], characters[i]->isFacingRight());
 						
 						items.push_back(rocket);
-						if (!cheatsEnabled) characters[i]->resetItem();
+						if (!cheatsEnabled && p != nullptr) characters[i]->resetItem();
 					} 
 					else if ((int)item >= glb::NUMBER_OF_ITEMS-glb::NUMBER_OF_UNOBTAINABLE_ITEMS 
 							&& (int)item < glb::NUMBER_OF_ITEMS) { // crates
@@ -541,12 +543,12 @@ void Game::update()
 					else if (item == glb::ICERAY) {
 						auto iceray = std::make_shared<IceRay>(cam, characters[i]);
 						items.push_back(iceray);
-						if (!cheatsEnabled) characters[i]->resetItem();
+						if (!cheatsEnabled && p != nullptr) characters[i]->resetItem();
 					}
 					else if (item == glb::GOLDEN_HOOK) {
 						auto ghook = std::make_shared<GoldenHook>(characters[i], characters[target]);
 						items.push_back(ghook);
-						if (!cheatsEnabled) characters[i]->resetItem();
+						if (!cheatsEnabled && p != nullptr) characters[i]->resetItem();
 					}
 					else {
 						std::cout << "unimplemented item " << item << "\n";
