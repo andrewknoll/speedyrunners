@@ -380,10 +380,6 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 
 	//fixPosition(hitBox);
 
-	sf::Vector2f posIni(hitBox.left, hitBox.top);
-	//std::cout << "After move: " << posIni << "\n";
-	std::vector<Tiles::Collision> collisions = tiles.collision(hitBox, isGrounded);
-
 	bool wasAtWallJump = isAtWallJump;
 	if (!isFrozen && !isStunned && isAtWallJump) { // get out of walljump mode
 		isAtWallJump = false; // we assume it is not, and set it if it is
@@ -401,20 +397,20 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 		if (stunnedRemaining <= glb::FREEZE_TIME / 2.0f) {
 			if (iceCubeAnim.get_current_frame() == 0) {
 				iceCubeAnim.advance_frame(iceCube);
-				iceCube.setScale(0.6f, 0.6f);
+				iceCube.setScale(0.65f, 0.65f);
 				iceCube.setOrigin(iceCubeAnim.get_origin_point());
 				iceCube.setColor(sf::Color(255, 255, 255, 150));
 			}
 		}
 		else {
 			iceCube = iceCubeAnim.get_first_frame();
-			iceCube.setScale(0.6f, 0.6f);
+			iceCube.setScale(0.65f, 0.65f);
 			iceCube.setOrigin(iceCubeAnim.get_origin_point());
 			iceCube.setColor(sf::Color(255, 255, 255, 150));
 		}
 		if (hasFrozenWiggled) {
 			//Move to a random relative position
-			float wAmount = rng::defaultGen.rand(50, 100);
+			float wAmount = rng::defaultGen.rand(0, 6);
 			if (wiggleFrames % 2 == 1) {
 				wAmount = -wAmount;
 			}
@@ -430,6 +426,10 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 			}
 		}
 	}
+
+	sf::Vector2f posIni(hitBox.left, hitBox.top);
+	//std::cout << "After move: " << posIni << "\n";
+	std::vector<Tiles::Collision> collisions = tiles.collision(hitBox, isGrounded);
 
 	if (!collisions.empty()) {
 		Tiles::Collision c = collisions.front();
@@ -774,7 +774,7 @@ void Character::getFrozen() {
 	if (!isFrozen) {
 		stunnedRemaining = glb::FREEZE_TIME;
 		iceCube = iceCubeAnim.get_first_frame();
-		iceCube.setScale(0.6f, 0.6f);
+		iceCube.setScale(0.65f, 0.65f);
 		iceCube.setOrigin(iceCubeAnim.get_origin_point());
 		iceCube.setColor(sf::Color(255, 255, 255, 150));
 		isFrozen = true;
