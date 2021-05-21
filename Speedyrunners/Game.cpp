@@ -442,16 +442,20 @@ void Game::setFullScreen() {
 
 
 void Game::updateItems() {
+	int handle;
 	// Weird loop to be able to erase (https://www.techiedelight.com/remove-elements-list-iterating-cpp/):
 	auto itr = items.cbegin();
 	while (itr != items.cend())
 	{
 		auto item = *itr;
-		if (item->update(dT, lvl)) { // if the update returns true, it should be handled
+		handle = item->update(dT, lvl);
+		if (handle > 0) { // if the update returns 1 or 2, it should be handled
 			handleItem(item); // handle
-			itr = items.erase(itr); // and delete
+			if (handle == 1) {
+				itr = items.erase(itr); // and delete
+			}
 		}
-		else {
+		if(handle != 1) {
 			++itr;
 		}
 	}

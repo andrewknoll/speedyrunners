@@ -62,7 +62,7 @@ GoldenHook::GoldenHook(CharPtr _from, CharPtr _target, float width) :
 	audioPlayer.play(AudioPlayer::Effect::GOLDEN_HOOK_SHOOT);
 }
 
-bool GoldenHook::update(sf::Time elapsed, const Level& lvl)
+int GoldenHook::update(sf::Time elapsed, const Level& lvl)
 {
 	if (!hooked && !missed) {
 		position += vel * elapsed.asSeconds();
