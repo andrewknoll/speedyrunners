@@ -175,9 +175,6 @@
       <Filter>Items</Filter>
     </ClCompile>
     <ClCompile Include="MetaTile.cpp" />
-    <ClCompile Include="Source.cpp">
-      <Filter>Level</Filter>
-    </ClCompile>
     <ClCompile Include="Tiles.cpp" />
   </ItemGroup>
   <ItemGroup>
