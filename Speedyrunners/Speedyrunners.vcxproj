@@ -301,6 +301,7 @@
     <ClCompile Include="NPC.cpp" />
     <ClCompile Include="ParticleSystem.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PlayerSlot.cpp" />
     <ClCompile Include="PriorityQueue.cpp" />
     <ClCompile Include="Resources.cpp" />
     <ClCompile Include="Rocket.cpp" />
@@ -344,6 +345,7 @@
     <ClInclude Include="NPC.h" />
     <ClInclude Include="ParticleSystem.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="PlayerSlot.h" />
     <ClInclude Include="PriorityQueue.h" />
     <ClInclude Include="Resources.h" />
     <ClInclude Include="Rocket.h" />

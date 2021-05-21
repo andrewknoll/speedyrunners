@@ -180,6 +180,9 @@
     <ClCompile Include="Tiles.cpp">
       <Filter>Level\Tiles</Filter>
     </ClCompile>
+    <ClCompile Include="PlayerSlot.cpp">
+      <Filter>Characters</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Level.h">
@@ -302,6 +305,9 @@
     </ClInclude>
     <ClInclude Include="Tiles.h">
       <Filter>Level\Tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerSlot.h">
+      <Filter>Characters</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
