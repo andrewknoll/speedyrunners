@@ -19,10 +19,9 @@
 
 
 Lobby::Lobby()
-	: window(sf::VideoMode(1600, 900), "SpeedyRunners"),
-	lvl(window),
+	:
 	state(State::Countdown),
-	selectedTile(Tiles::Collidable::FLOOR),
+	lvl(),
 	cam(sf::FloatRect(0, 0, 1600, 900)),
 	src(Resources::getInstance()),
 	particleSystems(src.getParticleSystems())
@@ -123,7 +122,6 @@ void Lobby::defaultInit(const std::vector<glb::characterIndex>& _players, const 
 	running = true;
 }
 
-/*
 void Lobby::defaultInit(int N_PLAYERS) {
 
 	sf::Vector2f spawnPosition = lvl.getInitialPosition();
@@ -183,7 +181,6 @@ void Lobby::defaultInit(int N_PLAYERS) {
 	setState(State::Countdown);
 	running = true;
 }
-*/
 
 void Lobby::setState(const State _state)
 {
@@ -193,16 +190,6 @@ void Lobby::setState(const State _state)
 Lobby::State Lobby::getState() const{
 	return state;
 }
-/*
-void Lobby::setUpWindow() {
-
-	window.setFramerateLimit(60); //60 FPS?
-	window.setVerticalSyncEnabled(true);
-	//auto settings = window.getSettings();
-	//settings.antialiasingLevel = 2;
-	//window.set
-}
-*/
 
 // update the positions based on distance to the active checkpoint
 void Lobby::updatePositions()
@@ -261,11 +248,6 @@ void Lobby::npcJoin(NPCPtr newNPC){
 	}
 }
 
-const Settings& Lobby::getSettings() const
-{
-	return settings;
-}
-
 int Lobby::getFirstCharacterIdx() const
 {
 	return 0;
@@ -273,20 +255,15 @@ int Lobby::getFirstCharacterIdx() const
 
 void Lobby::loadLevel(const std::string& lvlPath)
 {
-	lvl.load(lvlPath, window);
+	lvl.load(lvlPath);
 	checkpoints.clear();
 	lvl.getCheckpoints(checkpoints);
 	std::cout << "I have " << checkpoints.size() << " checkpoints now\n";
 	for (NPCPtr npc : npcs) {
 		npc->setTileMap(std::make_shared<TileMap>(lvl.getCollidableTiles()));
 	}
-
 }
 
-
-void Lobby::setSaveName(std::string fileName) {
-	saveLevelName = fileName;
-}
 /*
 void Lobby::loop()
 {
@@ -360,16 +337,11 @@ void Lobby::addCharacter(const CharPtr character)
 {
 	if (characters.size() < 4) {
 		characters.emplace_back(character);
-		ui.setCharacters(characters);
 		aliveCount++;
 	}
 
 }
-void Lobby::createNewLevel(int nLevels)
-{
-	loadLevel("default_level.csv");
-	saveLevelName = "USER_LEVEL_" + std::to_string(nLevels) + ".csv";
-}
+
 /*
 Lobby::CharPtr Lobby::getCharacterAt(int pos) const {
 	return characters[positions[pos].index];
@@ -387,6 +359,112 @@ Lobby::NPCPtr Lobby::getNPCAt(int pos) const {
 		if (npc->getCharacter() == characters[pos]) return npc;
 	}
 	return nullptr;
+}
+
+void Lobby::setLevelTile(const sf::Vector2i & pos, int tileNumber)
+{
+	if (onlineMode) {
+		lvl.setTile(pos, tileNumber);
+	}
+}
+
+void Lobby::drawLevelTile(sf::RenderTarget& target, sf::RenderStates states, const sf::Vector2i & pos, int tileNumber) {
+	if (!onlineMode) {
+		lvl.drawTile(target, states, pos, tileNumber);
+	}
+	
+}
+
+void Lobby::emitParticles(int selectedPSystem, const sf::Vector2f& pos, bool linear, int n) {
+	if (!onlineMode) {
+		if (linear) {
+			particleSystems[selectedPSystem].emitLinear(pos, n);
+		}
+		else {
+			particleSystems[selectedPSystem].emit(pos);
+		}
+	}
+	
+}
+
+const std::vector<particles::PSystem>& Lobby::getParticleSystems() const
+{
+	return particleSystems;
+}
+
+const std::list<Lobby::ItemPtr>& Lobby::getItems() const
+{
+	return items;
+}
+
+const std::shared_ptr<RoundVictory>& Lobby::getRV() const
+{
+	return rv;
+}
+
+const Countdown & Lobby::getCountdown() const
+{
+	return countdown;
+}
+
+void Lobby::addCheckpoint(const sf::Vector2f & pos, float radius) {
+	if (!onlineMode) {
+		checkpoints.emplace_back(pos, radius);
+	}
+}
+
+void Lobby::removeLastCheckpoint() {
+	if (!onlineMode && !checkpoints.empty()) {
+
+	}
+}
+
+void Lobby::saveLevelCheckpoints() {
+	if (!onlineMode) {
+		lvl.setCheckpoints(checkpoints);
+	}
+}
+
+const std::vector<Lobby::CharPtr>& Lobby::getCharacters() const {
+	return characters;
+}
+
+void Lobby::requestAddObject(int type, sf::Vector2f pos, CharPtr newChar) {
+	if (!onlineMode) {
+		if (type == 0 && newChar != nullptr) { //Character
+			addCharacter(newChar);
+			lvl.setInitialPosition(pos);
+		}
+		else if (type == 1) {
+			lvl.addBoostBox(pos);
+		}
+		else if (type == 2) {
+			lvl.addItemPickup(pos);
+		}
+		else if (type == 3) {
+			lvl.addBoxObstacle(pos);
+		}
+	}
+}
+
+void Lobby::requestLoadLevel(std::string l) {
+	if (!onlineMode) {
+		loadLevel(l);
+	}
+}
+
+void Lobby::setOffline() {
+	onlineMode = false;
+}
+
+Camera Lobby::getCamera() const
+{
+	return cam;
+}
+
+Level Lobby::getLevel() const
+{
+	return lvl;
 }
 
 MusicPlayer& Lobby::music() {
@@ -438,18 +516,6 @@ void Lobby::updateNPCs(bool follow) {
 	}
 }
 
-void Lobby::setFullScreen() {
-	sf::VideoMode vMode = sf::VideoMode::getFullscreenModes().front();
-	if (!vMode.isValid()) {
-		std::cerr << "NOPE\n";
-	}
-	window.create(vMode, "SpeedyRunners", sf::Style::Fullscreen);
-	setUpWindow();
-	cam = window.getDefaultView();
-	lvl.loadBackground(lvl.getBackgroundPath(), window);
-	settings.setResolution(sf::Vector2i(window.getSize().x, window.getSize().y));
-}
-
 
 void Lobby::updateItems() {
 	int handle;
@@ -475,112 +541,15 @@ void Lobby::clearParticles() {
 	for (auto& ps : particleSystems) ps.clear();
 }
 
+void Lobby::requestClearParticles() {
+	if (!onlineMode) {
+		clearParticles();
+	}
+}
+
 void Lobby::update()
 {
-	sf::Event event;
 	int target;
-	while (window.pollEvent(event))
-	{
-#ifdef USE_IMGUI
-		ImGui::SFML::ProcessEvent(event);
-#endif // USE_IMGUI
-
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
-			loopMenu();
-		}
-		else if (event.type == sf::Event::Closed) {
-			running = false;
-			window.close();
-		}
-
-
-		
-		if (event.type == sf::Event::Resized)
-		{
-			// sf::FloatRect visibleArea(0, 0, event.size.width, event.size.height);
-			sf::FloatRect visibleArea(0, 0, float(event.size.width), float(event.size.width) / aspectRatio);
-
-			window.setView(sf::View(visibleArea));
-		}
-		if (cheatsEnabled) {
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::F1)) {
-				state = State::Playing;
-			}
-			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::F2)) {
-				state = State::Editing;
-				addingCheckpoint = false;
-				testingParticles = false;
-				clearParticles();
-			}
-			else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F4) {
-				loopMenu();
-			}
-		}
-
-
-		if (state == State::Editing) { // Editing state
-			processEditingInputs(event);
-		} // End of editing state
-		else if (state == State::Playing) { // Playing
-			//characters.front().processInput(event); // Podemos cambiarlo por Player en el futuro
-			for (int i = 0; i < characters.size(); i++) {
-				target = i; //Set target initial value to oneself
-
-				if (i > 0) target--;
-				else if (i < characters.size() - 1) target++;
-				//if player is dumb and uses rockets when nobody else is playing, it will hit them
-				auto p = getPlayerAt(i);
-				auto n = getNPCAt(i);
-				if (p != nullptr && p->captureEvents(event)
-					|| n != nullptr && n->getAndResetUseItem()) {
-					auto item = characters[i]->getCurrentItem();
-					if (item == glb::item::ROCKET) {
-						auto rocket = std::make_shared<Rocket>(characters[i]->getPosition(), characters[target], characters[i]->isFacingRight());
-						
-						items.push_back(rocket);
-						if (!cheatsEnabled && p != nullptr) characters[i]->resetItem();
-					} 
-					else if ((int)item >= glb::NUMBER_OF_ITEMS-glb::NUMBER_OF_UNOBTAINABLE_ITEMS 
-							&& (int)item < glb::NUMBER_OF_ITEMS) { // crates
-						lvl.dropCrate(characters[i]->getBackPosition());
-						characters[i]->setItem(glb::item(((int)item + 1) % (glb::NUMBER_OF_ITEMS)));
-					}
-					else if (item == glb::TNT) {
-						auto& tnt = items.emplace_back(std::make_shared<TNT>(characters[i]->getBackPosition(), lvl.getCollidableTiles().getTileSizeWorld().x));
-						characters[i]->setItemPtr(tnt);
-						characters[i]->setItem(glb::item::TNT_DETONATOR);
-					}
-					else if (item == glb::TNT_DETONATOR) {
-						characters[i]->getItemPtr()->changeState();
-						characters[i]->resetItem();
-					}
-					else if (item == glb::ICERAY) {
-						auto iceray = std::make_shared<IceRay>(cam, characters[i]);
-						items.push_back(iceray);
-						if (!cheatsEnabled && p != nullptr) characters[i]->resetItem();
-					}
-					else if (item == glb::GOLDEN_HOOK) {
-						auto ghook = std::make_shared<GoldenHook>(characters[i], characters[target]);
-						items.push_back(ghook);
-						if (!cheatsEnabled && p != nullptr) characters[i]->resetItem();
-					}
-					else {
-						std::cout << "unimplemented item " << item << "\n";
-						characters[i]->setItem(glb::NONE);
-					}
-				}
-			}
-		}
-
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::F10)) { // Change to fullscreen (change back to window not implemented)
-			setFullScreen();
-		}
-
-	}
-#ifdef USE_IMGUI
-	ImGui::SFML::Update(window,dT);
-#endif
-	processMouseEditing();
 	if (state != State::Editing) {
 		cam.update(dT);
 	}
@@ -696,225 +665,16 @@ void Lobby::handleItem(Lobby::ItemPtr item) {
 }
 
 void Lobby::enableCheats(bool enable) {
-#ifdef DEV_MODE
-	cheatsEnabled = true;
-#else
-	cheatsEnabled = enable;
-#endif
-}
-
-void Lobby::processMouseEditing() {
-	if (state == State::Editing && sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-		if (!addingCheckpoint && !testingParticles)
-			lvl.setTile(utils::clampMouseCoord(window), selectedTile);
-		else if (!addingCheckpoint) {
-			particleSystems[selectedPSystem].emit(utils::mousePosition2f(window));
-		}
-	}
-
-}
-
-// Controls for editing state:
-void Lobby::processEditingInputs(const sf::Event& event) {
-	
-	if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
-		cam.moveByMouse(sf::Mouse::getPosition());
-		//cam.move(sf::Vector2f(1, 0));
-	}
-	else {
-		cam.resetDrag();
-	}
-	if (event.type == sf::Event::MouseWheelScrolled)
-	{
-		if (event.mouseWheelScroll.wheel == sf::Mouse::VerticalWheel) {
-			int add = -1;
-			if (event.mouseWheelScroll.delta > 0) {
-				add = 1;
-			}
-			selectedTile = (Tiles::Collidable)utils::positiveMod((selectedTile + add), Tiles::NB_COLLIDABLE);
-			//std::cout << "New tile selected: " << selectedTile << std::endl;
-		}
-	}
-	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Numpad7) {
-		testingParticles = !testingParticles;
-		addingCheckpoint = false;
-		clearParticles();
-	}
-	else if (testingParticles && event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Numpad8) {
-		selectedPSystem = (selectedPSystem + 1) % particleSystems.size();
-		std::cout << "selected PSystem: " << selectedPSystem << "\n";
-	}
-	else if (testingParticles && event.type == sf::Event::MouseButtonPressed && event.key.code ==sf::Mouse::Middle)
-		//particleSystems[selectedPSystem].burstOut(utils::mousePosition2f(window), 200, 100);
-		particleSystems[selectedPSystem].emitLinear(utils::mousePosition2f(window), 1000);
-	else if (addingCheckpoint && event.type == sf::Event::MouseButtonPressed && event.key.code == sf::Mouse::Left) {
-		std::cout << "adding checkpoint to " << utils::mousePosition2f(window).x << " " << utils::mousePosition2f(window).y << "\n";
-		checkpoints.emplace_back(utils::mousePosition2f(window), currentRadius);
-	}
-	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Numpad4) { // box debug
-		lvl.testBoxCollision(utils::mousePosition2f(window));
-	}
-	
-	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) { // sf::Keyboard::isKeyPressed(sf::Keyboard::S) &&
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-			lvl.setCheckpoints(checkpoints);
-			//lvl.saveDuplicateVertical("first.csv");
-
-			//lvl.setDefaultLevel();
-			//lvl.save("default_level.csv");
-
-			lvl.save(saveLevelName);
-		}
-		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::L)) {
-			loadLevel("defaultLevel.csv");
-		}
-		else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::J) {
-
-			// Join as player
-			//playerJoin();
-		}
-	}
-	if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::C) {
-		addingCheckpoint = !addingCheckpoint;
-		testingParticles = false;
-	}
-	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::BackSpace && !checkpoints.empty()) {
-		std::cout << "removing last checkpoint\n";
-		checkpoints.pop_back();
-	}else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Add)) {
-		//std::cout << "Resizing circle...\n";
-		currentRadius += 10;
-		checkpointCircle.setRadius(currentRadius);
-	}else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Subtract) && currentRadius > 10) {
-		//std::cout << "Resizing circle...\n";
-		currentRadius -= 10;
-		checkpointCircle.setRadius(currentRadius);
-	}
-	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::J) { // For debug, add Falcon to mouse position
-		// Add player
-		Spritesheet sprsht = src.getSpriteSheet(3); //Falcon
-		std::shared_ptr<Character> falcon = std::make_shared<Character>(sprsht, glb::FALCON);
-		falcon->setPosition(utils::mousePosition2f(window));
-		falcon->setName(std::string("falcon ") + std::to_string(characters.size()));
-		//falcon.setScale(0.5, 0.5);
-		addCharacter(falcon);
-		lvl.setInitialPosition(falcon->getPosition());
-	}
-	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Num1) {
-		lvl.addBoostBox(utils::mousePosition2f(window));
-	}
-	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Num2) { // ITem pickup
-		lvl.addItemPickup(utils::mousePosition2f(window));
-	}
-	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Num3) { // box obstacle
-		lvl.addBoxObstacle(utils::mousePosition2f(window));
-	}
-
-	// Debug player positions (P to show):
-	printCharacterPositions(event);
-
-}
-
-void Lobby::printCharacterPositions(const sf::Event& e) const {
-
-	if (e.type == sf::Event::KeyPressed && e.key.code == (sf::Keyboard::P)) {
-		std::cout << "Character positions:\n";
-		for (auto c : characters)  std::cout << c->getName() << " | ";
-		std::cout << "\nCharacter distances:\n";
-		for (auto c : characters) std::cout << c->getDToCheckpoint() << " | ";
-		std::cout << "\n";
+	if (!onlineMode) {
+		cheatsEnabled = enable;
 	}
 }
 
-
-void Lobby::animateCharacters() {
-	for (auto c : characters) {
-		if (!c->isDead()) {
-			c->tickAnimation(dT);
-			window.draw(*c);
-		}
-	}
+std::vector<Checkpoint> Lobby::getCheckpoints() const {
+	return checkpoints;
 }
 
-void Lobby::draw(sf::Time dT)
+std::vector<Lobby::NPCPtr> Lobby::getNPCs() const
 {
-	window.clear();
-	window.setView(cam);
-	window.draw(lvl);
-
-	/*for (auto npc : npcs) {
-		window.draw(npc->debugCurrentPos());
-	}*/
-
-	if(state == State::Editing) {
-		// sf::Mouse::getPosition() - window.getPosition()
-		// Visualizar checkpoints:
-		for (auto cp : checkpoints) {
-			window.draw(cp);
-		}
-		// characters (sin hacer tick a las animaciones):
-		/*for (auto c : characters) {
-			if (!c->isDead()) {
-				window.draw(*c);
-			}
-		}*/
-		for (auto npc : npcs) {
-			for (auto l : npc->debugExpanded()) {
-				window.draw(l);
-			}
-			for (auto l : npc->debugLines()) {
-				window.draw(l);
-			}
-		}
-		// Selected tile
-		if (!addingCheckpoint && !testingParticles)
-			lvl.drawTile(window, sf::RenderStates(), utils::clampMouseCoord(window), selectedTile);
-		else if (addingCheckpoint) {
-			checkpointCircle.setPosition(utils::mousePosition2f(window));
-			window.draw(checkpointCircle);
-		}
-		/*else for (const auto& ps : particleSystems) {
-			window.draw(ps); // testing particles
-		}*/
-	}
-
-	// Characters
-	
-	animateCharacters();
-	for (const auto& ps : particleSystems) window.draw(ps);
-	for (const auto i : items) {
-		window.draw(*i);
-	}
-
-	//Sudden death screen
-	if (state != State::Editing) {
-		window.setView(window.getDefaultView());
-		window.draw(cam);
-	}
-
-	if (state == State::FinishedRound) {
-		if (rv != nullptr) {
-			rv->draw(window);
-		}
-	}
-	else if (state == State::Countdown) {
-		suddenDeath = false;
-		cam.setSuddenDeath(false);
-		countdown.draw(window);
-		//animateCharacters();
-	}
-
-	// UI
-	ui.update();
-	window.draw(ui);
-
-#ifdef USE_IMGUI
-	ImGui::Begin("Hello, world!");
-	ImGui::Button("Look at this pretty button");
-	ImGui::End();
-
-	ImGui::SFML::Render(window);
-#endif // USE_IMGUI
-
-	window.display();
+	return npcs;
 }

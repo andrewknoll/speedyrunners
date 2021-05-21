@@ -58,12 +58,12 @@ public:
 	void dropCrate(const sf::Vector2f& pos);
 
 	bool checkItemPickups(std::shared_ptr<Character> character);
-
+	
 	bool checkBoxCollisions(std::shared_ptr<Character> character);
 
 	void drawTile(sf::RenderTarget& target, sf::RenderStates states, const sf::Vector2i& pos, const int tileNumber) const;
 
-	Level(const sf::RenderWindow& window);
+	Level();
 
 	void setTile(const sf::Vector2i& pos, const int tileNumber);
 
@@ -72,16 +72,18 @@ public:
 
 	void saveDuplicateVertical(const std::string& f_name) const;
 
-	void load(const std::string& f_name, const sf::RenderWindow& window);
+	void load(const std::string& f_name);
 
-	Level(const std::string& tilesetPath, const std::string& bgPath, const sf::RenderWindow& window);
+	Level(const std::string& tilesetPath, const std::string& bgPath);
 
-	void loadBackground(const std::string& file, const sf::RenderWindow& window);
+	void loadBackground(const std::string& file);
 
 
 	void setDefaultLevel();
 
 	std::string getBackgroundPath() const;
+
+	Background getBackground() const;
 
 	const TileMap& getCollidableTiles() const;
 

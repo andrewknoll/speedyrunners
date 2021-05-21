@@ -8,7 +8,7 @@
 #include "AudioPlayer.h"
 
 // airport: "../assets/Content/tiles/tiles_airport.png"
-Level::Level(const sf::RenderWindow& window) : Level("../assets/Content/tiles/tiles_black_editor.png", "../assets/Content/Backgrounds/ENV_Airport/sky_1280_720.png", window)
+Level::Level() : Level("../assets/Content/tiles/tiles_black_editor.png", "../assets/Content/Backgrounds/ENV_Airport/sky_1280_720.png")
 {	
 }
 
@@ -172,7 +172,7 @@ void Level::saveDuplicateVertical(const std::string& f_name) const
 	std::cout << "Level saved\n";
 }
 
-void Level::load(const std::string& f_name, const sf::RenderWindow& window)
+void Level::load(const std::string& f_name)
 {
 	checkpoints.clear();
 	boostBoxes.clear();
@@ -201,8 +201,8 @@ void Level::load(const std::string& f_name, const sf::RenderWindow& window)
 	std::string line;
 	file >> backgroundPath;
 	// random thing:
-	if (backgroundPath == "random") background.load(rng::bgSampler.getSample(), window); // random background
-	else background.load(backgroundPath, window);
+	if (backgroundPath == "random") background = Background(rng::bgSampler.getSample()); // random background
+	else background = Background(backgroundPath);
 	file.ignore(); // skip \n
 
 	// Ini pos:
@@ -268,8 +268,8 @@ void Level::load(const std::string& f_name, const sf::RenderWindow& window)
 }
 
 
-Level::Level(const std::string& tilesetPath, const std::string& bgPath, const sf::RenderWindow& window) :
-	backgroundPath(bgPath), background(bgPath,window), audioPlayer(Resources::getInstance().getAudioPlayer())
+Level::Level(const std::string& tilesetPath, const std::string& bgPath) :
+	backgroundPath(bgPath), background(bgPath), audioPlayer(Resources::getInstance().getAudioPlayer())
 {	// Adapted from: https://www.sfml-dev.org/tutorials/2.5/graphics-vertex-array.php#what-is-a-vertex-and-why-are-they-always-in-arrays
 	// define the level with an array of tile indices
 	const int lvlSize = 128 * 64;
@@ -297,9 +297,9 @@ Level::Level(const std::string& tilesetPath, const std::string& bgPath, const sf
 	//loadBackground(bgPath, window);
 }
 
-void Level::loadBackground(const std::string& file, const sf::RenderWindow& window)
+void Level::loadBackground(const std::string& file)
 {
-	background.load(file, window);
+	background = Background(file);
 }
 
 
@@ -330,6 +330,10 @@ std::string Level::getBackgroundPath() const
 {
 	return backgroundPath;
 }
+Background Level::getBackground() const
+{
+	return background;
+}
 const TileMap& Level::getCollidableTiles() const
 {
 	return collidableTiles;
@@ -341,7 +345,6 @@ void Level::setCheckpoints(const std::vector<Checkpoint>& cps)
 
 void Level::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	target.draw(background);
 	target.draw(collidableTiles, states);
 	for (const auto& b : boostBoxes)   target.draw(b, states);
 	for (const auto& b : boxObstacles) target.draw(b, states);

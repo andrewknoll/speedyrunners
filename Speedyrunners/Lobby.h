@@ -9,10 +9,8 @@
 #include "Camera.h"
 #include "Player.h"
 #include "Countdown.h"
-#include "Settings.h"
 #include "Resources.h"
 #include "MusicPlayer.h"
-#include "InGameUI.h"
 #include "NPC.h"
 #include "PlayerSlot.h"
 #include "RoundVictory.h"
@@ -46,16 +44,14 @@ class Lobby
 public:
 	enum class State { Countdown, Playing, FinishedRound, Paused, Editing, AcceptingPlayers, Full };
 protected:
-
+	bool onlineMode = true;
 	//Thread Pool
 	std::vector<workerThread> threadPool = std::vector<workerThread>(12);
 	std::atomic<bool> running = true;
 	std::mutex finishMtx;
 	std::condition_variable finishCV;
-	// Settings:
-	Settings settings;
+
 	// Main components:
-	mutable sf::RenderWindow window;
 	std::vector<CharPtr> characters;
 	Camera cam;
 	Level lvl;
@@ -65,15 +61,11 @@ protected:
 
 	bool gameWon = false;
 
-
-	std::string saveLevelName = "defaultLevel.csv";
-
 	// "cheats"
-	bool cheatsEnabled = false;
+	
 
 	bool suddenDeath = false;
 	State state;
-	float aspectRatio = 16.0 / 9.0;
 	int aliveCount = 0;
 
 	std::vector<PlayerPtr> players;
@@ -87,42 +79,27 @@ protected:
 
 	sf::Time dT; // Time since last update
 
-	// Checkpoints:
-	// Editor:
-	float currentRadius = 200.0;
 	//sf::Sprite selectedTile;
-	Tiles::Collidable selectedTile; // When editing
-	bool addingCheckpoint = false;
-	Checkpoint checkpointCircle = Checkpoint(sf::Vector2f(100,100), currentRadius);
+	
 	// Checkpoints:
 	std::vector<Checkpoint> checkpoints;
 	int activeCheckpoint;
 	// int firstCharacter;
 
-	bool testingParticles = false; // change with numpad7 in editingmode
-	int selectedPSystem = 0;
 	// Countdown:
 	Countdown countdown;
 
-	std::unique_ptr<RoundVictory> rv = nullptr;
+	bool cheatsEnabled = false;
 
-	// UI:
-	InGameUI ui;
+	std::shared_ptr<RoundVictory> rv = nullptr;
 
 	void update();
-	void processEditingInputs(const sf::Event& event);
-	void printCharacterPositions(const sf::Event& e) const;
-	void draw(sf::Time dT);
-	void setUpWindow();
 	void updatePositions();
 
 	// Handle an item explosion or something (when item.update returns true):
 	void handleItem(Lobby::ItemPtr item);
+
 	void clearParticles(); // clears all particles
-
-	void processMouseEditing();
-
-	void animateCharacters();
 
 	void updateItems();
 	void updateNPCs(bool follow);
@@ -135,6 +112,8 @@ public:
 
 	void clear();
 
+	void requestClearParticles();
+
 	void defaultInit(int N_PLAYERS);
 	void defaultInit(const std::vector<glb::characterIndex>& _players, const std::vector<glb::characterIndex>& _npcs);
 	void setState(const State _state);
@@ -146,15 +125,12 @@ public:
 	void loadLevel(const std::string& lvlPath);
 	void setSaveName(std::string fileName);
 	void loopGame();
-	void loopMenu();
 	void checkConnections();
 	void addCharacter(const CharPtr character);
 
 	void createNewLevel(int nLevels);
 
 	MusicPlayer& music();
-
-	void setFullScreen();
 
 	void playerJoin(PlayerPtr newPlayer);
 	void npcJoin(NPCPtr newNPC);
@@ -165,7 +141,25 @@ public:
 
 	void checkItemPickups(CharPtr c);
 
-	// allow F1, F2, etc.
+	//OFFLINE
+	void setLevelTile(const sf::Vector2i& pos, int tileNumber);
+	void drawLevelTile(sf::RenderTarget& target, sf::RenderStates states, const sf::Vector2i& pos, int tileNumber);
+	void emitParticles(int selectedPSystem, const sf::Vector2f& pos, bool linear = false, int n = 1);
+	const std::vector<particles::PSystem>& getParticleSystems() const;
+	const std::list<ItemPtr>& getItems() const;
+	const std::shared_ptr<RoundVictory>& getRV() const;
+	const Countdown& getCountdown() const;
+	void addCheckpoint(const sf::Vector2f& pos, float radius);
+	void removeLastCheckpoint();
+	void saveLevelCheckpoints();
 	void enableCheats(bool enable);
+	std::vector<Checkpoint> getCheckpoints() const;
+	std::vector<NPCPtr> getNPCs() const;
+	const std::vector<CharPtr>& getCharacters() const;
+	void requestAddObject(int type, sf::Vector2f pos, CharPtr newChar = nullptr);
+	void requestLoadLevel(std::string l);
+	void setOffline();
+	Camera getCamera() const;
+	Level getLevel() const;
 };
 

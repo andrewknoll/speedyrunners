@@ -1,25 +1,19 @@
 #include <iostream>
 #include "Background.h"
 
-Background::Background(const std::string& file, const sf::RenderWindow& window) {
-	load(file, window);
-}
-
-Background::Background(const std::string& file, const sf::RenderWindow& window, const sf::FloatRect& zona)
-{
-	load(file, window, zona);
-}
-
-
-void Background::load(const std::string& file, const sf::RenderWindow& window) {
-	sf::Vector2u windowSize = window.getSize();
-	//sf::Vector2u windowSize = window.mapCoordsToPixel(
-	//	window.getSize());
-	if (!bgTexture.loadFromFile(file))
+Background::Background(const std::string& file) {
+	loaded = bgTexture.loadFromFile(file);
+	if(!loaded)
 	{
 		std::cerr << "Error cargando fondo de " << file << "\n";
 	}
-	else {
+}
+
+void Background::load(const sf::RenderWindow& window) {
+	sf::Vector2u windowSize = window.getSize();
+	//sf::Vector2u windowSize = window.mapCoordsToPixel(
+	//	window.getSize());
+	if (loaded) {
 		// Vertices for background:
 		bgVertices.setPrimitiveType(sf::Quads);
 		bgVertices.resize(4);
@@ -36,20 +30,16 @@ void Background::load(const std::string& file, const sf::RenderWindow& window) {
 		bgVertices[2].texCoords = sf::Vector2f(texSize.x, texSize.y);
 		bgVertices[3].texCoords = sf::Vector2f(0, texSize.y);
 		currentTexSize = sf::Vector2f(texSize.x, texSize.y);
-
 	}
+	
 }
 
 
-void Background::load(const std::string& file, const sf::RenderWindow& window, const sf::FloatRect& zona) {
+void Background::load(const sf::RenderWindow& window, const sf::FloatRect& zona) {
 	sf::Vector2u windowSize = window.getSize();
 	//sf::Vector2u windowSize = window.mapCoordsToPixel(
 	//	window.getSize());
-	if (!bgTexture.loadFromFile(file))
-	{
-		std::cerr << "Error cargando fondo de " << file << "\n";
-	}
-	else {
+	if(loaded) {
 		// Vertices for background:
 		bgVertices.setPrimitiveType(sf::Quads);
 		bgVertices.resize(4);

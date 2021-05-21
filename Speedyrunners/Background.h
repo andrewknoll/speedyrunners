@@ -10,16 +10,17 @@ class Background : public sf::Drawable
 
 
 	sf::Vector2f currentTexSize;
+	bool loaded = false;
 
 
 
 	void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 public:
-	Background(const std::string& file, const sf::RenderWindow& window);
-	Background(const std::string& file, const sf::RenderWindow& window, const sf::FloatRect& zona);
-	void load(const std::string& file, const sf::RenderWindow& window);
+	Background();
+	Background(const std::string& file);
+	void load(const sf::RenderWindow& window);
 	// zona especifica el rectangulo de la pantalla que ocupa el fondo (las 4 esquinas de 0 a 1)
- 	void load(const std::string& file, const sf::RenderWindow& window, const sf::FloatRect& zona);
+ 	void load(const sf::RenderWindow& window, const sf::FloatRect& zona);
 
 	void setTextureCoords(const sf::FloatRect& zona);
 
