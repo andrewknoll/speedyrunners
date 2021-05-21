@@ -1,4 +1,5 @@
 ﻿#include "OnlinePlayer.h"
+#include "OnlineRequest.h"
 
 OnlinePlayer::OnlinePlayer(sf::TcpSocket& socket, const Settings & settings, int id) : Player(settings, id), socket(socket)  {
 }
@@ -9,25 +10,29 @@ OnlinePlayer::Event OnlinePlayer::captureEvents(const sf::Event& event) {
 	if (status == sf::Socket::Disconnected || status == sf::Socket::Error) {
 		return DISCONNECTED;
 	}
+	OnlineRequest req;
+	packet >> req;
 
 	if (!me->isDead()) {
-		if (sf::Keyboard::isKeyPressed(k_left)) {
+		
+		if (req.inputEvent.leftPressed) {
 			me->run(false);
 		}
-		else if (sf::Keyboard::isKeyPressed(k_right)) {
+		else if (req.inputEvent.rightPressed) {
 			me->run(true);
 		}
-		if (sf::Keyboard::isKeyPressed(k_down)) {
+		if (req.inputEvent.downPressed) {
 			me->slide();
 		}
-		if (sf::Keyboard::isKeyPressed(k_boost)) {
+		if (req.inputEvent.boostPressed) {
 			me->useBoost();
 		}
 		else {
 			me->useBoost(false);
 		}
-		if (event.type == sf::Event::KeyPressed) {
-			if (event.key.code == k_jump && !holdingUp) {
+
+		if (req.inputEvent.pressed) {
+			if (req.inputEvent.inputEventKey == OnlineRequest::JUMP && !holdingUp) {
 				holdingUp = true;
 				me->startJumping();
 			}
@@ -41,26 +46,26 @@ OnlinePlayer::Event OnlinePlayer::captureEvents(const sf::Event& event) {
 				}
 
 			}*/
-			else if (event.key.code == k_hook && !holdingX) {
+			else if (req.inputEvent.inputEventKey == OnlineRequest::HOOK && !holdingX) {
 				me->useHook();
 				holdingX = true;
 			}
-			else if (event.key.code == k_item) {
+			else if (req.inputEvent.inputEventKey == OnlineRequest::ITEM) {
 				return USE_ITEM;
 			}
 		}
-		if (event.type == sf::Event::KeyReleased) {
-			if (event.key.code == k_right || event.key.code == k_left) {
+		else {
+			if (!req.inputEvent.leftPressed || !req.inputEvent.rightPressed) {
 				me->stop();
 			}
-			else if (event.key.code == k_hook) {
+			if (req.inputEvent.inputEventKey == OnlineRequest::HOOK) {
 				holdingX = false;
 				me->useHook(false);
 			}
-			else if (event.key.code == k_down) {
+			if (!req.inputEvent.downPressed) {
 				me->stopSliding();
 			}
-			else if (event.key.code == k_jump) {
+			if (req.inputEvent.inputEventKey == OnlineRequest::JUMP) {
 				holdingUp = false;
 				me->stopJumping();
 			}

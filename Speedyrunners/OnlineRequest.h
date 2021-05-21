@@ -13,16 +13,17 @@ struct OnlineRequest
 
 	enum InputEventKey {
 		NONE,
-		LEFT,
-		RIGHT,
-		DOWN,
-		BOOST,
 		JUMP,
-		HOOK
+		HOOK,
+		ITEM
 	};
 	struct InputEvent {
 		InputEventKey inputEventKey = NONE;
-		bool pressed = true;
+		bool pressed = false;
+		bool leftPressed = false;
+		bool rightPressed = false;
+		bool downPressed = false;
+		bool boostPressed = false;
 	};
 	Type type = CREATE;
 	std::string stringParam = "";
@@ -32,7 +33,7 @@ struct OnlineRequest
 sf::Packet& operator<< (sf::Packet& packet, const OnlineRequest& o)
 {
 	if (o.type == OnlineRequest::KEY_EVENT) {
-		return packet << (int)o.type << o.inputEvent.inputEventKey << o.inputEvent.pressed;
+		return packet << (int)o.type << o.inputEvent.inputEventKey << o.inputEvent.pressed << o.inputEvent.leftPressed << o.inputEvent.rightPressed << o.inputEvent.downPressed << o.inputEvent.boostPressed;;
 	}
 	else {
 		return packet << (int)o.type << o.stringParam;
@@ -47,7 +48,7 @@ sf::Packet& operator>> (sf::Packet& packet, OnlineRequest& o)
 	if (t == OnlineRequest::KEY_EVENT) {
 		auto packet3 = packet2 >> t;
 		o.inputEvent.inputEventKey = (OnlineRequest::InputEventKey)t;
-		return packet3 >> o.inputEvent.pressed;
+		return packet3 >> o.inputEvent.pressed >> o.inputEvent.leftPressed >> o.inputEvent.rightPressed >> o.inputEvent.downPressed >> o.inputEvent.boostPressed;
 	}
 	else {
 		return packet2 >> o.stringParam;
