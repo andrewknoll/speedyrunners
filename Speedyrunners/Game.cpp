@@ -84,7 +84,7 @@ void Game::clear() {
 void Game::defaultInit(const std::vector<glb::characterIndex>& _players, const std::vector<glb::characterIndex>& _npcs) {
 	clear();
 	int N_PLAYERS = players.size();
-
+	sf::Vector2f spawnPosition = lvl.getInitialPosition();
 	std::cout << "players: " << _players.size() << "\n";
 	std::shared_ptr<Character> character;
 	int i = 0;
@@ -93,7 +93,7 @@ void Game::defaultInit(const std::vector<glb::characterIndex>& _players, const s
 		std::cout << "adding player " << c << "\n";
 		// character:
 		character = std::make_shared<Character>(src.getSpriteSheet(c), c);
-		character->setPosition(lvl.getInitialPosition());
+		character->setPosition(spawnPosition);
 		//  player:
 		std::shared_ptr<Player> me = std::make_shared<Player>(getSettings(), i);
 		me->setCharacter(character);
@@ -101,13 +101,20 @@ void Game::defaultInit(const std::vector<glb::characterIndex>& _players, const s
 		character->setName("Player " + std::to_string((int)i));
 		addCharacter(character);
 		i++;
+		bool canMoveSpawn = true;
+		for (auto t : lvl.getCollidableTiles().tilesToTheSide(character->getHitBox(), false)) {
+			canMoveSpawn &= t == Tiles::AIR;
+		}
+		if (canMoveSpawn) {
+			spawnPosition.x -= 20;
+		}
 	}
 	i = 0;
 	for (auto c : _npcs) {
 		std::cout << "adding npc " << c << "\n";
 		// char:
 		character = std::make_shared<Character>(src.getSpriteSheet(c), c);
-		character->setPosition(lvl.getInitialPosition());
+		character->setPosition(spawnPosition);
 		// NPC
 		std::shared_ptr<NPC> npc = std::make_shared<NPC>();
 		npc->setCharacter(character);
@@ -115,6 +122,13 @@ void Game::defaultInit(const std::vector<glb::characterIndex>& _players, const s
 		npcJoin(npc);
 		character->setName("NPC " + std::to_string(i++));
 		addCharacter(character);
+		bool canMoveSpawn = true;
+		for (auto t : lvl.getCollidableTiles().tilesToTheSide(character->getHitBox(), false)) {
+			canMoveSpawn &= t == Tiles::AIR;
+		}
+		if (canMoveSpawn) {
+			spawnPosition.x -= 20;
+		}
 	}
 	updatePositions();
 	for (auto n : npcs) {
@@ -129,17 +143,35 @@ void Game::defaultInit(const std::vector<glb::characterIndex>& _players, const s
 
 void Game::defaultInit(int N_PLAYERS) {
 
+	sf::Vector2f spawnPosition = lvl.getInitialPosition();
+
 	if (N_PLAYERS != 2) N_PLAYERS = 1;// only 1 or 2 players
 	clear();
 
 	std::shared_ptr<Character> speedyrunner = std::make_shared<Character>(src.getSpriteSheet(0), glb::SPEEDRUNNER);
-	speedyrunner->setPosition(lvl.getInitialPosition());
+	speedyrunner->setPosition(spawnPosition);
+
+	bool canMoveSpawn = true;
+	for (auto t : lvl.getCollidableTiles().tilesToTheSide(speedyrunner->getHitBox(), false)) {
+		canMoveSpawn &= t == Tiles::AIR;
+	}
+	if (canMoveSpawn) {
+		spawnPosition.x -= 20;
+	}
 
 	std::shared_ptr<Character> cosmonaut = std::make_shared<Character>(src.getSpriteSheet(1), glb::COSMONAUT);
-	cosmonaut->setPosition(lvl.getInitialPosition());
+	cosmonaut->setPosition(spawnPosition);
+
+	canMoveSpawn = true;
+	for (auto t : lvl.getCollidableTiles().tilesToTheSide(cosmonaut->getHitBox(), false)) {
+		canMoveSpawn &= t == Tiles::AIR;
+	}
+	if (canMoveSpawn) {
+		spawnPosition.x -= 20;
+	}
 
 	std::shared_ptr<Character> otro = std::make_shared<Character>(src.getSpriteSheet(2), glb::UNIC);
-	otro->setPosition(lvl.getInitialPosition());
+	otro->setPosition(spawnPosition);
 
 	int id = 0;
 	if (N_PLAYERS == 2) id = 1;
@@ -442,16 +474,20 @@ void Game::setFullScreen() {
 
 
 void Game::updateItems() {
+	int handle;
 	// Weird loop to be able to erase (https://www.techiedelight.com/remove-elements-list-iterating-cpp/):
 	auto itr = items.cbegin();
 	while (itr != items.cend())
 	{
 		auto item = *itr;
-		if (item->update(dT, lvl)) { // if the update returns true, it should be handled
+		handle = item->update(dT, lvl);
+		if (handle > 0) { // if the update returns 1 or 2, it should be handled
 			handleItem(item); // handle
-			itr = items.erase(itr); // and delete
+			if (handle == 1) {
+				itr = items.erase(itr); // and delete
+			}
 		}
-		else {
+		if(handle != 1) {
 			++itr;
 		}
 	}
@@ -516,13 +552,15 @@ void Game::update()
 				else if (i < characters.size() - 1) target++;
 				//if player is dumb and uses rockets when nobody else is playing, it will hit them
 				auto p = getPlayerAt(i);
-				if (p != nullptr && p->captureEvents(event)) {
+				auto n = getNPCAt(i);
+				if (p != nullptr && p->captureEvents(event)
+					|| n != nullptr && n->getAndResetUseItem()) {
 					auto item = characters[i]->getCurrentItem();
 					if (item == glb::item::ROCKET) {
 						auto rocket = std::make_shared<Rocket>(characters[i]->getPosition(), characters[target], characters[i]->isFacingRight());
 						
 						items.push_back(rocket);
-						if (!cheatsEnabled) characters[i]->resetItem();
+						if (!cheatsEnabled && p != nullptr) characters[i]->resetItem();
 					} 
 					else if ((int)item >= glb::NUMBER_OF_ITEMS-glb::NUMBER_OF_UNOBTAINABLE_ITEMS 
 							&& (int)item < glb::NUMBER_OF_ITEMS) { // crates
@@ -541,12 +579,12 @@ void Game::update()
 					else if (item == glb::ICERAY) {
 						auto iceray = std::make_shared<IceRay>(cam, characters[i]);
 						items.push_back(iceray);
-						if (!cheatsEnabled) characters[i]->resetItem();
+						if (!cheatsEnabled && p != nullptr) characters[i]->resetItem();
 					}
 					else if (item == glb::GOLDEN_HOOK) {
 						auto ghook = std::make_shared<GoldenHook>(characters[i], characters[target]);
 						items.push_back(ghook);
-						if (!cheatsEnabled) characters[i]->resetItem();
+						if (!cheatsEnabled && p != nullptr) characters[i]->resetItem();
 					}
 					else {
 						std::cout << "unimplemented item " << item << "\n";
@@ -655,6 +693,13 @@ void Game::update()
 				aliveCount = characters.size();
 				for (int i = 0; i < characters.size(); i++) {
 					characters[i]->respawn(respawnPosition);
+					bool canMoveSpawn = true;
+					for (auto t : lvl.getCollidableTiles().tilesToTheSide(characters[i]->getHitBox(), false)) {
+						canMoveSpawn &= t == Tiles::AIR;
+					}
+					if (canMoveSpawn) {
+						respawnPosition.x -= 20;
+					}
 				}
 				updatePositions();
 				for (auto n : npcs) {

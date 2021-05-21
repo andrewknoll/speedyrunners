@@ -36,7 +36,7 @@ private:
 public:
 	GoldenHook(CharPtr _from, CharPtr _target, float width=15); // width is its world width
 
-	virtual bool update(sf::Time elapsed, const Level& lvl) override;
+	virtual int update(sf::Time elapsed, const Level& lvl) override;
 
 	virtual void doThingTo(std::shared_ptr<Character> c) override; // Explode, in this case
 

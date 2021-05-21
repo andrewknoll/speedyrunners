@@ -21,7 +21,7 @@ protected:
 public:
 	TNT(const sf::Vector2f& pos, float tileWidth);
 
-	bool update(sf::Time elapsed, const Level& lvl) override; // Returns true if the item should die (rocket explodes)
+	int update(sf::Time elapsed, const Level& lvl) override; // Returns true if the item should die (rocket explodes)
 
 	void doThingTo(std::shared_ptr<Character> c) override; // item, do your thing
 

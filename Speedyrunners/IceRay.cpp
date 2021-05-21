@@ -12,16 +12,17 @@ IceRay::IceRay(const Camera& cam, CharPtr user) :
 	facingRight(user->isFacingRight()),
 	beamParticles(Resources::getInstance().getParticleSystem(glb::particleSystemIdx::ICE_BEAM_PS))
 {
-	sourceAnim = Resources::getInstance().getMiscSpriteSheet(0).get_animations()[0];
+	sourceAnim = *Resources::getInstance().getMiscSpriteSheet(0).get_animations()[0];
 	auto& t = Resources::getInstance().getItemTexture(glb::item::ICERAY);
 
-	sourceAnim->set_scale(0.5f, 0.5f);
+	sourceAnim.set_scale(0.5f, 0.5f);
+	sourceAnim.update_orientation(facingRight);
 
 	source.setScale(0.5f, 0.5f);
-	sf::Vector2f o = sourceAnim->get_origin_point();
+	sf::Vector2f o = sourceAnim.get_origin_point();
 	o.y /= 2;
 	source.setOrigin(o);
-	source = sourceAnim->get_first_frame();
+	source = sourceAnim.get_first_frame();
 	ttl = beamParticles.getSettings().ttl;
 
 	// Sound:
@@ -31,7 +32,7 @@ IceRay::IceRay(const Camera& cam, CharPtr user) :
 
 void IceRay::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	//target.draw(particles, states);
-	if (!sourceAnim->getFinished()) {
+	if (!emitted) {
 		target.draw(source, states);
 	}
 	else {
@@ -40,21 +41,22 @@ void IceRay::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	
 }
 
-bool IceRay::update(sf::Time elapsed, const Level& lvl) {
+int IceRay::update(sf::Time elapsed, const Level& lvl) {
 	sf::Vector2f pos = user->getPosition();
 	
 	
-	if (!sourceAnim->getFinished()) {
-		sf::Vector2f o = sourceAnim->get_origin_point();
+	if (!sourceAnim.getFinished()) {
+		sf::Vector2f o = sourceAnim.get_origin_point();
 		o.y /= 2;
 		source.setOrigin(o);
 		source.setPosition(pos);
 		tickAnimation(elapsed);
-		return false;
+		return 0;
 	}
 	else if(ttl > sf::Time::Zero){
-		if (!emitted && sourceAnim->get_current_frame() > 10) {
-			beamParticles.emitLinear(sf::Vector2f(0, 0), cam.viewRectangle().width);
+		if (!emitted) {
+			auto w = cam.viewRectangle().width;
+			beamParticles.emitLinear(sf::Vector2f(0, 0), facingRight? w : -w);
 			emitted = true;
 		}
 		beamParticles.setScale(1.0f, 0.3f);
@@ -63,15 +65,15 @@ bool IceRay::update(sf::Time elapsed, const Level& lvl) {
 		beamParticles.update(elapsed);
 		ttl -= elapsed;
 		
-		return false;
+		return 2;
 	}
-	return true;
+	return 1;
 }
 
 void IceRay::tickAnimation(sf::Time dT) {
 	countdown -= dT;
 	if (countdown <= sf::Time::Zero) {
-		sourceAnim->advance_frame(source);
+		sourceAnim.advance_frame(source);
 		countdown = glb::ANIMATION_PERIOD;
 	}
 }
@@ -79,9 +81,12 @@ void IceRay::tickAnimation(sf::Time dT) {
 
 void IceRay::doThingTo(std::shared_ptr<Character> c)
 {
-	/*if (utils::inRange(c->getPosition().y - user->getPosition().y, -16, 16)) {
-
-	}*/
+	auto pos_c = c->getPosition();
+	auto pos_u = user->getPosition();
+	if (c != user && utils::inRange(pos_c.y - pos_u.y, -16, 16)
+		&& facingRight? pos_c.x > pos_u.x : pos_c.x < pos_u.x) {
+		c->getFrozen();
+	}
 }
 
 

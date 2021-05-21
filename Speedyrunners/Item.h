@@ -17,7 +17,10 @@ protected:
 public:
 	Item(glb::item idx);
 
-	virtual bool update(sf::Time elapsed, const Level& lvl) = 0; // Returns true if the item should die (rocket explodes)
+	// Returns 2 if the item should "do their thing" but not die
+	// Returns 1 if the item should die (rocket explodes).
+	//Returns 0 if nothing should happen
+	virtual int update(sf::Time elapsed, const Level& lvl) = 0; 
 	
 	virtual void doThingTo(std::shared_ptr<Character> c); // item, do your thing
 

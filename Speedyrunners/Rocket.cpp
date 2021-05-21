@@ -44,13 +44,13 @@ void Rocket::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	target.draw(rocket, states);
 }
 
-bool Rocket::update(sf::Time elapsed, const Level& lvl) { // todo: check tiles collisions
+int Rocket::update(sf::Time elapsed, const Level& lvl) { // todo: check tiles collisions
 	sf::Vector2f diff;
 	if (!lvl.getCollidableTiles().collision(rocket.getGlobalBounds()).empty()) { // Collision with tiles
 		audioPlayer.play(AudioPlayer::Effect::ROCKET_EXPLODE);
 		Resources::getInstance().getParticleSystem(glb::particleSystemIdx::ROCKET_CLOUD).burst(position, 50, 5);
 		Resources::getInstance().getParticleSystem(glb::particleSystemIdx::SUDDEN_DEATH_EXPLOSION).emit(position);
-		return true;
+		return 1;
 	}
 	//Update Acceleration
 	if (target != nullptr) {
@@ -61,7 +61,7 @@ bool Rocket::update(sf::Time elapsed, const Level& lvl) { // todo: check tiles c
 			audioPlayer.play(AudioPlayer::Effect::ROCKET_EXPLODE);
 			Resources::getInstance().getParticleSystem(glb::particleSystemIdx::ROCKET_CLOUD).burst(position, 50, 5);
 			Resources::getInstance().getParticleSystem(glb::particleSystemIdx::SUDDEN_DEATH_EXPLOSION).emit(position);
-			return true;
+			return 1;
 		}
 		else if (dist < 2 * detonationRadius) { // Almost hit
 			audioPlayer.setLoop(AudioPlayer::Effect::ROCKET_ALMOST_HIT_LOOP);
@@ -94,7 +94,7 @@ bool Rocket::update(sf::Time elapsed, const Level& lvl) { // todo: check tiles c
 	rocket.setRotation(angle);
 	auto particlesPoint = rocket.getTransform().transformPoint(sf::Vector2f(-rocketLength, 10));
 	particleSyst.emit(particlesPoint); // smoke!
-	return false;
+	return 0;
 }
 
 void Rocket::doThingTo(std::shared_ptr<Character> c)

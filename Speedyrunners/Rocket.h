@@ -37,7 +37,7 @@ private:
 public:
 	Rocket(sf::Vector2f pos, CharPtr target, bool facingRight, float width = 35); // width is its world width
 	void setTexRect(bool first); // Sets the first or the second tex rect
-	virtual bool update(sf::Time elapsed, const Level& lvl) override;
+	virtual int update(sf::Time elapsed, const Level& lvl) override;
 
 	virtual void doThingTo(std::shared_ptr<Character> c) override; // Explode, in this case
 

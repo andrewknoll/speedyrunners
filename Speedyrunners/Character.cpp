@@ -262,9 +262,13 @@ void Character::updateStunned(const sf::Time& dT) {
 		isRunning = false;
 		sliding = false;
 		stunnedRemaining -= dT;
-		rotate(3000.0 * dT.asSeconds()); // TODO: BUG: No funciona y no se por que!
-		if (stunnedRemaining < sf::seconds(0)) {
+		if (isStunned) {
+			rotate(3000.0 * dT.asSeconds()); // TODO: BUG: No funciona y no se por que!
+		}
+		
+		if (stunnedRemaining < sf::Time::Zero) {
 			isStunned = false;
+			isFrozen = false;
 		}
 	}
 }
@@ -350,6 +354,13 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 		currJumpCD = sf::Time::Zero;
 	}
 
+	if (frozenWiggleCooldown > sf::Time::Zero) {
+		frozenWiggleCooldown -= dT;
+	}
+	else {
+		frozenWiggleCooldown = sf::Time::Zero;
+	}
+
 	if (currHookCD > sf::Time::Zero) {
 		currHookCD = currHookCD - dT;
 	}
@@ -369,10 +380,6 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 
 	//fixPosition(hitBox);
 
-	sf::Vector2f posIni(hitBox.left, hitBox.top);
-	//std::cout << "After move: " << posIni << "\n";
-	std::vector<Tiles::Collision> collisions = tiles.collision(hitBox, isGrounded);
-
 	bool wasAtWallJump = isAtWallJump;
 	if (!isFrozen && !isStunned && isAtWallJump) { // get out of walljump mode
 		isAtWallJump = false; // we assume it is not, and set it if it is
@@ -388,21 +395,41 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 
 	if (isFrozen) {
 		if (stunnedRemaining <= glb::FREEZE_TIME / 2.0f) {
-			iceCubeAnim.advance_frame(iceCube);
+			if (iceCubeAnim.get_current_frame() == 0) {
+				iceCubeAnim.advance_frame(iceCube);
+				iceCube.setScale(0.65f, 0.65f);
+				iceCube.setOrigin(iceCubeAnim.get_origin_point());
+				iceCube.setColor(sf::Color(255, 255, 255, 150));
+			}
 		}
 		else {
 			iceCube = iceCubeAnim.get_first_frame();
+			iceCube.setScale(0.65f, 0.65f);
+			iceCube.setOrigin(iceCubeAnim.get_origin_point());
+			iceCube.setColor(sf::Color(255, 255, 255, 150));
 		}
 		if (hasFrozenWiggled) {
 			//Move to a random relative position
-			move(sf::Vector2f(rng::defaultGen.rand(-2, 2), rng::defaultGen.rand(-2, 2)));
-			stunnedRemaining -= sf::seconds(0.5);
+			float wAmount = rng::defaultGen.rand(0, 6);
+			if (wiggleFrames % 2 == 1) {
+				wAmount = -wAmount;
+			}
+			hitBox.left += wAmount;
+			setPosition(hitBox.left, hitBox.top);
+			stunnedRemaining -= sf::seconds(0.1);
 			if (wiggleFrames <= 0) { //See tickAnimation
 				hasFrozenWiggled = false;
 				wiggleFrames = glb::WIGGLE_FRAMES;
 			}
+			else {
+				wiggleFrames--;
+			}
 		}
 	}
+
+	sf::Vector2f posIni(hitBox.left, hitBox.top);
+	//std::cout << "After move: " << posIni << "\n";
+	std::vector<Tiles::Collision> collisions = tiles.collision(hitBox, isGrounded);
 
 	if (!collisions.empty()) {
 		Tiles::Collision c = collisions.front();
@@ -744,9 +771,14 @@ void Character::getHitByRocket() {
 }
 
 void Character::getFrozen() {
-	stunnedRemaining = glb::FREEZE_TIME;
-	iceCube = iceCubeAnim.get_first_frame();
-	isFrozen = true;
+	if (!isFrozen) {
+		stunnedRemaining = glb::FREEZE_TIME;
+		iceCube = iceCubeAnim.get_first_frame();
+		iceCube.setScale(0.65f, 0.65f);
+		iceCube.setOrigin(iceCubeAnim.get_origin_point());
+		iceCube.setColor(sf::Color(255, 255, 255, 150));
+		isFrozen = true;
+	}
 }
 
 
@@ -872,7 +904,6 @@ void Character::updateHitBoxRectangle() {
 }
 
 void Character::draw(sf::RenderTarget& target, sf::RenderStates states) const {
-	if (isFrozen) target.draw(iceCube);
 	if (usingHook) target.draw(hook);
 	// apply the transform
 	states.transform *= getTransform();
@@ -881,6 +912,11 @@ void Character::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	states.texture = mySprite.getTexture();
 
 	target.draw(mySprite, states);
+	auto s = iceCube.getScale();
+
+	states.transform.scale(iceCube.getScale());
+	states.texture = iceCube.getTexture();
+	if (isFrozen) target.draw(iceCube, states);
 
 
 

@@ -45,7 +45,6 @@ class NPC : public PlayerSlot
 	const float DIRECTION_CHANGE_COST = 10 * 500.0f;
 	const float JUMP_COST_PER_DISTANCE_UNIT = 10 * 50.0f;
 
-
 	const float THRESHOLD_PER_RADIUS_UNIT = 3.0f;
 
 	const sf::Time MAX_TIME_PER_STEP = sf::seconds(6.0f);
@@ -53,6 +52,7 @@ class NPC : public PlayerSlot
 
 	const float CLOSENESS_THRESHOLD = 1.0f;
 	const float FARNESS_THRESHOLD = 10.0f;
+	const float USE_ITEM_THRESHOLD = 40.0f;
 
 	using CharPtr = std::shared_ptr<Character>;
 	using TilePriorityQueue = PriorityQueue<NodeData>;
@@ -67,6 +67,8 @@ private:
 
 	std::vector<Goal> goals;
 	int currentGoalIdx;
+	bool tryingToFindAir = false;
+	bool mustReposition = false;
 
 	std::mutex pathMtx[2];
 	std::mutex goalMtx;
@@ -77,6 +79,7 @@ private:
 	std::atomic<bool> active = true;
 	std::atomic<bool> resetPlan = false;
 	std::atomic<bool> stitched = false;
+	std::atomic<bool> useItem = false;
 
 	// 0 -> First path
 	// 1 -> Next step
@@ -93,6 +96,8 @@ private:
 	PathIterator step;
 	int retryCount = 0;
 
+	std::shared_ptr<MetaTile> currentMT;
+	sf::Vector2i MTposition;
 
 	bool isPerformingWallJump = false;
 	bool wallJumpStep2 = false;
@@ -115,7 +120,7 @@ private:
 	void halt();
 	void giveUp();
 	float nodeDistance(const TileNode& n1, const TileNode& n2) const;
-	PathIterator getClosestNode(TileNode& current, const std::deque<std::shared_ptr<TileNode> >& p) const;
+	PathIterator getClosestNode(const TileNode& current, const std::deque<std::shared_ptr<TileNode> >& p) const;
 	void moveWithoutPath(); // tries to get closer to the objective before having the path
 	void tryToWallJump();
 	bool detectWallJump(bool right, float widthMultiplier);// returns if there are jump wall to the <right>, in a rectangle of width hitbox*widthMultiplier
@@ -135,6 +140,7 @@ public:
 	int getPathFound(int i) const;
 	void endMe();
 	void clearPaths();
+	bool getAndResetUseItem();
 
 	void die(); // resets states of path follower part
 	std::list<selbaward::Line> debugLines();

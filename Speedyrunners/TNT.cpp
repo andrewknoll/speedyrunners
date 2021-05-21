@@ -19,7 +19,7 @@ TNT::TNT(const sf::Vector2f& pos, float tileWidth) :
 	sprite.setPosition(pos);
 }
 
-bool TNT::update(sf::Time elapsed, const Level& lvl)
+int TNT::update(sf::Time elapsed, const Level& lvl)
 {
 	if (falling) {
 		const auto& tiles = lvl.getCollidableTiles();

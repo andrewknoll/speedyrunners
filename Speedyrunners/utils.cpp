@@ -161,7 +161,7 @@ namespace utils {
 	}
 
 	bool inRange(float value, float min, float max) {
-		return min <= value && max <= value;
+		return min <= value && value <= max;
 	}
 
 	sf::Vector2f clampAbs(const sf::Vector2f& val, const float& limit)

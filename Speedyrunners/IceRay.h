@@ -7,7 +7,7 @@ class IceRay : public Item {
 	using CharPtr = std::shared_ptr<Character>;
 	using AnimationPtr = std::shared_ptr<Animation>;
 private:
-	AnimationPtr sourceAnim;
+	Animation sourceAnim;
 	sf::Sprite source;
 	particles::PSystem beamParticles;
 	CharPtr user;
@@ -26,7 +26,7 @@ private:
 public:
 	IceRay(const Camera& cam, CharPtr user);
 	//void setTexRect(bool first); // Sets the first or the second tex rect
-	virtual bool update(sf::Time elapsed, const Level& lvl) override;
+	virtual int update(sf::Time elapsed, const Level& lvl) override;
 
 	virtual void doThingTo(std::shared_ptr<Character> c) override; // Explode, in this case
 

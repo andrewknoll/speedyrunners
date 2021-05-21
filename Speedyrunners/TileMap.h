@@ -3,6 +3,8 @@
 #include <optional>
 #include "SFML/Graphics.hpp"
 #include "utils.hpp"
+#include "MetaTile.h"
+#include "Tiles.h"
 
 
 // Adapted from: https://www.sfml-dev.org/tutorials/2.5/graphics-vertex-array.php#what-is-a-vertex-and-why-are-they-always-in-arrays
@@ -10,67 +12,12 @@
 
 //const long MAX_TILEMAP_SIZE = 8192*8;//128*64
 
-namespace Tiles {
-	//const int FLOOR = 0;
-	enum Collidable { // En tiles_black_editor.png
-		AIR,
-		FLOOR,
-		JUMP_WALL_L,
-		GRAPPLABLE,
-		JUMP_WALL_R,
-		WEIRD_SQUARES, // No se que es esto
-		RAMP_UP,
-		RAMP_DOWN,
-		STAIRS_UP,
-		STAIRS_DOWN,
-		WEIRD_RAMP_UP, // Estas dos tampoco
-		WEIRD_RAMP_DOWN, // "    "
-		RAMP_CEIL_DOWN,
-		RAMP_CEIL_UP,
-		WEIRD_RAMP_CEIL_DOWN,
-		WEIRD_RAMP_CEIL_UP
-	};
-
-	const int NB_COLLIDABLE = 16;
-
-
-
-	enum Ramp {
-		UP,
-		DOWN,
-		CEIL_UP,
-		CEIL_DOWN,
-		NONE
-	};
-
-	Ramp toRamp(Collidable tile);
-	bool isRamp(Collidable tile);
-
-
-	struct Collision {
-		sf::Vector2f point; // point
-		sf::Vector2f normal; // Normal
-		float distance; // Distancia de entrada en el segundo obj
-		Collidable tileType; // type
-	};
-
-	// Returns true if collision a has priority over b
-	bool hasPriority(const Collision& a, const Collision& b);
-
-	// Returns the collision, if any, between the hitbox of a character and a tile
-	std::optional<Tiles::Collision> collision(const Collidable tile, const sf::Vector2f& tilePos, const sf::Vector2f& tileSize, const sf::FloatRect& hitbox, bool isGrounded=false);
-
-
-	std::optional<Tiles::Collision> rampCollision(const Tiles::Ramp ramp, const sf::Vector2f& tilePos, const sf::Vector2f& tileSize, const sf::FloatRect& hitbox, bool isGrounded=false);
-
-}
-
-
 class TileMap : public sf::Transformable, public sf::Drawable
 {
 protected:
 	//std::array<int, MAX_TILEMAP_SIZE> tiles;
 	std::vector<int> tiles;
+	std::vector<std::shared_ptr<MetaTile> > meta_tiles;
 
 	sf::VertexArray vertices;
 	sf::Texture tileset;
@@ -101,7 +48,11 @@ public:
 
 	void setTile(const sf::Vector2i& pos, const int tileNumber);
 
+	void setMetaTile(const sf::Vector2i& pos, std::shared_ptr<MetaTile> mt);
+
 	Tiles::Collidable getTile(int i, int j) const;
+
+	std::shared_ptr<MetaTile> getMetaTile(int i, int j) const;
 
 	size_t getWidth() const;
 	size_t getHeight() const;

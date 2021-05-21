@@ -1,6 +1,9 @@
+class MetaTile;
+
 #include "NPC.h"
 #include "PriorityQueue.h"
 #include "SE_Exception.h"
+#include "MetaTile.h"
 
 NPC::NPC() {
 	goals = std::vector<Goal>();
@@ -487,7 +490,7 @@ float NPC::nodeDistance(const TileNode & n1, const TileNode & n2) const
 	return sqrtf(hor * hor + ver * ver);
 }
 
-NPC::PathIterator NPC::getClosestNode(TileNode& current, const std::deque<std::shared_ptr<TileNode> >& p) const {
+NPC::PathIterator NPC::getClosestNode(const TileNode& current, const std::deque<std::shared_ptr<TileNode> >& p) const {
 	float dist, minDist = INFINITY;
 	PathIterator it = std::begin(p);
 	PathIterator minimum = it;
@@ -520,14 +523,18 @@ void NPC::replan() {
 	if (pathFound[1] == 1) {
 		const std::lock_guard<std::mutex> lock1(pathMtx[1]);
 		pathFound[0] = 1;	//Next part of the path was already planned
-		auto last = path[0].back();
+		std::shared_ptr<TileNode> last;
+		if (!path[0].empty()) {
+			last = path[0].back();
+		}
+		
 		path[0].clear();
 		// Stitch the two paths together and save path[1] to path[0]
 		if (stitched) {
 			std::copy(std::begin(path[1]), std::end(path[1]), std::begin(path[0]));
 			stitched = false;
 		}
-		else {
+		else if(last != nullptr){
 			path[0].push_front(last);
 		}
 		path[1].clear();
@@ -554,17 +561,18 @@ void NPC::plan() {
 				backHeur = heuristic(*path[0].back(), *goal1);
 				path[2] = path[1];
 				//std::copy(path[1].begin(), path[1].end(), path[2].begin());
-				PathIterator p;
-				p = std::begin(path[1]);
-				while (p != std::end(path[1])) {
-					if (((*p)->heuristic < backHeur)) {
-						break;
+				if (!path[1].empty()) {
+					PathIterator p;
+					p = path[1].cend();
+					while (--p != path[1].cbegin()) {
+						if (((*p)->heuristic > backHeur)) {
+							break;
+						}
 					}
-					p++;
+					path[1].erase(std::begin(path[1]), p);
+					stitched = true;
+					path[1].push_front(path[0].back());
 				}
-				path[1].erase(std::begin(path[1]), p);
-				stitched = true;
-				path[1].push_front(path[0].back());
 				pathMtx[1].unlock();
 			}
 			choiceMtx.unlock();
@@ -645,6 +653,7 @@ void NPC::planFromTo(const int n_path, const std::shared_ptr<Goal> goal, NPC::Op
 	std::unique_ptr<TileNode> prev = nullptr;
 	Tiles::Collidable underMe;
 	float auxCost;
+	std::shared_ptr<MetaTile> mt = nullptr;
 	//std::deque<std::shared_ptr<TileNode> > newPath;
 	if (newPath) newPath->clear();
 	if (!active || resetPlan) {
@@ -655,8 +664,30 @@ void NPC::planFromTo(const int n_path, const std::shared_ptr<Goal> goal, NPC::Op
 		expanded[n_path].clear();
 		while (!frontier[n_path].safeEmpty() && active && !resetPlan) {
 			current = frontier[n_path].popReturn();
+
+			mt = tm->getMetaTile(current.cell[0], current.cell[1]);
+			if (mt != nullptr) {
+				switch (mt->getType()) {
+				case MetaTile::Type::HOOK:
+					current.data.automaticHook = true;
+					break;
+				case MetaTile::Type::WALL_JUMP:
+					current.data.automaticWallJump = true;
+					break;
+				case MetaTile::Type::SLIDE:
+					current.data.automaticSlide = true;
+					break;
+				default: {}
+				}
+
+				frontier[n_path].safePush(*mt->getNextNode());
+				continue;
+			}
+
 			expanded[n_path].push_back(current);
 			auxCost = INFINITY;
+			
+			
 
 			//Don't let expand to hook nodes between different hooks
 			if (prev != nullptr && prev->prev != current.prev && prev->data.isHooking && current.data.isHooking) continue;
@@ -751,7 +782,7 @@ void NPC::doBasicMovement(const TileNode& current, const TileNode& n, bool block
 }
 
 void NPC::die() {
-
+	halt();
 	isPerformingWallJump = false; wallJumpStep2 = false;
 }
 bool NPC::detectWallJump(bool right, float widthMultiplier) {
@@ -775,6 +806,10 @@ void NPC::tryToWallJump() {
 		if (wallJumpStep2 && me->getGrounded()) { // end
 			//std::cout << "END WALLJUMP MODE\n";
 			isPerformingWallJump = false; wallJumpStep2 = false;
+			if (currentMT) {
+				currentMT->setNextNode(std::make_shared<TileNode>(getCharacterCell()));
+				tm->setMetaTile(MTposition, currentMT);
+			}
 		}
 		else if (me->canWallJump()) {
 			// check if there are things to the other side
@@ -800,12 +835,31 @@ void NPC::tryToWallJump() {
 
 void NPC::moveWithoutPath()
 {
+	mustReposition = true;
 	auto goalpos = goals[currentGoalIdx].position;
 	bool right = goalpos.x > me->getPosition().x;
+	auto t = tm->tilesToTheSide(me->getHitBox(), right);
+	if (t[0] != Tiles::AIR) {
+		if (t[1] != Tiles::AIR) {
+			tryingToFindAir = true;
+		}
+		else {
+			me->slide();
+		}
+	}
+	if (tryingToFindAir) {
+		right = !right;
+		
+	}
+
 	me->run(right);
-	if (isGoal(getCharacterCell(), goals[currentGoalIdx])) { // reached a goal
+	auto pos = getCharacterCell();
+	if (isGoal(pos, goals[currentGoalIdx])) { // reached a goal
 		resetPlan = true;
 		replan();
+	}
+	if (tm->getTile(pos.cell[0], pos.cell[1] + 1) == Tiles::AIR) {
+		tryingToFindAir = false;
 	}
 	//if (goals[currentGoalIdx])
 }
@@ -813,8 +867,17 @@ void NPC::moveWithoutPath()
 void NPC::update(const sf::Time dT) { // Tries to get from current to next
 	if (me->isDead()) {
 		isPerformingWallJump = false; wallJumpStep2 = false;
+		halt();
+		tryingToFindAir = false;
 		return;
 	}
+	int r = rng::defaultGen.rand(0, 10);
+	if (r > 8 || me->getDToCheckpoint() > USE_ITEM_THRESHOLD) {
+		if (r > 3) {
+			useItem = true;
+		}
+	}
+
 	tryToWallJump();
 	if (isPerformingWallJump) return;
 
@@ -830,7 +893,13 @@ void NPC::update(const sf::Time dT) { // Tries to get from current to next
 		jumped = false;
 	}
 	const std::lock_guard<std::mutex> lock0(pathMtx[0]);
-	if (pathFound[0] != 1) moveWithoutPath();
+	if (pathFound[0] != 1) {
+		moveWithoutPath();
+	}
+	else if (mustReposition) {
+		step = getClosestNode(getCharacterCell(), path[0]);
+		mustReposition = false;
+	}
 
 	if (!isPerformingWallJump) {
 		isPerformingWallJump = detectWallJump(me->isFacingRight(), 6); // if there are wall jump tiles, try to jump them
@@ -855,21 +924,23 @@ void NPC::update(const sf::Time dT) { // Tries to get from current to next
 		/*if (++step != pathEnd && (*step)->data.canWallJumpLeft || (*step)->data.canWallJumpRight) {
 			std::cout << "ENTERING WALL JUMP MODE\n";
 			isPerformingWallJump = true; // TODO: dejar esto o no??
-			pathMtx[0].unlock();
 			return;
 		}*/
-		if (!wallJumped && stepNodePtr->data.canWallJumpLeft == 1 || stepNodePtr->data.canWallJumpRight == 1) {
+		if (!wallJumped && stepNodePtr->data.canWallJumpLeft == 1 || stepNodePtr->data.canWallJumpRight == 1
+			|| current.data.automaticWallJump) {
 			isPerformingWallJump = true;
+			currentMT = std::make_shared<MetaTile>();
+			MTposition = sf::Vector2i(stepNodePtr->cell[0], stepNodePtr->cell[1]);
+			currentMT->setType(MetaTile::Type::WALL_JUMP);
 			std::cout << "ENTERING WALL JUMP MODE\n";
-			pathMtx[0].unlock();
 			return;
 			
 
 			if (stepNodePtr->data.canWallJumpLeft == 1) me->run(false);
 			else me->run(true);
 			if (me->canJump()) me->startJumping();
-			pathMtx[0].unlock();
 			return;
+
 			if (!wallJumped && me->canWallJump()) {
 				me->startJumping();
 				wallJumped = true;
@@ -881,20 +952,34 @@ void NPC::update(const sf::Time dT) { // Tries to get from current to next
 		}
 		else {
 			wallJumped = false;
-			if (stepNodePtr->data.isHooking) {
+			if (stepNodePtr->data.isHooking || current.data.automaticHook) {
 				if (!me->isUsingHook()) {
+					currentMT = std::make_shared<MetaTile>();
+					currentMT->setType(MetaTile::Type::HOOK);
+					MTposition = sf::Vector2i(stepNodePtr->cell[0], stepNodePtr->cell[1]);
 					me->useHook(true);
 				}
 			}
 			else {
+				if (currentMT && currentMT->getType() == MetaTile::Type::HOOK && currentMT->getNextNode() == nullptr) {
+					currentMT->setNextNode(stepNodePtr);
+					tm->setMetaTile(MTposition, currentMT);
+				}
 				me->useHook(false);
 			}
-			if (stepNodePtr->data.isSliding) {
+			if (stepNodePtr->data.isSliding || current.data.automaticSlide) {
 				if (!me->isUsingSlide()) {
+					currentMT = std::make_shared<MetaTile>();
+					currentMT->setType(MetaTile::Type::SLIDE);
+					MTposition = sf::Vector2i(stepNodePtr->cell[0], stepNodePtr->cell[1]);
 					me->slide();
 				}
 			}
 			else {
+				if (currentMT && currentMT->getType() == MetaTile::Type::SLIDE && currentMT->getNextNode() == nullptr) {
+					currentMT->setNextNode(stepNodePtr);
+					tm->setMetaTile(MTposition, currentMT);
+				}
 				me->stopSliding();
 			}
 			verticalDist = getCharacterCell().cell[1] - stepNodePtr->cell[1];
@@ -946,6 +1031,7 @@ void NPC::update(const sf::Time dT) { // Tries to get from current to next
 		}
 	}
 	else if(pathFound[0] == 1){
+	std::shared_ptr<TileNode> last = nullptr;
 		elapsed = sf::Time::Zero;
 		currentGoalIdx = (currentGoalIdx + 1) % goals.size();
 		std::cout << "Completed... Now I want " << currentGoalIdx << std::endl;
@@ -953,18 +1039,20 @@ void NPC::update(const sf::Time dT) { // Tries to get from current to next
 		if (pathFound[1] == 1) {
 			const std::lock_guard<std::mutex> lock1(pathMtx[1]);
 			pathFound[0] = 1;	//Next part of the path was already planned
-			auto last = path[0].back();
+			if (!path[0].empty()) {
+				last = path[0].back();
+			}
 			path[0].clear();
 			// Stitch the two paths together and save path[1] to path[0]
 			if (stitched) {
 				path[0] = path[1];
-				step = std::begin(path[0]);
 				//std::copy(std::begin(path[1]), std::end(path[1]), std::begin(path[0]));
 				stitched = false;
 			}
-			else {
+			else if (last != nullptr) {
 				path[0].push_front(last);
 			}
+			step = std::begin(path[0]);
 			path[1].clear();
 
 			//Make sure we start planning the next part
@@ -992,6 +1080,12 @@ void NPC::clearPaths() {
 	pathFound[1] = 0;
 	halt();
 
+}
+
+bool NPC::getAndResetUseItem() {
+	bool a = useItem;
+	useItem = false;
+	return a;
 }
 
 std::list<selbaward::Line> NPC::debugLines() {

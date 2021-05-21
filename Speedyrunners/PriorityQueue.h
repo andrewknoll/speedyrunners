@@ -2,7 +2,7 @@
 #include <queue>
 #include <memory>
 #include <mutex>
-#include "TileMap.h"
+#include "Tiles.h"
 
 struct NodeData {
 	Tiles::Collidable tile;
@@ -15,6 +15,10 @@ struct NodeData {
 	*/
 	short int canWallJumpLeft = -1;
 	short int canWallJumpRight = -1;
+
+	bool automaticWallJump = false;
+	bool automaticHook = false;
+	bool automaticSlide = false;
 
 	bool operator==(const NodeData& n2) const{
 		return tile == n2.tile && jumps == n2.jumps && isHooking == n2.isHooking;
