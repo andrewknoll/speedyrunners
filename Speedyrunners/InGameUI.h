@@ -47,10 +47,6 @@ public:
 
 	void setWindow(sf::RenderWindow& _window);
 
-
-
-	
-
 	void setCharacters(std::vector<CharPtr> characters);
 	void update();
 	void updatePoints();

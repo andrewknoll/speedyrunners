@@ -14,7 +14,6 @@
 #include "MusicPlayer.h"
 #include "InGameUI.h"
 #include "NPC.h"
-#include "PlayerSlot.h"
 #include "RoundVictory.h"
 
 #include "ParticleSystem.h"
@@ -34,7 +33,6 @@ class Game
 	using CharPtr = std::shared_ptr<Character>;
 	using PlayerPtr = std::shared_ptr<Player>;
 	using NPCPtr = std::shared_ptr<NPC>;
-	using PSPtr = std::shared_ptr<PlayerSlot>;
 	using ItemPtr = std::shared_ptr<Item>;
 
 	struct workerThread {
