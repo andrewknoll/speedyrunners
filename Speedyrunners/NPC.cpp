@@ -523,14 +523,18 @@ void NPC::replan() {
 	if (pathFound[1] == 1) {
 		const std::lock_guard<std::mutex> lock1(pathMtx[1]);
 		pathFound[0] = 1;	//Next part of the path was already planned
-		auto last = path[0].back();
+		std::shared_ptr<TileNode> last;
+		if (!path[0].empty()) {
+			last = path[0].back();
+		}
+		
 		path[0].clear();
 		// Stitch the two paths together and save path[1] to path[0]
 		if (stitched) {
 			std::copy(std::begin(path[1]), std::end(path[1]), std::begin(path[0]));
 			stitched = false;
 		}
-		else {
+		else if(last != nullptr){
 			path[0].push_front(last);
 		}
 		path[1].clear();
