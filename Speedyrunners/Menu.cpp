@@ -1,22 +1,21 @@
 #include "Menu.h"
 #include "utils.hpp"
-#include "Lobby.h"
+#include "GameServer.h"
+#include "LobbyInterface.h"
 
 #ifdef USE_IMGUI
 #include "imgui-SFML.h"
 #endif // USE_IMGUI
 
-#define DEBUG_MOUSE_POS
-
-Menu::Menu(sf::RenderWindow& _window, Settings& _settings, Lobby& _game) 
-	: window(&_window), settings(_settings), game(_game), 
+Menu::Menu(sf::RenderWindow& _window, Settings& _settings, std::shared_ptr<LobbyInterface> _game, GameClient& _gameClient)
+	: window(&_window), settings(_settings), game(_game), gameClient(_gameClient),
 	audio(Resources::getInstance().getAudioPlayer())
 {
 	window->setView(window->getDefaultView());
 }
 
-Menu::Menu(sf::RenderWindow* _window, Settings& _settings, Lobby& _game) :
-	window(_window), settings(_settings), game(_game),
+Menu::Menu(sf::RenderWindow* _window, Settings& _settings, std::shared_ptr<LobbyInterface> _game, GameClient& _gameClient) :
+	window(_window), settings(_settings), game(_game), gameClient(_gameClient),
 	audio(Resources::getInstance().getAudioPlayer())
 {
 	window->setView(window->getDefaultView());
@@ -242,8 +241,8 @@ void Menu::handleMainMenuClick(int i) {
 	case 2:
 	{
 		std::cout << "Clicked dev mode\n";
-		game.defaultInit(2);
-		game.enableCheats(true);
+		game->requestDefaultInit(2, gameClient.getSettings());
+		game->enableCheats(true);
 		exitMenu = true;
 		break;
 	}
@@ -251,8 +250,8 @@ void Menu::handleMainMenuClick(int i) {
 	{
 		std::cout << "Clicked practice\n";
 		std::vector<glb::characterIndex> players{ glb::characterIndex::SPEEDRUNNER };
-		game.defaultInit(players, std::vector<glb::characterIndex>());
-		game.enableCheats(false);
+		game->requestDefaultInit(players, std::vector<glb::characterIndex>());
+		game->enableCheats(false);
 		exitMenu = true;
 		break;
 	}
@@ -287,19 +286,17 @@ void Menu::handleWorkshopClick(int i) {
 	else if (i == 1) {
 		audio.play(AudioPlayer::Effect::MENU_CLICK_START_GAME);
 		// New level
-		game.createNewLevel(levelNames.size());
-		game.clear();
-		game.setState(Lobby::State::Editing);
+		game = gameClient.createNewLevel(levelNames.size());
+		game->requestSetState(LobbyInterface::State::Editing);
 		exitMenu = true;
 	}
 	else {
 		audio.play(AudioPlayer::Effect::MENU_CLICK_START_GAME);
 		i-=2;
 		if (i >= levelNames.size()) std::cerr << i << " is not a level " << levelNames.size() << "\n";
-		game.loadLevel(levelNames[i] + ".csv");
-		game.clear();
-		game.setState(Lobby::State::Editing);
-		game.setSaveName(levelNames[i] + ".csv");
+		game->requestLoadLevel(levelNames[i] + ".csv");
+		game->requestSetState(LobbyInterface::State::Editing);
+		gameClient.setSaveName(levelNames[i] + ".csv");
 		exitMenu = true;
 	}
 }
@@ -421,11 +418,11 @@ void Menu::handleLvlSelectClick(int i) {
 		audio.play(AudioPlayer::Effect::MENU_CLICK_START_GAME);
 		i -= 1;
 		if (i >= levelNames.size()) std::cerr << i << " is not a level " << levelNames.size() << "\n";
-		game.loadLevel(levelNames[i] + ".csv");
-		game.setState(Lobby::State::Playing);
-		game.enableCheats(false);
-		game.setSaveName(levelNames[i] + ".csv");
-		game.defaultInit(players, npcs);
+		game->requestLoadLevel(levelNames[i] + ".csv");
+		game->requestSetState(LobbyInterface::State::Playing);
+		//game->requestEnableCheats(false);
+		gameClient.setSaveName(levelNames[i] + ".csv");
+		game->requestDefaultInit(players, npcs);
 		exitMenu = true;
 	}
 }

@@ -8,7 +8,16 @@ struct OnlineRequest
 		CREATE,
 		JOIN,
 		RANDOM,
-		KEY_EVENT
+		KEY_EVENT,
+		GET_PS,
+		GET_IT,
+		GET_RV,
+		GET_CD,
+		GET_CAM,
+		GET_LVL,
+		GET_CHP,
+		GET_NPC,
+		GET_CHAR
 	};
 
 	enum InputEventKey {
@@ -35,8 +44,11 @@ sf::Packet& operator<< (sf::Packet& packet, const OnlineRequest& o)
 	if (o.type == OnlineRequest::KEY_EVENT) {
 		return packet << (int)o.type << o.inputEvent.inputEventKey << o.inputEvent.pressed << o.inputEvent.leftPressed << o.inputEvent.rightPressed << o.inputEvent.downPressed << o.inputEvent.boostPressed;;
 	}
-	else {
+	else if(o.type == OnlineRequest::CREATE || o.type == OnlineRequest::JOIN || o.type == OnlineRequest::RANDOM){
 		return packet << (int)o.type << o.stringParam;
+	}
+	else {
+		return packet << (int)o.type;
 	}
 	
 }
@@ -50,8 +62,11 @@ sf::Packet& operator>> (sf::Packet& packet, OnlineRequest& o)
 		o.inputEvent.inputEventKey = (OnlineRequest::InputEventKey)t;
 		return packet3 >> o.inputEvent.pressed >> o.inputEvent.leftPressed >> o.inputEvent.rightPressed >> o.inputEvent.downPressed >> o.inputEvent.boostPressed;
 	}
-	else {
+	else if (o.type == OnlineRequest::CREATE || o.type == OnlineRequest::JOIN || o.type == OnlineRequest::RANDOM){
 		return packet2 >> o.stringParam;
+	}
+	else {
+		return packet2;
 	}
 	
 }

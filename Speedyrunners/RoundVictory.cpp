@@ -2,7 +2,7 @@
 #include "Resources.h"
 #include "utils.hpp"
 
-RoundVictory::RoundVictory(const sf::RenderWindow& _window, const int characterIdx, const int characterVariant, const int characterScore) :
+RoundVictory::RoundVictory(const int characterIdx, const int characterVariant, const int characterScore) :
 	currentSecond(3),
 	t(sf::seconds(0.5)),
 	audioPlayer(Resources::getInstance().getAudioPlayer()),
@@ -11,8 +11,6 @@ RoundVictory::RoundVictory(const sf::RenderWindow& _window, const int characterI
 	// Fondo:
 	bg.loadFromFile(bgPath);
 	bgSprite.setTexture(bg);
-	width = _window.getDefaultView().getSize().x;
-	height = _window.getDefaultView().getSize().y;
 	bgSprite.setPosition(0, height / 2.0f);
 
 	sf::IntRect rect;
@@ -22,17 +20,21 @@ RoundVictory::RoundVictory(const sf::RenderWindow& _window, const int characterI
 	rect.top = 0;
 	bgSprite.setTextureRect(rect);
 
-	utils::scaleToFullScreenRatio(bgSprite, _window, 0.4);
+	
 	//bgSprite.setScale(relation, relation);
 	auto& spritesheet = Resources::getInstance().getVictorySpriteSheet(characterIdx, characterVariant);
 	characterVictoryPose = spritesheet.get_animations()[0];
 	mySprite = characterVictoryPose->get_first_frame();
-	utils::scaleToFullScreenRatio(mySprite, _window, 0.4);
-	mySprite.setPosition(width * 0.2f, height * 0.882f);
-	if (characterIdx == 0) { // Speedrunner mas parriba
-		//mySprite.move(0, +height * 0.1);
-	}
+}
 
+void RoundVictory::setWindow(const sf::RenderWindow & _window) {
+	width = _window.getDefaultView().getSize().x;
+	height = _window.getDefaultView().getSize().y;
+
+	utils::scaleToFullScreenRatio(bgSprite, _window, 0.4);
+	utils::scaleToFullScreenRatio(mySprite, _window, 0.4);
+
+	mySprite.setPosition(width * 0.2f, height * 0.882f);
 
 	addScoreStuff(_window, characterScore);
 }

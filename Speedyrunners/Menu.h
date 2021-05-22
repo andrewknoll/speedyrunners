@@ -6,9 +6,11 @@
 #include "TextElement.h"
 #include "Background.h"
 #include "LobbyWidget.h"
+#include "GameClient.h"
 #include "AudioPlayer.h"
 
-class Lobby;
+class LobbyInterface;
+template <typename T> class temp;
 
 class Menu
 {
@@ -20,7 +22,8 @@ class Menu
 		Controls
 	};
 
-	Lobby& game;
+	GameClient& gameClient;
+	std::shared_ptr<LobbyInterface> game;
 	sf::RenderWindow* window;
 	Settings& settings;
 	
@@ -83,9 +86,9 @@ class Menu
 public:
 	//void addElement(const UIElement& e);
 	//Menu(std::shared_ptr<sf::RenderWindow> _window);
-	Menu(sf::RenderWindow& _window, Settings& _settings, Lobby& _game);
+	Menu(sf::RenderWindow& _window, Settings& _settings, std::shared_ptr<LobbyInterface> _game, GameClient& _gameClient);
 
-	Menu(sf::RenderWindow* _window, Settings& _settings, Lobby& _game);
+	Menu(sf::RenderWindow* _window, Settings& _settings, std::shared_ptr<LobbyInterface> _game, GameClient& _gameClient);
 
 	void addElement(std::unique_ptr<UIElement> e);
 

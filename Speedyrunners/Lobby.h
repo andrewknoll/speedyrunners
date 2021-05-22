@@ -43,7 +43,7 @@ class Lobby
 
 public:
 	enum class State { Countdown, Playing, FinishedRound, Paused, Editing, AcceptingPlayers, Full };
-protected:
+private:
 	bool onlineMode = true;
 	//Thread Pool
 	std::vector<workerThread> threadPool = std::vector<workerThread>(12);
@@ -58,7 +58,7 @@ protected:
 	Resources& src;
 	sf::Vector2f respawnPosition;
 
-
+	bool testingParticles = false;
 	bool gameWon = false;
 
 	// "cheats"
@@ -106,13 +106,13 @@ protected:
 
 	sf::TcpListener listener;
 
-public:
+protected:
 
 	Lobby();
 
 	void clear();
 
-	void defaultInit(int N_PLAYERS);
+	void defaultInit(int N_PLAYERS, const Settings& settings);
 	void defaultInit(const std::vector<glb::characterIndex>& _players, const std::vector<glb::characterIndex>& _npcs);
 	void setState(const State _state);
 	State getState() const;
@@ -134,6 +134,7 @@ public:
 
 	void checkItemPickups(CharPtr c);
 
+public:
 	//OFFLINE
 	void setOffline();
 	void setLevelTile(const sf::Vector2i& pos, int tileNumber);
@@ -146,8 +147,14 @@ public:
 	void requestAddObject(int type, sf::Vector2f pos, CharPtr newChar = nullptr);
 	void requestLoadLevel(std::string l);
 	void requestClearParticles();
+
+	void requestDefaultInit(int N_PLAYERS, const Settings& settings);
+	void requestDefaultInit(const std::vector<glb::characterIndex>& _players, const std::vector<glb::characterIndex>& _npcs);
+	void requestSetState(const State _state);
+	void requestSetTestingParticles(bool p);
+protected:
 	//ONLINE / OFFLINE GETTERS
-	const std::vector<particles::PSystem>& getParticleSystems() const;
+	std::vector<particles::PSystem>& getParticleSystems() const;
 	const std::list<ItemPtr>& getItems() const;
 	const std::shared_ptr<RoundVictory>& getRV() const;
 	const Countdown& getCountdown() const;
@@ -156,8 +163,7 @@ public:
 	std::vector<Checkpoint> getCheckpoints() const;
 	std::vector<NPCPtr> getNPCs() const;
 	const std::vector<CharPtr>& getCharacters() const;
-	
-	
-	
+
+	friend class LobbyInterface;
 };
 

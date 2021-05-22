@@ -76,7 +76,7 @@ void Lobby::update()
 					if (c->getScore() >= 3) { // Won
 						gameWon = true; // We dont finish here to let the anim play
 					}
-					ui.updatePoints();
+					//ui.updatePoints();
 					break;
 				}
 			}
@@ -101,7 +101,7 @@ void Lobby::update()
 			for (int i = 0; i < characters.size(); i++) {
 				if (!characters[i]->isDead()) {
 					clearParticles();
-					rv = std::make_unique<RoundVictory>(window, characters[i]->getID(), characters[i]->getVariant(), characters[i]->getScore());
+					rv = std::make_unique<RoundVictory>(characters[i]->getID(), characters[i]->getVariant(), characters[i]->getScore());
 					respawnPosition = characters[i]->getLastSafePosition();
 					rv->update(dT);
 				}
@@ -114,7 +114,7 @@ void Lobby::update()
 			rv->update(dT);
 			if (rv->ended()) {
 				if (gameWon) {
-					loopMenu();
+					//loopMenu();
 				}
 				state = State::Countdown;
 				countdown.reset();
@@ -288,7 +288,7 @@ void Lobby::clear() {
 	threadPool.resize(8);
 }
 
-void Lobby::defaultInit(int N_PLAYERS) {
+void Lobby::defaultInit(int N_PLAYERS, const Settings& settings) {
 
 	sf::Vector2f spawnPosition = lvl.getInitialPosition();
 
@@ -322,14 +322,14 @@ void Lobby::defaultInit(int N_PLAYERS) {
 
 	int id = 0;
 	if (N_PLAYERS == 2) id = 1;
-	std::shared_ptr<Player> me = std::make_shared<Player>(getSettings(), id);
+	std::shared_ptr<Player> me = std::make_shared<Player>(settings, id);
 	me->setCharacter(speedyrunner);
 	playerJoin(me);
 	speedyrunner->setName("Player 1");
 	addCharacter(speedyrunner);
 
 	if (N_PLAYERS > 1) {
-		std::shared_ptr<Player> secondPlayer = std::make_shared<Player>(getSettings(), ++id);
+		std::shared_ptr<Player> secondPlayer = std::make_shared<Player>(settings, ++id);
 		secondPlayer->setCharacter(otro);
 		playerJoin(secondPlayer);
 		otro->setName("Player 2");
@@ -638,9 +638,34 @@ void Lobby::requestClearParticles() {
 	}
 }
 
+void Lobby::requestDefaultInit(int N_PLAYERS, const Settings& settings)
+{
+	if (!onlineMode) {
+		defaultInit(N_PLAYERS, settings);
+	}
+}
+
+void Lobby::requestDefaultInit(const std::vector<glb::characterIndex>& _players, const std::vector<glb::characterIndex>& _npcs) {
+	if (!onlineMode) {
+		defaultInit(_players, _npcs);
+	}
+}
+
+void Lobby::requestSetState(const State _state) {
+	if (!onlineMode) {
+		state = _state;
+	}
+}
+
+void Lobby::requestSetTestingParticles(bool p) {
+	if (!onlineMode) {
+		testingParticles = p;
+	}
+}
+
 /////////////////////
 
-const std::vector<particles::PSystem>& Lobby::getParticleSystems() const
+std::vector<particles::PSystem>& Lobby::getParticleSystems() const
 {
 	return particleSystems;
 }

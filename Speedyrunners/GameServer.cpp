@@ -3,14 +3,14 @@
 #include "OnlineRequest.h"
 #include "utils.hpp"
 
-std::shared_ptr<Lobby> GameServer::createLobby() {
+std::shared_ptr<LobbyInterface> GameServer::createLobby() {
 	int key[5];
 	std::string keyString = "";
 	rng::defaultGen.fillRand(key, glb::HASH_LENGTH, glb::ALPHANUMERIC_CHARACTERS[1].front(), glb::ALPHANUMERIC_CHARACTERS[1].back());
 	for (int i : key) {
 		keyString += (char)i;
 	}
-	std::shared_ptr<Lobby> newLobby = std::make_shared<Lobby>();
+	std::shared_ptr<LobbyInterface> newLobby = std::make_shared<LobbyInterface>();
 	lobbies[keyString] = newLobby;
 	return newLobby;
 }
@@ -33,7 +33,7 @@ void GameServer::loop() {
 	}
 	else if (o.type == OnlineRequest::RANDOM) {
 		for (auto& l : lobbies) {
-			if (l.second->getState() == Lobby::State::AcceptingPlayers) {
+			if (l.second->getState() == LobbyInterface::State::AcceptingPlayers) {
 				l.second->playerJoin(socket);
 				foundMatch = true;
 				break;

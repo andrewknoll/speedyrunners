@@ -188,6 +188,9 @@
     <ClCompile Include="OnlinePlayer.cpp">
       <Filter>Characters</Filter>
     </ClCompile>
+    <ClCompile Include="LobbyInterface.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TileMap.h">
@@ -322,6 +325,9 @@
     </ClInclude>
     <ClInclude Include="OnlinePlayer.h">
       <Filter>Characters</Filter>
+    </ClInclude>
+    <ClInclude Include="LobbyInterface.h">
+      <Filter>Game</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

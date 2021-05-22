@@ -1,6 +1,8 @@
 #include "GameClient.h"
 #include "Menu.h"
+#include "Level.h"
 #include <iostream>
+
 
 void GameClient::setUpWindow() {
 
@@ -11,16 +13,19 @@ void GameClient::setUpWindow() {
 	//window.set
 }
 
+
 GameClient::GameClient() :
 	window(sf::VideoMode(1600, 900), "SpeedyRunners"),
 	src(Resources::getInstance())
 {
 }
 
+
 void GameClient::createLobby() {
-	lobby = std::make_shared<Lobby>();
+	lobby = std::make_shared<LobbyInterface>();
 	onlineLobby = false;
 }
+
 
 void GameClient::setFullScreen() {
 	sf::VideoMode vMode = sf::VideoMode::getFullscreenModes().front();
@@ -37,7 +42,8 @@ void GameClient::setFullScreen() {
 	settings.setResolution(sf::Vector2i(window.getSize().x, window.getSize().y));
 }
 
-void GameClient::offlineUpdate() {
+
+void GameClient::offlineUpdate(sf::Time dT) {
 	sf::Event event;
 	int target;
 	while (window.pollEvent(event))
@@ -48,11 +54,11 @@ void GameClient::offlineUpdate() {
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
 			onlineLobby = false;
-			socketToServer.disconnect();
+			socketToServer->disconnect();
 			loopMenu();
 		}
 		else if (event.type == sf::Event::Closed) {
-			socketToServer.disconnect();
+			socketToServer->disconnect();
 			running = false;
 			window.close();
 		}
@@ -96,19 +102,21 @@ void GameClient::offlineUpdate() {
 	processMouseEditing();
 }
 
+
 void GameClient::loopMenu()
 {
 	Resources::getInstance().getAudioPlayer().stopAll();
-	Menu menu(window, settings, *this);
+	Menu menu(window, settings, lobby, *this);
 	if (!src.musicPlayer.isPlaying(MusicPlayer::MusicType::MENU)) {
 		src.musicPlayer.playMusicTrack(MusicPlayer::MusicType::MENU);
 	}
 	menu.setMainMenu();
 	menu.loop(); // , this);
 	std::cout << "State after menu: " << (int)state << "\n";
-	//state = (Lobby::State)menu.getGameState();
+	//state = (LobbyInterface::State)menu.getGameState();
 	//characters = menu.getCharacters
 }
+
 
 void GameClient::processMouseEditing() {
 	if (state == State::Editing && sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
@@ -122,6 +130,7 @@ void GameClient::processMouseEditing() {
 }
 
 // Controls for editing state:
+
 void GameClient::processEditingInputs(const sf::Event& event) {
 
 	if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
@@ -148,7 +157,7 @@ void GameClient::processEditingInputs(const sf::Event& event) {
 		lobby->requestClearParticles();
 	}
 	else if (testingParticles && event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Numpad8) {
-		selectedPSystem = (selectedPSystem + 1) % lobby->getParticleSystems().size();
+		selectedPSystem = (selectedPSystem + 1) % lobby->getParticleSystems(socketToServer).size();
 		std::cout << "selected PSystem: " << selectedPSystem << "\n";
 	}
 	else if (testingParticles && event.type == sf::Event::MouseButtonPressed && event.key.code == sf::Mouse::Middle)
@@ -159,7 +168,7 @@ void GameClient::processEditingInputs(const sf::Event& event) {
 		lobby->addCheckpoint(utils::mousePosition2f(window), currentRadius);
 	}
 	else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Numpad4) { // box debug
-		lobby->getLevel().testBoxCollision(utils::mousePosition2f(window));
+		lobby->getLevel(socketToServer).testBoxCollision(utils::mousePosition2f(window));
 	}
 
 	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::LControl)) { // sf::Keyboard::isKeyPressed(sf::Keyboard::S) &&
@@ -170,7 +179,7 @@ void GameClient::processEditingInputs(const sf::Event& event) {
 			//lvl.setDefaultLevel();
 			//lvl.save("default_level.csv");
 
-			lobby->getLevel().save(saveLevelName);
+			lobby->getLevel(socketToServer).save(saveLevelName);
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::L)) {
 			lobby->requestLoadLevel("defaultLevel.csv");
@@ -204,7 +213,7 @@ void GameClient::processEditingInputs(const sf::Event& event) {
 		Spritesheet sprsht = src.getSpriteSheet(3); //Falcon
 		std::shared_ptr<Character> falcon = std::make_shared<Character>(sprsht, glb::FALCON);
 		falcon->setPosition(utils::mousePosition2f(window));
-		falcon->setName(std::string("falcon ") + std::to_string(lobby->getCharacters().size()));
+		falcon->setName(std::string("falcon ") + std::to_string(lobby->getCharacters(socketToServer).size()));
 		//falcon.setScale(0.5, 0.5);
 		lobby->requestAddObject(0, falcon->getPosition(), falcon);
 	}
@@ -222,31 +231,35 @@ void GameClient::processEditingInputs(const sf::Event& event) {
 	printCharacterPositions(event);
 }
 
+
 void GameClient::setState(const State _state)
 {
 	state = _state;
 }
 
+
 GameClient::State GameClient::getState() const {
 	return state;
 }
+
 
 void GameClient::printCharacterPositions(const sf::Event& e) const {
 
 	if (e.type == sf::Event::KeyPressed && e.key.code == (sf::Keyboard::P)) {
 		std::cout << "Character positions:\n";
-		for (auto c : lobby->getCharacters())  std::cout << c->getName() << " | ";
+		for (auto c : lobby->getCharacters(socketToServer))  std::cout << c->getName() << " | ";
 		std::cout << "\nCharacter distances:\n";
-		for (auto c : lobby->getCharacters()) std::cout << c->getDToCheckpoint() << " | ";
+		for (auto c : lobby->getCharacters(socketToServer)) std::cout << c->getDToCheckpoint() << " | ";
 		std::cout << "\n";
 	}
 }
+
 
 void GameClient::draw(sf::Time dT)
 {
 	window.clear();
 	window.setView(cam);
-	window.draw(lobby->getLevel());
+	window.draw(lobby->getLevel(socketToServer));
 
 	/*for (auto npc : npcs) {
 		window.draw(npc->debugCurrentPos());
@@ -255,7 +268,7 @@ void GameClient::draw(sf::Time dT)
 	if(state == State::Editing) {
 		// sf::Mouse::getPosition() - window.getPosition()
 		// Visualizar checkpoints:
-		for (auto cp : lobby->getCheckpoints()) {
+		for (auto cp : lobby->getCheckpoints(socketToServer)) {
 			window.draw(cp);
 		}
 		// characters (sin hacer tick a las animaciones):
@@ -264,7 +277,7 @@ void GameClient::draw(sf::Time dT)
 				window.draw(*c);
 			}
 		}*/
-		for (auto npc : lobby->getNPCs()) {
+		for (auto npc : lobby->getNPCs(socketToServer)) {
 			for (auto l : npc->debugExpanded()) {
 				window.draw(l);
 			}
@@ -286,9 +299,9 @@ void GameClient::draw(sf::Time dT)
 
 	// Characters
 	
-	animateCharacters();
-	for (const auto& ps : lobby->getParticleSystems()) window.draw(ps);
-	for (const auto i : lobby->getItems()) {
+	animateCharacters(dT);
+	for (const auto& ps : lobby->getParticleSystems(socketToServer)) window.draw(ps);
+	for (const auto i : lobby->getItems(socketToServer)) {
 		window.draw(*i);
 	}
 
@@ -299,12 +312,14 @@ void GameClient::draw(sf::Time dT)
 	}
 
 	if (state == State::FinishedRound) {
-		if (lobby->getRV() != nullptr) {
-			lobby->getRV()->draw(window);
+		auto rvPointer = lobby->getRV(socketToServer);
+		if (rvPointer != nullptr) {
+			rvPointer->setWindow(window);
+			rvPointer->draw(window);
 		}
 	}
 	else if (state == State::Countdown) {
-		lobby->getCountdown().draw(window);
+		lobby->getCountdown(socketToServer).draw(window);
 		//animateCharacters();
 	}
 
@@ -323,6 +338,7 @@ void GameClient::draw(sf::Time dT)
 	window.display();
 }
 
+
 void GameClient::enableCheats(bool enable) {
 #ifdef DEV_MODE
 		cheatsEnabled = true;
@@ -332,8 +348,9 @@ void GameClient::enableCheats(bool enable) {
 		lobby->enableCheats(cheatsEnabled);
 }
 
+
 void GameClient::animateCharacters(sf::Time dT) {
-	for (auto c : lobby->getCharacters()) {
+	for (auto c : lobby->getCharacters(socketToServer)) {
 		if (!c->isDead()) {
 			c->tickAnimation(dT);
 			window.draw(*c);
@@ -341,17 +358,22 @@ void GameClient::animateCharacters(sf::Time dT) {
 	}
 }
 
-void GameClient::createNewLevel(int nLevels)
+
+std::shared_ptr<LobbyInterface> GameClient::createNewLevel(int nLevels)
 {
-	loadLevel("default_level.csv");
+	lobby = std::make_shared<LobbyInterface>();
+	lobby->requestLoadLevel("default_level.csv");
 	saveLevelName = "USER_LEVEL_" + std::to_string(nLevels) + ".csv";
+	return lobby;
 }
+
 
 void GameClient::setSaveName(std::string fileName) {
 	saveLevelName = fileName;
 }
 
-const Settings& Lobby::getSettings() const
+
+const Settings& GameClient::getSettings() const
 {
 	return settings;
 }

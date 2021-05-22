@@ -311,6 +311,7 @@
     <ClCompile Include="Rocket.cpp" />
     <ClCompile Include="RoundVictory.cpp" />
     <ClCompile Include="Settings.cpp" />
+    <ClCompile Include="LobbyInterface.cpp" />
     <ClCompile Include="Spritesheet.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Character.cpp" />
@@ -330,6 +331,7 @@
     <ClInclude Include="GameServer.h" />
     <ClInclude Include="GoldenHook.h" />
     <ClInclude Include="IceRay.h" />
+    <ClInclude Include="LobbyInterface.h" />
     <ClInclude Include="LocalPlayer.h" />
     <ClInclude Include="MetaTile.h" />
     <ClInclude Include="OnlinePlayer.h" />

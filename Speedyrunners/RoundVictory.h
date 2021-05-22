@@ -7,7 +7,7 @@ class RoundVictory
 {
 private:
 
-	float width, height;
+	float width = 1, height = 1;
 
 	//sf::Time remaining;
 	int currentSecond;
@@ -26,7 +26,8 @@ private:
 	std::vector<sf::Sprite> sprites;
 
 public:
-	RoundVictory(const sf::RenderWindow& _window, const int characterIdx, const int characterVariant, const int characterScore);
+	RoundVictory(const int characterIdx, const int characterVariant, const int characterScore);
+	void setWindow(const sf::RenderWindow& _window);
 	void setRectForPoint(sf::Sprite& s, int points);
 	void addScoreStuff(const sf::RenderWindow& _window, int score);
 	void update(const sf::Time& dT);
