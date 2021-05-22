@@ -1,6 +1,8 @@
 #include <iostream>
 #include "Background.h"
 
+Background::Background() {}
+
 Background::Background(const std::string& file) {
 	loaded = bgTexture.loadFromFile(file);
 	if(!loaded)

@@ -74,8 +74,6 @@ public:
 
 	void load(const std::string& f_name);
 
-	Level(const std::string& tilesetPath, const std::string& bgPath);
-
 	void loadBackground(const std::string& file);
 
 

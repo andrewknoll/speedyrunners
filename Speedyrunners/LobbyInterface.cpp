@@ -1,4 +1,5 @@
 #include "LobbyInterface.h"
+#include "SFML/Network.hpp"
 
 template<class T>
 sf::Socket::Status LobbyInterface::sendAndReceive(const OnlineRequest& req, T& ans, SocketPtr socket) const

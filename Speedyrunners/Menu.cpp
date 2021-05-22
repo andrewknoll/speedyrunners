@@ -33,16 +33,25 @@ void Menu::setMainMenu()
 	// Color plano de fondo:
 	bgColor = sf::Color(0);//;63, 92, 123);
 	// Sky:
-	backgrounds.emplace_back(menuPath + "Speedrunners/Menu_Sky.png", *window, sf::FloatRect(0, 0, 1, 1));
+	Background sky(menuPath + "Speedrunners/Menu_Sky.png");
+	sky.load(*window, sf::FloatRect(0, 0, 1, 1));
+	backgrounds.emplace_back(sky);
+
 	backgrounds.back().setTextureCoords(sf::FloatRect(0.1, 0.1, 0.7, 0.7)); // Recortar algo vertical
 	//backgrounds.back().fixProportions();
 	// Background 1:
-	backgrounds.emplace_back(menuPath + "Speedrunners/Menu_far_city.png", *window, sf::FloatRect(0, 0.5, 1, 0.5)); // izq, top, anchura, altura de 0 a 1
+	Background b1(menuPath + "Speedrunners/Menu_far_city.png");
+	b1.load(*window, sf::FloatRect(0, 0.5, 1, 0.5));
+	backgrounds.emplace_back(b1); // izq, top, anchura, altura de 0 a 1
 	// Background 2 :
-	backgrounds.emplace_back(menuPath + "Speedrunners/Menu_city.png", *window);// , sf::FloatRect(0, 0.5, 1, 0.5));
+	Background b2(menuPath + "Speedrunners/Menu_city.png");
+	b2.load(*window);
+	backgrounds.emplace_back(b2);// , sf::FloatRect(0, 0.5, 1, 0.5));
 	backgrounds.back().setTextureCoords(sf::FloatRect(0, 0, 1, 0.5)); // Solo se muestra la mitad superior de la textura
 	// Title:
-	backgrounds.emplace_back(menuPath + "SpeedRunnerLogo.png", *window, sf::FloatRect(0.17, 0.03, 0.73, 0.35));
+	Background title(menuPath + "SpeedRunnerLogo.png");
+	title.load(*window, sf::FloatRect(0.17, 0.03, 0.73, 0.35));
+	backgrounds.emplace_back(title);
 	backgrounds.back().fixProportions();
 
 	// ----------------------------- Text:

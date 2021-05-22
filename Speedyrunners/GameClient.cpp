@@ -379,3 +379,4 @@ const Settings& GameClient::getSettings() const
 }
 
 //	ui.setCharacters(characters);
+// ui.updatePoints();

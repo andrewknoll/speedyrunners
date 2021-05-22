@@ -43,8 +43,8 @@ void GameServer::loop() {
 			createLobby()->playerJoin(socket);
 		}
 	}
-	else if(o.joinID.size() == 4){
-		lobbies[o.joinID]->playerJoin(socket);
+	else if(o.stringParam.size() == 4){
+		lobbies[o.stringParam]->playerJoin(socket);
 	}
 	
 }
