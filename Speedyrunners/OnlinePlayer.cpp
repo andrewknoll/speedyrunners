@@ -1,7 +1,7 @@
 ﻿#include "OnlinePlayer.h"
 #include "OnlineRequest.h"
 
-OnlinePlayer::OnlinePlayer(sf::TcpSocket& socket, const Settings & settings, int id) : Player(settings, id), socket(socket)  {
+OnlinePlayer::OnlinePlayer(sf::TcpSocket& socket, int id) : Player(id), socket(socket)  {
 }
 
 OnlinePlayer::Event OnlinePlayer::captureEvents(const sf::Event& event) {

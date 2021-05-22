@@ -1,5 +1,6 @@
 #include "GameServer.h"
 #include "Globals.hpp"
+#include "OnlinePlayer.h"
 #include "OnlineRequest.h"
 #include "utils.hpp"
 
@@ -29,22 +30,22 @@ void GameServer::loop() {
 	received >> o;
 
 	if (o.type == OnlineRequest::CREATE) {
-		createLobby()->playerJoin(socket);
+		createLobby()->playerJoin(std::make_shared<OnlinePlayer>(socket, 1));
 	}
 	else if (o.type == OnlineRequest::RANDOM) {
 		for (auto& l : lobbies) {
 			if (l.second->getState() == LobbyInterface::State::AcceptingPlayers) {
-				l.second->playerJoin(socket);
+				l.second->playerJoin(std::make_shared<OnlinePlayer>(socket));
 				foundMatch = true;
 				break;
 			}
 		}
 		if (!foundMatch) {
-			createLobby()->playerJoin(socket);
+			createLobby()->playerJoin(std::make_shared<OnlinePlayer>(socket));
 		}
 	}
 	else if(o.stringParam.size() == 4){
-		lobbies[o.stringParam]->playerJoin(socket);
+		lobbies[o.stringParam]->playerJoin(std::make_shared<OnlinePlayer>(socket));
 	}
 	
 }

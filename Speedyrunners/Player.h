@@ -14,6 +14,7 @@ protected:
 
 	sf::Keyboard::Key k_left, k_right, k_down, k_jump, k_hook, k_item, k_boost;
 
+	Player(int id = 0);
 	Player(const Settings& settings, int id = 0);
 
 public:

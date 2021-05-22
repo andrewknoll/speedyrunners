@@ -13,9 +13,7 @@ sf::Socket::Status LobbyInterface::sendAndReceive(const OnlineRequest& req, T& a
 	if (status != sf::Socket::Done) {
 		return status;
 	}
-
 	sf::Packet pack_ans;
-
 	status = socket->receive(pack_ans);
 
 	if (status != sf::Socket::Done) {

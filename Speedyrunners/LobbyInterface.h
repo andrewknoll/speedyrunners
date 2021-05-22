@@ -9,7 +9,7 @@ class LobbyInterface : public Lobby
 	using NPCPtr = std::shared_ptr<NPC>;
 	using PSPtr = std::shared_ptr<PlayerSlot>;
 	using ItemPtr = std::shared_ptr<Item>;
-	using SocketPtr = std::shared_ptr<sf::Socket>;
+	using SocketPtr = std::shared_ptr<sf::TcpSocket>;
 	/*using ServerAnswer = std::variant < std::vector<particles::PSystem>,
 		std::list<ItemPtr>,
 		std::shared_ptr<RoundVictory>,

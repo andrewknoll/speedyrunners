@@ -36,6 +36,7 @@ struct OnlineRequest
 	};
 	Type type = CREATE;
 	std::string stringParam = "";
+	std::shared_ptr<Settings> settings;
 	InputEvent inputEvent;
 };
 

@@ -7,7 +7,7 @@ protected:
 	sf::TcpSocket& socket;
 
 public:
-	OnlinePlayer(sf::TcpSocket& socket, const Settings& settings, int id = 0);
+	OnlinePlayer(sf::TcpSocket& socket, int id = 0);
 
 	virtual OnlinePlayer::Event captureEvents(const sf::Event& event) override;
 };

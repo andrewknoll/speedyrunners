@@ -3,6 +3,10 @@
 
 #define WEIRD_CHEATS
 
+Player::Player(int id) {
+
+}
+
 Player::Player(const Settings& settings, int id) {
 	std::vector<sf::Keyboard::Key> controls;
 	settings.getControlScheme(controls, id);
