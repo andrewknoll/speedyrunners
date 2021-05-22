@@ -9,6 +9,8 @@ class GameClient
 {
 protected:
 	bool onlineLobby = false;
+	int myID;
+	std::string lobbyCode = "";
 	std::shared_ptr<LobbyInterface> lobby;
 
 	mutable sf::RenderWindow window;
@@ -68,5 +70,19 @@ public:
 	std::shared_ptr<LobbyInterface> createNewLevel(int nLevels);
 	void setSaveName(std::string fileName);
 	const Settings& getSettings() const;
+
+	sf::Socket::Status connectToServer(std::string ip = "127.0.0.1");
+
+	void disconnectFromServer();
+
+	std::string getLobbyCode();
+	int getMyId();
+
+	void sendReadyRequest(bool r);
+	void sendChangeRequest(glb::characterIndex idx, bool npc);
+
+	//sf::Socket::Status sendRequest(OnlineRequest o) const;
+
+	//sf::Socket::Status receiveAnswer(const void* answer);
 };
 

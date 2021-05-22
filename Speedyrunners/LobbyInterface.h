@@ -27,6 +27,7 @@ class LobbyInterface : public Lobby
 private:
 	sf::Socket::Status sendAndReceive(const OnlineRequest& req, sf::Packet& ans, SocketPtr socket) const;
 public:
+	void loopMenu(SocketPtr socket = nullptr);
 	std::vector<particles::PSystem>& getParticleSystems(SocketPtr socket = nullptr);
 	const std::list<ItemPtr>& getItems(SocketPtr socket = nullptr);
 	const std::shared_ptr<RoundVictory> getRV(SocketPtr socket = nullptr);
@@ -37,5 +38,7 @@ public:
 	const std::vector<NPCPtr>& getNPCs(SocketPtr socket = nullptr);
 	const std::vector<CharPtr>& getCharacters(SocketPtr socket = nullptr);
 	State getState(SocketPtr socket = nullptr);
+	void setReady(std::string lobbyID, int id, bool r, SocketPtr socket = nullptr);
+	void requestChangeCharacter(std::string lobbyID, int id, bool npc, glb::characterIndex idx, SocketPtr socket = nullptr);
 };
 

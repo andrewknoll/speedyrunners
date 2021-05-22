@@ -194,7 +194,7 @@ LobbyWidget::setCharacterSelect(sf::RenderWindow& _window, const Settings& setti
 
 
 
-void LobbyWidget::handleClick(int idx) {
+bool LobbyWidget::handleClick(int idx) {
 	if (isActive) {
 		audio.play(AudioPlayer::Effect::MENU_TOGGLE);
 		switch (idx) {
@@ -203,7 +203,7 @@ void LobbyWidget::handleClick(int idx) {
 			int sel = (int)selectedCharacter;
 			selectedCharacter = glb::characterIndex((sel + 1) % 4);
 			updateCharacter();
-			break;
+			return true;
 		}
 		case 1:
 		{
@@ -228,9 +228,10 @@ void LobbyWidget::handleClick(int idx) {
 		// Runner button:
 		addWidgetButton(m_lobbyPath, m_pos + sf::Vector2f(0.18, 0.1), 0.05, window, m_settings, 1);
 	}
+	return false;
 }
 
-void LobbyWidget::update(sf::Event &event, const sf::Vector2f& mousePos)
+bool LobbyWidget::update(sf::Event &event, const sf::Vector2f& mousePos)
 {
 #ifdef DEBUG_MOUSE_POS
 	std::cout << ""
@@ -238,7 +239,9 @@ void LobbyWidget::update(sf::Event &event, const sf::Vector2f& mousePos)
 	if (event.type == sf::Event::MouseMoved || event.type == sf::Event::MouseButtonPressed) { // Click
 		for (int i = 0; i < elements.size(); i++) {
 			if (elements[i]->mouseInside(window) && event.type == sf::Event::MouseButtonPressed && event.key.code == sf::Mouse::Left) {
-				handleClick(i);
+				if (handleClick(i)) {
+					return true;
+				};
 				break;
 			}
 			//else {
@@ -246,6 +249,7 @@ void LobbyWidget::update(sf::Event &event, const sf::Vector2f& mousePos)
 			//}
 		}
 	}
+	return false;
 }
 
 glb::characterIndex LobbyWidget::getSelectedCharacter() const

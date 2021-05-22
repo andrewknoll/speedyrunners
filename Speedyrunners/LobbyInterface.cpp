@@ -1,53 +1,6 @@
 #include "LobbyInterface.h"
 #include "SFML/Network.hpp"
 
-template <typename T> 
-sf::Packet operator<< (const sf::Packet& p, const std::shared_ptr<T> obj) {
-	p.append(*obj);
-}
-
-template <typename T>
-sf::Packet operator>> (sf::Packet& p, std::shared_ptr<T> obj) {
-	obj = std::shared_ptr<T>((T*)p.getData());
-	return p;
-}
-
-template <typename T>
-sf::Packet operator<< (sf::Packet& p, const std::vector<T> obj) {
-	p << obj.size();
-	for (T& t : obj) {
-		p << t;
-	}
-	return p;
-}
-
-template <typename T>
-sf::Packet operator>> (sf::Packet& p, std::vector<T>& obj) {
-	sf::Uint32 size;
-	auto content = p >> size;
-	T* buffer = (T*)content.getData();
-	obj = std::vector<T>(buffer, buffer + size);
-	return p;
-}
-
-template <typename T>
-sf::Packet operator<< (sf::Packet& p, const std::list<T> obj) {
-	p << obj.size();
-	for (T& t : obj) {
-		p << t;
-	}
-	return p;
-}
-
-template <typename T>
-sf::Packet operator>> (sf::Packet& p, std::list<T>& obj) {
-	sf::Uint32 size;
-	auto content = p >> size;
-	T* buffer = (T*)content.getData();
-	obj = std::list<T>(buffer, buffer + size);
-	return p;
-}
-
 sf::Socket::Status LobbyInterface::sendAndReceive(const OnlineRequest& req, sf::Packet& ans, SocketPtr socket) const
 {
 	sf::Socket::Status status;
@@ -154,12 +107,13 @@ Camera LobbyInterface::getCamera(SocketPtr socket) {
 		req.type = OnlineRequest::GET_CAM;
 
 		sf::Packet pack_ans;
-		Camera ans;
+		std::shared_ptr<Camera> ans;
 
 		sf::Socket::Status status = sendAndReceive(req, pack_ans, socket);
+		pack_ans >> ans;
 		if (status == sf::Socket::Done) {
-			this->cam = ans;
-			return ans;
+			this->cam = *ans;
+			return *ans;
 		}
 	}
 	return Lobby::getCamera();
@@ -172,12 +126,13 @@ Level LobbyInterface::getLevel(SocketPtr socket) {
 		req.type = OnlineRequest::GET_LVL;
 
 		sf::Packet pack_ans;
-		Level ans;
+		std::shared_ptr<Level> ans;
 
 		sf::Socket::Status status = sendAndReceive(req, pack_ans, socket);
+		pack_ans >> ans;
 		if (status == sf::Socket::Done) {
-			this->lvl = ans;
-			return ans;
+			this->lvl = *ans;
+			return *ans;
 		}
 	}
 	return Lobby::getLevel();
@@ -194,6 +149,7 @@ const std::vector<Checkpoint>& LobbyInterface::getCheckpoints(SocketPtr socket) 
 		std::vector<Checkpoint> ans;
 
 		sf::Socket::Status status = sendAndReceive(req, pack_ans, socket);
+		pack_ans >> ans;
 		if (status == sf::Socket::Done) {
 			this->checkpoints = ans;
 			return ans;
@@ -212,6 +168,7 @@ const std::vector<LobbyInterface::NPCPtr>& LobbyInterface::getNPCs(SocketPtr soc
 		std::vector<NPCPtr> ans;
 
 		sf::Socket::Status status = sendAndReceive(req, pack_ans, socket);
+		pack_ans >> ans;
 		if (status == sf::Socket::Done) {
 			this->npcs = ans;
 			return ans;
@@ -230,6 +187,7 @@ const std::vector<LobbyInterface::CharPtr>& LobbyInterface::getCharacters(Socket
 		std::vector<CharPtr> ans;
 
 		sf::Socket::Status status = sendAndReceive(req, pack_ans, socket);
+		pack_ans >> ans;
 		if (status == sf::Socket::Done) {
 			this->characters = ans;
 			return ans;
@@ -245,12 +203,52 @@ LobbyInterface::State LobbyInterface::getState(SocketPtr socket) {
 		req.type = OnlineRequest::GET_ST;
 
 		sf::Packet pack_ans;
-		State ans;
+		int ans;
 
 		sf::Socket::Status status = sendAndReceive(req, pack_ans, socket);
+		pack_ans >> ans;
 		if (status == sf::Socket::Done) {
-			this->state = ans;
-			return ans;
+			this->state = (Lobby::State)ans;
+			return (Lobby::State)ans;
 		}
+	}
 	return Lobby::getState();
+}
+
+/*void LobbyInterface::loopMenu()
+{
+	
+}*/
+
+void LobbyInterface::setReady(std::string lobbyID, int id, bool r, SocketPtr socket) {
+	if (onlineMode && socket) {
+		OnlineRequest o;
+		o.type = OnlineRequest::READY;
+		o.stringParam = lobbyID;
+		o.intParam = id;
+		o.boolParam = r;
+		sf::Packet pack;
+		pack << o;
+		socket->send(pack);
+	}
+	else {
+		Lobby::requestSetReady(id, r);
+	}
+}
+
+void LobbyInterface::requestChangeCharacter(std::string lobbyID, int id, bool npc, glb::characterIndex idx, SocketPtr socket) {
+	if (onlineMode && socket) {
+		OnlineRequest o;
+		o.type = OnlineRequest::CHARACTER_CHANGE;
+		o.stringParam = lobbyID;
+		o.intParam = id;
+		o.ciParam = idx;
+		o.boolParam = npc;
+		sf::Packet pack;
+		pack << o;
+		socket->send(pack);
+	}
+	else {
+		Lobby::changeCharacter(id, npc, idx);
+	}
 }

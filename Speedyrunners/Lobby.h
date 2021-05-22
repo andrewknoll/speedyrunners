@@ -15,6 +15,7 @@
 #include "PlayerSlot.h"
 #include "RoundVictory.h"
 #include "SFML/Network.hpp"
+#include <map>
 
 #include "ParticleSystem.h"
 
@@ -44,6 +45,7 @@ class Lobby
 public:
 	enum class State { Countdown, Playing, FinishedRound, Paused, Editing, AcceptingPlayers, Full };
 private:
+	std::string lobbyCode = "";
 	bool onlineMode = true;
 	//Thread Pool
 	std::vector<workerThread> threadPool = std::vector<workerThread>(12);
@@ -61,7 +63,10 @@ private:
 	bool testingParticles = false;
 	bool gameWon = false;
 
-	// "cheats"
+	// Menu
+	std::map<int, glb::characterIndex> chosen;
+	std::map<int, glb::characterIndex> chosenNPC;
+	std::vector<bool> ready = std::vector<bool>();
 	
 
 	bool suddenDeath = false;
@@ -113,13 +118,14 @@ protected:
 	void clear();
 
 	void defaultInit(int N_PLAYERS, const Settings& settings);
-	void defaultInit(const std::vector<glb::characterIndex>& _players, const std::vector<glb::characterIndex>& _npcs);
+	void defaultInit(const std::map<int, glb::characterIndex>& _players, const std::map<int, glb::characterIndex>& _npcs);
 	void setState(const State _state);
 	
 	// devuelve el indice del character en 1a pos
 	int getFirstCharacterIdx() const;
 	void loadLevel(const std::string& lvlPath);
 	void loopGame();
+	void loopMenu();
 	void checkConnections();
 	void addCharacter(const CharPtr character);
 	void playerJoin(PlayerPtr newPlayer);
@@ -148,10 +154,13 @@ public:
 	void requestClearParticles();
 
 	void requestDefaultInit(int N_PLAYERS, const Settings& settings);
-	void requestDefaultInit(const std::vector<glb::characterIndex>& _players, const std::vector<glb::characterIndex>& _npcs);
+	void requestDefaultInit();
 	void requestSetState(const State _state);
 	void requestSetTestingParticles(bool p);
+	//void requestChooseCharacter(glb::characterIndex idx, bool npc);
 protected:
+	void requestSetReady(int id, bool r);
+	void changeCharacter(int id, bool npc, glb::characterIndex idx);
 	//ONLINE / OFFLINE GETTERS
 	std::vector<particles::PSystem>& getParticleSystems() const;
 	const std::list<ItemPtr>& getItems() const;
@@ -162,6 +171,8 @@ protected:
 	std::vector<Checkpoint> getCheckpoints() const;
 	std::vector<NPCPtr> getNPCs() const;
 	const std::vector<CharPtr>& getCharacters() const;
+	std::string getCode() const;
+	int getNextId() const;
 
 	State getState() const;
 

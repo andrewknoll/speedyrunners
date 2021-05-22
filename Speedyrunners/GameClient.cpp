@@ -399,5 +399,68 @@ const Settings& GameClient::getSettings() const
 	return settings;
 }
 
-//	ui.setCharacters(characters);
-// ui.updatePoints();
+sf::Socket::Status GameClient::connectToServer(std::string ip)
+{
+	if (!socketToServer) {
+		socketToServer = std::make_shared<sf::TcpSocket>();
+		
+		socketToServer->connect(ip, glb::MATCHMAKING_PORT);
+		OnlineRequest o;
+		o.type = OnlineRequest::RANDOM;
+		sf::Packet pack, pack_ans;
+		pack << o;
+		socketToServer->send(pack);
+		auto status = socketToServer->receive(pack_ans);
+		pack_ans >> myID >> lobbyCode;
+		socketToServer->setBlocking(false);
+		return status;
+		
+	}
+	return sf::Socket::Status::Disconnected;
+}
+
+void GameClient::disconnectFromServer() {
+	if (socketToServer) {
+		socketToServer->disconnect();
+	}
+	socketToServer = nullptr;
+}
+
+std::string GameClient::getLobbyCode()
+{
+	if (onlineLobby) {
+		return lobbyCode;
+	}
+	else {
+		return "";
+	}
+	
+}
+
+int GameClient::getMyId()
+{
+	return myID;
+}
+
+void GameClient::sendReadyRequest(bool r) {
+	lobby->setReady(getLobbyCode(), getMyId(), r, socketToServer);
+}
+
+void GameClient::sendChangeRequest(glb::characterIndex idx, bool npc) {
+	lobby->requestChangeCharacter(getLobbyCode(), getMyId(), npc, idx, socketToServer);
+}
+
+/*void GameClient::sendRequest(OnlineRequest o) const {
+	if (socketToServer) {
+		sf::Packet pack;
+		pack << o;
+		socketToServer->send(pack);
+	}
+}
+
+sf::Socket::Status GameClient::receiveAnswer(const void* answer) {
+	sf::Packet pack;
+	sf::Socket::Status status = socketToServer->receive(pack);
+	answer = pack.getData();
+	return status;
+}*/

@@ -42,9 +42,10 @@ public:
 
 	void updateCharacter();
 
-	void handleClick(int idx);
+	//Return true when character must be updated
+	bool handleClick(int idx);
 
-	void update(sf::Event& event, const sf::Vector2f& mousePos);
+	bool update(sf::Event& event, const sf::Vector2f& mousePos);
 
 
 	glb::characterIndex getSelectedCharacter() const;

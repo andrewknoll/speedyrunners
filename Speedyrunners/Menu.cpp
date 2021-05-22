@@ -154,7 +154,6 @@ void Menu::setCharacterSelect() {
 
 	// Player widgets:
 	addLobbyWidgets(lobbyPath);
-	
 }
 
 
@@ -243,6 +242,13 @@ void Menu::handleMainMenuClick(int i) {
 	{
 		std::cout << "Clicked multiplayer\n";
 		nPlayers = 2;	//CONNECT TO SERVERRRRRRRRRRR
+		if (gameClient.connectToServer() != sf::Socket::Done)
+		{
+			std::cerr << "Connection error." << std::endl;
+		}
+		else {
+			onOnlineLobby = true;
+		}
 		setCharacterSelect();
 		break;
 	}
@@ -263,8 +269,8 @@ void Menu::handleMainMenuClick(int i) {
 	case 3:
 	{
 		std::cout << "Clicked practice\n";
-		std::vector<glb::characterIndex> players{ glb::characterIndex::SPEEDRUNNER };
-		game->requestDefaultInit(players, std::vector<glb::characterIndex>());
+		gameClient.sendChangeRequest(glb::characterIndex::SPEEDRUNNER, false);
+		game->requestDefaultInit();
 		game->enableCheats(false);
 		exitMenu = true;
 		break;
@@ -287,6 +293,10 @@ void Menu::handleMainMenuClick(int i) {
 }
 
 void Menu::backToMainMenu() {
+	if (onOnlineLobby) {
+		gameClient.disconnectFromServer();
+		onOnlineLobby = false;
+	}
 	audio.play(AudioPlayer::Effect::MENU_CLICK_CANCEL);
 	changingControl = false;
 	clear();
@@ -404,15 +414,22 @@ void Menu::handleLobbyClick(int i) {
 	{
 		audio.play(AudioPlayer::Effect::MENU_CLICK_CHARACTER_CHOSEN);
 		elements.pop_back(); // remove only ready sign
-		players.clear(); npcs.clear();
-		int i = 0;
-		for (const auto& w : widgets) {
-			if (w.activated()) {
-				if (i < 2) players.emplace_back(w.getSelectedCharacter());
-				else npcs.emplace_back(w.getSelectedCharacter());
-			}
-			i++;
+		/*int i = 0;
+		if (onOnlineLobby) {
+			game->requestChooseCharacter(widgets[0].getSelectedCharacter(), false);
 		}
+		else {
+			for (const auto& w : widgets) {
+				if (w.activated()) {
+					if (i < 2) game->requestChooseCharacter(w.getSelectedCharacter(), false);
+					else game->requestChooseCharacter(w.getSelectedCharacter(), true);
+				}
+				i++;
+			}
+		}*/
+		ready = !ready;
+		gameClient.sendReadyRequest(ready);
+		
 		widgets.clear();
 		clearBackgrounds(1);
 		setLevelSelect();
@@ -436,7 +453,7 @@ void Menu::handleLvlSelectClick(int i) {
 		game->requestSetState(LobbyInterface::State::Playing);
 		//game->requestEnableCheats(false);
 		gameClient.setSaveName(levelNames[i] + ".csv");
-		game->requestDefaultInit(players, npcs);
+		game->requestDefaultInit();
 		exitMenu = true;
 	}
 }
@@ -531,7 +548,11 @@ void Menu::pollEvents()
 					break;
 				}
 			}
-			for (auto& w : widgets) w.update(event, mousePos);
+			for (int i = 0; i < widgets.size(); i++) {
+				if (widgets[i].update(event, mousePos) && i == 0) {
+					gameClient.sendChangeRequest(widgets[i].getSelectedCharacter(), false);
+				}
+			}
 		}
 		else if (changingControl && event.type == sf::Event::KeyPressed) {
 			auto k = event.key.code;

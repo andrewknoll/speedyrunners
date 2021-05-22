@@ -18,7 +18,9 @@ struct OnlineRequest
 		GET_CHP,
 		GET_NPC,
 		GET_CHAR,
-		GET_ST
+		GET_ST,
+		READY,
+		CHARACTER_CHANGE
 	};
 
 	enum InputEventKey {
@@ -39,6 +41,9 @@ struct OnlineRequest
 	std::string stringParam = "";
 	std::shared_ptr<Settings> settings;
 	InputEvent inputEvent;
+	int intParam = -1;
+	bool boolParam = false;
+	glb::characterIndex ciParam = glb::characterIndex::SPEEDRUNNER;
 };
 
 sf::Packet& operator<< (sf::Packet& packet, const OnlineRequest& o)
@@ -48,6 +53,12 @@ sf::Packet& operator<< (sf::Packet& packet, const OnlineRequest& o)
 	}
 	else if(o.type == OnlineRequest::CREATE || o.type == OnlineRequest::JOIN || o.type == OnlineRequest::RANDOM){
 		return packet << (int)o.type << o.stringParam;
+	}
+	else if (o.type == OnlineRequest::READY) {
+		return packet << (int)o.type << o.stringParam << o.intParam << o.boolParam;
+	}
+	else if (o.type == OnlineRequest::CHARACTER_CHANGE) {
+		return packet << (int)o.type << o.stringParam << o.intParam << (int)o.ciParam;
 	}
 	else {
 		return packet << (int)o.type;
@@ -66,6 +77,15 @@ sf::Packet& operator>> (sf::Packet& packet, OnlineRequest& o)
 	}
 	else if (o.type == OnlineRequest::CREATE || o.type == OnlineRequest::JOIN || o.type == OnlineRequest::RANDOM){
 		return packet2 >> o.stringParam;
+	}
+	else if (o.type == OnlineRequest::READY) {
+		return packet2 >> o.stringParam >> o.intParam >> o.boolParam;
+	}
+	else if (o.type == OnlineRequest::CHARACTER_CHANGE) {
+		int ci;
+		auto packet3 = packet2 >> o.stringParam >> o.intParam >> ci;
+		o.ciParam = (glb::characterIndex)ci;
+		return packet3;
 	}
 	else {
 		return packet2;

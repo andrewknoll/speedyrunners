@@ -22,6 +22,7 @@ class Menu
 		Controls
 	};
 
+	bool onOnlineLobby = false;
 	GameClient& gameClient;
 	std::shared_ptr<LobbyInterface> game;
 	sf::RenderWindow* window;
@@ -33,14 +34,12 @@ class Menu
 	std::vector<Background> backgrounds;
 	std::vector<std::unique_ptr<UIElement>> elements;
 	std::vector<LobbyWidget> widgets;
+	bool ready = false;
 
 	
 	int nPlayers = 1;
 
 	std::vector<std::string> levelNames;
-
-	std::vector<glb::characterIndex> players;
-	std::vector<glb::characterIndex> npcs;
 
 	Page currentMenuPage = Page::Main;
 

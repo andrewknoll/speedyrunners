@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "Menu.h"
 #include "RoundVictory.h"
+#include "LocalPlayer.h"
 
 #include "Rocket.h"
 #include "IceRay.h"
@@ -322,14 +323,14 @@ void Lobby::defaultInit(int N_PLAYERS, const Settings& settings) {
 
 	int id = 0;
 	if (N_PLAYERS == 2) id = 1;
-	std::shared_ptr<Player> me = std::make_shared<Player>(settings, id);
+	std::shared_ptr<Player> me = std::make_shared<LocalPlayer>(settings, id);
 	me->setCharacter(speedyrunner);
 	playerJoin(me);
 	speedyrunner->setName("Player 1");
 	addCharacter(speedyrunner);
 
 	if (N_PLAYERS > 1) {
-		std::shared_ptr<Player> secondPlayer = std::make_shared<Player>(settings, ++id);
+		std::shared_ptr<Player> secondPlayer = std::make_shared<LocalPlayer>(settings, ++id);
 		secondPlayer->setCharacter(otro);
 		playerJoin(secondPlayer);
 		otro->setName("Player 2");
@@ -348,7 +349,7 @@ void Lobby::defaultInit(int N_PLAYERS, const Settings& settings) {
 	running = true;
 }
 
-void Lobby::defaultInit(const std::vector<glb::characterIndex>& _players, const std::vector<glb::characterIndex>& _npcs) {
+void Lobby::defaultInit(const std::map<int, glb::characterIndex>& _players, const std::map<int, glb::characterIndex>& _npcs) {
 	clear();
 	int N_PLAYERS = players.size();
 	sf::Vector2f spawnPosition = lvl.getInitialPosition();
@@ -357,9 +358,9 @@ void Lobby::defaultInit(const std::vector<glb::characterIndex>& _players, const 
 	int i = 0;
 	if (_players.size() == 2) i = 1; // controls
 	for (auto c : _players) {
-		std::cout << "adding player " << c << "\n";
+		std::cout << "adding player " << c.second << "\n";
 		// character:
-		character = std::make_shared<Character>(src.getSpriteSheet(c), c);
+		character = std::make_shared<Character>(src.getSpriteSheet((int)c.second), c.first);
 		character->setPosition(spawnPosition);
 	/////	//  player:
 	//	std::shared_ptr<Player> me = std::make_shared<Player>(getSettings(), i);
@@ -378,9 +379,9 @@ void Lobby::defaultInit(const std::vector<glb::characterIndex>& _players, const 
 	}
 	i = 0;
 	for (auto c : _npcs) {
-		std::cout << "adding npc " << c << "\n";
+		std::cout << "adding npc " << c.second << "\n";
 		// char:
-		character = std::make_shared<Character>(src.getSpriteSheet(c), c);
+		character = std::make_shared<Character>(src.getSpriteSheet((int)c.second), c.first);
 		character->setPosition(spawnPosition);
 		// NPC
 		std::shared_ptr<NPC> npc = std::make_shared<NPC>();
@@ -430,6 +431,20 @@ void Lobby::loadLevel(const std::string& lvlPath)
 	std::cout << "I have " << checkpoints.size() << " checkpoints now\n";
 	for (NPCPtr npc : npcs) {
 		npc->setTileMap(std::make_shared<TileMap>(lvl.getCollidableTiles()));
+	}
+}
+
+void Lobby::loopMenu()
+{
+	bool allReady = false;
+	
+	if (!allReady) {
+		if (players.size() < 4) {
+			state = State::AcceptingPlayers;
+		}
+		else {
+			state = State::Full;
+		}
 	}
 }
 
@@ -515,20 +530,6 @@ void Lobby::loop()
 	clear();
 }*/
 
-/*void Lobby::loopMenu()
-{
-	Resources::getInstance().getAudioPlayer().stopAll();
-	Menu menu(window, settings, *this);
-	if (!src.musicPlayer.isPlaying(MusicPlayer::MusicType::MENU)) {
-		src.musicPlayer.playMusicTrack(MusicPlayer::MusicType::MENU);
-	}
-	menu.setMainMenu();
-	menu.loop(); // , this);
-	std::cout << "State after menu: " << (int)state << "\n";
-	//state = (Lobby::State)menu.getGameState();
-	//characters = menu.getCharacters
-}
-*/
 /*
 void Lobby::loopLobby() {
 }*/
@@ -592,7 +593,7 @@ void Lobby::addCheckpoint(const sf::Vector2f & pos, float radius) {
 
 void Lobby::removeLastCheckpoint() {
 	if (!onlineMode && !checkpoints.empty()) {
-
+		checkpoints.pop_back();
 	}
 }
 
@@ -645,9 +646,9 @@ void Lobby::requestDefaultInit(int N_PLAYERS, const Settings& settings)
 	}
 }
 
-void Lobby::requestDefaultInit(const std::vector<glb::characterIndex>& _players, const std::vector<glb::characterIndex>& _npcs) {
+void Lobby::requestDefaultInit() {
 	if (!onlineMode) {
-		defaultInit(_players, _npcs);
+		defaultInit(chosen, chosenNPC);
 	}
 }
 
@@ -662,8 +663,48 @@ void Lobby::requestSetTestingParticles(bool p) {
 		testingParticles = p;
 	}
 }
-
+/*
+void Lobby::requestChooseCharacter(glb::characterIndex idx, bool npc) {
+	if (!onlineMode) {
+		if (!npc) {
+			chosen.emplace_back(idx);
+		}
+		else {
+			chosenNPC.emplace_back(idx);
+		}
+	}
+}
+*/
 /////////////////////
+
+void Lobby::requestSetReady(int id, bool r) {
+	ready[id] = r;
+}
+
+void Lobby::changeCharacter(int id, bool npc, glb::characterIndex idx) {
+	bool shouldDo = false;
+	if (!npc) {
+		for (auto& p : chosenNPC) {
+			if (shouldDo) break;
+			shouldDo |= p.first == id;
+		}
+
+		if (!ready[id] && shouldDo) {
+			chosen[id] = idx;
+		}
+	}
+	else {
+		for (auto& p : chosen) {
+			if (shouldDo) break;
+			shouldDo |= p.first == id;
+		}
+
+		if (!ready[id] && shouldDo) {
+			chosenNPC[id] = idx;
+		}
+	}
+	
+}
 
 std::vector<particles::PSystem>& Lobby::getParticleSystems() const
 {
@@ -706,4 +747,14 @@ std::vector<Lobby::NPCPtr> Lobby::getNPCs() const
 
 const std::vector<Lobby::CharPtr>& Lobby::getCharacters() const {
 	return characters;
+}
+
+std::string Lobby::getCode() const
+{
+	return lobbyCode;
+}
+
+int Lobby::getNextId() const
+{
+	return players.size() - 1;
 }
