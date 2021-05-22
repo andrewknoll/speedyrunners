@@ -112,28 +112,21 @@ public:
 
 	void clear();
 
-	void requestClearParticles();
-
 	void defaultInit(int N_PLAYERS);
 	void defaultInit(const std::vector<glb::characterIndex>& _players, const std::vector<glb::characterIndex>& _npcs);
 	void setState(const State _state);
 	State getState() const;
 	
-	const Settings& getSettings() const;
 	// devuelve el indice del character en 1a pos
 	int getFirstCharacterIdx() const;
 	void loadLevel(const std::string& lvlPath);
-	void setSaveName(std::string fileName);
 	void loopGame();
 	void checkConnections();
 	void addCharacter(const CharPtr character);
-
-	void createNewLevel(int nLevels);
-
-	MusicPlayer& music();
-
 	void playerJoin(PlayerPtr newPlayer);
 	void npcJoin(NPCPtr newNPC);
+
+	MusicPlayer& music();
 
 	CharPtr getCharacterAt(int pos) const;
 	PlayerPtr getPlayerAt(int pos) const;
@@ -142,24 +135,29 @@ public:
 	void checkItemPickups(CharPtr c);
 
 	//OFFLINE
+	void setOffline();
 	void setLevelTile(const sf::Vector2i& pos, int tileNumber);
 	void drawLevelTile(sf::RenderTarget& target, sf::RenderStates states, const sf::Vector2i& pos, int tileNumber);
 	void emitParticles(int selectedPSystem, const sf::Vector2f& pos, bool linear = false, int n = 1);
-	const std::vector<particles::PSystem>& getParticleSystems() const;
-	const std::list<ItemPtr>& getItems() const;
-	const std::shared_ptr<RoundVictory>& getRV() const;
-	const Countdown& getCountdown() const;
 	void addCheckpoint(const sf::Vector2f& pos, float radius);
 	void removeLastCheckpoint();
 	void saveLevelCheckpoints();
 	void enableCheats(bool enable);
+	void requestAddObject(int type, sf::Vector2f pos, CharPtr newChar = nullptr);
+	void requestLoadLevel(std::string l);
+	void requestClearParticles();
+	//ONLINE / OFFLINE GETTERS
+	const std::vector<particles::PSystem>& getParticleSystems() const;
+	const std::list<ItemPtr>& getItems() const;
+	const std::shared_ptr<RoundVictory>& getRV() const;
+	const Countdown& getCountdown() const;
+	Camera getCamera() const;
+	Level getLevel() const;
 	std::vector<Checkpoint> getCheckpoints() const;
 	std::vector<NPCPtr> getNPCs() const;
 	const std::vector<CharPtr>& getCharacters() const;
-	void requestAddObject(int type, sf::Vector2f pos, CharPtr newChar = nullptr);
-	void requestLoadLevel(std::string l);
-	void setOffline();
-	Camera getCamera() const;
-	Level getLevel() const;
+	
+	
+	
 };
 

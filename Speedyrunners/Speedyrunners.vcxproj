@@ -280,9 +280,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="GameClient.cpp" />
+    <ClCompile Include="GameServer.cpp" />
     <ClCompile Include="GoldenHook.cpp" />
     <ClCompile Include="IceRay.cpp" />
+    <ClCompile Include="LocalPlayer.cpp" />
     <ClCompile Include="MetaTile.cpp" />
+    <ClCompile Include="OnlinePlayer.cpp" />
     <ClCompile Include="Particles.cpp" />
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="AudioPlayer.cpp" />
@@ -324,9 +327,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GameClient.h" />
+    <ClInclude Include="GameServer.h" />
     <ClInclude Include="GoldenHook.h" />
     <ClInclude Include="IceRay.h" />
+    <ClInclude Include="LocalPlayer.h" />
     <ClInclude Include="MetaTile.h" />
+    <ClInclude Include="OnlinePlayer.h" />
+    <ClInclude Include="OnlineRequest.h" />
     <ClInclude Include="Particles.h" />
     <ClInclude Include="Animation.h" />
     <ClInclude Include="AudioPlayer.h" />

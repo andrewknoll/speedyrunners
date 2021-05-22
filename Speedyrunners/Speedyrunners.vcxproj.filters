@@ -179,6 +179,15 @@
     <ClCompile Include="Lobby.cpp">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="GameServer.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="LocalPlayer.cpp">
+      <Filter>Characters</Filter>
+    </ClCompile>
+    <ClCompile Include="OnlinePlayer.cpp">
+      <Filter>Characters</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TileMap.h">
@@ -303,6 +312,16 @@
     </ClInclude>
     <ClInclude Include="Lobby.h">
       <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="GameServer.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="OnlineRequest.h" />
+    <ClInclude Include="LocalPlayer.h">
+      <Filter>Characters</Filter>
+    </ClInclude>
+    <ClInclude Include="OnlinePlayer.h">
+      <Filter>Characters</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
