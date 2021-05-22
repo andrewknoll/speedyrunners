@@ -1,0 +1,341 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="UI">
+      <UniqueIdentifier>{edf39627-d36c-458b-a216-257cd6826a15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Level">
+      <UniqueIdentifier>{c56f5392-6cee-4b1a-b5cb-99a742653d78}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Animation">
+      <UniqueIdentifier>{95d0fcac-946b-47ee-8e5f-cdea9b12a705}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Items">
+      <UniqueIdentifier>{c6c8f07d-a326-4459-a700-8a1917aa8625}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="utils">
+      <UniqueIdentifier>{745c638f-51e4-4934-8a30-60f6fb0177d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Characters">
+      <UniqueIdentifier>{8f358f7d-facd-46b0-b146-c1692534d45b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Camera">
+      <UniqueIdentifier>{1681dd2e-5468-40e2-8eda-fbf744c0db88}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Audio">
+      <UniqueIdentifier>{32da8ed2-799a-49dc-9b2f-c578e529a702}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game">
+      <UniqueIdentifier>{547e61b9-26e6-4a30-a7db-7335580d416e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\InGame">
+      <UniqueIdentifier>{b3f121b3-7598-4eae-8ec9-5fddbc713708}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Elements">
+      <UniqueIdentifier>{293d564f-e966-4ec1-948d-77bca79aa5da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Menus">
+      <UniqueIdentifier>{1d9dda49-8182-42cb-84ee-21aa24e6e7f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Background">
+      <UniqueIdentifier>{c5a7525a-7759-4d6c-b77f-e9300fd6248d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Elements\Text">
+      <UniqueIdentifier>{9ff7cad5-d7c7-40a1-aa51-0fc32ff9c5ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Elements\Sprites">
+      <UniqueIdentifier>{49f8899f-b598-4623-b34a-2ab38547bbb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\Elements\Widgets">
+      <UniqueIdentifier>{dada622b-a7c7-481f-96c0-18428524f432}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Level\LevelElements">
+      <UniqueIdentifier>{30a99cb4-ed15-4afa-8797-16f7af4d3ea8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Animation\Particles">
+      <UniqueIdentifier>{5824c78f-efb3-49dc-8005-548da3eb92bf}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="TileMap.cpp">
+      <Filter>Level</Filter>
+    </ClCompile>
+    <ClCompile Include="Level.cpp">
+      <Filter>Level</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation.cpp">
+      <Filter>Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Spritesheet.cpp">
+      <Filter>Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Item.cpp">
+      <Filter>Items</Filter>
+    </ClCompile>
+    <ClCompile Include="Rocket.cpp">
+      <Filter>Items</Filter>
+    </ClCompile>
+    <ClCompile Include="Checkpoint.cpp">
+      <Filter>Level</Filter>
+    </ClCompile>
+    <ClCompile Include="utils.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Settings.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Resources.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="Character.cpp">
+      <Filter>Characters</Filter>
+    </ClCompile>
+    <ClCompile Include="NPC.cpp">
+      <Filter>Characters</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Characters</Filter>
+    </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="MusicPlayer.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Countdown.cpp">
+      <Filter>UI\InGame</Filter>
+    </ClCompile>
+    <ClCompile Include="InGameUI.cpp">
+      <Filter>UI\InGame</Filter>
+    </ClCompile>
+    <ClCompile Include="UIElement.cpp">
+      <Filter>UI\Elements</Filter>
+    </ClCompile>
+    <ClCompile Include="Menu.cpp">
+      <Filter>UI\Menus</Filter>
+    </ClCompile>
+    <ClCompile Include="Background.cpp">
+      <Filter>UI\Background</Filter>
+    </ClCompile>
+    <ClCompile Include="TextElement.cpp">
+      <Filter>UI\Elements\Text</Filter>
+    </ClCompile>
+    <ClCompile Include="UISprite.cpp">
+      <Filter>UI\Elements\Sprites</Filter>
+    </ClCompile>
+    <ClCompile Include="Hook.cpp">
+      <Filter>Items</Filter>
+    </ClCompile>
+    <ClCompile Include="Line.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="PriorityQueue.cpp">
+      <Filter>utils</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerSlot.cpp">
+      <Filter>Characters</Filter>
+    </ClCompile>
+    <ClCompile Include="AudioPlayer.cpp">
+      <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="RoundVictory.cpp">
+      <Filter>UI\InGame</Filter>
+    </ClCompile>
+    <ClCompile Include="LobbyWidget.cpp">
+      <Filter>UI\Elements\Widgets</Filter>
+    </ClCompile>
+    <ClCompile Include="BoostBox.cpp">
+      <Filter>Level\LevelElements</Filter>
+    </ClCompile>
+    <ClCompile Include="ItemPickup.cpp">
+      <Filter>Level\LevelElements</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticleSystem.cpp">
+      <Filter>Animation\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="BoxObstacle.cpp">
+      <Filter>Level\LevelElements</Filter>
+    </ClCompile>
+    <ClCompile Include="TNT.cpp">
+      <Filter>Items</Filter>
+    </ClCompile>
+    <ClCompile Include="Particles.cpp">
+      <Filter>Animation\Particles</Filter>
+    </ClCompile>
+    <ClCompile Include="IceRay.cpp">
+      <Filter>Items</Filter>
+    </ClCompile>
+    <ClCompile Include="GoldenHook.cpp">
+      <Filter>Items</Filter>
+    </ClCompile>
+    <ClCompile Include="MetaTile.cpp" />
+    <ClCompile Include="Tiles.cpp" />
+    <ClCompile Include="GameClient.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Lobby.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="GameServer.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="LocalPlayer.cpp">
+      <Filter>Characters</Filter>
+    </ClCompile>
+    <ClCompile Include="OnlinePlayer.cpp">
+      <Filter>Characters</Filter>
+    </ClCompile>
+    <ClCompile Include="LobbyInterface.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="mainClient.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="NetworkUtils.cpp" />
+    <ClCompile Include="OnlineRequest.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="TileMap.h">
+      <Filter>Level</Filter>
+    </ClInclude>
+    <ClInclude Include="Level.h">
+      <Filter>Level</Filter>
+    </ClInclude>
+    <ClInclude Include="Spritesheet.h">
+      <Filter>Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation.h">
+      <Filter>Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Item.h">
+      <Filter>Items</Filter>
+    </ClInclude>
+    <ClInclude Include="Rocket.h">
+      <Filter>Items</Filter>
+    </ClInclude>
+    <ClInclude Include="Checkpoint.h">
+      <Filter>Level</Filter>
+    </ClInclude>
+    <ClInclude Include="utils.hpp">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Settings.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Resources.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Character.h">
+      <Filter>Characters</Filter>
+    </ClInclude>
+    <ClInclude Include="NPC.h">
+      <Filter>Characters</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Characters</Filter>
+    </ClInclude>
+    <ClInclude Include="Globals.hpp">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.h">
+      <Filter>Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="MusicPlayer.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Countdown.h">
+      <Filter>UI\InGame</Filter>
+    </ClInclude>
+    <ClInclude Include="InGameUI.h">
+      <Filter>UI\InGame</Filter>
+    </ClInclude>
+    <ClInclude Include="UIElement.h">
+      <Filter>UI\Elements</Filter>
+    </ClInclude>
+    <ClInclude Include="Menu.h">
+      <Filter>UI\Menus</Filter>
+    </ClInclude>
+    <ClInclude Include="Background.h">
+      <Filter>UI\Background</Filter>
+    </ClInclude>
+    <ClInclude Include="TextElement.h">
+      <Filter>UI\Elements\Text</Filter>
+    </ClInclude>
+    <ClInclude Include="UISprite.h">
+      <Filter>UI\Elements\Sprites</Filter>
+    </ClInclude>
+    <ClInclude Include="Hook.h">
+      <Filter>Items</Filter>
+    </ClInclude>
+    <ClInclude Include="Line.hpp">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="PriorityQueue.h">
+      <Filter>utils</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerSlot.h">
+      <Filter>Characters</Filter>
+    </ClInclude>
+    <ClInclude Include="AudioPlayer.h">
+      <Filter>Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="RoundVictory.h">
+      <Filter>UI\InGame</Filter>
+    </ClInclude>
+    <ClInclude Include="LobbyWidget.h">
+      <Filter>UI\Elements\Widgets</Filter>
+    </ClInclude>
+    <ClInclude Include="SE_Exception.h" />
+    <ClInclude Include="BoostBox.h">
+      <Filter>Level\LevelElements</Filter>
+    </ClInclude>
+    <ClInclude Include="ItemPickup.h">
+      <Filter>Level\LevelElements</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticleSystem.h">
+      <Filter>Animation\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="BoxObstacle.h">
+      <Filter>Level\LevelElements</Filter>
+    </ClInclude>
+    <ClInclude Include="TNT.h">
+      <Filter>Items</Filter>
+    </ClInclude>
+    <ClInclude Include="Particles.h">
+      <Filter>Animation\Particles</Filter>
+    </ClInclude>
+    <ClInclude Include="IceRay.h">
+      <Filter>Items</Filter>
+    </ClInclude>
+    <ClInclude Include="GoldenHook.h">
+      <Filter>Items</Filter>
+    </ClInclude>
+    <ClInclude Include="MetaTile.h" />
+    <ClInclude Include="Tiles.h" />
+    <ClInclude Include="GameClient.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Lobby.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="GameServer.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="OnlineRequest.h" />
+    <ClInclude Include="LocalPlayer.h">
+      <Filter>Characters</Filter>
+    </ClInclude>
+    <ClInclude Include="OnlinePlayer.h">
+      <Filter>Characters</Filter>
+    </ClInclude>
+    <ClInclude Include="LobbyInterface.h">
+      <Filter>Game</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkUtils.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+    <None Include="packages.config" />
+    <None Include="ClassDiagram1.cd" />
+  </ItemGroup>
+</Project>

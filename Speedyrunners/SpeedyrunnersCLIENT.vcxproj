@@ -36,9 +36,10 @@
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
-    <ProjectGuid>{85663A8B-14D0-4352-9E63-25B868612CE3}</ProjectGuid>
+    <ProjectGuid>{0E1076D6-78FF-472F-A4D1-6581E0FC80EF}</ProjectGuid>
     <RootNamespace>Speedyrunners</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <ProjectName>SpeedyRunnersCLIENT</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -320,7 +321,6 @@
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="Lobby.cpp" />
     <ClCompile Include="Level.cpp" />
-    <ClCompile Include="mainServer.cpp" />
     <ClCompile Include="TextElement.cpp" />
     <ClCompile Include="TileMap.cpp" />
     <ClCompile Include="Tiles.cpp" />

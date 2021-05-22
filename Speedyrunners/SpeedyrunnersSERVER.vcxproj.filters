@@ -191,9 +191,6 @@
     <ClCompile Include="mainServer.cpp">
       <Filter>Game</Filter>
     </ClCompile>
-    <ClCompile Include="mainClient.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
     <ClCompile Include="NetworkUtils.cpp" />
     <ClCompile Include="OnlineRequest.cpp" />
   </ItemGroup>
