@@ -117,14 +117,18 @@ void LobbyWidget::addCharacterStuff(std::string lobbyPath, sf::RenderWindow& win
 		h = pos.y;
 	}
 	// Set bg and rect:
-	backgrounds.emplace_back(path, window, sf::FloatRect(pos.x, pos.y + 130.0/1080.0, 0.66 / 5.0,1.0 /6.0));
-	backgrounds.back().setTextureCoords(getTexRectForCharacter(selectedCharacter, rows));
-	backgrounds.back().fixProportions();
+	Background bg(path);
+	bg.load(window, sf::FloatRect(pos.x, pos.y + 130.0 / 1080.0, 0.66 / 5.0, 1.0 / 6.0));
+	bg.setTextureCoords(getTexRectForCharacter(selectedCharacter, rows));
+	bg.fixProportions();
+	backgrounds.emplace_back(bg);
 	
 	// Name tag:
-	backgrounds.emplace_back(lobbyPath + "NameTags_240x80.png", window, sf::FloatRect(pos.x + 0.008, h + 60.0 / 1080.0, 0.66 / 5.0, 0.1));
-	backgrounds.back().setTextureCoords(getNametagRectForCharacter(selectedCharacter));
-	backgrounds.back().fixProportions();
+	Background nameTags(lobbyPath + "NameTags_240x80.png");
+	nameTags.load(window, sf::FloatRect(pos.x + 0.008, h + 60.0 / 1080.0, 0.66 / 5.0, 0.1));
+	nameTags.setTextureCoords(getNametagRectForCharacter(selectedCharacter));
+	nameTags.fixProportions();
+	backgrounds.emplace_back(nameTags);
 
 }
 
@@ -139,14 +143,18 @@ LobbyWidget::LobbyWidget(sf::RenderWindow& _window, const Settings& settings, co
 	: window(_window), isActive(active), m_lobbyPath(lobbyPath), m_pos(pos), m_settings(settings), audio(Resources::getInstance().getAudioPlayer())
 {
 	// widget background:
-	backgrounds.emplace_back(lobbyPath + "PlayerWidgetBackground.png", window, sf::FloatRect(pos.x, pos.y, 0.66 / 2.25, 0.9 / 2.25));
-	backgrounds.back().setTextureCoords(sf::FloatRect(0.01, 0.02, 0.99, 0.98));
+	Background wbg(lobbyPath + "PlayerWidgetBackground.png");
+	wbg.load(window, sf::FloatRect(pos.x, pos.y, 0.66 / 2.25, 0.9 / 2.25));
+	wbg.setTextureCoords(sf::FloatRect(0.01, 0.02, 0.99, 0.98));
+	backgrounds.emplace_back(wbg);
 	//active = true;
 	if (active) { // add surrounding rectangle
 
 
 		//Outline:
-		backgrounds.emplace_back(lobbyPath + "CharacterSelectPortraitOutline.png", window, sf::FloatRect(pos.x - 0.01, pos.y - 0.02, 0.66 / 2.1, 0.9 / 2.08));
+		Background outline(lobbyPath + "CharacterSelectPortraitOutline.png");
+		outline.load(window, sf::FloatRect(pos.x - 0.01, pos.y - 0.02, 0.66 / 2.1, 0.9 / 2.08));
+		backgrounds.emplace_back(outline);
 		addCharacterStuff(lobbyPath, window, pos);
 		// Runner button:
 		addWidgetButton(lobbyPath, pos+sf::Vector2f(0.18,0.1), 0.05, window, settings, 1);
@@ -213,7 +221,9 @@ void LobbyWidget::handleClick(int idx) {
 		isActive = true;
 		elements.pop_back();
 		//Outline:
-		backgrounds.emplace_back(m_lobbyPath + "CharacterSelectPortraitOutline.png", window, sf::FloatRect(m_pos.x - 0.01, m_pos.y - 0.02, 0.66 / 2.1, 0.9 / 2.08));
+		Background out(m_lobbyPath + "CharacterSelectPortraitOutline.png");
+		out.load(window, sf::FloatRect(m_pos.x - 0.01, m_pos.y - 0.02, 0.66 / 2.1, 0.9 / 2.08));
+		backgrounds.emplace_back(out);
 		addCharacterStuff(m_lobbyPath, window, m_pos);
 		// Runner button:
 		addWidgetButton(m_lobbyPath, m_pos + sf::Vector2f(0.18, 0.1), 0.05, window, m_settings, 1);

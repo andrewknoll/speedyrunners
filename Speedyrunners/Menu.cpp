@@ -35,9 +35,8 @@ void Menu::setMainMenu()
 	// Sky:
 	Background sky(menuPath + "Speedrunners/Menu_Sky.png");
 	sky.load(*window, sf::FloatRect(0, 0, 1, 1));
+	sky.setTextureCoords(sf::FloatRect(0.1, 0.1, 0.7, 0.7)); // Recortar algo vertical
 	backgrounds.emplace_back(sky);
-
-	backgrounds.back().setTextureCoords(sf::FloatRect(0.1, 0.1, 0.7, 0.7)); // Recortar algo vertical
 	//backgrounds.back().fixProportions();
 	// Background 1:
 	Background b1(menuPath + "Speedrunners/Menu_far_city.png");
@@ -46,13 +45,13 @@ void Menu::setMainMenu()
 	// Background 2 :
 	Background b2(menuPath + "Speedrunners/Menu_city.png");
 	b2.load(*window);
+	b2.setTextureCoords(sf::FloatRect(0, 0, 1, 0.5)); // Solo se muestra la mitad superior de la textura
 	backgrounds.emplace_back(b2);// , sf::FloatRect(0, 0.5, 1, 0.5));
-	backgrounds.back().setTextureCoords(sf::FloatRect(0, 0, 1, 0.5)); // Solo se muestra la mitad superior de la textura
 	// Title:
 	Background title(menuPath + "SpeedRunnerLogo.png");
 	title.load(*window, sf::FloatRect(0.17, 0.03, 0.73, 0.35));
+	title.fixProportions();
 	backgrounds.emplace_back(title);
-	backgrounds.back().fixProportions();
 
 	// ----------------------------- Text:
 	// Multiplayer:
@@ -132,8 +131,8 @@ void Menu::setCharacterSelect() {
 	// background:
 	Background mid_city(menuPath + "SpeedRunners/Menu_mid_City_B.png");
 	mid_city.load(*window, sf::FloatRect(0, 0, 1, 1));
+	mid_city.setTextureCoords(sf::FloatRect(0.01, 0, 0.99, 0.95)); // Solo se muestra la mitad superior de la textura
 	backgrounds.emplace_back(mid_city);
-	backgrounds.back().setTextureCoords(sf::FloatRect(0.01, 0, 0.99, 0.95)); // Solo se muestra la mitad superior de la textura
 	
 
 	// Exit:
