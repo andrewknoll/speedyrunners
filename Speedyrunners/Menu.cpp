@@ -355,14 +355,14 @@ void Menu::setControls() {
 	for (auto k : schemes[2]) secondPlayer.emplace_back(settings.to_string(k));
 
 	std::vector<std::vector<std::string>> texts{ singlePlayer, firstPlayer, secondPlayer };
-	pos = sf::Vector2f(0.3, 0.38);
+	pos = sf::Vector2f(0.4, 0.38);
 	size = 0.04;
 	std::string font = glb::CONTENT_PATH + "UI/Font/FreeSans.ttf";
 	elements.emplace_back(std::make_unique<TextElement>(settings, mainTextFontPath, "CONTROLS", size * 2, pos, false, sf::Color::White));
 
 	pos.y += size * 2.6;
 	float h = pos.y;
-	pos.x = 0.15;
+	pos.x = 0.15;// centrar opciones
 	size *= 0.85;
 	for (const auto& t : actions) {
 		elements.emplace_back(std::make_unique<TextElement>(settings, font, t, size * 1.15, pos, false, sf::Color::White));
