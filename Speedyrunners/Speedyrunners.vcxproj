@@ -286,7 +286,9 @@
     <ClCompile Include="LocalPlayer.cpp" />
     <ClCompile Include="mainClient.cpp" />
     <ClCompile Include="MetaTile.cpp" />
+    <ClCompile Include="NetworkUtils.cpp" />
     <ClCompile Include="OnlinePlayer.cpp" />
+    <ClCompile Include="OnlineRequest.cpp" />
     <ClCompile Include="Particles.cpp" />
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="AudioPlayer.cpp" />
@@ -335,6 +337,7 @@
     <ClInclude Include="LobbyInterface.h" />
     <ClInclude Include="LocalPlayer.h" />
     <ClInclude Include="MetaTile.h" />
+    <ClInclude Include="NetworkUtils.h" />
     <ClInclude Include="OnlinePlayer.h" />
     <ClInclude Include="OnlineRequest.h" />
     <ClInclude Include="Particles.h" />

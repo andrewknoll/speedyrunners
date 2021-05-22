@@ -194,6 +194,8 @@
     <ClCompile Include="mainClient.cpp">
       <Filter>Game</Filter>
     </ClCompile>
+    <ClCompile Include="NetworkUtils.cpp" />
+    <ClCompile Include="OnlineRequest.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TileMap.h">
@@ -332,6 +334,7 @@
     <ClInclude Include="LobbyInterface.h">
       <Filter>Game</Filter>
     </ClInclude>
+    <ClInclude Include="NetworkUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />

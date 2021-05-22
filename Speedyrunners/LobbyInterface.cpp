@@ -1,5 +1,6 @@
 #include "LobbyInterface.h"
 #include "SFML/Network.hpp"
+#include "NetworkUtils.h"
 
 sf::Socket::Status LobbyInterface::sendAndReceive(const OnlineRequest& req, sf::Packet& ans, SocketPtr socket) const
 {
@@ -28,7 +29,7 @@ std::vector<particles::PSystem>& LobbyInterface::getParticleSystems(SocketPtr so
 		sf::Packet pack_ans;
 		std::vector<particles::PSystem> ans;
 		sf::Socket::Status status = sendAndReceive(req, pack_ans, socket);
-		pack_ans >> ans;
+		pack_ans = vectorOverloadOut(pack_ans, ans);
 		if (status == sf::Socket::Done) {
 			this->particleSystems = ans;
 			return ans;
@@ -49,7 +50,7 @@ const std::list<LobbyInterface::ItemPtr>& LobbyInterface::getItems(SocketPtr soc
 		std::list<ItemPtr> ans;
 
 		sf::Socket::Status status = sendAndReceive(req, pack_ans, socket);
-		pack_ans >> ans;
+		listOverloadOut(pack_ans, ans);
 		if (status == sf::Socket::Done) {
 			this->items = ans;
 			return ans;
@@ -70,7 +71,7 @@ const std::shared_ptr<RoundVictory> LobbyInterface::getRV(SocketPtr socket) {
 		std::shared_ptr<RoundVictory> ans;
 
 		sf::Socket::Status status = sendAndReceive(req, pack_ans, socket);
-		pack_ans >> ans;
+		pack_ans = sharedPtrOverloadOut(pack_ans, ans);
 		if (status == sf::Socket::Done) {
 			this->rv = ans;
 			return ans;
@@ -90,7 +91,7 @@ const Countdown& LobbyInterface::getCountdown(SocketPtr socket) {
 		std::shared_ptr<Countdown> ans;
 
 		sf::Socket::Status status = sendAndReceive(req, pack_ans, socket);
-		pack_ans >> ans;
+		pack_ans = sharedPtrOverloadOut(pack_ans, ans);
 		if (status == sf::Socket::Done) {
 			this->countdown = *ans;
 			return *ans;
@@ -110,7 +111,7 @@ Camera LobbyInterface::getCamera(SocketPtr socket) {
 		std::shared_ptr<Camera> ans;
 
 		sf::Socket::Status status = sendAndReceive(req, pack_ans, socket);
-		pack_ans >> ans;
+		pack_ans = sharedPtrOverloadOut(pack_ans, ans);
 		if (status == sf::Socket::Done) {
 			this->cam = *ans;
 			return *ans;
@@ -129,7 +130,7 @@ Level LobbyInterface::getLevel(SocketPtr socket) {
 		std::shared_ptr<Level> ans;
 
 		sf::Socket::Status status = sendAndReceive(req, pack_ans, socket);
-		pack_ans >> ans;
+		pack_ans = sharedPtrOverloadOut(pack_ans, ans);
 		if (status == sf::Socket::Done) {
 			this->lvl = *ans;
 			return *ans;
@@ -149,7 +150,7 @@ const std::vector<Checkpoint>& LobbyInterface::getCheckpoints(SocketPtr socket) 
 		std::vector<Checkpoint> ans;
 
 		sf::Socket::Status status = sendAndReceive(req, pack_ans, socket);
-		pack_ans >> ans;
+		pack_ans = vectorOverloadOut(pack_ans, ans);
 		if (status == sf::Socket::Done) {
 			this->checkpoints = ans;
 			return ans;
@@ -168,7 +169,7 @@ const std::vector<LobbyInterface::NPCPtr>& LobbyInterface::getNPCs(SocketPtr soc
 		std::vector<NPCPtr> ans;
 
 		sf::Socket::Status status = sendAndReceive(req, pack_ans, socket);
-		pack_ans >> ans;
+		pack_ans = vectorOverloadOut(pack_ans, ans);
 		if (status == sf::Socket::Done) {
 			this->npcs = ans;
 			return ans;
@@ -187,7 +188,7 @@ const std::vector<LobbyInterface::CharPtr>& LobbyInterface::getCharacters(Socket
 		std::vector<CharPtr> ans;
 
 		sf::Socket::Status status = sendAndReceive(req, pack_ans, socket);
-		pack_ans >> ans;
+		pack_ans = vectorOverloadOut(pack_ans, ans);
 		if (status == sf::Socket::Done) {
 			this->characters = ans;
 			return ans;

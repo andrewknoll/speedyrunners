@@ -173,27 +173,6 @@ namespace utils {
 	sf::Vector2u toVector2u(const sf::Vector2<T>& v);
 }
 
-
-namespace network {
-	template <typename T>
-	inline sf::Packet operator<< (const sf::Packet& p, const std::shared_ptr<T> obj);
-
-	template <typename T>
-	inline sf::Packet operator>> (sf::Packet& p, std::shared_ptr<T> obj);
-
-	template <typename T>
-	inline sf::Packet operator<< (sf::Packet& p, const std::vector<T> obj);
-
-	template <typename T>
-	inline sf::Packet operator>> (sf::Packet& p, std::vector<T>& obj);
-
-	template <typename T>
-	inline sf::Packet operator<< (sf::Packet& p, const std::list<T> obj);
-
-	template <typename T>
-	inline sf::Packet operator>> (sf::Packet& p, std::list<T>& obj);
-}
-
 namespace geometry {
 	inline const float PI = 3.141592;
 

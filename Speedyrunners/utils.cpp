@@ -282,55 +282,6 @@ namespace utils {
 }
 
 
-
-template <typename T>
-sf::Packet network::operator<< (const sf::Packet& p, const std::shared_ptr<T> obj) {
-	p.append(*obj);
-}
-
-template <typename T>
-sf::Packet network::operator>> (sf::Packet& p, std::shared_ptr<T> obj) {
-	obj = std::shared_ptr<T>((T*)p.getData());
-	return p;
-}
-
-template <typename T>
-sf::Packet network::operator<< (sf::Packet& p, const std::vector<T> obj) {
-	p << obj.size();
-	for (T& t : obj) {
-		p << t;
-	}
-	return p;
-}
-
-template <typename T>
-sf::Packet network::operator>> (sf::Packet& p, std::vector<T>& obj) {
-	sf::Uint32 size;
-	auto content = p >> size;
-	T* buffer = (T*)content.getData();
-	obj = std::vector<T>(buffer, buffer + size);
-	return p;
-}
-
-template <typename T>
-sf::Packet network::operator<< (sf::Packet& p, const std::list<T> obj) {
-	p << obj.size();
-	for (T& t : obj) {
-		p << t;
-	}
-	return p;
-}
-
-template <typename T>
-sf::Packet network::operator>> (sf::Packet& p, std::list<T>& obj) {
-	sf::Uint32 size;
-	auto content = p >> size;
-	T* buffer = (T*)content.getData();
-	obj = std::list<T>(buffer, buffer + size);
-	return p;
-}
-
-
 // Vector3 RNG::vectorNormalAleatorio() const {
 // 	double rand1 = gen.rand01();
 // 	double rand2 = gen.rand01();
