@@ -27,14 +27,15 @@ class LobbyInterface : public Lobby
 private:
 	sf::Socket::Status sendAndReceive(const OnlineRequest& req, sf::Packet& ans, SocketPtr socket) const;
 public:
-	std::vector<particles::PSystem>& getParticleSystems(SocketPtr = nullptr) const;
-	const std::list<ItemPtr>& getItems(SocketPtr = nullptr) const;
-	const std::shared_ptr<RoundVictory> getRV(SocketPtr = nullptr) const;
-	const Countdown& getCountdown(SocketPtr = nullptr) const;
-	Camera getCamera(SocketPtr = nullptr) const;
-	Level getLevel(SocketPtr = nullptr) const;
-	const std::vector<Checkpoint>& getCheckpoints(SocketPtr = nullptr) const;
-	const std::vector<NPCPtr>& getNPCs(SocketPtr = nullptr) const;
-	const std::vector<CharPtr>& getCharacters(SocketPtr = nullptr) const;
+	std::vector<particles::PSystem>& getParticleSystems(SocketPtr socket = nullptr);
+	const std::list<ItemPtr>& getItems(SocketPtr socket = nullptr);
+	const std::shared_ptr<RoundVictory> getRV(SocketPtr socket = nullptr);
+	const Countdown& getCountdown(SocketPtr socket = nullptr);
+	Camera getCamera(SocketPtr socket = nullptr);
+	Level getLevel(SocketPtr socket = nullptr);
+	const std::vector<Checkpoint>& getCheckpoints(SocketPtr socket = nullptr);
+	const std::vector<NPCPtr>& getNPCs(SocketPtr socket = nullptr);
+	const std::vector<CharPtr>& getCharacters(SocketPtr socket = nullptr);
+	State getState(SocketPtr socket = nullptr);
 };
 

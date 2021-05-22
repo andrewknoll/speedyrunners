@@ -66,7 +66,7 @@ sf::Socket::Status LobbyInterface::sendAndReceive(const OnlineRequest& req, sf::
 	}
 }
 
-std::vector<particles::PSystem>& LobbyInterface::getParticleSystems(SocketPtr socket) const {
+std::vector<particles::PSystem>& LobbyInterface::getParticleSystems(SocketPtr socket) {
 	if (onlineMode && socket) {
 
 		OnlineRequest req;
@@ -76,17 +76,17 @@ std::vector<particles::PSystem>& LobbyInterface::getParticleSystems(SocketPtr so
 		std::vector<particles::PSystem> ans;
 		sf::Socket::Status status = sendAndReceive(req, pack_ans, socket);
 		pack_ans >> ans;
-		if (status != sf::Socket::Done) {
-			throw std::exception("Couldn't retrieve Particle System");
+		if (status == sf::Socket::Done) {
+			this->particleSystems = ans;
+			return ans;
 		}
-		return ans;
 	}
-	else {
-		return Lobby::getParticleSystems();
-	}
+
+	return Lobby::getParticleSystems();
+
 }
 
-const std::list<LobbyInterface::ItemPtr>& LobbyInterface::getItems(SocketPtr socket) const {
+const std::list<LobbyInterface::ItemPtr>& LobbyInterface::getItems(SocketPtr socket) {
 	if (onlineMode && socket) {
 
 		OnlineRequest req;
@@ -97,17 +97,17 @@ const std::list<LobbyInterface::ItemPtr>& LobbyInterface::getItems(SocketPtr soc
 
 		sf::Socket::Status status = sendAndReceive(req, pack_ans, socket);
 		pack_ans >> ans;
-		if (status != sf::Socket::Done) {
-			throw std::exception("Couldn't retrieve Items");
+		if (status == sf::Socket::Done) {
+			this->items = ans;
+			return ans;
 		}
-		return ans;
 	}
 	else {
 		return Lobby::getItems();
 	}
 }
 
-const std::shared_ptr<RoundVictory> LobbyInterface::getRV(SocketPtr socket) const {
+const std::shared_ptr<RoundVictory> LobbyInterface::getRV(SocketPtr socket) {
 	if (onlineMode && socket) {
 
 		OnlineRequest req;
@@ -118,17 +118,16 @@ const std::shared_ptr<RoundVictory> LobbyInterface::getRV(SocketPtr socket) cons
 
 		sf::Socket::Status status = sendAndReceive(req, pack_ans, socket);
 		pack_ans >> ans;
-		if (status != sf::Socket::Done) {
-			throw std::exception("Couldn't retrieve Victory Screen");
+		if (status == sf::Socket::Done) {
+			this->rv = ans;
+			return ans;
 		}
-		return ans;
 	}
-	else {
-		return Lobby::getRV();
-	}
+	return Lobby::getRV();
+
 }
 
-const Countdown& LobbyInterface::getCountdown(SocketPtr socket) const {
+const Countdown& LobbyInterface::getCountdown(SocketPtr socket) {
 	if (onlineMode && socket) {
 
 		OnlineRequest req;
@@ -139,17 +138,16 @@ const Countdown& LobbyInterface::getCountdown(SocketPtr socket) const {
 
 		sf::Socket::Status status = sendAndReceive(req, pack_ans, socket);
 		pack_ans >> ans;
-		if (status != sf::Socket::Done) {
-			throw std::exception("Couldn't retrieve Countdown");
+		if (status == sf::Socket::Done) {
+			this->countdown = *ans;
+			return *ans;
 		}
-		return *ans;
 	}
-	else {
-		return Lobby::getCountdown();
-	}
+	return Lobby::getCountdown();
+
 }
 
-Camera LobbyInterface::getCamera(SocketPtr socket) const {
+Camera LobbyInterface::getCamera(SocketPtr socket) {
 	if (onlineMode && socket) {
 
 		OnlineRequest req;
@@ -159,17 +157,15 @@ Camera LobbyInterface::getCamera(SocketPtr socket) const {
 		Camera ans;
 
 		sf::Socket::Status status = sendAndReceive(req, pack_ans, socket);
-		if (status != sf::Socket::Done) {
-			throw std::exception("Couldn't retrieve Camera");
+		if (status == sf::Socket::Done) {
+			this->cam = ans;
+			return ans;
 		}
-		return ans;
 	}
-	else {
-		return Lobby::getCamera();
-	}
+	return Lobby::getCamera();
 }
 
-Level LobbyInterface::getLevel(SocketPtr socket) const {
+Level LobbyInterface::getLevel(SocketPtr socket) {
 	if (onlineMode && socket) {
 
 		OnlineRequest req;
@@ -179,17 +175,16 @@ Level LobbyInterface::getLevel(SocketPtr socket) const {
 		Level ans;
 
 		sf::Socket::Status status = sendAndReceive(req, pack_ans, socket);
-		if (status != sf::Socket::Done) {
-			throw std::exception("Couldn't retrieve Camera");
+		if (status == sf::Socket::Done) {
+			this->lvl = ans;
+			return ans;
 		}
-		return ans;
 	}
-	else {
-		return Lobby::getLevel();
-	}
+	return Lobby::getLevel();
+
 }
 
-const std::vector<Checkpoint>& LobbyInterface::getCheckpoints(SocketPtr socket) const {
+const std::vector<Checkpoint>& LobbyInterface::getCheckpoints(SocketPtr socket) {
 	if (onlineMode && socket) {
 
 		OnlineRequest req;
@@ -199,17 +194,15 @@ const std::vector<Checkpoint>& LobbyInterface::getCheckpoints(SocketPtr socket) 
 		std::vector<Checkpoint> ans;
 
 		sf::Socket::Status status = sendAndReceive(req, pack_ans, socket);
-		if (status != sf::Socket::Done) {
-			throw std::exception("Couldn't retrieve Checkpoints");
+		if (status == sf::Socket::Done) {
+			this->checkpoints = ans;
+			return ans;
 		}
-		return ans;
 	}
-	else {
-		return Lobby::getCheckpoints();
-	}
+	return Lobby::getCheckpoints();
 }
 
-const std::vector<LobbyInterface::NPCPtr>& LobbyInterface::getNPCs(SocketPtr socket) const {
+const std::vector<LobbyInterface::NPCPtr>& LobbyInterface::getNPCs(SocketPtr socket) {
 	if (onlineMode && socket) {
 
 		OnlineRequest req;
@@ -219,16 +212,15 @@ const std::vector<LobbyInterface::NPCPtr>& LobbyInterface::getNPCs(SocketPtr soc
 		std::vector<NPCPtr> ans;
 
 		sf::Socket::Status status = sendAndReceive(req, pack_ans, socket);
-		if (status != sf::Socket::Done) {
-			throw std::exception("Couldn't retrieve NPCs");
+		if (status == sf::Socket::Done) {
+			this->npcs = ans;
+			return ans;
 		}
-		return ans;
 	}
-	else {
-		return Lobby::getNPCs();
-	}
+	return Lobby::getNPCs();
 }
-const std::vector<LobbyInterface::CharPtr>& LobbyInterface::getCharacters(SocketPtr socket) const {
+
+const std::vector<LobbyInterface::CharPtr>& LobbyInterface::getCharacters(SocketPtr socket) {
 	if (onlineMode && socket) {
 
 		OnlineRequest req;
@@ -238,12 +230,27 @@ const std::vector<LobbyInterface::CharPtr>& LobbyInterface::getCharacters(Socket
 		std::vector<CharPtr> ans;
 
 		sf::Socket::Status status = sendAndReceive(req, pack_ans, socket);
-		if (status != sf::Socket::Done) {
-			throw std::exception("Couldn't retrieve NPCs");
+		if (status == sf::Socket::Done) {
+			this->characters = ans;
+			return ans;
 		}
-		return ans;
 	}
-	else {
-		return Lobby::getCharacters();
-	}
+	return Lobby::getCharacters();
+}
+
+LobbyInterface::State LobbyInterface::getState(SocketPtr socket) {
+	if (onlineMode && socket) {
+
+		OnlineRequest req;
+		req.type = OnlineRequest::GET_ST;
+
+		sf::Packet pack_ans;
+		State ans;
+
+		sf::Socket::Status status = sendAndReceive(req, pack_ans, socket);
+		if (status == sf::Socket::Done) {
+			this->state = ans;
+			return ans;
+		}
+	return Lobby::getState();
 }

@@ -7,7 +7,6 @@
 
 class GameClient
 {
-	enum class State { Countdown, Playing, FinishedRound, Paused, Editing, AcceptingPlayers, Full };
 protected:
 	bool onlineLobby = false;
 	std::shared_ptr<LobbyInterface> lobby;
@@ -36,7 +35,6 @@ protected:
 	std::shared_ptr<sf::TcpSocket> socketToServer;
 	bool cheatsEnabled = false;
 
-	State state;
 	sf::Time dT; // Time since last update
 
 
@@ -52,9 +50,6 @@ public:
 
 	void setFullScreen();
 	void offlineUpdate(sf::Time dT);
-
-	void setState(const State _state);
-	State getState() const;
 
 	void loopMenu();
 	void loop();

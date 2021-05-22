@@ -17,7 +17,8 @@ struct OnlineRequest
 		GET_LVL,
 		GET_CHP,
 		GET_NPC,
-		GET_CHAR
+		GET_CHAR,
+		GET_ST
 	};
 
 	enum InputEventKey {

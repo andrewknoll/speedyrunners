@@ -50,4 +50,8 @@ public:
 
 	void setSuddenDeath(bool sd);
 	void update(sf::Time dT);
+
+	Camera(Camera const&) = default;
+
+	Camera& operator=(Camera other);
 };

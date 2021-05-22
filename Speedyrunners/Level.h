@@ -96,5 +96,9 @@ public:
 	void update(const sf::Time& dT);
 	//void draw(sf::RenderWindow& window, const Camera& cam) const;
 
+
+	Level(Level const&) = default;
+
+	Level& operator=(Level other);
 };
 

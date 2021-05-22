@@ -98,3 +98,14 @@ void Countdown::reset() {
 	updateSprite();
 	period = sf::seconds(1);
 }
+
+Countdown & Countdown::operator=(Countdown other) {
+	std::swap(currentSecond, other.currentSecond);
+	std::swap(period, other.period);
+	std::swap(audioPlayer, other.audioPlayer);
+	std::swap(bg, other.bg);
+	std::swap(bgSprite, other.bgSprite);
+	std::swap(text, other.text);
+	std::swap(textSprite, other.textSprite);
+	return *this;
+}

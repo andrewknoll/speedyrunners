@@ -115,7 +115,6 @@ protected:
 	void defaultInit(int N_PLAYERS, const Settings& settings);
 	void defaultInit(const std::vector<glb::characterIndex>& _players, const std::vector<glb::characterIndex>& _npcs);
 	void setState(const State _state);
-	State getState() const;
 	
 	// devuelve el indice del character en 1a pos
 	int getFirstCharacterIdx() const;
@@ -163,6 +162,8 @@ protected:
 	std::vector<Checkpoint> getCheckpoints() const;
 	std::vector<NPCPtr> getNPCs() const;
 	const std::vector<CharPtr>& getCharacters() const;
+
+	State getState() const;
 
 	friend class LobbyInterface;
 };

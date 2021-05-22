@@ -375,3 +375,17 @@ void Level::update(const sf::Time& dT)
 	for (auto& b : boostBoxes)	 b.update(dT); // animations
 	for (auto& b : boxObstacles) b.update(dT, collidableTiles); // animations
 }
+
+Level & Level::operator=(Level other) {
+	std::swap(background, other.background);
+	std::swap(collidableTiles, other.collidableTiles);
+	std::swap(decorationTiles, other.decorationTiles);
+	std::swap(initialPosition, other.initialPosition);
+	std::swap(backgroundPath, other.backgroundPath);
+	std::swap(audioPlayer, other.audioPlayer);
+	std::swap(checkpoints, other.checkpoints);
+	std::swap(boostBoxes, other.boostBoxes);
+	std::swap(itemPickups, other.itemPickups);
+	std::swap(boxObstacles, other.boxObstacles);
+	return *this;
+}

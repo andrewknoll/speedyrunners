@@ -46,7 +46,7 @@ void GameClient::setFullScreen() {
 void GameClient::offlineUpdate(sf::Time dT) {
 	sf::Event event;
 	int target;
-	while (window.pollEvent(event))
+	if (window.pollEvent(event))
 	{
 #ifdef USE_IMGUI
 		ImGui::SFML::ProcessEvent(event);
@@ -72,10 +72,10 @@ void GameClient::offlineUpdate(sf::Time dT) {
 		}
 		if (cheatsEnabled) {
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::F1)) {
-				state = State::Playing;
+				lobby->requestSetState(LobbyInterface::State::Playing);
 			}
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::F2)) {
-				state = State::Editing;
+				lobby->requestSetState(LobbyInterface::State::Editing);
 				addingCheckpoint = false;
 				testingParticles = false;
 				lobby->requestClearParticles();
@@ -85,14 +85,20 @@ void GameClient::offlineUpdate(sf::Time dT) {
 			}
 		}
 
-
-		if (state == State::Editing) { // Editing state
+		LobbyInterface::State s = lobby->getState(socketToServer);
+		if (s == LobbyInterface::State::Playing) { // Editing state
 			processEditingInputs(event);
-		if (state == State::Editing && testingParticles && dT.asSeconds() < 0.1)
+		if (s == LobbyInterface::State::Editing && testingParticles && dT.asSeconds() < 0.1)
 			for (auto& ps : lobby->getParticleSystems()) ps.update(dT); // update particles
 		} // End of editing state
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::F10)) { // Change to fullscreen (change back to window not implemented)
 			setFullScreen();
+		}
+		
+		if (s == LobbyInterface::State::Playing) {
+			auto c = lobby->getCharacters(socketToServer);
+			ui.setCharacters(c);
+			ui.updatePoints();
 		}
 
 	}
@@ -112,7 +118,7 @@ void GameClient::loopMenu()
 	}
 	menu.setMainMenu();
 	menu.loop(); // , this);
-	std::cout << "State after menu: " << (int)state << "\n";
+	//std::cout << "State after menu: " << (int)state << "\n";
 	//state = (LobbyInterface::State)menu.getGameState();
 	//characters = menu.getCharacters
 }
@@ -127,6 +133,7 @@ void GameClient::loop()
 		if (!src.musicPlayer.isPlaying(MusicPlayer::MusicType::REGULAR)) {
 			src.musicPlayer.playMusicTrack(MusicPlayer::MusicType::REGULAR);
 		}
+		
 		offlineUpdate(dT);
 		draw(dT);
 	}
@@ -143,7 +150,7 @@ void GameClient::loop()
 
 
 void GameClient::processMouseEditing() {
-	if (state == State::Editing && sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+	if (lobby->getState(socketToServer) == LobbyInterface::State::Editing && sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
 		if (!addingCheckpoint && !testingParticles)
 			lobby->setLevelTile(utils::clampMouseCoord(window), selectedTile);
 		else if (!addingCheckpoint) {
@@ -252,20 +259,8 @@ void GameClient::processEditingInputs(const sf::Event& event) {
 	}
 
 	// Debug player positions (P to show):
-	printCharacterPositions(event);
+	//printCharacterPositions(event);
 }
-
-
-void GameClient::setState(const State _state)
-{
-	state = _state;
-}
-
-
-GameClient::State GameClient::getState() const {
-	return state;
-}
-
 
 void GameClient::printCharacterPositions(const sf::Event& e) const {
 
@@ -289,7 +284,9 @@ void GameClient::draw(sf::Time dT)
 		window.draw(npc->debugCurrentPos());
 	}*/
 
-	if(state == State::Editing) {
+	LobbyInterface::State s = lobby->getState(socketToServer);
+
+	if(s == LobbyInterface::State::Editing) {
 		// sf::Mouse::getPosition() - window.getPosition()
 		// Visualizar checkpoints:
 		for (auto cp : lobby->getCheckpoints(socketToServer)) {
@@ -330,19 +327,19 @@ void GameClient::draw(sf::Time dT)
 	}
 
 	//Sudden death screen
-	if (state != State::Editing) {
+	if (s != LobbyInterface::State::Editing) {
 		window.setView(window.getDefaultView());
 		window.draw(cam);
 	}
 
-	if (state == State::FinishedRound) {
+	if (s == LobbyInterface::State::FinishedRound) {
 		auto rvPointer = lobby->getRV(socketToServer);
 		if (rvPointer != nullptr) {
 			rvPointer->setWindow(window);
 			rvPointer->draw(window);
 		}
 	}
-	else if (state == State::Countdown) {
+	else if (s == LobbyInterface::State::Countdown) {
 		lobby->getCountdown(socketToServer).draw(window);
 		//animateCharacters();
 	}

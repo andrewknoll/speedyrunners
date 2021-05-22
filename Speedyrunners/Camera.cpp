@@ -160,3 +160,14 @@ void Camera::update(sf::Time dT) {
 		}
 	}
 }
+
+Camera & Camera::operator=(Camera other) {
+	std::swap(dragging, other.dragging);
+	std::swap(suddenDeath, other.suddenDeath);
+	std::swap(increasingRedness, other.increasingRedness);
+	std::swap(viewportShape, other.viewportShape);
+	std::swap(redValue, other.redValue);
+	std::swap(objectivePos, other.objectivePos);
+	std::swap(objectiveSize, other.objectiveSize);
+	return *this;
+}

@@ -50,5 +50,9 @@ public:
 
 	void reset();
 
+	Countdown(Countdown const&) = default;
+
+	Countdown& operator=(Countdown other);
+
 };
 
