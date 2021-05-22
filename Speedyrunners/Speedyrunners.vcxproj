@@ -284,6 +284,7 @@
     <ClCompile Include="GoldenHook.cpp" />
     <ClCompile Include="IceRay.cpp" />
     <ClCompile Include="LocalPlayer.cpp" />
+    <ClCompile Include="mainClient.cpp" />
     <ClCompile Include="MetaTile.cpp" />
     <ClCompile Include="OnlinePlayer.cpp" />
     <ClCompile Include="Particles.cpp" />
@@ -317,7 +318,7 @@
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="Lobby.cpp" />
     <ClCompile Include="Level.cpp" />
-    <ClCompile Include="main.cpp" />
+    <ClCompile Include="mainServer.cpp" />
     <ClCompile Include="TextElement.cpp" />
     <ClCompile Include="TileMap.cpp" />
     <ClCompile Include="Tiles.cpp" />

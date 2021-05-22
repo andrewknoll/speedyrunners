@@ -117,6 +117,30 @@ void GameClient::loopMenu()
 	//characters = menu.getCharacters
 }
 
+void GameClient::loop()
+{
+	sf::Clock clock = sf::Clock::Clock();
+	sf::Time currentTime, previousTime = clock.getElapsedTime();
+	float fps, showPeriod = 2;
+
+	while (window.isOpen()) {
+		if (!src.musicPlayer.isPlaying(MusicPlayer::MusicType::REGULAR)) {
+			src.musicPlayer.playMusicTrack(MusicPlayer::MusicType::REGULAR);
+		}
+		offlineUpdate(dT);
+		draw(dT);
+	}
+	currentTime = clock.getElapsedTime();
+	dT = (currentTime - previousTime);
+	fps = 1.0f / dT.asSeconds(); // the asSeconds returns a float
+	if ((showPeriod -= dT.asSeconds()) < 0) // Para que no este sacandolo todos los frames
+	{
+		showPeriod = 2; // cada 2 s
+		std::cout << "fps = " << floor(fps) << std::endl; // flooring it will make the frame rate a rounded number
+	}
+	previousTime = currentTime;
+}
+
 
 void GameClient::processMouseEditing() {
 	if (state == State::Editing && sf::Mouse::isButtonPressed(sf::Mouse::Left)) {

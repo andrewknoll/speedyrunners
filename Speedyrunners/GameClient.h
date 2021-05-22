@@ -37,6 +37,7 @@ protected:
 	bool cheatsEnabled = false;
 
 	State state;
+	sf::Time dT; // Time since last update
 
 
 	bool testingParticles = false; // change with numpad7 in editingmode
@@ -56,6 +57,7 @@ public:
 	State getState() const;
 
 	void loopMenu();
+	void loop();
 
 	void processMouseEditing();
 	void processEditingInputs(const sf::Event& event);

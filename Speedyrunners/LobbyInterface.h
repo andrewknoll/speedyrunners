@@ -25,12 +25,11 @@ class LobbyInterface : public Lobby
 	//GameServer will have access to PROTECTED and PUBLIC elements of Lobby
 	friend class GameServer;
 private:
-	template<class T>
-	sf::Socket::Status sendAndReceive(const OnlineRequest& req, T& ans, SocketPtr socket) const;
+	sf::Socket::Status sendAndReceive(const OnlineRequest& req, sf::Packet& ans, SocketPtr socket) const;
 public:
 	std::vector<particles::PSystem>& getParticleSystems(SocketPtr = nullptr) const;
 	const std::list<ItemPtr>& getItems(SocketPtr = nullptr) const;
-	const std::shared_ptr<RoundVictory>& getRV(SocketPtr = nullptr) const;
+	const std::shared_ptr<RoundVictory> getRV(SocketPtr = nullptr) const;
 	const Countdown& getCountdown(SocketPtr = nullptr) const;
 	Camera getCamera(SocketPtr = nullptr) const;
 	Level getLevel(SocketPtr = nullptr) const;

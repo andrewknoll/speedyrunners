@@ -102,9 +102,6 @@
     <ClCompile Include="MusicPlayer.cpp">
       <Filter>Audio</Filter>
     </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>Game</Filter>
-    </ClCompile>
     <ClCompile Include="Countdown.cpp">
       <Filter>UI\InGame</Filter>
     </ClCompile>
@@ -189,6 +186,12 @@
       <Filter>Characters</Filter>
     </ClCompile>
     <ClCompile Include="LobbyInterface.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="mainServer.cpp">
+      <Filter>Game</Filter>
+    </ClCompile>
+    <ClCompile Include="mainClient.cpp">
       <Filter>Game</Filter>
     </ClCompile>
   </ItemGroup>
