@@ -92,7 +92,9 @@ int Menu::getGameState() const
 }
 
 void Menu::addTopLeftSign(const std::string& path) {
-	backgrounds.emplace_back(path, *window, sf::FloatRect(0, 0, 0.33, 0.33));
+	Background exitSign(path);
+	exitSign.load(*window, sf::FloatRect(0, 0, 0.33, 0.33));
+	backgrounds.emplace_back(exitSign);
 	//backgrounds.back().fixProportions();
 }
 
@@ -128,7 +130,9 @@ void Menu::setCharacterSelect() {
 	clear();
 
 	// background:
-	backgrounds.emplace_back(menuPath + "SpeedRunners/Menu_mid_City_B.png", *window, sf::FloatRect(0, 0, 1, 1));
+	Background mid_city(menuPath + "SpeedRunners/Menu_mid_City_B.png");
+	mid_city.load(*window, sf::FloatRect(0, 0, 1, 1));
+	backgrounds.emplace_back(mid_city);
 	backgrounds.back().setTextureCoords(sf::FloatRect(0.01, 0, 0.99, 0.95)); // Solo se muestra la mitad superior de la textura
 	
 
@@ -138,7 +142,9 @@ void Menu::setCharacterSelect() {
 	addTopLeftSign(menuPath + "SpeedRunners/Menu_lobby.png");
 	
 	// character board:
-	backgrounds.emplace_back(menuPath + "SpeedRunners/Menu_characterBoard.png", *window, sf::FloatRect(0.33, 0.09, 0.66, 0.9));
+	Background char_board(menuPath + "SpeedRunners/Menu_characterBoard.png");
+	mid_city.load(*window, sf::FloatRect(0.33, 0.09, 0.66, 0.9));
+	backgrounds.emplace_back(char_board);
 	//backgrounds.back().fixProportions();
 	
 	// Ready

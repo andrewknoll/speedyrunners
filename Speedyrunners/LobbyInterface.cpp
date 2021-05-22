@@ -1,7 +1,7 @@
 #include "LobbyInterface.h"
 #include "SFML/Network.hpp"
 
-template<class T>
+template<typename T>
 sf::Socket::Status LobbyInterface::sendAndReceive(const OnlineRequest& req, T& ans, SocketPtr socket) const
 {
 	sf::Socket::Status status;
