@@ -116,9 +116,9 @@ namespace glb
 	const float cosine45 = 0.70710678118654752440f;
 
 	// Paths:
-	const std::string CONTENT_PATH = "../assets/Content/";
-	const std::string LEVELS_PATH = "../assets/levels/";
-	const std::string SETTINGS_PATH = "../assets/settings.csv";
+	const std::string CONTENT_PATH = "./assets/Content/";
+	const std::string LEVELS_PATH = "./assets/levels/";
+	const std::string SETTINGS_PATH = "./assets/settings.csv";
 
 	const std::string PASSPORT_PATH = CONTENT_PATH + "UI/Ingame/Passports/";
 

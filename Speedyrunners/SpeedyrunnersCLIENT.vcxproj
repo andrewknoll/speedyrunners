@@ -132,7 +132,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug  (v141)|x64'">
     <ReferencePath>$(VC_ReferencesPath_x64);</ReferencePath>
     <LibraryPath>C:\Users\Andrés\Desktop\Videojuegos\Speedyrunners\bin;$(ProjectPath)/bin;$(LibraryPath);D:\Universidad\cuarto-2\videojuegos\videojuegos\Speedyrunners\imgui\imgui-1.82\examples\libs\glfw\lib-vc2010-32</LibraryPath>
-    <OutDir>$(ProjectDir)\bin</OutDir>
+    <OutDir>$(ProjectDir)\bin\Client</OutDir>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -182,6 +182,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>D:\SFML-2.5.1\include;D:\Software\SFML-2.5.1\include;D:\Universidad\cuarto-2\videojuegos\videojuegos\Speedyrunners\imgui\imgui-1.82;D:\Universidad\cuarto-2\videojuegos\videojuegos\Speedyrunners\imgui\imgui-sfml-2.3;D:\Universidad\cuarto-2\videojuegos\videojuegos\Speedyrunners\imgui\imgui-1.82\examples\libs\glfw</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalOptions>/FS</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -198,6 +199,7 @@
       <AdditionalIncludeDirectories>D:\SFML-2.5.1\include;D:\Software\SFML-2.5.1\include;D:\Universidad\cuarto-2\videojuegos\videojuegos\Speedyrunners\imgui\imgui-1.82;D:\Universidad\cuarto-2\videojuegos\videojuegos\Speedyrunners\imgui\imgui-sfml-2.3;D:\Universidad\cuarto-2\videojuegos\videojuegos\Speedyrunners\imgui\imgui-1.82\examples\libs\glfw</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <ExceptionHandling>Async</ExceptionHandling>
+      <AdditionalOptions>/FS</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -251,6 +253,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>D:\SFML-2.5.1\include;D:\Software\SFML-2.5.1\include;D:\Universidad\cuarto-2\videojuegos\videojuegos\Speedyrunners\imgui\imgui-1.82;D:\Universidad\cuarto-2\videojuegos\videojuegos\Speedyrunners\imgui\imgui-sfml-2.3;D:\Universidad\cuarto-2\videojuegos\videojuegos\Speedyrunners\imgui\imgui-1.82\examples\libs\glfw</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalOptions>/FS</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -270,6 +273,7 @@
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>D:\SFML-2.5.1\include;D:\Software\SFML-2.5.1\include;D:\Universidad\cuarto-2\videojuegos\videojuegos\Speedyrunners\imgui\imgui-1.82;D:\Universidad\cuarto-2\videojuegos\videojuegos\Speedyrunners\imgui\imgui-sfml-2.3;D:\Universidad\cuarto-2\videojuegos\videojuegos\Speedyrunners\imgui\imgui-1.82\examples\libs\glfw</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalOptions>/FS</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

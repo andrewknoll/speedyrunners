@@ -19,7 +19,7 @@ void rngTest() {
 int main() {
 	
 	GameServer game;
-	Resources& src = Resources::getInstance();
+	//Resources& src = Resources::getInstance();
 
 	game.loop();
 }

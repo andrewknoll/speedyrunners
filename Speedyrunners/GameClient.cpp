@@ -16,8 +16,17 @@ void GameClient::setUpWindow() {
 
 GameClient::GameClient() :
 	window(sf::VideoMode(1600, 900), "SpeedyRunners"),
-	src(Resources::getInstance())
+	src(Resources::getInstance()),
+	selectedTile(Tiles::Collidable::FLOOR),
+	cam(sf::FloatRect(0, 0, 1600, 900))
 {
+	setUpWindow();
+#ifndef  DISABLE_FULLSCREEN
+	setFullScreen();
+#else
+	settings.setResolution(sf::Vector2i(window.getSize().x, window.getSize().y));
+#endif
+	ui.setWindow(window);
 }
 
 
@@ -413,6 +422,7 @@ sf::Socket::Status GameClient::connectToServer(std::string ip)
 		auto status = socketToServer->receive(pack_ans);
 		pack_ans >> myID >> lobbyCode;
 		socketToServer->setBlocking(false);
+		lobby = std::make_shared<LobbyInterface>();
 		return status;
 		
 	}
@@ -424,6 +434,7 @@ void GameClient::disconnectFromServer() {
 		socketToServer->disconnect();
 	}
 	socketToServer = nullptr;
+	lobby = nullptr;
 }
 
 std::string GameClient::getLobbyCode()

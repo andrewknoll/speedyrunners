@@ -26,11 +26,11 @@ private:
 
 	//std::vector<sf::FloatRect> otherTexturesRect = std::vector<sf::FloatRect>(glb::NUMBER_OF_MISC_TEXTURES);
 
-	const std::string PATH_TO_ASSETS = "../assets/",
-		PATH_TO_PLAYER_SFX = "../assets/Content/Audio/Sfx/Player/",
-		PATH_TO_INGAME_UI_SFX = "../assets/Content/Audio/Sfx/UI/Ingame/",
-		PATH_TO_ITEMS_SFX = "../assets/Content/Audio/Sfx/Weapons/",
-		PATH_TO_MENU_SFX = "../assets/Content/Audio/Sfx/UI/Menu/";
+	const std::string PATH_TO_ASSETS = "./assets/",
+		PATH_TO_PLAYER_SFX = "./assets/Content/Audio/Sfx/Player/",
+		PATH_TO_INGAME_UI_SFX = "./assets/Content/Audio/Sfx/UI/Ingame/",
+		PATH_TO_ITEMS_SFX = "./assets/Content/Audio/Sfx/Weapons/",
+		PATH_TO_MENU_SFX = "./assets/Content/Audio/Sfx/UI/Menu/";
 	const std::string RESOURCES_CSV = "resources.csv";
 
 public:

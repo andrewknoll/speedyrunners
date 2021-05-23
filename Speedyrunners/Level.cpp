@@ -7,8 +7,8 @@
 #include "Resources.h"
 #include "AudioPlayer.h"
 
-// airport: "../assets/Content/tiles/tiles_airport.png"
-Level::Level() : Level("../assets/Content/tiles/tiles_black_editor.png", "../assets/Content/Backgrounds/ENV_Airport/sky_1280_720.png")
+// airport: "./assets/Content/tiles/tiles_airport.png"
+Level::Level() : Level("./assets/Content/tiles/tiles_black_editor.png", "./assets/Content/Backgrounds/ENV_Airport/sky_1280_720.png")
 {	
 }
 
@@ -97,9 +97,9 @@ void Level::save(const std::string& f_name) const
 {
 	std::cout << "Saving " << f_name << "\n";
 	std::string version = "0";
-	std::ofstream file("../assets/levels/" + f_name);
+	std::ofstream file("./assets/levels/" + f_name);
 	if (!(file << version << std::endl)) { // formato, #MAX, # nombre fichero
-		std::cerr << "File <../assets/levels/" + f_name + "> inaccesible\n";
+		std::cerr << "File <./assets/levels/" + f_name + "> inaccesible\n";
 		//exit(1);
 	}
 	// Save background:
@@ -133,14 +133,14 @@ void Level::save(const std::string& f_name) const
 	// Save tilemap:
 	file << collidableTiles << std::endl;
 
-	std::ifstream lvls("../assets/levels/levels.csv");
+	std::ifstream lvls("./assets/levels/levels.csv");
 	std::set<std::string> lvlsSet;
 	std::string line;
 	while (std::getline(lvls, line)) lvlsSet.insert(line);
 	std::string name = f_name.substr(0, f_name.size() - 4);
 	//std::cout << name << "\n";
 	if (lvlsSet.find(name) == lvlsSet.end()) { // Doesnt contain it already
-		std::ofstream lvlsList("../assets/levels/levels.csv", std::ios_base::app);
+		std::ofstream lvlsList("./assets/levels/levels.csv", std::ios_base::app);
 		lvlsList << name << "\n";
 	}
 	
@@ -153,9 +153,9 @@ void Level::saveDuplicateVertical(const std::string& f_name) const
 {
 	std::cout << "Saving " << f_name << "\n";
 	std::string version = "0";
-	std::ofstream file("../assets/levels/" + f_name);
+	std::ofstream file("./assets/levels/" + f_name);
 	if (!(file << version << std::endl)) { // formato, #MAX, # nombre fichero
-		std::cerr << "File <../assets/levels/" + f_name + "> inaccesible\n";
+		std::cerr << "File <./assets/levels/" + f_name + "> inaccesible\n";
 		//exit(1);
 	}
 	// Save background:
@@ -180,13 +180,13 @@ void Level::load(const std::string& f_name)
 	boxObstacles.clear();
 	std::cout << "Loading " << f_name << "\n";
 
-	std::ifstream file("../assets/levels/" + f_name);
+	std::ifstream file("./assets/levels/" + f_name);
 	int format;
 	std::string s;
 	//if (!(file >> format)) {
 	if (!(file >> s)) {
 
-		std::cerr << "File <../assets/levels/" + f_name + "> inaccesible " << s << "\n";
+		std::cerr << "File <./assets/levels/" + f_name + "> inaccesible " << s << "\n";
 		exit(1);
 	}
 	else {

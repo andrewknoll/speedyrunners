@@ -132,7 +132,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug  (v141)|x64'">
     <ReferencePath>$(VC_ReferencesPath_x64);</ReferencePath>
     <LibraryPath>C:\Users\Andrés\Desktop\Videojuegos\Speedyrunners\bin;$(ProjectPath)/bin;$(LibraryPath);D:\Universidad\cuarto-2\videojuegos\videojuegos\Speedyrunners\imgui\imgui-1.82\examples\libs\glfw\lib-vc2010-32</LibraryPath>
-    <OutDir>$(ProjectDir)\bin</OutDir>
+    <OutDir>$(ProjectDir)\bin\Server</OutDir>
     <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
