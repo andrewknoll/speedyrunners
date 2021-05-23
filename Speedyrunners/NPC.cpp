@@ -889,9 +889,9 @@ void NPC::update(const sf::Time dT) { // Tries to get from current to next
 		return;
 	}
 	if (me->getCurrentItem() != glb::item::NONE) {
-		int r = rng::defaultGen.rand(0, 10);
-		if (r > 8 || me->getDToCheckpoint() > USE_ITEM_THRESHOLD) {
-			if (r > 6) {
+		int r = rng::defaultGen.rand01();
+		if (r > 0.8 || me->getDToCheckpoint() > USE_ITEM_THRESHOLD) {
+			if (r > 0.6) {
 				useItem = true;
 			}
 		}
