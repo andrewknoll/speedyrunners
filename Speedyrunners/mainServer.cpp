@@ -21,5 +21,7 @@ int main() {
 	GameServer game;
 	//Resources& src = Resources::getInstance();
 
-	game.loop();
+	while (true) {
+		game.loop();
+	}
 }
