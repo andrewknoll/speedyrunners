@@ -880,6 +880,7 @@ void Game::draw(sf::Time dT)
 				window.draw(*c);
 			}
 		}*/
+#ifdef DEBUG_PATH
 		for (auto npc : npcs) {
 			for (auto l : npc->debugExpanded()) {
 				window.draw(l);
@@ -888,6 +889,7 @@ void Game::draw(sf::Time dT)
 				window.draw(l);
 			}
 		}
+#endif
 		// Selected tile
 		if (!addingCheckpoint && !testingParticles)
 			lvl.drawTile(window, sf::RenderStates(), utils::clampMouseCoord(window), selectedTile);
