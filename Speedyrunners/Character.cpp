@@ -198,7 +198,7 @@ void Character::updateVel(const float& dtSec) {
 		if (!isStunned && !isFrozen && !tumble && isGrounded && isRunning && !usingHook) {
 			if (((vel.x >= 0) ^ (acc.x >= 0)) && abs(vel.x) > 20.0f) {
 				emitBrakeParticles();
-				setAnimation(SkidAnim, true);
+				setAnimation(SkidAnim);
 				currentAnimation->update_orientation(!facingRight);
 			}
 			else {
@@ -330,7 +330,6 @@ void Character::updateHook(sf::Time dT, const TileMap& tiles) {
 }
 
 void Character::update(const sf::Time& dT, const Level& lvl)
-
 {
 	auto pIni = getPosition();
 	updateStunned(dT);
@@ -861,7 +860,7 @@ void Character::setFriction() {
 		if (isGrounded) {
 			if (std::abs(vel.x) > eps) {
 				emitBrakeParticles();
-				setAnimation(SkidAnim, true);
+				setAnimation(SkidAnim);
 				currentAnimation->update_orientation(!facingRight);
 			}
 			if (sliding) friction = physics::FLOOR_FRICTION * 0.5;
