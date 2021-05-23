@@ -203,10 +203,13 @@ void Menu::setWorkshopMenu() {
 		"Mouse wheel: change selected tile",
 		"C: checkpoint mode",
 		"+,-, change checkpoint size",
+		"[1,2,3]: add [BoostBox,Item Pickup,Obstacle]", 
+		"CTRL+L: Load last save",
+		"CTRL+S: Save",
+		"",
 		"Bonus:",
 		"Numpad7: particle system test",
-		"(Numpad8 to change particles)",
-		"CTRL+S: Save"
+		"(Numpad8 to change particles)"
 	};
 	pos = sf::Vector2f(0.6, 0.33);
 	size = 0.04;
