@@ -60,7 +60,7 @@ void Countdown::playSecondSFX(const int second) {
 void Countdown::update(const sf::Time& dT)
 {
 	//SOUND
-	if (period == sf::seconds(1) && currentSecond >= 3) {// first time
+	if (period == sf::seconds(0.75) && currentSecond >= 3) {// first time
 		audioPlayer.play(AudioPlayer::Effect::COUNTDOWN_TIMER_BUILDUP); 
 		playSecondSFX(currentSecond);
 	}
@@ -70,7 +70,7 @@ void Countdown::update(const sf::Time& dT)
 		currentSecond--;
 		playSecondSFX(currentSecond);
 		updateSprite();
-		period = sf::seconds(1);
+		period = sf::seconds(0.75);
 	}
 }
 
@@ -96,5 +96,5 @@ void Countdown::draw(sf::RenderWindow& window) const
 void Countdown::reset() {
 	currentSecond = 3;
 	updateSprite();
-	period = sf::seconds(1);
+	period = sf::seconds(0.75);
 }

@@ -74,12 +74,15 @@ void Game::clear() {
 	}
 	threadPool.clear();
 	npcs.clear();
+	characters.clear();
+	players.clear();
 
-	countdown.end();
+	rv = nullptr;
+	countdown.reset();
 	cam.setSuddenDeath(false);
 
-
-	threadPool.resize(8);
+	ui.update();
+	threadPool.resize(12);
 }
 
 void Game::defaultInit(const std::vector<glb::characterIndex>& _players, const std::vector<glb::characterIndex>& _npcs) {
@@ -347,7 +350,8 @@ void Game::loopMenu()
 	Menu menu(window, settings, *this);
 	if (!src.musicPlayer.isPlaying(MusicPlayer::MusicType::MENU)) {
 		src.musicPlayer.stopAll();
-		src.musicPlayer.playRandomTrack(MusicPlayer::MusicType::MENU);
+		src.musicPlayer.selectRandomTrack(MusicPlayer::MusicType::MENU);
+		src.musicPlayer.playSelected();
 	}
 	menu.setMainMenu();
 	menu.loop(); // , this);
@@ -587,14 +591,23 @@ void Game::update()
 	if (state != State::Editing) {
 		cam.update(dT);
 	}
+	else if (!src.musicPlayer.isPlaying(MusicPlayer::MusicType::EDIT_MODE)) {
+		src.musicPlayer.stopAll();
+		src.musicPlayer.selectRandomTrack(MusicPlayer::MusicType::EDIT_MODE);
+		src.musicPlayer.playSelected();
+	}
 	if (state == State::Playing && dT.asSeconds() < 0.1) {
-		if (!suddenDeath && !src.musicPlayer.isPlaying(MusicPlayer::MusicType::REGULAR)) {
+		if (!suddenDeath && !src.musicPlayer.isPlaying(MusicPlayer::MusicType::REGULAR)
+			&& !src.musicPlayer.isPlaying(MusicPlayer::MusicType::REGULAR_WITH_PAUSE)) {
 			src.musicPlayer.stopAll();
-			src.musicPlayer.playRandomTrack(MusicPlayer::MusicType::REGULAR);
+			src.musicPlayer.selectRandomTrack(MusicPlayer::MusicType::REGULAR_WITH_PAUSE);
+			src.musicPlayer.playSelected();
+			std::cout << "CACA 2" << std::endl;
 		}
 		if (suddenDeath && !src.musicPlayer.isPlaying(MusicPlayer::MusicType::SUDDENDEATH)) {
 			src.musicPlayer.stopAll();
-			src.musicPlayer.playRandomTrack(MusicPlayer::MusicType::SUDDENDEATH);
+			src.musicPlayer.selectRandomTrack(MusicPlayer::MusicType::SUDDENDEATH);
+			src.musicPlayer.playSelected();
 		}
 		for (auto c : characters) {
 			if (c->isDead()) continue;
@@ -645,7 +658,15 @@ void Game::update()
 	else if (state == State::Editing && testingParticles && dT.asSeconds() < 0.1)
 		for (auto& ps : particleSystems) ps.update(dT); // update particles
 	else if (state == State::Countdown) {
-		src.musicPlayer.stopAll();
+		if (!src.musicPlayer.hasSelected() && !src.musicPlayer.isPlaying(MusicPlayer::MusicType::REGULAR)) {
+			src.musicPlayer.stopAll();
+			if(src.musicPlayer.selectRandomTrack(std::vector<MusicPlayer::MusicType>{
+				MusicPlayer::MusicType::REGULAR, MusicPlayer::MusicType::REGULAR_WITH_PAUSE}
+			) != MusicPlayer::MusicType::REGULAR_WITH_PAUSE) {
+				src.musicPlayer.playSelected();
+				std::cout << "CACA 1" << std::endl;
+			}
+		}
 		cam.follow(characters);
 		cam.update(dT);
 		updateNPCs(false);
@@ -677,6 +698,7 @@ void Game::update()
 			rv->update(dT);
 			if (rv->ended()) {
 				if (gameWon) {
+					state = State::MainMenu;
 					loopMenu();
 				}
 				state = State::Countdown;

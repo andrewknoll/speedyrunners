@@ -47,8 +47,34 @@ void MusicPlayer::playMusicTrack(MusicType t, int variant) {
 	playMusicTrack((int)t, variant);
 }
 
-void MusicPlayer::playRandomTrack(MusicType t) {
-	musicSampler[(int)t].getSample()->play();
+MusicPlayer::MusicType MusicPlayer::selectRandomTrack(MusicType t){
+	selected = musicSampler[(int)t].getSample();
+	return t;
+}
+
+MusicPlayer::MusicType MusicPlayer::selectRandomTrack(const std::vector<MusicType>& t) {
+	int n = -1;
+	for (const MusicType& i : t) {
+		n += tracks[(int)i].size();
+	}
+	int r = rng::defaultGen.rand(0, n);
+	for (const MusicType& i : t) {
+		if (r < tracks[(int)i].size()) {
+			selected = musicSampler[(int)i].getSample();
+			selectedValid = true;
+			return i;
+		}
+	}
+}
+
+void MusicPlayer::playSelected() {
+	stopAll();
+	selected->play();
+	selectedValid = false;
+}
+
+bool MusicPlayer::hasSelected() const {
+	return selectedValid;
 }
 
 void MusicPlayer::pauseAll() {

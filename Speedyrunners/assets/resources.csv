@@ -10,8 +10,17 @@ WS,3,Content/Characters/Falcon/win_variant00.png,Indexes/Characters/Falcon/win_a
 MS,0,Content/Sprites/CustomIceBeamStartup.png,Indexes/Sprites/CustomIceBeamStartup.json
 
 M,0,Content/Audio/Music/Track 03 - Menu.ogg
-M,1,Content/Audio/Music/Track 01 - Level.ogg
+M,1,Content/Audio/Music/PREMIX_Track01_Ingame.ogg
+M,1,Content/Audio/Music/PREMIX_Track03_Ingame.ogg
+M,1,Content/Audio/Music/Track 02 - Game.ogg
+M,1,Content/Audio/Music/Track04 - Game.ogg
+M,1,Content/Audio/Music/Track02 - Boss.ogg
+M,2,Content/Audio/Music/PREMIX_Track01_SD.ogg
 M,2,Content/Audio/Music/Track02 - SD.ogg
+M,2,Content/Audio/Music/PREMIX_Track03_SD.ogg
+M,2,Content/Audio/Music/Track04 - SD.ogg
+M,3,Content/Audio/Music/Track 01 - Level.ogg
+M,4,Content/Audio/Music/Track 05 - City.ogg
 
 # ------------------- Audio Sfx
 # Characters:
