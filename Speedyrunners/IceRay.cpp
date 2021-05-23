@@ -24,6 +24,7 @@ IceRay::IceRay(const Camera& cam, CharPtr user) :
 	source.setOrigin(o);
 	source = sourceAnim.get_first_frame();
 	ttl = beamParticles.getSettings().ttl;
+	displacement = sf::Vector2f((facingRight) ? 50 : -36, 0);
 
 	// Sound:
 	audioPlayer.play(AudioPlayer::Effect::ICE_BEAM_FULL);
@@ -56,7 +57,7 @@ int IceRay::update(sf::Time elapsed, const Level& lvl) {
 	else if(ttl > sf::Time::Zero){
 		if (!emitted) {
 			auto w = cam.viewRectangle().width;
-			beamParticles.emitLinear(sf::Vector2f(0, 0), facingRight? w : -w);
+			beamParticles.emitLinear(displacement, facingRight? w : -w);
 			emitted = true;
 		}
 		beamParticles.setScale(1.0f, 0.3f);

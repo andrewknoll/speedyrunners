@@ -17,6 +17,8 @@ private:
 	sf::Time countdown;
 	sf::Time ttl;
 
+	sf::Vector2f displacement;// of the particles
+
 	//particles::PSystem& particleSyst;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;

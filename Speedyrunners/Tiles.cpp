@@ -108,6 +108,7 @@ bool Tiles::hasPriority(const Collision& a, const Collision& b)
 	else if (!isRamp(a.tileType) && isRamp(b.tileType)) return false;
 	return a.distance > b.distance;
 }
+
 // Adapted from the SAT method in https://laptrinhx.com/custom-physics-engine-part-2-manifold-generation-716517698/
 std::optional<Tiles::Collision> Tiles::collision(const Tiles::Collidable tile, const sf::Vector2f& tilePos,
 	const sf::Vector2f& tileSize, const sf::FloatRect& hitbox, bool isGrounded)
