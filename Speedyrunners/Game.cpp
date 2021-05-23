@@ -95,7 +95,7 @@ void Game::defaultInit(const std::vector<glb::characterIndex>& _players, const s
 		character = std::make_shared<Character>(src.getSpriteSheet(c), c);
 		character->setPosition(spawnPosition);
 		//  player:
-		std::shared_ptr<Player> me = std::make_shared<Player>(getSettings(), i);
+		std::shared_ptr<Player> me = std::make_shared<Player>(getSettings(), i, cheatsEnabled);
 		me->setCharacter(character);
 		playerJoin(me);
 		character->setName("Player " + std::to_string((int)i));
@@ -175,14 +175,14 @@ void Game::defaultInit(int N_PLAYERS) {
 
 	int id = 0;
 	if (N_PLAYERS == 2) id = 1;
-	std::shared_ptr<Player> me = std::make_shared<Player>(getSettings(), id);
+	std::shared_ptr<Player> me = std::make_shared<Player>(getSettings(), id, cheatsEnabled);
 	me->setCharacter(speedyrunner);
 	playerJoin(me);
 	speedyrunner->setName("Player 1");
 	addCharacter(speedyrunner);
 
 	if (N_PLAYERS > 1) {
-		std::shared_ptr<Player> secondPlayer = std::make_shared<Player>(getSettings(), ++id);
+		std::shared_ptr<Player> secondPlayer = std::make_shared<Player>(getSettings(), ++id, cheatsEnabled);
 		secondPlayer->setCharacter(otro);
 		playerJoin(secondPlayer);
 		otro->setName("Player 2");
@@ -209,7 +209,7 @@ void Game::setState(const State _state)
 
 void Game::setUpWindow() {
 
-	window.setFramerateLimit(60); //60 FPS?
+	window.setFramerateLimit(120); //60 FPS?
 	window.setVerticalSyncEnabled(true);
 	//auto settings = window.getSettings();
 	//settings.antialiasingLevel = 2;

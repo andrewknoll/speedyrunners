@@ -95,8 +95,6 @@ std::optional<Tiles::Collision> Tiles::rampCollision(const Tiles::Ramp ramp, con
 		return Tiles::Collision{ downCenter, n / utils::length(n), -dist };
 	}
 	else {
-		// TODO: los otros 4 tipos de rampas
-
 		return {};
 	}
 }

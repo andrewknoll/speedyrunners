@@ -6,7 +6,7 @@
 #include "imgui-SFML.h"
 #endif // USE_IMGUI
 
-#define DEBUG_MOUSE_POS
+//#define DEBUG_MOUSE_POS
 
 Menu::Menu(sf::RenderWindow& _window, Settings& _settings, Game& _game) 
 	: window(&_window), settings(_settings), game(_game), 
@@ -254,8 +254,8 @@ void Menu::handleMainMenuClick(int i) {
 	{
 		std::cout << "Clicked practice\n";
 		std::vector<glb::characterIndex> players{ glb::characterIndex::SPEEDRUNNER };
-		game.defaultInit(players, std::vector<glb::characterIndex>());
 		game.enableCheats(false);
+		game.defaultInit(players, std::vector<glb::characterIndex>());
 		exitMenu = true;
 		break;
 	}
