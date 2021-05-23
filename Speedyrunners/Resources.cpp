@@ -117,6 +117,7 @@ Resources::Resources()
 	//std::cout << 
 
 	audioPlayer.loadSoundsFromBuffers(soundBuffers);
+	musicPlayer.generateSamplers();
 }
 
 Resources& Resources::getInstance() {

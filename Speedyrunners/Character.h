@@ -125,6 +125,9 @@ protected:
 	AudioPlayer &audioPlayer;
 	
 	sf::Vector2f lastSafePosition = sf::Vector2f();
+	unsigned int checkpointCounter = 0;
+	int lastSafeCheckpoint = -1;
+	int n_checkpoints = 1;
 
 	//Score
 	int score = 0;
@@ -167,6 +170,13 @@ public:
 	void setPosition(const sf::Vector2f pos);
 	void setPosition(float x, float y);
 	sf::Vector2f getLastSafePosition() const;
+
+	unsigned int getCheckpointCounter() const;
+	int getLastSafeCheckpoint() const;
+
+	void resetCheckpointInfo(int lsc, unsigned int cc);
+	void setLastSafeCheckpoint(int lsc);
+	void setNumberCheckpoints(int n);
 
 	sf::Sprite getSprite();
 	void tickAnimation(sf::Time dT);
