@@ -143,8 +143,10 @@ public:
 	bool getAndResetUseItem();
 
 	void die(); // resets states of path follower part
+#ifdef DEBUG_PATH
 	std::list<selbaward::Line> debugLines();
 	std::list<sf::RectangleShape> debugExpanded();
 	std::list<sf::RectangleShape> debugHook();
 	sf::RectangleShape debugCurrentPos();
+#endif
 };

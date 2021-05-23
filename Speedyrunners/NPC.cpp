@@ -1087,7 +1087,7 @@ bool NPC::getAndResetUseItem() {
 	useItem = false;
 	return a;
 }
-
+#ifdef DEBUG_PATH
 std::list<selbaward::Line> NPC::debugLines() {
 	std::list<selbaward::Line> lines = std::list<selbaward::Line>();
 	sf::Vector2u size = tm->getTileSizeWorld();
@@ -1170,3 +1170,4 @@ sf::RectangleShape NPC::debugCurrentPos() {
 	r.setFillColor(sf::Color::White);
 	return r;
 }
+#endif
