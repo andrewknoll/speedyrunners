@@ -3,6 +3,22 @@
 
 //#define DISABLE_MUSIC // DEBUG jeje
 
+MusicPlayer::MusicPlayer():
+	tracks(std::vector<std::vector<std::shared_ptr<sf::Music> > >(n_types)),
+	musicSampler(std::vector<rng::Sampler< std::shared_ptr<sf::Music> > >())
+{
+}
+
+void MusicPlayer::setUp() {
+	for (std::vector<std::shared_ptr<sf::Music> >& t : tracks) {
+		if (!t.empty()) musicSampler.emplace_back(t);
+		for (std::shared_ptr<sf::Music>& ptr : t) {
+			ptr->setVolume(volume);
+			ptr->setLoop(true);
+		}
+	}
+}
+
 void MusicPlayer::addTrack(std::string file, int t) {
 	std::shared_ptr<sf::Music> m = std::make_shared<sf::Music>();
 	m->openFromFile(file);
@@ -20,8 +36,6 @@ void MusicPlayer::playMusicTrack(int t, int variant) {
 		for (int j = 0; j < tracks[i].size(); j++) {
 			if (i != t || j != variant) tracks[i][j]->stop();
 			else {
-				tracks[i][j]->setVolume(volume);
-				tracks[i][j]->setLoop(true);
 				tracks[i][j]->play();
 			}
 		}
@@ -33,10 +47,22 @@ void MusicPlayer::playMusicTrack(MusicType t, int variant) {
 	playMusicTrack((int)t, variant);
 }
 
+void MusicPlayer::playRandomTrack(MusicType t) {
+	musicSampler[(int)t].getSample()->play();
+}
+
 void MusicPlayer::pauseAll() {
 	for (int i = 0; i < n_types; i++) {
 		for (int j = 0; j < tracks[i].size(); j++) {
 			tracks[i][j]->pause();
+		}
+	}
+}
+
+void MusicPlayer::stopAll() {
+	for (int i = 0; i < n_types; i++) {
+		for (int j = 0; j < tracks[i].size(); j++) {
+			tracks[i][j]->stop();
 		}
 	}
 }

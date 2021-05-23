@@ -57,6 +57,8 @@ protected:
 	Level lvl;
 	Resources& src;
 	sf::Vector2f respawnPosition;
+	unsigned int respawnCounter;
+	int respawnCheckpoint;
 
 
 	bool gameWon = false;

@@ -52,7 +52,7 @@ class NPC : public PlayerSlot
 
 	const float CLOSENESS_THRESHOLD = 1.0f;
 	const float FARNESS_THRESHOLD = 10.0f;
-	const float USE_ITEM_THRESHOLD = 40.0f;
+	const float USE_ITEM_THRESHOLD = 100.0f;
 
 	using CharPtr = std::shared_ptr<Character>;
 	using TilePriorityQueue = PriorityQueue<NodeData>;

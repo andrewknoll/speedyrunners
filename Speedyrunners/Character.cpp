@@ -50,6 +50,36 @@ sf::Vector2f Character::getLastSafePosition() const {
 	return lastSafePosition;
 }
 
+unsigned int Character::getCheckpointCounter() const{
+	return checkpointCounter;
+}
+
+int Character::getLastSafeCheckpoint() const {
+	return lastSafeCheckpoint;
+}
+
+void Character::resetCheckpointInfo(int lsc, unsigned int cc) {
+	lastSafeCheckpoint = lsc;
+	checkpointCounter = cc;
+}
+
+void Character::setLastSafeCheckpoint(int lsc) {
+	if (lastSafeCheckpoint != lsc) {
+		std::cout << lsc << checkpointCounter << std::endl;
+		if (lsc == (lastSafeCheckpoint + 1) % n_checkpoints) {
+			checkpointCounter++;
+		}
+		else if (lsc == (lastSafeCheckpoint - 1) % n_checkpoints) {
+			checkpointCounter--;
+		}		
+		lastSafeCheckpoint = lsc;
+	}
+}
+
+void Character::setNumberCheckpoints(int n) {
+	n_checkpoints = n;
+}
+
 bool Character::getGrounded() const {
 	return isGrounded;
 }

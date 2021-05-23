@@ -1,7 +1,7 @@
 #include "Player.h"
 
 
-#define WEIRD_CHEATS
+//#define WEIRD_CHEATS
 
 Player::Player(const Settings& settings, int id, bool cheats) : cheatsEnabled(cheats){
 	std::vector<sf::Keyboard::Key> controls;

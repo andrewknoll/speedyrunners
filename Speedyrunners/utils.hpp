@@ -6,6 +6,7 @@
 #include <list>
 
 #include "SFML/Graphics.hpp"
+#include "SFML/Audio.hpp"
 #include "Settings.h"
 //#include "TileMap.h"
 
@@ -68,6 +69,7 @@ namespace rng {
 
 	inline const Sampler bgSampler(glb::bgPaths); // devuelve el path a un background aleatorio
 
+	template class Sampler< std::shared_ptr<sf::Music>>;
 }
 
 

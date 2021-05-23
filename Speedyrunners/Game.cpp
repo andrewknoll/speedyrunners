@@ -50,6 +50,7 @@ Game::Game()
 
 void Game::clear() {
 	gameWon = false;
+	aliveCount = 0;
 	Resources::getInstance().getAudioPlayer().stopAll(); // stop all sfx
 	characters.clear();
 	players.clear();
@@ -94,6 +95,7 @@ void Game::defaultInit(const std::vector<glb::characterIndex>& _players, const s
 		// character:
 		character = std::make_shared<Character>(src.getSpriteSheet(c), c);
 		character->setPosition(spawnPosition);
+		character->setNumberCheckpoints(checkpoints.size());
 		//  player:
 		std::shared_ptr<Player> me = std::make_shared<Player>(getSettings(), i, cheatsEnabled);
 		me->setCharacter(character);
@@ -115,6 +117,7 @@ void Game::defaultInit(const std::vector<glb::characterIndex>& _players, const s
 		// char:
 		character = std::make_shared<Character>(src.getSpriteSheet(c), c);
 		character->setPosition(spawnPosition);
+		character->setNumberCheckpoints(checkpoints.size());
 		// NPC
 		std::shared_ptr<NPC> npc = std::make_shared<NPC>();
 		npc->setCharacter(character);
@@ -150,6 +153,7 @@ void Game::defaultInit(int N_PLAYERS) {
 
 	std::shared_ptr<Character> speedyrunner = std::make_shared<Character>(src.getSpriteSheet(0), glb::SPEEDRUNNER);
 	speedyrunner->setPosition(spawnPosition);
+	speedyrunner->setNumberCheckpoints(checkpoints.size());
 
 	bool canMoveSpawn = true;
 	for (auto t : lvl.getCollidableTiles().tilesToTheSide(speedyrunner->getHitBox(), false)) {
@@ -161,6 +165,7 @@ void Game::defaultInit(int N_PLAYERS) {
 
 	std::shared_ptr<Character> cosmonaut = std::make_shared<Character>(src.getSpriteSheet(1), glb::COSMONAUT);
 	cosmonaut->setPosition(spawnPosition);
+	cosmonaut->setNumberCheckpoints(checkpoints.size());
 
 	canMoveSpawn = true;
 	for (auto t : lvl.getCollidableTiles().tilesToTheSide(cosmonaut->getHitBox(), false)) {
@@ -172,6 +177,7 @@ void Game::defaultInit(int N_PLAYERS) {
 
 	std::shared_ptr<Character> otro = std::make_shared<Character>(src.getSpriteSheet(2), glb::UNIC);
 	otro->setPosition(spawnPosition);
+	otro->setNumberCheckpoints(checkpoints.size());
 
 	int id = 0;
 	if (N_PLAYERS == 2) id = 1;
@@ -220,40 +226,38 @@ void Game::setUpWindow() {
 // update the positions based on distance to the active checkpoint
 void Game::updatePositions()
 {
-	if (!checkpoints.empty()) {
-		Checkpoint cp = checkpoints[activeCheckpoint];
-		auto cpPos = cp.getPos();
+	for(int i = 0; i < checkpoints.size(); i++) {
 		float d;
-		for (auto c : characters) {
-			if (c->isDead()) {
+		for (int j = 0; j < characters.size(); j++) {
+			if (characters[j]->isDead()) {
 				d = INFINITY;
 			}
 			else {
-				d = utils::distance(c->getPosition(), cpPos);
+				d = utils::distance(characters[j]->getPosition(), checkpoints[i].getPos());
 			}
-
-			c->setDToCheckpoint(d);
-			// get distance d to active checkpoint
-			// if d < r: next checkpoint
-		}
-		// order characters and players based on distance
-		std::sort(characters.begin(), characters.end(),
-			[](auto & c1, auto & c2) {
-			return c1->getDToCheckpoint() < c2->getDToCheckpoint();
-		}
-		);
-		// Check if one has reached the checkpoint
-		if (!characters.empty() && characters[0]->getDToCheckpoint() <= cp.getRadius()) {
-			// Checkpoint reached, cycle to next
+			if (i == activeCheckpoint) {
+				characters[j]->setDToCheckpoint(d);
+			}
+			// Check if one has reached the checkpoint
+			if (!characters.empty() && d != INFINITY && utils::length(checkpoints[i].getPos() - characters[j]->getPosition()) <= checkpoints[i].getRadius()) {
+				// Checkpoint reached, cycle to next
 #ifdef VERBOSE_DEBUG
-			std::cout << "Checkpoint " << activeCheckpoint << " reached\n";
+				std::cout << "Checkpoint " << i << " by character " << j << "reached\n";
 #endif
-			activeCheckpoint = (activeCheckpoint + 1) % checkpoints.size();
-#ifdef VERBOSE_DEBUG
-			std::cout << "(new = " << activeCheckpoint << ")\n";
-#endif
+				characters[j]->setLastSafeCheckpoint(i);
+				if (i == activeCheckpoint && j == 0) {
+					activeCheckpoint = (activeCheckpoint + 1) % checkpoints.size();
+				}
+			}
 		}
 	}
+
+	// order characters and players based on distance
+	std::sort(characters.begin(), characters.end(),
+		[](const CharPtr& c1, const CharPtr& c2) {
+		return c1->getCheckpointCounter() >= c2->getCheckpointCounter() && c1->getDToCheckpoint() < c2->getDToCheckpoint();
+}
+	);
 }
 
 void Game::playerJoin(PlayerPtr newPlayer) {
@@ -315,9 +319,6 @@ void Game::loop()
 	sf::Time currentTime, previousTime = clock.getElapsedTime();
 
 	while (window.isOpen()) {
-		if (!src.musicPlayer.isPlaying(MusicPlayer::MusicType::REGULAR)) {
-			src.musicPlayer.playMusicTrack(MusicPlayer::MusicType::REGULAR);
-		}
 		if (state == State::FinishedRound) {
 			//slow motion
 			dT = dT * 0.5f;
@@ -345,7 +346,8 @@ void Game::loopMenu()
 	Resources::getInstance().getAudioPlayer().stopAll();
 	Menu menu(window, settings, *this);
 	if (!src.musicPlayer.isPlaying(MusicPlayer::MusicType::MENU)) {
-		src.musicPlayer.playMusicTrack(MusicPlayer::MusicType::MENU);
+		src.musicPlayer.stopAll();
+		src.musicPlayer.playRandomTrack(MusicPlayer::MusicType::MENU);
 	}
 	menu.setMainMenu();
 	menu.loop(); // , this);
@@ -434,28 +436,6 @@ void Game::updateNPCs(bool follow) {
 			if (follow && state == State::Playing) {
 				npcs[i]->update(dT);
 			}
-			/**
-			if (follow && threadPool[2 * i + 2].threadPtr == nullptr) {
-				threadPool[2 * i + 2].finished = false;
-				threadPool[2 * i + 2].threadPtr = std::make_unique<std::thread>([&, i]() {
-					while (running) {
-						if (npcs[i]->getCharacter()->isDead()) {
-							{ std::unique_lock<std::mutex> lck(restartMtx);
-							restartCv.wait(lck); }
-						}
-						if (running) {
-							if (npcs[i]->getPathFound(0) == 1) {
-								npcs[i]->followPath();
-							}
-							//else {
-							//	npcs[i]->plan();
-							//}
-						}
-					}
-					threadPool[2 * i + 2].finished = true;
-					finishCV.notify_one();
-				});
-			}*/
 		}
 	}
 }
@@ -526,6 +506,7 @@ void Game::update()
 		}
 		if (cheatsEnabled) {
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::F1)) {
+				cam.immediateFollow(characters);
 				state = State::Playing;
 			}
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::F2)) {
@@ -560,7 +541,7 @@ void Game::update()
 						auto rocket = std::make_shared<Rocket>(characters[i]->getPosition(), characters[target], characters[i]->isFacingRight());
 						
 						items.push_back(rocket);
-						if (!cheatsEnabled && p != nullptr) characters[i]->resetItem();
+						if (!cheatsEnabled || p == nullptr) characters[i]->resetItem();
 					} 
 					else if ((int)item >= glb::NUMBER_OF_ITEMS-glb::NUMBER_OF_UNOBTAINABLE_ITEMS 
 							&& (int)item < glb::NUMBER_OF_ITEMS) { // crates
@@ -579,12 +560,12 @@ void Game::update()
 					else if (item == glb::ICERAY) {
 						auto iceray = std::make_shared<IceRay>(cam, characters[i]);
 						items.push_back(iceray);
-						if (!cheatsEnabled && p != nullptr) characters[i]->resetItem();
+						if (!cheatsEnabled || p == nullptr) characters[i]->resetItem();
 					}
 					else if (item == glb::GOLDEN_HOOK) {
 						auto ghook = std::make_shared<GoldenHook>(characters[i], characters[target]);
 						items.push_back(ghook);
-						if (!cheatsEnabled && p != nullptr) characters[i]->resetItem();
+						if (!cheatsEnabled || p == nullptr) characters[i]->resetItem();
 					}
 					else {
 						std::cout << "unimplemented item " << item << "\n";
@@ -607,6 +588,14 @@ void Game::update()
 		cam.update(dT);
 	}
 	if (state == State::Playing && dT.asSeconds() < 0.1) {
+		if (!suddenDeath && !src.musicPlayer.isPlaying(MusicPlayer::MusicType::REGULAR)) {
+			src.musicPlayer.stopAll();
+			src.musicPlayer.playRandomTrack(MusicPlayer::MusicType::REGULAR);
+		}
+		if (suddenDeath && !src.musicPlayer.isPlaying(MusicPlayer::MusicType::SUDDENDEATH)) {
+			src.musicPlayer.stopAll();
+			src.musicPlayer.playRandomTrack(MusicPlayer::MusicType::SUDDENDEATH);
+		}
 		for (auto c : characters) {
 			if (c->isDead()) continue;
 			lvl.checkItemPickups(c); // check pickups, give the items to the character, etc
@@ -656,6 +645,7 @@ void Game::update()
 	else if (state == State::Editing && testingParticles && dT.asSeconds() < 0.1)
 		for (auto& ps : particleSystems) ps.update(dT); // update particles
 	else if (state == State::Countdown) {
+		src.musicPlayer.stopAll();
 		cam.follow(characters);
 		cam.update(dT);
 		updateNPCs(false);
@@ -665,6 +655,7 @@ void Game::update()
 		}
 	}
 	else if (state == State::FinishedRound) {
+		src.musicPlayer.stopAll();
 		cam.follow(characters);
 		cam.update(dT);
 		if (rv == nullptr) { // first time here, create round victory
@@ -673,6 +664,8 @@ void Game::update()
 					clearParticles();
 					rv = std::make_unique<RoundVictory>(window, characters[i]->getID(), characters[i]->getVariant(), characters[i]->getScore());
 					respawnPosition = characters[i]->getLastSafePosition();
+					respawnCounter = characters[i]->getCheckpointCounter();
+					respawnCheckpoint = characters[i]->getLastSafeCheckpoint();
 					rv->update(dT);
 				}
 				else {
@@ -693,6 +686,7 @@ void Game::update()
 				aliveCount = characters.size();
 				for (int i = 0; i < characters.size(); i++) {
 					characters[i]->respawn(respawnPosition);
+					characters[i]->resetCheckpointInfo(respawnCheckpoint, respawnCounter);
 					bool canMoveSpawn = true;
 					for (auto t : lvl.getCollidableTiles().tilesToTheSide(characters[i]->getHitBox(), false)) {
 						canMoveSpawn &= t == Tiles::AIR;

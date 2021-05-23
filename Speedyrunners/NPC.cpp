@@ -481,6 +481,7 @@ void NPC::giveUp() {
 	halt();
 	pathFound[0] = -1;
 	path[0].clear();
+	step = std::begin(path[0]);
 }
 
 float NPC::nodeDistance(const TileNode & n1, const TileNode & n2) const
@@ -514,6 +515,7 @@ void NPC::replan() {
 	if (pathFound[0] != -1) {
 		pathFound[0] = -1;
 		path[0].clear();
+		step = std::begin(path[0]);
 		elapsed = sf::Time::Zero;
 		currentGoalIdx = (currentGoalIdx + 1) % goals.size();
 		std::cout << "Completed... Now I want " << currentGoalIdx << std::endl;
@@ -529,9 +531,10 @@ void NPC::replan() {
 		}
 		
 		path[0].clear();
+		
 		// Stitch the two paths together and save path[1] to path[0]
 		if (stitched) {
-			std::copy(std::begin(path[1]), std::end(path[1]), std::begin(path[0]));
+			path[0] = path[1];
 			stitched = false;
 		}
 		else if(last != nullptr){
@@ -541,6 +544,7 @@ void NPC::replan() {
 
 		//Make sure we start planning the next part
 		pathFound[1] = 0;
+		step = std::begin(path[0]);
 	}
 }
 
@@ -552,13 +556,16 @@ void NPC::plan() {
 	TileNode goalNode;
 	float backHeur;
 
+	pathMtx[0].lock();
 	if (pathFound[0] == 1) {
+		pathMtx[1].lock();
 		if (pathFound[1] == 1) {
 			choiceMtx.lock();
 			if (!stitched) {
-				pathMtx[1].lock();
 				goal1 = std::make_shared<Goal>(goals[(currentGoalIdx + 1) % goals.size()]);
-				backHeur = heuristic(*path[0].back(), *goal1);
+				auto pback = path[0].back();
+				backHeur = heuristic(*pback, *goal1);
+				pathMtx[0].unlock();
 				path[2] = path[1];
 				//std::copy(path[1].begin(), path[1].end(), path[2].begin());
 				if (!path[1].empty()) {
@@ -571,17 +578,27 @@ void NPC::plan() {
 					}
 					path[1].erase(std::begin(path[1]), p);
 					stitched = true;
-					path[1].push_front(path[0].back());
+					path[1].push_front(pback);
 				}
-				pathMtx[1].unlock();
+				
 			}
+			else {
+				pathMtx[0].unlock();
+			}
+			pathMtx[1].unlock();
 			choiceMtx.unlock();
 			return;
 		}
 		else {
+			pathMtx[0].unlock();
+			pathMtx[1].unlock();
 			n_path = 1;
 		}
 	}
+	else {
+		pathMtx[0].unlock();
+	}
+	
 	//Check nobody else is planning this path
 	choiceMtx.lock();
 	if (planningPath[0]) {
@@ -871,12 +888,15 @@ void NPC::update(const sf::Time dT) { // Tries to get from current to next
 		tryingToFindAir = false;
 		return;
 	}
-	int r = rng::defaultGen.rand(0, 10);
-	if (r > 8 || me->getDToCheckpoint() > USE_ITEM_THRESHOLD) {
-		if (r > 3) {
-			useItem = true;
+	if (me->getCurrentItem() != glb::item::NONE) {
+		int r = rng::defaultGen.rand01();
+		if (r > 0.8 || me->getDToCheckpoint() > USE_ITEM_THRESHOLD) {
+			if (r > 0.6) {
+				useItem = true;
+			}
 		}
 	}
+	
 
 	tryToWallJump();
 	if (isPerformingWallJump) return;
