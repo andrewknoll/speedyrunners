@@ -12,7 +12,7 @@ private:
 	std::vector<rng::Sampler< std::shared_ptr<sf::Music> > > musicSampler;
 public:
 	MusicPlayer();
-	void generateSamplers();
+	void setUp();
 	void addTrack(std::string file, int t);
 	void addTrack(std::string file, MusicType t);
 

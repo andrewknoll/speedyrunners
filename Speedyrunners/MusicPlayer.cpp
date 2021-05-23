@@ -9,9 +9,13 @@ MusicPlayer::MusicPlayer():
 {
 }
 
-void MusicPlayer::generateSamplers() {
-	for (const std::vector<std::shared_ptr<sf::Music> >& t : tracks) {
+void MusicPlayer::setUp() {
+	for (std::vector<std::shared_ptr<sf::Music> >& t : tracks) {
 		if (!t.empty()) musicSampler.emplace_back(t);
+		for (std::shared_ptr<sf::Music>& ptr : t) {
+			ptr->setVolume(volume);
+			ptr->setLoop(true);
+		}
 	}
 }
 
@@ -32,8 +36,6 @@ void MusicPlayer::playMusicTrack(int t, int variant) {
 		for (int j = 0; j < tracks[i].size(); j++) {
 			if (i != t || j != variant) tracks[i][j]->stop();
 			else {
-				tracks[i][j]->setVolume(volume);
-				tracks[i][j]->setLoop(true);
 				tracks[i][j]->play();
 			}
 		}
