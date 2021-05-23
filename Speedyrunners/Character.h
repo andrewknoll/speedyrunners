@@ -13,7 +13,7 @@
 #include <variant>
 #include "Item.h"
 
-//#define DEBUG_HITBOX
+#define DEBUG_HITBOX
 
 class TileMap;
 class Level;

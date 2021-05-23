@@ -97,7 +97,7 @@ void Game::defaultInit(const std::vector<glb::characterIndex>& _players, const s
 		character->setPosition(spawnPosition);
 		character->setNumberCheckpoints(checkpoints.size());
 		//  player:
-		std::shared_ptr<Player> me = std::make_shared<Player>(getSettings(), i);
+		std::shared_ptr<Player> me = std::make_shared<Player>(getSettings(), i, cheatsEnabled);
 		me->setCharacter(character);
 		playerJoin(me);
 		character->setName("Player " + std::to_string((int)i));
@@ -181,14 +181,14 @@ void Game::defaultInit(int N_PLAYERS) {
 
 	int id = 0;
 	if (N_PLAYERS == 2) id = 1;
-	std::shared_ptr<Player> me = std::make_shared<Player>(getSettings(), id);
+	std::shared_ptr<Player> me = std::make_shared<Player>(getSettings(), id, cheatsEnabled);
 	me->setCharacter(speedyrunner);
 	playerJoin(me);
 	speedyrunner->setName("Player 1");
 	addCharacter(speedyrunner);
 
 	if (N_PLAYERS > 1) {
-		std::shared_ptr<Player> secondPlayer = std::make_shared<Player>(getSettings(), ++id);
+		std::shared_ptr<Player> secondPlayer = std::make_shared<Player>(getSettings(), ++id, cheatsEnabled);
 		secondPlayer->setCharacter(otro);
 		playerJoin(secondPlayer);
 		otro->setName("Player 2");

@@ -668,7 +668,7 @@ void Character::startJumping() {
 			if (!holdingJump) setAnimation(JumpAnim);
 			isGrounded = false;
 			//vel.y = std::min(vel.y-jumpingSpeed, -jumpingSpeed); // if going up, keeps momentum
-			vel.y = std::min(vel.y, -0.15f*jumpingSpeed);// -jumpingSpeed * 0.3; // TODO: vel.x en funcion de vel.y?
+			vel.y = std::min(vel.y, -0.15f*jumpingSpeed);
 			if (facingRight) vel.x = 1.4*jumpingSpeed;
 			else vel.x = -1.4*jumpingSpeed;
 			isAtWallJump = false;
