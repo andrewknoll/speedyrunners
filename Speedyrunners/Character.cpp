@@ -746,7 +746,8 @@ void Character::pullTowards(const sf::Vector2f& target, float pullSpeed)
 	auto dir = target - getPosition();
 	dir = dir / utils::length(dir); // normalize
 	vel = dir * pullSpeed;
-	setAnimation(AnimationIndex::SwingAnim);
+	if (!isGrounded) setAnimation(AnimationIndex::SwingAnim);
+	else setAnimation(AnimationIndex::RunningHookAnim);
 }
 
 
