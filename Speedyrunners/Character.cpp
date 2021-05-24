@@ -50,7 +50,7 @@ sf::Vector2f Character::getLastSafePosition() const {
 	return lastSafePosition;
 }
 
-unsigned int Character::getCheckpointCounter() const{
+int Character::getCheckpointCounter() const{
 	return checkpointCounter;
 }
 
@@ -58,7 +58,7 @@ int Character::getLastSafeCheckpoint() const {
 	return lastSafeCheckpoint;
 }
 
-void Character::resetCheckpointInfo(int lsc, unsigned int cc) {
+void Character::resetCheckpointInfo(int lsc, int cc) {
 	lastSafeCheckpoint = lsc;
 	checkpointCounter = cc;
 }

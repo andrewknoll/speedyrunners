@@ -247,7 +247,9 @@ void Game::updatePositions()
 #ifdef VERBOSE_DEBUG
 				std::cout << "Checkpoint " << i << " by character " << j << "reached\n";
 #endif
+				
 				characters[j]->setLastSafeCheckpoint(i);
+				std::cout << i << " " << j << " " << characters[j]->getCheckpointCounter() << std::endl;
 				if (i == activeCheckpoint && j == 0) {
 					activeCheckpoint = (activeCheckpoint + 1) % checkpoints.size();
 				}

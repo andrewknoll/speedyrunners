@@ -13,7 +13,7 @@
 #include <variant>
 #include "Item.h"
 
-#define DEBUG_HITBOX
+//#define DEBUG_HITBOX
 
 class TileMap;
 class Level;
@@ -125,7 +125,7 @@ protected:
 	AudioPlayer &audioPlayer;
 	
 	sf::Vector2f lastSafePosition = sf::Vector2f();
-	unsigned int checkpointCounter = 0;
+	int checkpointCounter = 0;
 	int lastSafeCheckpoint = -1;
 	int n_checkpoints = 1;
 
@@ -171,10 +171,10 @@ public:
 	void setPosition(float x, float y);
 	sf::Vector2f getLastSafePosition() const;
 
-	unsigned int getCheckpointCounter() const;
+	int getCheckpointCounter() const;
 	int getLastSafeCheckpoint() const;
 
-	void resetCheckpointInfo(int lsc, unsigned int cc);
+	void resetCheckpointInfo(int lsc, int cc);
 	void setLastSafeCheckpoint(int lsc);
 	void setNumberCheckpoints(int n);
 
