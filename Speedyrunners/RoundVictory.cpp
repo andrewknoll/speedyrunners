@@ -28,6 +28,7 @@ RoundVictory::RoundVictory(const sf::RenderWindow& _window, const int characterI
 	characterVictoryPose = spritesheet.get_animations()[0];
 	mySprite = characterVictoryPose->get_first_frame();
 	utils::scaleToFullScreenRatio(mySprite, _window, 0.4);
+	characterVictoryPose->set_scale(mySprite.getScale().x, mySprite.getScale().y);
 	mySprite.setPosition(width * 0.2f, height * 0.882f);
 	if (characterIdx == 0) { // Speedrunner mas parriba
 		//mySprite.move(0, +height * 0.1);
@@ -58,6 +59,7 @@ void RoundVictory::addScoreStuff(const sf::RenderWindow& _window, int score) {
 			auto& s = sprites.back();
 			setRectForPoint(s, i + 1);
 			utils::scaleToFullScreenRatio(s, _window, 0.2);
+
 			s.setPosition(pos);
 			pos.x += size.x * 0.15;
 		}

@@ -238,6 +238,9 @@ void Character::updateVel(const float& dtSec) {
 	}
 	else { // is swinging
 		vel = utils::length(hook.radius()) * hook.tangent() * omega;
+		if (utils::length(vel) > 2.0f * maxS) { // cap
+			vel = vel / utils::length(vel) * maxS;
+		}
 		//std::cout << "swinging vel " << vel << "\n";
 		if (!isStunned) {
 			if (facingRight) setAnimationAngle(-135.0f - utils::degrees(hook.angle()));
@@ -633,6 +636,8 @@ void Character::die() {
 	stop();
 	stopJumping();
 	stopSliding();
+	useHook(false);
+	swinging = false; usingHook = false;
 	vel = sf::Vector2f(0, 0);
 	dead = true;
 }
@@ -746,6 +751,11 @@ void Character::useHook(bool use)
 			usingHook = false;
 			hook.destroy();
 		}
+	}
+	if (!use) {
+		swinging = false;
+		usingHook = false;
+		hook.destroy();
 	}
 }
 

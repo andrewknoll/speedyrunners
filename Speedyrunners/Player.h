@@ -18,5 +18,6 @@ public:
 	//Player(int id = 0);
 	Player(const Settings& settings, int id = 0, bool cheats=false);
 	bool captureEvents(const sf::Event& event);
+	void setCheats(bool enable);
 };
 

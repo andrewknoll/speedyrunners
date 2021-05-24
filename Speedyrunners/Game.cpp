@@ -18,6 +18,8 @@
 #include "TNT.h"
 #define  DISABLE_FULLSCREEN
 
+
+
 Game::Game()
 	: window(sf::VideoMode(1600, 900), "SpeedyRunners"),
 	lvl(window),
@@ -219,9 +221,8 @@ void Game::setState(const State _state)
 
 void Game::setUpWindow() {
 
-	window.setFramerateLimit(0); //60 FPS?
-	//window.setVerticalSyncEnabled(true);
-	window.setVerticalSyncEnabled(false);
+	window.setFramerateLimit(30); //60 FPS?
+	window.setVerticalSyncEnabled(true);
 	//auto settings = window.getSettings();
 	//settings.antialiasingLevel = 2;
 	//window.set
@@ -262,7 +263,8 @@ void Game::updatePositions()
 	// order characters and players based on distance
 	std::sort(characters.begin(), characters.end(),
 		[](const CharPtr& c1, const CharPtr& c2) {
-		return c1->getCheckpointCounter() >= c2->getCheckpointCounter() && c1->getDToCheckpoint() < c2->getDToCheckpoint();
+		return c1->getCheckpointCounter() > c2->getCheckpointCounter() || 
+			(c1->getCheckpointCounter() == c2->getCheckpointCounter() && c1->getDToCheckpoint() < c2->getDToCheckpoint());
 }
 	);
 }
@@ -750,6 +752,7 @@ void Game::enableCheats(bool enable) {
 #else
 	cheatsEnabled = enable;
 #endif
+	for (auto p : players) p->setCheats(cheatsEnabled);
 }
 
 void Game::processMouseEditing() {

@@ -34,15 +34,13 @@ namespace glb
 	const int NUMBER_OF_MISC_TEXTURES = 11;
 	const sf::Vector2f FEET_TO_HAND = sf::Vector2f(20.0, 0);// -50.0
 	// Items:
-	const int NUMBER_OF_ITEMS = 10;
+	const int NUMBER_OF_ITEMS = 8;
 	const int NUMBER_OF_UNOBTAINABLE_ITEMS = 3;
 	enum item : int {
 		NONE = 0,
 		ROCKET = 1,
-		BOULDER = 2, // rolling thing
-		ICERAY = 3,
+		ICERAY = 2,
 		GOLDEN_HOOK,
-		INVINCI_DRILL,
 		TNT,
 		CRATE_3,
 		// these 3 must be last!!:
@@ -55,10 +53,8 @@ namespace glb
 	const std::array<int, NUMBER_OF_ITEMS+1> itemToTexIndex { {
 		0, // NONE is first (hay un hueco al principio)
 		4,  // Rocket is 5th
-		15, // rolling thing
 		16, // freeze
-		1, // golden hook
-		3, // invinci drill
+		1, // golden hook¡
 		5, // TNT
 		9, // Crates
 		8,

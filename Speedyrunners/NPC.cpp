@@ -884,12 +884,14 @@ void NPC::moveWithoutPath()
 	auto goalpos = goals[currentGoalIdx].position;
 	bool right = goalpos.x > me->getPosition().x;
 	auto t = tm->tilesToTheSide(me->getHitBox(), right);
-	if (t[0] != Tiles::AIR) {
-		if (t[1] != Tiles::AIR) {
-			tryingToFindAir = true;
-		}
-		else {
-			me->slide();
+	if (t.size() > 1) {
+		if (t[0] != Tiles::AIR) {
+			if (t[1] != Tiles::AIR) {
+				tryingToFindAir = true;
+			}
+			else {
+				me->slide();
+			}
 		}
 	}
 	if (tryingToFindAir) {
@@ -976,7 +978,7 @@ void NPC::update(const sf::Time dT) { // Tries to get from current to next
 		if ((stepNodePtr->prev && stepNodePtr->prev->data.isHooking) || current.data.isHooking || current.data.automaticHook) {
 			if (!usedHook && !me->isUsingHook()) {
 				usedHook = true;
-				std::cout << "HOOK!" << std::endl;
+				//std::cout << "HOOK!" << std::endl;
 				currentMT = std::make_shared<MetaTile>();
 				currentMT->setType(MetaTile::Type::HOOK);
 				MTposition = sf::Vector2i(stepNodePtr->cell[0], stepNodePtr->cell[1]);

@@ -8,7 +8,7 @@
 #include <deque>
 #include <atomic>
 
-#define DEBUG_PATH
+//#define DEBUG_PATH
 
 class NPC : public PlayerSlot
 {

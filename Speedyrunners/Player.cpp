@@ -85,3 +85,8 @@ bool Player::captureEvents(const sf::Event& event) {
 	}
 	return false;
 }
+
+void Player::setCheats(bool enable)
+{
+	cheatsEnabled = enable;
+}
