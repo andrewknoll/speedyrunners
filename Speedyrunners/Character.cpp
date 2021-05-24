@@ -942,13 +942,12 @@ void Character::draw(sf::RenderTarget& target, sf::RenderStates states) const {
 	states.texture = mySprite.getTexture();
 
 	target.draw(mySprite, states);
-	auto s = iceCube.getScale();
-
-	states.transform.scale(iceCube.getScale());
-	states.texture = iceCube.getTexture();
-	if (isFrozen) target.draw(iceCube, states);
-
-
+	if (isFrozen) {
+		auto s = iceCube.getScale();
+		states.transform.scale(iceCube.getScale());
+		states.texture = iceCube.getTexture();
+		target.draw(iceCube, states);
+	}
 
 #ifdef DEBUG_HITBOX
 	target.draw(hitBoxShape);

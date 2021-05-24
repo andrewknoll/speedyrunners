@@ -219,7 +219,7 @@ void Game::setState(const State _state)
 
 void Game::setUpWindow() {
 
-	window.setFramerateLimit(60); //60 FPS?
+	window.setFramerateLimit(0); //60 FPS?
 	window.setVerticalSyncEnabled(true);
 	//auto settings = window.getSettings();
 	//settings.antialiasingLevel = 2;
@@ -250,7 +250,7 @@ void Game::updatePositions()
 #endif
 				
 				characters[j]->setLastSafeCheckpoint(i);
-				std::cout << i << " " << j << " " << characters[j]->getCheckpointCounter() << std::endl;
+				//std::cout << i << " " << j << " " << characters[j]->getCheckpointCounter() << std::endl;
 				if (i == activeCheckpoint && j == 0) {
 					activeCheckpoint = (activeCheckpoint + 1) % checkpoints.size();
 				}
@@ -606,7 +606,6 @@ void Game::update()
 			src.musicPlayer.stopAll();
 			src.musicPlayer.selectRandomTrack(MusicPlayer::MusicType::REGULAR_WITH_PAUSE);
 			src.musicPlayer.playSelected();
-			std::cout << "CACA 2" << std::endl;
 		}
 		if (suddenDeath && !src.musicPlayer.isPlaying(MusicPlayer::MusicType::SUDDENDEATH)) {
 			src.musicPlayer.stopAll();
@@ -630,9 +629,11 @@ void Game::update()
 				//std::cout << "one down\n";
 				//particleSystems[glb::SUDDEN_DEATH_EXPLOSION].burst(cam.closestInView(characters[i]->getPosition()),50,10); // TODO: no consigo sacar la posicion en el mundo de la camara
 				characters[i]->die();
-				src.getAudioPlayer().play(AudioPlayer::Effect::CHARACTER_OUTOFSCREEN);
-				src.getAudioPlayer().play(AudioPlayer::Effect::DEATH);
+				auto& audio = src.getAudioPlayer();
+				audio.play(AudioPlayer::Effect::CHARACTER_OUTOFSCREEN);
+				audio.play(AudioPlayer::Effect::DEATH);
 				aliveCount--;
+				if (aliveCount>1) audio.continuePlaying(AudioPlayer::Effect::STINGER);
 				suddenDeath = true;
 				cam.setSuddenDeath(true);
 			}
@@ -668,7 +669,6 @@ void Game::update()
 				MusicPlayer::MusicType::REGULAR, MusicPlayer::MusicType::REGULAR_WITH_PAUSE}
 			) != MusicPlayer::MusicType::REGULAR_WITH_PAUSE) {
 				src.musicPlayer.playSelected();
-				std::cout << "CACA 1" << std::endl;
 			}
 		}
 		cam.follow(characters);

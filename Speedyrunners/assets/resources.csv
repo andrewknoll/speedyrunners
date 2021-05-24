@@ -12,9 +12,9 @@ MS,0,Content/Sprites/CustomIceBeamStartup.png,Indexes/Sprites/CustomIceBeamStart
 M,0,Content/Audio/Music/Track 03 - Menu.ogg
 M,1,Content/Audio/Music/PREMIX_Track01_Ingame.ogg
 M,1,Content/Audio/Music/PREMIX_Track03_Ingame.ogg
-M,1,Content/Audio/Music/Track 02 - Game.ogg
+M,1,Content/Audio/Music/Track02 - Game.ogg
 M,1,Content/Audio/Music/Track04 - Game.ogg
-M,1,Content/Audio/Music/Track02 - Boss.ogg
+M,1,Content/Audio/Music/Track 02 - Boss.ogg
 M,2,Content/Audio/Music/PREMIX_Track01_SD.ogg
 M,2,Content/Audio/Music/Track02 - SD.ogg
 M,2,Content/Audio/Music/PREMIX_Track03_SD.ogg
@@ -99,6 +99,8 @@ AM,menu_rollover.wav
 AM,menu_single_tab_slide_in.wav
 AM,menu_tabs_slide_in.wav
 AM,menu_toggle.wav
+# Stingers
+AS,PREMIX_Track01_Stinger.wav,PREMIX_Track03_Stinger.wav,Stinger_SD.wav,Track02 - Stinger.wav,Track04 - Stinger.wav
 
 I,0,Content/Sprites/rocket.png
 I,1,Content/Sprites/ballWeapon-150x150.png

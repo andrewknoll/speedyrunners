@@ -79,7 +79,8 @@ public:
 		MENU_ROLLOVER,
 		MENU_SINGLE_TAB_SLIDEIN,
 		MENU_TABS_SLIDEIN,
-		MENU_TOGGLE
+		MENU_TOGGLE,
+		STINGER // Tension for sudden death
 	};
 protected:
 	std::vector<std::vector<sf::Sound>> sounds; // like sf::Sprite for sounds

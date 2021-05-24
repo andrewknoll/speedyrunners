@@ -43,7 +43,7 @@ void Menu::setMainMenu()
 	backgrounds.emplace_back(menuPath + "Speedrunners/Menu_city.png", *window);// , sf::FloatRect(0, 0.5, 1, 0.5));
 	backgrounds.back().setTextureCoords(sf::FloatRect(0, 0, 1, 0.5)); // Solo se muestra la mitad superior de la textura
 	// Title:
-	backgrounds.emplace_back(menuPath + "SpeedRunnerLogo.png", *window, sf::FloatRect(0.17, 0.03, 0.73, 0.35));
+	backgrounds.emplace_back(menuPath + "SpeedyRunnerLogo.png", *window, sf::FloatRect(0.17, 0.03, 0.73, 0.35));
 	backgrounds.back().fixProportions();
 
 	// ----------------------------- Text:
