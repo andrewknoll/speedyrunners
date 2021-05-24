@@ -20,7 +20,7 @@
 
 // Defines de configuracion para debug:
 //#define USE_IMGUI
-#define DEV_MODE
+//#define DEV_MODE
 //#define DISABLE_FULLSCREEN
 
 //#define VERBOSE_DEBUG // Cambiar para quitar couts
@@ -84,7 +84,7 @@ protected:
 	std::condition_variable restartCv;
 
 	sf::Time dT; // Time since last update
-	const sf::Time maxDT = sf::seconds(1.0f / 32.0f);
+	const sf::Time maxDT = sf::seconds(1.0f / 30.0f);
 
 	// Checkpoints:
 	// Editor:

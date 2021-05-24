@@ -884,12 +884,14 @@ void NPC::moveWithoutPath()
 	auto goalpos = goals[currentGoalIdx].position;
 	bool right = goalpos.x > me->getPosition().x;
 	auto t = tm->tilesToTheSide(me->getHitBox(), right);
-	if (t[0] != Tiles::AIR) {
-		if (t[1] != Tiles::AIR) {
-			tryingToFindAir = true;
-		}
-		else {
-			me->slide();
+	if (t.size() > 1) {
+		if (t[0] != Tiles::AIR) {
+			if (t[1] != Tiles::AIR) {
+				tryingToFindAir = true;
+			}
+			else {
+				me->slide();
+			}
 		}
 	}
 	if (tryingToFindAir) {

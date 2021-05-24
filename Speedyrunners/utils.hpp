@@ -209,7 +209,7 @@ std::ostream& operator<<(std::ostream& os, const sf::Vector2<T>& v);
 
 
 namespace physics {
-	const float GRAVITY = 50*9.821; // was 25*
+	const float GRAVITY = 42*9.821; // was 25*
 	const float MAX_FALL_SPEED = 425;
 	const float FLOOR_FRICTION = GRAVITY*1.5/2.0;
 	const float AIR_FRICTION = GRAVITY * 0.5 /2.0;

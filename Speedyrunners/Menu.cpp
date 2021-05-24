@@ -111,9 +111,9 @@ void Menu::setMainMenu()
 	// Multiplayer:
 	sf::Vector2f pos(0.05, 0.43);
 	float size = 0.05;
-	elements.emplace_back(std::make_unique<TextElement>(settings, mainTextFontPath, "MULTIPLAYER", size, pos, true));
-	pos.y += size * 1.25;
-	elements.emplace_back(std::make_unique<TextElement>(settings, mainTextFontPath, "VS AI", size, pos, true));
+	elements.emplace_back(std::make_unique<TextElement>(settings, mainTextFontPath, "PLAY", size, pos, true));
+	//pos.y += size * 1.25;
+	//elements.emplace_back(std::make_unique<TextElement>(settings, mainTextFontPath, "VS AI", size, pos, true));
 
 	// Story:
 	pos.y += size*1.25;
@@ -294,25 +294,18 @@ void Menu::handleMainMenuClick(int i) {
 	case 0:
 	{
 		std::cout << "Clicked multiplayer\n";
-		nPlayers = 2;
 		setCharacterSelect();
 		break;
 	}
 	case 1:
 	{
-		nPlayers = 1;
-		setCharacterSelect();
-		break;
-	}
-	case 2:
-	{
 		std::cout << "Clicked dev mode\n";
-		game.defaultInit(2);
 		game.enableCheats(true);
+		game.defaultInit(2);
 		exitMenu = true;
 		break;
 	}
-	case 3:
+	case 2:
 	{
 		std::cout << "Clicked practice\n";
 		std::vector<glb::characterIndex> players{ glb::characterIndex::SPEEDRUNNER };
@@ -321,15 +314,15 @@ void Menu::handleMainMenuClick(int i) {
 		exitMenu = true;
 		break;
 	}
-	case 4:
+	case 3:
 	{ // Workshop - Level editor
 		setWorkshopMenu();
 		break;
 	}
-	case 5:
+	case 4:
 		setControls();
 		break;
-	case 6: // quit
+	case 5: // quit
 		window->close();
 		exit(0);
 		break; 
