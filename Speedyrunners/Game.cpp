@@ -16,7 +16,7 @@
 #include "imgui-SFML.h"
 #endif // USE_IMGUI
 #include "TNT.h"
-#define  DISABLE_FULLSCREEN
+//#define  DISABLE_FULLSCREEN
 
 
 

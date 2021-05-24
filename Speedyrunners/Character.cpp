@@ -65,7 +65,7 @@ void Character::resetCheckpointInfo(int lsc, int cc) {
 
 void Character::setLastSafeCheckpoint(int lsc) {
 	if (lastSafeCheckpoint != lsc) {
-		std::cout << lsc << checkpointCounter << std::endl;
+		//std::cout << lsc << checkpointCounter << std::endl;
 		if (lsc == (lastSafeCheckpoint + 1) % n_checkpoints) {
 			checkpointCounter++;
 		}
