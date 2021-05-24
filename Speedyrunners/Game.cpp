@@ -78,6 +78,7 @@ void Game::clear() {
 	players.clear();
 
 	rv = nullptr;
+	setState(State::Countdown);
 	countdown.reset();
 	cam.setSuddenDeath(false);
 
@@ -249,7 +250,7 @@ void Game::updatePositions()
 #endif
 				
 				characters[j]->setLastSafeCheckpoint(i);
-				std::cout << i << " " << j << " " << characters[j]->getCheckpointCounter() << std::endl;
+				//std::cout << i << " " << j << " " << characters[j]->getCheckpointCounter() << std::endl;
 				if (i == activeCheckpoint && j == 0) {
 					activeCheckpoint = (activeCheckpoint + 1) % checkpoints.size();
 				}
@@ -358,7 +359,7 @@ void Game::loopMenu()
 	}
 	menu.setMainMenu();
 	menu.loop(); // , this);
-	std::cout << "State after menu: " << (int)state << "\n";
+	//std::cout << "State after menu: " << (int)state << "\n";
 	//state = (Game::State)menu.getGameState();
 	//characters = menu.getCharacters
 }
@@ -370,8 +371,8 @@ void Game::addCharacter(const CharPtr character)
 		ui.setCharacters(characters);
 		aliveCount++;
 	}
-
 }
+
 void Game::createNewLevel(int nLevels)
 {
 	loadLevel("default_level.csv");
@@ -496,6 +497,7 @@ void Game::update()
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
 			loopMenu();
+			return;
 		}
 		else if (event.type == sf::Event::Closed) {
 			running = false;
@@ -523,7 +525,7 @@ void Game::update()
 				clearParticles();
 			}
 			else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F4) {
-				loopMenu();
+				loopMenu(); return;
 			}
 		}
 
@@ -605,7 +607,6 @@ void Game::update()
 			src.musicPlayer.stopAll();
 			src.musicPlayer.selectRandomTrack(MusicPlayer::MusicType::REGULAR_WITH_PAUSE);
 			src.musicPlayer.playSelected();
-			std::cout << "CACA 2" << std::endl;
 		}
 		if (suddenDeath && !src.musicPlayer.isPlaying(MusicPlayer::MusicType::SUDDENDEATH)) {
 			src.musicPlayer.stopAll();
@@ -629,9 +630,11 @@ void Game::update()
 				//std::cout << "one down\n";
 				//particleSystems[glb::SUDDEN_DEATH_EXPLOSION].burst(cam.closestInView(characters[i]->getPosition()),50,10); // TODO: no consigo sacar la posicion en el mundo de la camara
 				characters[i]->die();
-				src.getAudioPlayer().play(AudioPlayer::Effect::CHARACTER_OUTOFSCREEN);
-				src.getAudioPlayer().play(AudioPlayer::Effect::DEATH);
+				auto& audio = src.getAudioPlayer();
+				audio.play(AudioPlayer::Effect::CHARACTER_OUTOFSCREEN);
+				audio.play(AudioPlayer::Effect::DEATH);
 				aliveCount--;
+				if (aliveCount>1) audio.continuePlaying(AudioPlayer::Effect::STINGER);
 				suddenDeath = true;
 				cam.setSuddenDeath(true);
 			}
@@ -667,7 +670,6 @@ void Game::update()
 				MusicPlayer::MusicType::REGULAR, MusicPlayer::MusicType::REGULAR_WITH_PAUSE}
 			) != MusicPlayer::MusicType::REGULAR_WITH_PAUSE) {
 				src.musicPlayer.playSelected();
-				std::cout << "CACA 1" << std::endl;
 			}
 		}
 		cam.follow(characters);
@@ -702,7 +704,9 @@ void Game::update()
 			if (rv->ended()) {
 				if (gameWon) {
 					state = State::MainMenu;
+					rv = nullptr;
 					loopMenu();
+					return;
 				}
 				state = State::Countdown;
 				countdown.reset();

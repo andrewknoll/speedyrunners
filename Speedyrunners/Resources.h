@@ -30,7 +30,8 @@ private:
 		PATH_TO_PLAYER_SFX = "../assets/Content/Audio/Sfx/Player/",
 		PATH_TO_INGAME_UI_SFX = "../assets/Content/Audio/Sfx/UI/Ingame/",
 		PATH_TO_ITEMS_SFX = "../assets/Content/Audio/Sfx/Weapons/",
-		PATH_TO_MENU_SFX = "../assets/Content/Audio/Sfx/UI/Menu/";
+		PATH_TO_MENU_SFX = "../assets/Content/Audio/Sfx/UI/Menu/",
+		PATH_TO_STINGERS_SFX = "../assets/Content/Audio/Sfx/Stingers/";
 	const std::string RESOURCES_CSV = "resources.csv";
 
 public:

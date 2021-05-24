@@ -85,9 +85,7 @@ void IceRay::doThingTo(std::shared_ptr<Character> c)
 	auto pos_c = c->getPosition();
 	auto pos_u = user->getPosition();
 	if (c != user && utils::inRange(pos_c.y - pos_u.y, -16, 16)
-		&& facingRight? pos_c.x > pos_u.x : pos_c.x < pos_u.x) {
+		&& (facingRight? pos_c.x > pos_u.x : pos_c.x < pos_u.x)) {
 		c->getFrozen();
 	}
 }
-
-

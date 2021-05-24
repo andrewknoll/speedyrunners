@@ -58,16 +58,18 @@ Resources::Resources()
 			for (int i = 0; i < 2; i++) std::getline(iss, token[i], ',');
 			musicPlayer.addTrack(PATH_TO_ASSETS + token[1], stoi(token[0]));
 		}
-		else if (type == "A" || type == "A2" || type == "AM" || type == "AW") { // Audio (soundbuffers)
+		else if (type == "A" || type == "A2" || type == "AM" || type == "AW" || type == "AS") { // Audio (soundbuffers)
 			std::string path = PATH_TO_PLAYER_SFX;
 			if (type == "A2") { // Ingame ui audio
 				path = PATH_TO_INGAME_UI_SFX;
 			}
-			if (type == "AW") // Weapons
+			else if (type == "AW") // Weapons
 				path = PATH_TO_ITEMS_SFX;
 
-			if (type == "AM") // Menus
+			else if (type == "AM") // Menus
 				path = PATH_TO_MENU_SFX;
+			else if (type == "AS") // Stingers 
+				path = PATH_TO_STINGERS_SFX;
 			std::string line;
 			std::getline(iss, line); // until \n
 			std::istringstream liness(line);
