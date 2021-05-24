@@ -308,13 +308,11 @@ void Game::loadLevel(const std::string& lvlPath)
 	lvl.load(lvlPath, window);
 	checkpoints.clear();
 	lvl.getCheckpoints(checkpoints);
-	std::cout << "I have " << checkpoints.size() << " checkpoints now\n";
+	//std::cout << "I have " << checkpoints.size() << " checkpoints now\n";
 	for (NPCPtr npc : npcs) {
 		npc->setTileMap(std::make_shared<TileMap>(lvl.getCollidableTiles()));
 	}
-
 }
-
 
 void Game::setSaveName(std::string fileName) {
 	saveLevelName = fileName;
@@ -811,14 +809,13 @@ void Game::processEditingInputs(const sf::Event& event) {
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
 			lvl.setCheckpoints(checkpoints);
 			//lvl.saveDuplicateVertical("first.csv");
-
 			//lvl.setDefaultLevel();
 			//lvl.save("default_level.csv");
-
 			lvl.save(saveLevelName);
 		}
 		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::L)) {
-			loadLevel("defaultLevel.csv");
+			if (saveLevelName != "defaultLevel.csv") loadLevel(saveLevelName);
+			//loadLevel("defaultLevel.csv");
 		}
 		else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::J) {
 

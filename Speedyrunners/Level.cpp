@@ -190,7 +190,6 @@ void Level::load(const std::string& f_name, const sf::RenderWindow& window)
 		exit(1);
 	}
 	else {
-		std::cout << "format: " << s << "\n";
 		format = std::stoi(s);
 	}
 	if (format != 0) {

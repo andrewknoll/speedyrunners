@@ -167,7 +167,7 @@ namespace particles {
 				}
 			}
 		}
-		if (animate) std::cout << "Animated particle system\n";
+		//if (animate) std::cout << "Animated particle system\n";
 	}
 
 

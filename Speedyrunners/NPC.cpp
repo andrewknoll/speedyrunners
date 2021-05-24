@@ -526,7 +526,7 @@ void NPC::replan() {
 	path[0].clear();
 	step = std::begin(path[0]);
 	elapsed = sf::Time::Zero;
-	std::cout << "Completed... Now I want " << currentGoalIdx << std::endl;
+	//std::cout << "Completed... Now I want " << currentGoalIdx << std::endl;
 	
 	//Get next part
 	if (pathFound[1] == 1) {
@@ -1018,7 +1018,7 @@ void NPC::update(const sf::Time dT) { // Tries to get from current to next
 				currentMT = std::make_shared<MetaTile>();
 				MTposition = sf::Vector2i(stepNodePtr->cell[0], stepNodePtr->cell[1]);
 				currentMT->setType(MetaTile::Type::WALL_JUMP);
-				std::cout << "ENTERING WALL JUMP MODE\n";
+				//std::cout << "ENTERING WALL JUMP MODE\n";
 				return;
 
 
