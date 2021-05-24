@@ -624,6 +624,7 @@ void Character::stop(){
 }
 
 void Character::respawn(sf::Vector2f position) {
+	die();
 	//TO-DO: Spawnear separados
 	vel = sf::Vector2f(0, 0);
 	acc = vel;

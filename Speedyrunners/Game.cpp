@@ -221,7 +221,7 @@ void Game::setState(const State _state)
 
 void Game::setUpWindow() {
 
-	window.setFramerateLimit(30); //60 FPS?
+	window.setFramerateLimit(60); //60 FPS?
 	window.setVerticalSyncEnabled(true);
 	//auto settings = window.getSettings();
 	//settings.antialiasingLevel = 2;
@@ -338,7 +338,7 @@ void Game::loop()
 		// https://en.sfml-dev.org/forums/index.php?topic=7018.0:
 		currentTime = clock.getElapsedTime();
 		dT = (currentTime - previousTime);
-		if (dT > maxDT) dT = maxDT;
+		//if (dT > maxDT) dT = maxDT;
 		fps = 1.0f / dT.asSeconds(); // the asSeconds returns a float
 		if ((showPeriod -= dT.asSeconds()) < 0) // Para que no este sacandolo todos los frames
 		{
