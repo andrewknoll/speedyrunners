@@ -713,6 +713,7 @@ void Game::update()
 				rv = nullptr;
 				suddenDeath = false;
 				aliveCount = characters.size();
+				activeCheckpoint = respawnCheckpoint; 
 				for (int i = 0; i < characters.size(); i++) {
 					characters[i]->respawn(respawnPosition);
 					characters[i]->resetCheckpointInfo(respawnCheckpoint, respawnCounter);

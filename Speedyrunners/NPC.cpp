@@ -646,7 +646,7 @@ void NPC::plan() {
 	OptionalPath newPath;
 	planFromTo(n_path, goal, newPath);
 	if (newPath.has_value()) {
-		std::cout << "Hola, soy " << std::this_thread::get_id() << " " << currentGoalIdx << " " << n_path << std::endl;
+		//std::cout << "Hola, soy " << std::this_thread::get_id() << " " << currentGoalIdx << " " << n_path << std::endl;
 		pathMtx[n_path].lock();
 		path[n_path] = newPath.value();	//Once it's safe, replace the old path with the new one
 		pathFound[n_path] = 1;
