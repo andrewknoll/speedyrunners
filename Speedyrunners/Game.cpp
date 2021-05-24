@@ -16,7 +16,7 @@
 #include "imgui-SFML.h"
 #endif // USE_IMGUI
 #include "TNT.h"
-
+#define  DISABLE_FULLSCREEN
 
 Game::Game()
 	: window(sf::VideoMode(1600, 900), "SpeedyRunners"),
@@ -719,6 +719,7 @@ void Game::update()
 				for (int i = 0; i < characters.size(); i++) {
 					characters[i]->respawn(respawnPosition);
 					characters[i]->resetCheckpointInfo(respawnCheckpoint, respawnCounter);
+					activeCheckpoint = respawnCheckpoint;
 					bool canMoveSpawn = true;
 					for (auto t : lvl.getCollidableTiles().tilesToTheSide(characters[i]->getHitBox(), false)) {
 						canMoveSpawn &= t == Tiles::AIR;

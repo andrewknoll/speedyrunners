@@ -34,8 +34,8 @@ struct Node {
 	int cell[2];
 	float heuristic;
 	float cost;
+	std::shared_ptr<Node<T> > next = nullptr;
 	std::shared_ptr<Node<T> > prev = nullptr;
-
 
 	friend bool operator< (const Node<T>& n1, const Node<T>& n2) {
 		return (n1.cost + n1.heuristic) < (n2.cost + n2.heuristic);

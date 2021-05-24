@@ -8,8 +8,17 @@
 #include <deque>
 #include <atomic>
 
+#define DEBUG_PATH
+
 class NPC : public PlayerSlot
 {
+	using CharPtr = std::shared_ptr<Character>;
+	using TilePriorityQueue = PriorityQueue<NodeData>;
+	using TileNode = Node<NodeData>;
+	using TileMapPtr = std::shared_ptr<TileMap>;
+	using OptionalPath = std::optional< std::deque<std::shared_ptr<TileNode> > >;
+	using PathIterator = std::deque<std::shared_ptr<TileNode> >::const_iterator;
+
 	enum MoveType : int {NOTHING, START_RUNNING_LEFT, START_RUNNING_RIGHT, JUMP, SLIDE, USE_HOOK, USE_ITEM};
 	struct Goal {
 		sf::Vector2f position;
@@ -25,6 +34,11 @@ class NPC : public PlayerSlot
 			radius(c.getRadius())
 		{}
 
+		Goal(const TileNode& tn, int r) :
+			position(sf::Vector2f(tn.cell[0], tn.cell[1])),
+			radius(r)
+		{}
+
 		friend bool operator== (const Goal& a, const Goal& b) {
 			return a.position == b.position && a.radius == b.radius;
 		}
@@ -35,17 +49,17 @@ class NPC : public PlayerSlot
 
 	};
 
-	const float RUN_COST = 30.0f;
-	const float FREE_FALL_COST = 10.0f;
-	const float HOOK_COST = 15.0f;
-	const float SLIDE_COST = 35.0f;
-	const float JUMP_COST_BASE_1 = 10*4.0f;
-	const float JUMP_COST_BASE_2 = 10*5.0f;
+	const float RUN_COST = 1.0f;
+	const float FREE_FALL_COST = 1.5f;
+	const float HOOK_COST = 2.0f;
+	const float SLIDE_COST = 6.0f;
+	const float JUMP_COST_BASE_1 = 2.0f;
+	const float JUMP_COST_BASE_2 = 4.0f;
 	const float WALL_JUMP_COST = 1.5f;
-	const float DIRECTION_CHANGE_COST = 10 * 500.0f;
-	const float JUMP_COST_PER_DISTANCE_UNIT = 10 * 50.0f;
+	const float DIRECTION_CHANGE_COST = 500.0f;
+	const float JUMP_COST_PER_DISTANCE_UNIT = 50.0f;
 
-	const float THRESHOLD_PER_RADIUS_UNIT = 3.0f;
+	const float THRESHOLD_PER_RADIUS_UNIT = 5.0f;
 
 	const sf::Time MAX_TIME_PER_STEP = sf::seconds(6.0f);
 	const sf::Time GIVE_UP_TIME = sf::seconds(2.0f);
@@ -53,13 +67,6 @@ class NPC : public PlayerSlot
 	const float CLOSENESS_THRESHOLD = 1.0f;
 	const float FARNESS_THRESHOLD = 10.0f;
 	const float USE_ITEM_THRESHOLD = 100.0f;
-
-	using CharPtr = std::shared_ptr<Character>;
-	using TilePriorityQueue = PriorityQueue<NodeData>;
-	using TileNode = Node<NodeData>;
-	using TileMapPtr = std::shared_ptr<TileMap>;
-	using OptionalPath = std::optional< std::deque<std::shared_ptr<TileNode> > >;
-	using PathIterator = std::deque<std::shared_ptr<TileNode> >::const_iterator;
 
 private:
 	const int N_MOVES = 7;
@@ -69,6 +76,7 @@ private:
 	int currentGoalIdx;
 	bool tryingToFindAir = false;
 	bool mustReposition = false;
+	bool usedHook = false;
 
 	std::mutex pathMtx[2];
 	std::mutex goalMtx;
@@ -113,6 +121,7 @@ private:
 	void calculateWallJumpNeighbours(const bool right, TileNode& current, const Goal& goal, const int n_path);
 	void buildPath(TileNode foundGoal, std::deque<std::shared_ptr<NPC::TileNode>>& newPath);
 	bool isGoal(const TileNode & current, const Goal& goal) const;
+	bool isGoal(const TileNode & current, const TileNode& goal, int radius) const;
 	//void updateGoals();
 	bool nodeWasReached(const TileNode& n, const float closenessThreshold) const;
 	bool detectDirectionChange(const TileNode& n, const TileNode& current);
@@ -133,7 +142,7 @@ public:
 	//void addGoal(const sf::Vector2f& goalPos, const float goalRadius);
 	void plan();
 	void replan();
-	void planFromTo(const int n_path, const std::shared_ptr<Goal> goal, OptionalPath& newPath);
+	void planFromTo(const int n_path, const std::shared_ptr<Goal> origin, const std::shared_ptr<Goal> goal, OptionalPath& newPath);
 	void doBasicMovement(const TileNode& current, const TileNode& n, bool block);
 	//void followPath();
 	void update(const sf::Time dT);
