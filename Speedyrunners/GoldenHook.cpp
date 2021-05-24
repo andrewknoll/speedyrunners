@@ -38,15 +38,15 @@ GoldenHook::GoldenHook(CharPtr _from, CharPtr _target, float width) :
 	// direction of the hook:
 	auto direction = _target->getPosition() - _from->getPosition();
 	direction = direction / utils::length(direction);
-	std::cout << "Dir " << direction;
+	//std::cout << "Dir " << direction;
 	if (direction.y > maxVertical) direction.y = maxVertical*std::abs(direction.x);
 	else if (direction.y < -maxVertical) direction.y = -maxVertical*std::abs(direction.x);
 	direction = direction / utils::length(direction);
 
-	std::cout << " -> " << direction <<"\n";
+	//std::cout << " -> " << direction <<"\n";
 
 	angle = atan2f(direction.y, direction.x);
-	std::cout << "angle: " << angle << "\n";
+	//std::cout << "angle: " << angle << "\n";
 	//if (angle > maxVertical) angle = maxVertical;
 	//else if (angle < maxVertical) angle = -maxVertical;
 

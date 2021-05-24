@@ -8,14 +8,65 @@
 
 void TileMap::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
+    /*
+    sf::RenderTexture tex;
+    tex.create(target.getSize().x, target.getSize().y);
+    //tex.clear(sf::Color::Transparent);
+    //tilesRender.clear();
+    //sf::RenderStates states;
+    states.texture = &tileset;
+    tex.draw(vertices, states);
+    tex.display();
+    tilesRender = tex.getTexture();
+    //sf::RenderTexture::draw(vertices, states);
+    //sf::RenderTexture::clear();
+    //tilesRender.draw(vertices,states);
+    //tilesRenderSprite.setTexture(tilesRender);
+
+    //states.texture = &tileset;
+
+    //states.transform *= getTransform();
+    // draw the vertex array
+    target.draw(sf::Sprite(tex.getTexture()),states);
+    */
+    //t.create(target.)
+    
+    //renderToTexture();
+
     // apply the transform
     states.transform *= getTransform();
-
+    
     // apply the tileset texture
     states.texture = &tileset;
 
     // draw the vertex array
     target.draw(vertices, states);
+    
+}
+
+void TileMap::renderToTexture() const
+{   
+    static sf::RenderTexture tex;
+    tex.create(getWidth()*tileSize.x, getHeight()*tileSize.y);
+    tex.clear(sf::Color::Transparent);
+    //tilesRender.clear();
+    //sf::RenderTexture::clear();
+    sf::RenderStates states;
+    states.transform *= getTransform();
+    states.texture = &tileset;
+    tex.draw(vertices, states);
+    tex.display();
+    tilesRender = tex.getTexture();
+    //sf::RenderTexture::draw(vertices, states);
+    //sf::RenderTexture::clear();
+    //tilesRender.draw(vertices,states);
+    tilesRenderSprite.setTexture(tilesRender);
+
+    //utils::scaleToFullScreen(tilesRenderSprite, 900);
+}
+
+TileMap::TileMap()
+{
 }
 
 size_t TileMap::getSize() const {
@@ -60,16 +111,21 @@ bool TileMap::load(const std::string& _tileSetPath, sf::Vector2u _tileSize, cons
             setQuad(quad, i, j, tu, tv);
         }
 
+    renderToTexture();
     return true;
 }
 
 void TileMap::setQuad(sf::Vertex* quad, const int i, const int j, const int tu, const int tv) const {
-
+    auto size = utils::toVector2f(tileSizeWorld);
     // define its 4 corners
-    quad[0].position = sf::Vector2f(i * tileSizeWorld.x, j * tileSizeWorld.y);
+    /*quad[0].position = sf::Vector2f(i * tileSizeWorld.x, j * tileSizeWorld.y);
     quad[1].position = sf::Vector2f((i + 1) * tileSizeWorld.x, j * tileSizeWorld.y);
     quad[2].position = sf::Vector2f((i + 1) * tileSizeWorld.x, (j + 1) * tileSizeWorld.y);
-    quad[3].position = sf::Vector2f(i * tileSizeWorld.x, (j + 1) * tileSizeWorld.y);
+    quad[3].position = sf::Vector2f(i * tileSizeWorld.x, (j + 1) * tileSizeWorld.y);*/
+    quad[0].position = sf::Vector2f(i * size.x, j * size.y);
+    quad[1].position = sf::Vector2f((i + 1) * size.x, j * size.y);
+    quad[2].position = sf::Vector2f((i + 1) * size.x, (j + 1) * size.y);
+    quad[3].position = sf::Vector2f(i * size.x, (j + 1) * size.y);
 
     // define its 4 texture coordinates
     quad[0].texCoords = sf::Vector2f(tu * tileSize.x, tv * tileSize.y);
@@ -100,10 +156,10 @@ void TileMap::setTileIndexed(size_t row, size_t col, const int tileNumber) {
 
 void TileMap::setTile(const sf::Vector2i& pos, const int tileNumber) {
     // Get row and col:
-    size_t i = std::ceilf(0.5f + pos.x / tileSizeWorld.x);
-    size_t j = std::ceilf(0.5f + pos.y / tileSizeWorld.y);
+    size_t i = pos.x / tileSizeWorld.x;//std::ceilf(0.5f + pos.x / tileSizeWorld.x);
+    size_t j = pos.y / tileSizeWorld.y;
     setTileIndexed(i, j, tileNumber);
-    
+    renderToTexture();
 }
 
 void TileMap::setMetaTile(const sf::Vector2i & pos, std::shared_ptr<MetaTile> mt) {
@@ -142,6 +198,8 @@ void TileMap::setHeight(size_t newHeight) {
     height = newHeight;
     resize();
 }
+
+
 
 void TileMap::drawTile(sf::RenderTarget& target, sf::RenderStates states, const sf::Vector2i& pos, const int tileNumber) const
 {
@@ -261,6 +319,7 @@ bool TileMap::load(std::ifstream& file) {
             setQuad(quad, i, j, tu, tv);
         }
 
+    renderToTexture();
     return true;
 }
 

@@ -25,14 +25,18 @@ protected:
 	sf::Vector2u tileSizeWorld;
 	std::string tileSetPath;
 
-
+	mutable sf::Texture tilesRender;
+	mutable sf::Sprite tilesRenderSprite;
 
 	size_t width, height;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
+	void renderToTexture() const;
+
     
 public:
+	TileMap();
 
 	size_t getSize() const;
 

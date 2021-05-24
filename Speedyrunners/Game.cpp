@@ -220,7 +220,8 @@ void Game::setState(const State _state)
 void Game::setUpWindow() {
 
 	window.setFramerateLimit(0); //60 FPS?
-	window.setVerticalSyncEnabled(true);
+	//window.setVerticalSyncEnabled(true);
+	window.setVerticalSyncEnabled(false);
 	//auto settings = window.getSettings();
 	//settings.antialiasingLevel = 2;
 	//window.set

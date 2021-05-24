@@ -480,7 +480,7 @@ void Character::update(const sf::Time& dT, const Level& lvl)
 
 		if (ramp == Ramp::NONE) {
 			if (c.normal.x != 0) { // Make 0 the component of the collision
-				float xSpeed = 0.75*std::abs(vel.x); // for walljumps
+				float xSpeed = 0.85f * std::abs(vel.x); // for walljumps
 				vel.x = 0;
 				acc.x = 0;
 				isRunning = false;
