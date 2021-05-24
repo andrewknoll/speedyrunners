@@ -43,6 +43,7 @@ bool PriorityQueue<T>::insert(Node<T> val) {
 		if (equal(*first, val)) {
 			if (*first < val) {
 				first->cost = val.cost;
+				first->next = val.next;
 				first->prev = val.prev;
 				first->data = val.data;
 			}
