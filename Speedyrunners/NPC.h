@@ -51,13 +51,13 @@ class NPC : public PlayerSlot
 
 	const float RUN_COST = 1.0f;
 	const float FREE_FALL_COST = 1.5f;
-	const float HOOK_COST = 2.0f;
+	const float HOOK_COST = 5.0f;
 	const float SLIDE_COST = 6.0f;
 	const float JUMP_COST_BASE_1 = 2.0f;
 	const float JUMP_COST_BASE_2 = 4.0f;
 	const float WALL_JUMP_COST = 1.5f;
-	const float DIRECTION_CHANGE_COST = 500.0f;
-	const float JUMP_COST_PER_DISTANCE_UNIT = 50.0f;
+	const float DIRECTION_CHANGE_COST = 3.0f;
+	const float JUMP_COST_PER_DISTANCE_UNIT = 100.0f;
 
 	const float THRESHOLD_PER_RADIUS_UNIT = 5.0f;
 
@@ -109,6 +109,9 @@ private:
 
 	bool isPerformingWallJump = false;
 	bool wallJumpStep2 = false;
+	sf::Vector2f distHook;
+	sf::Vector2f hookPrevPos;
+	sf::Vector2f accDistHook;
 	
 
 	int findExpanded(const TileNode& n, const int n_path) const;

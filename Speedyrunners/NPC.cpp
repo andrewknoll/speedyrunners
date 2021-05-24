@@ -97,7 +97,7 @@ int NPC::updateExpanded(const TileNode& current, TileNode n, const int n_path) {
 		expanded[n_path][i].cost = n.cost;
 		expanded[n_path][i].heuristic = n.heuristic;
 		expanded[n_path][i].data = n.data;
-		expanded[n_path][i].next = std::make_shared<TileNode>(current);
+		expanded[n_path][i].prev = std::make_shared<TileNode>(current);
 	}
 	return i;
 }
@@ -178,7 +178,7 @@ void NPC::calculateJumpNeighbours(const TileNode & current, const Goal& goal, co
 					if (dist > 0.2) {
 						n.cost = current.cost + dist * JUMP_COST_PER_DISTANCE_UNIT + baseCost;
 						n.heuristic = heuristic(n, goal);
-						n.next = std::make_shared<TileNode>(current);
+						n.prev = std::make_shared<TileNode>(current);
 						n.data.jumps = jumps;
 						if (detectDirectionChange(n, current)) {
 							n.cost += DIRECTION_CHANGE_COST;
@@ -315,7 +315,7 @@ void NPC::calculateHookNeighbours(const bool right, const TileNode& current, con
 					aux.cost = current.cost + cost;
 					aux.heuristic = heuristic(aux, goal);
 					aux.data.isHooking = true;
-					aux.next = std::make_shared<TileNode>(current);
+					aux.prev = std::make_shared<TileNode>(current);
 					if (detectDirectionChange(aux, current)) {
 						aux.cost += DIRECTION_CHANGE_COST;
 					}
@@ -382,7 +382,7 @@ void NPC::calculateWallJumpNeighbours(const bool right, TileNode& current, const
 						n.data.isHooking = false;
 						n.cost = current.cost + WALL_JUMP_COST + abs(x) * JUMP_COST_PER_DISTANCE_UNIT;
 						n.heuristic = heuristic(n, goal);
-						n.next = std::make_shared<TileNode>(current);
+						n.prev = std::make_shared<TileNode>(current);
 						if (updateExpanded(current, n, n_path) >= expanded[n_path].size()) {
 							frontier[n_path].insert(n);
 						}
@@ -402,14 +402,11 @@ void NPC::calculateWallJumpNeighbours(const bool right, TileNode& current, const
 
 void NPC::buildPath (TileNode foundGoal, std::deque<std::shared_ptr<NPC::TileNode> >& newPath) {
 	newPath.push_front(std::make_shared<TileNode>(foundGoal));
-	std::shared_ptr<TileNode> prev = nullptr;
-	std::shared_ptr<TileNode> next = foundGoal.next;
+	std::shared_ptr<TileNode> next = foundGoal.prev;
 	while (next != nullptr) {
 		//std::cout << next->cell[0] << " " << next->cell[1] << " " << next->cost << " " << next->heuristic << std::endl;
-		newPath.push_back(next);
-		next->prev = prev;
-		prev = next;
-		next = next->next;
+		newPath.push_front(next);
+		next = next->prev;
 	}
 }
 
@@ -432,9 +429,9 @@ bool NPC::nodeWasReached(const TileNode & n, const float closenessThreshold) con
 bool NPC::detectDirectionChange(const TileNode & n, const TileNode & current)
 {
 	int diff1, diff0;
-	if (current.next != nullptr) {
+	if (current.prev != nullptr) {
 		diff1 = n.cell[0] - current.cell[0];
-		diff0 = current.cell[0] - current.next->cell[0];
+		diff0 = current.cell[0] - current.prev->cell[0];
 	}
 	else {
 		//Can only check if we have a previous node
@@ -463,7 +460,7 @@ float NPC::expandToNeighbour(const TileNode& current, const Goal& goal, const in
 			next.data.isSliding = true;
 		}
 		next.cost = current.cost + cost(current, next);
-		next.next = std::make_shared<TileNode>(current);
+		next.prev = std::make_shared<TileNode>(current);
 		if (detectDirectionChange(next, current)) {
 			next.cost += DIRECTION_CHANGE_COST;
 		}
@@ -529,7 +526,6 @@ void NPC::replan() {
 	path[0].clear();
 	step = std::begin(path[0]);
 	elapsed = sf::Time::Zero;
-	currentGoalIdx = (currentGoalIdx + 1) % goals.size();
 	std::cout << "Completed... Now I want " << currentGoalIdx << std::endl;
 	
 	//Get next part
@@ -577,24 +573,28 @@ void NPC::plan() {
 			choiceMtx.lock();
 			if (!stitched) {
 				goal1 = std::make_shared<Goal>(goals[(currentGoalIdx + 1) % goals.size()]);
-				auto pback = path[0].back();
-				backHeur = heuristic(*pback, *goal1);
-				pathMtx[0].unlock();
-				path[2] = path[1];
-				//std::copy(path[1].begin(), path[1].end(), path[2].begin());
-				if (!path[1].empty()) {
-					PathIterator p;
-					p = path[1].cend();
-					while (--p != path[1].cbegin()) {
-						if (((*p)->heuristic > backHeur)) {
-							break;
+				if (!path[0].empty()) {
+					auto pback = path[0].back();
+					backHeur = heuristic(*pback, *goal1);
+					pathMtx[0].unlock();
+					path[2] = path[1];
+					//std::copy(path[1].begin(), path[1].end(), path[2].begin());
+					if (!path[1].empty()) {
+						PathIterator p;
+						p = path[1].cend();
+						while (--p != path[1].cbegin()) {
+							if (((*p)->heuristic > backHeur)) {
+								break;
+							}
 						}
+						path[1].erase(std::begin(path[1]), p);
+						stitched = true;
+						path[1].push_front(pback);
 					}
-					path[1].erase(std::begin(path[1]), p);
-					stitched = true;
-					path[1].push_front(pback);
 				}
-				
+				else {
+					pathMtx[0].unlock();
+				}
 			}
 			else {
 				pathMtx[0].unlock();
@@ -640,6 +640,7 @@ void NPC::plan() {
 	if (n_path == 0) {
 		goalMtx.unlock();
 		frontier[n_path].clear();
+		frontier[n_path].safePush(getCharacterCell());
 	}
 	else {
 		goal0.cell[0] = int(goals[currentGoalIdx].position.x) / tm->getTileSizeWorld().x;
@@ -649,6 +650,7 @@ void NPC::plan() {
 		goal0.heuristic = 0;
 		goal0.cost = 0;
 		frontier[n_path].clear();
+		frontier[n_path].safePush(goal0);
 	}
 
 	goalNode.cell[0] = int(goal->position.x) / tm->getTileSizeWorld().x;
@@ -656,8 +658,6 @@ void NPC::plan() {
 
 	goalNode.data.tile = Tiles::AIR;
 	OptionalPath newPath;
-
-	frontier[n_path].safePush(goalNode);
 
 	if (!resetPlan) {
 		if (n_path == 0) {
@@ -730,15 +730,15 @@ void NPC::planFromTo(const int n_path, const std::shared_ptr<Goal> origin, const
 			auxCost = INFINITY;
 			
 			if (!origin) {
-				expansionGoal = std::make_shared<Goal>(me->getPosition(), 100);
+				expansionGoal = goal;
 			}
 
 			//Don't let expand to hook nodes between different hooks
-			if (prev != nullptr && prev->next != current.next && prev->data.isHooking && current.data.isHooking) continue;
+			if (prev != nullptr && prev->prev != current.prev && prev->data.isHooking && current.data.isHooking) continue;
 
-			if (isGoal(current, *expansionGoal)) {
+			if (isGoal(current, *goal)) {
 				stopFollowing = true;	//Tell moving thread to stop following the path
-				newPath = { std::deque<std::shared_ptr<NPC::TileNode> > ()};
+				newPath = { std::deque<std::shared_ptr<NPC::TileNode> >() };
 				buildPath(current, *newPath);
 				break;
 			}
@@ -925,7 +925,14 @@ void NPC::update(const sf::Time dT) { // Tries to get from current to next
 	}
 
 	tryToWallJump();
-	if (isPerformingWallJump) return;
+	if (isPerformingWallJump) {
+		if (isGoal(getCharacterCell(), goals[currentGoalIdx])) { // reached a goal
+			resetPlan = true;
+			replan();
+			currentGoalIdx = (currentGoalIdx + 1) % goals.size();
+		}
+		return;
+	}
 
 	bool canAdvance = true;
 	PathIterator next, aux, pathEnd;
@@ -953,12 +960,19 @@ void NPC::update(const sf::Time dT) { // Tries to get from current to next
 		}
 	}
 	pathEnd = std::end(path[0]);
-	auto pos = getCharacterCell();
-	if (isGoal(pos, goals[currentGoalIdx])) { // reached a goal
+	/*
+	for (int i = 0; i < goals.size(); i++) {
+		if (isGoal(getCharacterCell(), goals[currentGoalIdx])) {
+			currentGoalIdx = i;
+		}
+	}*/
+
+	if (isGoal(getCharacterCell(), goals[currentGoalIdx])) { // reached a goal
 		resetPlan = true;
 		replan();
+		currentGoalIdx = (currentGoalIdx + 1) % goals.size();
 	}
-	else if (pathFound[0] == 1 && step != pathEnd) {// && ++step != pathEnd) {
+	else if (pathFound[0] == 1 && (path[0].empty() || step != pathEnd)) {// && ++step != pathEnd) {
 		elapsed += dT;
 		newPosition = me->getPosition();
 		objDistance = nodeDistance(current, **step);
@@ -975,14 +989,25 @@ void NPC::update(const sf::Time dT) { // Tries to get from current to next
 			isPerformingWallJump = true; // TODO: dejar esto o no??
 			return;
 		}*/
-		if ((stepNodePtr->prev && stepNodePtr->prev->data.isHooking) || current.data.isHooking || current.data.automaticHook) {
-			if (!usedHook && !me->isUsingHook()) {
+		if ((current.data.isHooking || current.data.automaticHook) && (!usedHook || (accDistHook.x < distHook.x && accDistHook.y < distHook.y))) {
+			if (!usedHook) {
+				distHook = nodeCellVec(*stepNodePtr) - nodeCellVec(current);
+				hookPrevPos = me->getPosition();
 				usedHook = true;
-				//std::cout << "HOOK!" << std::endl;
-				currentMT = std::make_shared<MetaTile>();
-				currentMT->setType(MetaTile::Type::HOOK);
-				MTposition = sf::Vector2i(stepNodePtr->cell[0], stepNodePtr->cell[1]);
-				me->useHook(true);
+			}
+			accDistHook = me->getPosition() - hookPrevPos;
+
+			currentMT = std::make_shared<MetaTile>();
+			currentMT->setType(MetaTile::Type::HOOK);
+			MTposition = sf::Vector2i(stepNodePtr->cell[0], stepNodePtr->cell[1]);
+			me->useHook(true);
+			if (accDistHook.x > distHook.x || accDistHook.y > distHook.y) {
+				aux = getClosestNode(current, path[0]);
+				next = aux;
+				next++;
+
+				current = **aux;
+				step = next;
 			}
 		}
 		else {
@@ -1086,39 +1111,10 @@ void NPC::update(const sf::Time dT) { // Tries to get from current to next
 			retryCount = 0;
 		}*/
 	}
-	/*else if(pathFound[0] == 1){
-	std::shared_ptr<TileNode> last = nullptr;
-		elapsed = sf::Time::Zero;
-		currentGoalIdx = (currentGoalIdx + 1) % goals.size();
-		std::cout << "Completed... Now I want " << currentGoalIdx << std::endl;
-		//Get next part
-		if (pathFound[1] == 1) {
-			const std::lock_guard<std::mutex> lock1(pathMtx[1]);
-			pathFound[0] = 1;	//Next part of the path was already planned
-			if (!path[0].empty()) {
-				last = path[0].back();
-			}
-			path[0].clear();
-			// Stitch the two paths together and save path[1] to path[0]
-			if (stitched) {
-				path[0] = path[1];
-				//std::copy(std::begin(path[1]), std::end(path[1]), std::begin(path[0]));
-				stitched = false;
-			}
-			else if (last != nullptr) {
-				path[0].push_front(last);
-			}
-			step = std::begin(path[0]);
-			path[1].clear();
-
-			//Make sure we start planning the next part
-			pathFound[1] = -1;
-		}
-		else {
-			pathFound[0] = -1;	//We reached the end, so we make sure we replan
-			pathFound[1] = -1;
-		}
-	}*/
+	else if(pathFound[0] == 1) {
+		resetPlan = true;
+		replan();
+	}
 }
 
 int NPC::getPathFound(int i) const {
@@ -1150,9 +1146,9 @@ std::list<selbaward::Line> NPC::debugLines() {
 	std::list<selbaward::Line> lines = std::list<selbaward::Line>();
 	sf::Vector2u size = tm->getTileSizeWorld();
 	for (auto n : path[0]) {
-		if (n->next == NULL) continue;
+		if (n->prev == NULL) continue;
 		selbaward::Line l;
-		sf::Vector2f start = {(float)n->next->cell[0] * size.x, (float)n->next->cell[1] * size.y };
+		sf::Vector2f start = {(float)n->prev->cell[0] * size.x, (float)n->prev->cell[1] * size.y };
 		sf::Vector2f end = { (float)n->cell[0] * size.x, (float)n->cell[1] * size.y };
 		l.setPoints(start, end);
 		if (n->data.isHooking) {
@@ -1179,7 +1175,7 @@ std::list<sf::RectangleShape> NPC::debugExpanded() {
 	auto last = expanded[0].end() - 1;
 	int max = last->cost + last->heuristic;
 	for (auto n : expanded[0]) {
-		if (n.next == NULL) continue;
+		if (n.prev == NULL) continue;
 		sf::RectangleShape r;
 		
 		r.setSize(sf::Vector2f(size.x, size.y));
