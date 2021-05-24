@@ -48,7 +48,8 @@ public:
 
 	//void emitDeathParticles(bool multipleExplosions = false);
 	sf::Vector2f closestInView(const sf::Vector2f& p) const; // closest point to p in view
-
+
+	void setRect(const sf::View & v);
 	void setRect(const sf::FloatRect& rect);
 	void setSuddenDeath(bool sd);
 	void update(sf::Time dT);

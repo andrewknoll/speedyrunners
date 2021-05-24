@@ -10,22 +10,13 @@ void Camera::draw(sf::RenderTarget & target, sf::RenderStates states) const {
 
 Camera::Camera(const sf::View& v) : sf::View(v)
 {
-	size0 = v.getSize();
-	std::cout << "Size: " << size0 << "\n";
-	viewportShape = sf::RectangleShape(size0);
-	viewportShape.setFillColor(sf::Color::Transparent);
-	viewportShape.setOrigin(sf::Vector2f(v.getSize()/2.0f));
-	viewportShape.setPosition(getCenter()/*+ sf::Vector2f(rect.width / 2.0f, rect.height / 2.0f)*/);
+	setRect(v);
 	setSuddenDeath(false);
 }
 
 Camera::Camera(const sf::FloatRect& rect) : sf::View(rect)
 {
-	size0 = getSize();
-	viewportShape = sf::RectangleShape(size0);
-	viewportShape.setFillColor(sf::Color::Transparent);
-	viewportShape.setOrigin(sf::Vector2f(rect.width / 2.0f, rect.height / 2.0f));
-	viewportShape.setPosition(getCenter()/*+ sf::Vector2f(rect.width / 2.0f, rect.height / 2.0f)*/);
+	setRect(rect);
 	setSuddenDeath(false);
 } 
 
@@ -52,7 +43,7 @@ void Camera::operator=(const sf::View& v)
 {
 	setCenter(v.getCenter());
 	setRotation(v.getRotation());
-	setSize(v.getSize());
+	setRect(v);
 }
 
 void Camera::immediateFollow(std::vector<CharPtr>& characters, int first) {
@@ -140,6 +131,12 @@ void Camera::setRect(const sf::FloatRect& rect)
 	viewportShape.setFillColor(sf::Color::Transparent);
 	viewportShape.setOrigin(sf::Vector2f(rect.width / 2.0f, rect.height / 2.0f));
 	viewportShape.setPosition(getCenter()/*+ sf::Vector2f(rect.width / 2.0f, rect.height / 2.0f)*/);
+}
+
+void Camera::setRect(const sf::View& v) {
+	sf::Vector2f p = v.getCenter() - v.getSize() / 2.0f;
+	sf::Rect r(p.x, p.y, v.getSize().x, v.getSize().y);
+	setRect(r);
 }
 
 void Camera::setSuddenDeath(bool sd) {
