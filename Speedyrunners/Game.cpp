@@ -78,6 +78,7 @@ void Game::clear() {
 	players.clear();
 
 	rv = nullptr;
+	setState(State::Countdown);
 	countdown.reset();
 	cam.setSuddenDeath(false);
 
@@ -357,7 +358,7 @@ void Game::loopMenu()
 	}
 	menu.setMainMenu();
 	menu.loop(); // , this);
-	std::cout << "State after menu: " << (int)state << "\n";
+	//std::cout << "State after menu: " << (int)state << "\n";
 	//state = (Game::State)menu.getGameState();
 	//characters = menu.getCharacters
 }
@@ -369,8 +370,8 @@ void Game::addCharacter(const CharPtr character)
 		ui.setCharacters(characters);
 		aliveCount++;
 	}
-
 }
+
 void Game::createNewLevel(int nLevels)
 {
 	loadLevel("default_level.csv");
@@ -495,6 +496,7 @@ void Game::update()
 
 		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::Escape)) {
 			loopMenu();
+			return;
 		}
 		else if (event.type == sf::Event::Closed) {
 			running = false;
@@ -522,7 +524,7 @@ void Game::update()
 				clearParticles();
 			}
 			else if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::F4) {
-				loopMenu();
+				loopMenu(); return;
 			}
 		}
 
@@ -701,7 +703,9 @@ void Game::update()
 			if (rv->ended()) {
 				if (gameWon) {
 					state = State::MainMenu;
+					rv = nullptr;
 					loopMenu();
+					return;
 				}
 				state = State::Countdown;
 				countdown.reset();
