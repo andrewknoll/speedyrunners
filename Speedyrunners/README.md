@@ -4,6 +4,9 @@ Videojuegos unizar 2021
 
 Speedyrunners es un clon de Speedrunners.
 
+## Trailer:
+https://www.youtube.com/watch?v=HhmuJKTTdsU
+
 ## Jugar
 Ejecutar bin/Speedyrunners.exe
 
