@@ -84,6 +84,7 @@ protected:
 	std::condition_variable restartCv;
 
 	sf::Time dT; // Time since last update
+	const sf::Time maxDT = sf::seconds(1.0f / 32.0f);
 
 	// Checkpoints:
 	// Editor:
