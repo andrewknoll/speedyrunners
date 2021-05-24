@@ -8,6 +8,17 @@ void Camera::draw(sf::RenderTarget & target, sf::RenderStates states) const {
 	target.draw(viewportShape, states);
 }
 
+Camera::Camera(const sf::View& v) : sf::View(v)
+{
+	size0 = v.getSize();
+	std::cout << "Size: " << size0 << "\n";
+	viewportShape = sf::RectangleShape(size0);
+	viewportShape.setFillColor(sf::Color::Transparent);
+	viewportShape.setOrigin(sf::Vector2f(v.getSize()/2.0f));
+	viewportShape.setPosition(getCenter()/*+ sf::Vector2f(rect.width / 2.0f, rect.height / 2.0f)*/);
+	setSuddenDeath(false);
+}
+
 Camera::Camera(const sf::FloatRect& rect) : sf::View(rect)
 {
 	size0 = getSize();
@@ -120,6 +131,16 @@ sf::Vector2f Camera::closestInView(const sf::Vector2f& p) const
 }
 
 
+
+void Camera::setRect(const sf::FloatRect& rect)
+{
+
+	size0 = sf::Vector2f(rect.width, rect.height);
+	viewportShape = sf::RectangleShape(size0);
+	viewportShape.setFillColor(sf::Color::Transparent);
+	viewportShape.setOrigin(sf::Vector2f(rect.width / 2.0f, rect.height / 2.0f));
+	viewportShape.setPosition(getCenter()/*+ sf::Vector2f(rect.width / 2.0f, rect.height / 2.0f)*/);
+}
 
 void Camera::setSuddenDeath(bool sd) {
 	this->suddenDeath = sd;

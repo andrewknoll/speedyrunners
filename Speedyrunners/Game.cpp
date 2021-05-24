@@ -455,7 +455,8 @@ void Game::setFullScreen() {
 	}
 	window.create(vMode, "SpeedyRunners", sf::Style::Fullscreen);
 	setUpWindow();
-	cam = window.getDefaultView();
+	cam = window.getView();
+	//cam.setRect(window.getView().getViewport());
 	lvl.loadBackground(lvl.getBackgroundPath(), window);
 	settings.setResolution(sf::Vector2i(window.getSize().x, window.getSize().y));
 }

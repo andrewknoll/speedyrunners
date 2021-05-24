@@ -21,7 +21,7 @@
 // Defines de configuracion para debug:
 //#define USE_IMGUI
 #define DEV_MODE
-#define DISABLE_FULLSCREEN
+//#define DISABLE_FULLSCREEN
 
 //#define VERBOSE_DEBUG // Cambiar para quitar couts
 

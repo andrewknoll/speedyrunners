@@ -100,8 +100,8 @@ void TileMap::setTileIndexed(size_t row, size_t col, const int tileNumber) {
 
 void TileMap::setTile(const sf::Vector2i& pos, const int tileNumber) {
     // Get row and col:
-    size_t i = pos.x / tileSizeWorld.x;
-    size_t j = pos.y / tileSizeWorld.y;
+    size_t i = std::ceilf(0.5f + pos.x / tileSizeWorld.x);
+    size_t j = std::ceilf(0.5f + pos.y / tileSizeWorld.y);
     setTileIndexed(i, j, tileNumber);
     
 }

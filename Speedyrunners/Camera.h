@@ -27,6 +27,8 @@ private:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 public:
+	Camera(const sf::View& v);
+
 	Camera(const sf::FloatRect& rect = sf::FloatRect(0,0,10,10));
 	//sf::Rect<float> view;
 
@@ -47,7 +49,7 @@ public:
 	//void emitDeathParticles(bool multipleExplosions = false);
 	sf::Vector2f closestInView(const sf::Vector2f& p) const; // closest point to p in view
 
-
+	void setRect(const sf::FloatRect& rect);
 	void setSuddenDeath(bool sd);
 	void update(sf::Time dT);
 };
