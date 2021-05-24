@@ -21,7 +21,7 @@ struct NodeData {
 	bool automaticSlide = false;
 
 	bool operator==(const NodeData& n2) const{
-		return tile == n2.tile && jumps == n2.jumps && isHooking == n2.isHooking;
+		return jumps == n2.jumps && isHooking == n2.isHooking;
 	}
 	bool canJump() const {
 		return jumps > 0;
@@ -34,7 +34,6 @@ struct Node {
 	int cell[2];
 	float heuristic;
 	float cost;
-	std::shared_ptr<Node<T> > next = nullptr;
 	std::shared_ptr<Node<T> > prev = nullptr;
 
 	friend bool operator< (const Node<T>& n1, const Node<T>& n2) {
